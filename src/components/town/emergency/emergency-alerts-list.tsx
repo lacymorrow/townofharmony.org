@@ -65,27 +65,11 @@ export async function EmergencyAlertsList({
 	const alerts = result.docs;
 
 	if (alerts.length === 0) {
-		return (
-			<Card className="border-stone bg-warm-white">
-				<CardContent className="py-12 text-center">
-					<div className="flex flex-col items-center gap-4">
-						<Info className="h-12 w-12 text-sage-light" />
-						<div>
-							<h3 className="text-lg font-semibold text-sage-dark mb-2">No Emergency Alerts</h3>
-							<p className="text-[#4A4640]">
-								{activeOnly
-									? "There are currently no active emergency alerts."
-									: "No emergency alerts have been issued."}
-							</p>
-						</div>
-					</div>
-				</CardContent>
-			</Card>
-		);
+		return null;
 	}
 
 	return (
-		<div className="space-y-4">
+		<section className="mb-8 space-y-4">
 			{alerts.map((alert) => {
 				const Icon = getLevelIcon(alert.level);
 				const colors = getLevelColors(alert.level);
@@ -188,6 +172,6 @@ export async function EmergencyAlertsList({
 					</Link>
 				</div>
 			)}
-		</div>
+		</section>
 	);
 }

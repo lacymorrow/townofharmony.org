@@ -26,41 +26,15 @@ export default function EmergencyPage() {
 					<p className="text-white/90 text-lg">
 						Stay informed and prepared with official emergency information for the Town of Harmony.
 					</p>
-				</div>
-
-				{/* 911 call-out banner */}
-				<div className="bg-red-50 border-l-4 border-barn-red p-4 mb-8 rounded-r-lg">
-					<div className="flex items-center gap-2 mb-2">
-						<AlertTriangle className="h-5 w-5 text-barn-red" />
-						<h2 className="font-bold text-barn-red text-lg">Life-Threatening Emergency: Call 911</h2>
-					</div>
-					<p className="text-[#4A4640]">
-						For immediate emergency assistance requiring police, fire, or medical response, always
-						dial <strong>911</strong> first.
+					<p className="text-white font-semibold mt-3">
+						Life-threatening emergency? Call <strong className="text-xl">911</strong>
 					</p>
 				</div>
 
-				{/* Active alerts */}
-				<section className="mb-8">
-					<h2 className="text-2xl font-serif font-bold text-sage-dark mb-4 flex items-center gap-2">
-						<AlertTriangle className="h-6 w-6 text-barn-red" />
-						Active Emergency Alerts
-					</h2>
-					<Suspense
-						fallback={
-							<Card>
-								<CardContent className="py-12">
-									<div className="flex items-center justify-center">
-										<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-barn-red" />
-										<span className="ml-2 text-[#4A4640]">Loading active alerts...</span>
-									</div>
-								</CardContent>
-							</Card>
-						}
-					>
-						<EmergencyAlertsList activeOnly={true} limit={5} />
-					</Suspense>
-				</section>
+				{/* Active alerts — only rendered when alerts exist */}
+				<Suspense fallback={null}>
+					<EmergencyAlertsList activeOnly={true} limit={5} />
+				</Suspense>
 
 				{/* Main content tabs */}
 				<Tabs defaultValue="services" className="w-full">
