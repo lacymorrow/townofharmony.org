@@ -122,16 +122,10 @@ export const EmergencyServices = async () => {
 					</h3>
 					<div className="space-y-2 text-sm text-[#4A4640]">
 						<p>
-							<strong className="text-[#2D2A24]">Text Alerts:</strong> Text HARMONY to 67283 for emergency notifications
+							<strong className="text-[#2D2A24]">Social Media:</strong> Follow Town of Harmony on Facebook for real-time updates
 						</p>
 						<p>
-							<strong className="text-[#2D2A24]">Social Media:</strong> Follow @HarmonyTownWV for real-time updates
-						</p>
-						<p>
-							<strong className="text-[#2D2A24]">Local Radio:</strong> Tune to AM 1090 or FM 101.5 for emergency broadcasts
-						</p>
-						<p>
-							<strong className="text-[#2D2A24]">Website:</strong> Visit harmonytown.gov/emergency for current information
+							<strong className="text-[#2D2A24]">Website:</strong> Visit townofharmony.org/emergency for current information
 						</p>
 					</div>
 				</CardContent>

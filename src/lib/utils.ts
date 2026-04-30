@@ -16,6 +16,10 @@ export function formatDate(date: Date): string {
 }
 
 export function formatTime(time: string): string {
+	// Already includes AM/PM or is a plain-language value (e.g. "All day") — return as-is
+	if (/am|pm/i.test(time) || !/^\d/.test(time)) {
+		return time;
+	}
 	const [hours = "0", minutes = "0"] = time.split(":");
 	const date = new Date();
 	date.setHours(Number.parseInt(hours), Number.parseInt(minutes));

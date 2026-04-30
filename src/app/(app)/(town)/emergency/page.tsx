@@ -234,8 +234,7 @@ export default function EmergencyPage() {
 										<div>
 											<h4 className="font-semibold text-[#2D2A24] mb-2">Local Information:</h4>
 											<ul className="space-y-1">
-												<li>• Radio: AM 1090 or FM 101.5</li>
-												<li>• TV: Local news channels</li>
+												<li>• TV and radio: Local news channels</li>
 												<li>• NOAA Weather Radio: 162.550 MHz</li>
 											</ul>
 										</div>
