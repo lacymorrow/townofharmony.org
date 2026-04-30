@@ -22,12 +22,12 @@ export default function ResourcesPage() {
 
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{sorted.map((r) => {
-						const isExternal = r.externalUrl?.startsWith("http");
+						const opensInBrowser = r.type === "document" || r.externalUrl?.startsWith("http");
 						const Wrapper = (
 							{ children }: { children: React.ReactNode },
 						) =>
 							r.externalUrl ? (
-								isExternal ? (
+								opensInBrowser ? (
 									<a
 										href={r.externalUrl}
 										target="_blank"
