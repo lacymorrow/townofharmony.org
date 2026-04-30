@@ -4,7 +4,7 @@ import { historyArticles } from "@/data/town/history";
 export const metadata: Metadata = {
 	title: "History | Town of Harmony",
 	description:
-		"The history of the Town of Harmony, NC — incorporated February 10, 1927.",
+		"The history of the Town of Harmony, NC — incorporated 1927.",
 };
 
 export default function HistoryPage() {
@@ -23,7 +23,7 @@ export default function HistoryPage() {
 						History of Harmony
 					</h1>
 					<p className="text-[#4A4640] mt-3">
-						Harmony, North Carolina was incorporated <strong>February 10, 1927</strong>.
+						Harmony, North Carolina was incorporated <strong>1927</strong>.
 						The town takes its name from the Harmony Hill Camp Meetings, which
 						were first held in 1846 on the grounds of the present-day Harmony
 						Elementary School. The town sits at the crossroads of Highway 21 N
