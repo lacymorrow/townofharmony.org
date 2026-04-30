@@ -10,7 +10,7 @@ export const resources: TownResource[] = [
 		category: "General",
 		icon: "FileText",
 		description: "A compilation of all current town ordinances and local laws governing the Town of Harmony.",
-		externalUrl: "/docs/town-ordinance.pdf",
+		externalUrl: "/town-ordinance.pdf",
 		sortOrder: 0,
 	},
 	// Services

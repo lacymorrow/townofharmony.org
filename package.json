@@ -63,7 +63,9 @@
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
-    "analyze:both": "cross-env BUNDLE_ANALYZE=both next build"
+    "analyze:both": "cross-env BUNDLE_ANALYZE=both next build",
+    "audit:lh": "tsx scripts/lighthouse/run.ts",
+    "audit:lh:loop": "tsx scripts/lighthouse/loop.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "1.11.1",
@@ -272,7 +274,9 @@
     "vitest": "^4.0.18",
     "vitest-browser-react": "^2.0.5",
     "webdriverio": "9.24.0",
-    "worker-loader": "^3.0.8"
+    "worker-loader": "^3.0.8",
+    "lighthouse": "^13.1.0",
+    "chrome-launcher": "^1.2.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

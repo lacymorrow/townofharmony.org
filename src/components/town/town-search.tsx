@@ -42,6 +42,7 @@ interface SearchResult {
 	title: string;
 	subtitle: string;
 	href: string;
+	openExternal?: boolean;
 	category: string;
 	icon: React.ReactNode;
 }
@@ -131,6 +132,7 @@ const buildSearchIndex = (): SearchResult[] => {
 			title: resource.title,
 			subtitle: resource.description.slice(0, 80),
 			href: resource.externalUrl ?? `/resources#${resource.slug}`,
+			openExternal: !!resource.externalUrl,
 			category: "Resources",
 			icon: <FileText className="h-4 w-4" />,
 		});
@@ -328,10 +330,14 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 	}, [open, onOpenChange]);
 
 	const handleSelect = useCallback(
-		(result: { title: string; href: string }) => {
+		(result: { title: string; href: string; openExternal?: boolean }) => {
 			saveRecentSearch({ title: result.title, href: result.href });
 			onOpenChange(false);
-			router.push(result.href);
+			if (result.openExternal) {
+				window.location.href = result.href;
+			} else {
+				router.push(result.href);
+			}
 		},
 		[router, onOpenChange],
 	);
