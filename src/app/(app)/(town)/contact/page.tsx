@@ -35,23 +35,6 @@ export default function ContactPage() {
 
 				<div className="bg-white border border-stone rounded p-6 mt-6">
 					<h2 className="text-xl font-semibold text-sage-dark mb-3">
-						Reservations & After-Hours
-					</h2>
-					<p className="text-[#2D2A24]">
-						For Community Center reservation issues outside business hours,
-						contact Wanda Edwards at{" "}
-						<a
-							href="tel:7044502447"
-							className="text-sage-dark hover:underline"
-						>
-							(704) 450-2447
-						</a>
-						.
-					</p>
-				</div>
-
-				<div className="bg-white border border-stone rounded p-6 mt-6">
-					<h2 className="text-xl font-semibold text-sage-dark mb-3">
 						Emergencies
 					</h2>
 					<p className="text-[#2D2A24]">

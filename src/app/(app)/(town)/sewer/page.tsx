@@ -1,7 +1,7 @@
 import { Phone, Mail, Clock, MapPin } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { sewerRateTiers, sewerContactInfo, isSewerPaymentEnabled } from "@/data/town/sewer-rates";
+import { sewerContactInfo, isSewerPaymentEnabled } from "@/data/town/sewer-rates";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -23,26 +23,6 @@ export default function SewerPage() {
 					View current rates below and pay your bill online.
 				</p>
 			</div>
-
-			<section className="mb-12">
-				<h2 className="mb-4 text-2xl font-semibold">Monthly Rates</h2>
-				<div className="grid gap-4 sm:grid-cols-2">
-					{sewerRateTiers.map((tier) => (
-						<Card key={tier.id}>
-							<CardHeader className="pb-3">
-								<CardTitle className="text-lg">{tier.name}</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<p className="text-sm text-muted-foreground">{tier.description}</p>
-								<p className="mt-2 text-2xl font-bold">
-									${tier.monthlyRate.toFixed(2)}
-									<span className="text-sm font-normal text-muted-foreground">/month</span>
-								</p>
-							</CardContent>
-						</Card>
-					))}
-				</div>
-			</section>
 
 			<section className="mb-12">
 				<h2 className="mb-4 text-2xl font-semibold">Pay Your Bill</h2>

@@ -90,13 +90,6 @@ export const navigation: TownNavigation = {
 			color: "bg-teal-500",
 		},
 		{
-			title: "Pay Sewer Bill",
-			description: "Pay your sewer bill online",
-			href: "/pay/sewer",
-			icon: "CreditCard",
-			color: "bg-emerald-500",
-		},
-		{
 			title: "Contact Us",
 			description: "Get in touch with town offices",
 			href: "/contact",

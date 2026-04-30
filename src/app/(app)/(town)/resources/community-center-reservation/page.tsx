@@ -70,13 +70,9 @@ export default function CommunityCenterReservationPage() {
 					Issues During Your Reservation
 				</h2>
 				<p className="text-[#2D2A24] mb-2">
-					Report any issues to Town Hall immediately at{" "}
+					Report any issues to Town Hall at{" "}
 					<a href="tel:7045462339" className="text-sage-dark hover:underline">
 						(704) 546-2339
-					</a>
-					. After hours, contact Wanda Edwards at{" "}
-					<a href="tel:7044502447" className="text-sage-dark hover:underline">
-						(704) 450-2447
 					</a>
 					.
 				</p>
