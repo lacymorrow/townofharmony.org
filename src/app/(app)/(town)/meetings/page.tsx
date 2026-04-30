@@ -1,74 +1,34 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { meetings } from "@/data/town/meetings";
+import { MeetingsList } from "@/components/town/meetings/meetings-list";
 
 export const metadata: Metadata = {
-	title: "Meetings | Town of Harmony",
-	description: "Board of Aldermen meeting schedule and minutes for Harmony, NC.",
+	title: "Town Meetings | Town of Harmony, NC",
+	description:
+		"View upcoming and past Board of Aldermen meetings for the Town of Harmony, North Carolina.",
 };
 
-export default function MeetingsPage() {
-	const sorted = [...meetings].sort(
-		(a, b) =>
-			new Date(b.meetingDate).getTime() - new Date(a.meetingDate).getTime(),
-	);
+export default async function MeetingsPage({
+	searchParams,
+}: {
+	searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+	const params = await searchParams;
+	const type = typeof params.type === "string" ? params.type : undefined;
+	const month = typeof params.month === "string" ? params.month : undefined;
+	const year = typeof params.year === "string" ? params.year : undefined;
+	const status = typeof params.status === "string" ? params.status : undefined;
+	const page = typeof params.page === "string" ? params.page : "1";
 
 	return (
-		<section className="py-12 bg-cream">
-			<div className="container mx-auto px-4">
-				<header className="mb-8">
-					<h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark">
-						Town Meetings
-					</h1>
-					<p className="text-[#4A4640] mt-2">
-						Council meetings are held at Town Hall (3389 Harmony Hwy). Past
-						meeting minutes are linked below.
-					</p>
-				</header>
-
-				{sorted.length === 0 ? (
-					<p className="text-[#4A4640]">No meetings to display.</p>
-				) : (
-					<ul className="space-y-4">
-						{sorted.map((m) => {
-							const date = new Date(m.meetingDate);
-							const dateStr = date.toLocaleDateString("en-US", {
-								weekday: "long",
-								month: "long",
-								day: "numeric",
-								year: "numeric",
-								timeZone: "UTC",
-							});
-							return (
-								<li
-									key={m.id}
-									className="bg-white rounded-lg border border-stone p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
-								>
-									<div>
-										<Link
-											href={`/meetings/${m.slug}`}
-											className="text-lg font-semibold text-sage-dark hover:underline"
-										>
-											{m.title}
-										</Link>
-										<p className="text-sm text-[#4A4640]">
-											{dateStr} · {m.meetingTime} · {m.location}
-										</p>
-									</div>
-									{m.minutesUrl && (
-										<a
-											href={m.minutesUrl}
-											className="px-4 py-2 rounded border border-sage text-sage-dark text-sm font-semibold hover:bg-sage/10"
-										>
-											Download Minutes
-										</a>
-									)}
-								</li>
-							);
-						})}
-					</ul>
-				)}
+		<div className="container mx-auto max-w-6xl px-4 py-12">
+			<div className="mb-8">
+				<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Town Meetings</h1>
+				<p className="mt-2 text-lg text-muted-foreground">
+					Stay informed about Board of Aldermen and Public Hearing meetings.
+				</p>
 			</div>
-		</section>
+
+			<MeetingsList type={type} month={month} year={year} status={status} page={page} />
+		</div>
 	);
 }

@@ -1,69 +1,40 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { news } from "@/data/town/news";
+import { NewsGrid } from "@/components/town/news/news-grid";
+import { NewsFilters } from "@/components/town/news/news-filters";
 
 export const metadata: Metadata = {
-	title: "News | Town of Harmony",
-	description: "Latest news and updates from the Town of Harmony, NC.",
+	title: "News | Town of Harmony, NC",
+	description:
+		"Read the latest news and announcements from the Town of Harmony, North Carolina.",
 };
 
-export default function NewsPage() {
-	const published = news
-		.filter((n) => n.status === "published")
-		.sort(
-			(a, b) =>
-				new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-		);
+export default async function NewsPage({
+	searchParams,
+}: {
+	searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+	const params = await searchParams;
+	const page = typeof params.page === "string" ? Number(params.page) : 1;
+	const category = typeof params.category === "string" ? params.category : "";
+	const search = typeof params.search === "string" ? params.search : "";
 
 	return (
-		<section className="py-12 bg-cream">
-			<div className="container mx-auto px-4">
-				<header className="mb-8">
-					<h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark">
-						News
-					</h1>
-				</header>
-
-				{published.length === 0 ? (
-					<div className="bg-white rounded-lg border border-stone p-8 text-center">
-						<p className="text-[#4A4640]">
-							No news articles have been posted yet. Please check back later or
-							follow us on{" "}
-							<Link
-								href="https://www.facebook.com/profile.php?id=100088187771930"
-								className="text-sage-dark hover:underline"
-							>
-								Facebook
-							</Link>{" "}
-							for updates.
-						</p>
-					</div>
-				) : (
-					<ul className="space-y-4">
-						{published.map((n) => (
-							<li
-								key={n.id}
-								className="bg-white rounded-lg border border-stone p-5"
-							>
-								<Link
-									href={`/news/${n.slug}`}
-									className="text-xl font-semibold text-sage-dark hover:underline"
-								>
-									{n.title}
-								</Link>
-								<p className="text-sm text-[#635E56] mt-1">
-									{new Date(n.publishedAt).toLocaleDateString("en-US", {
-										month: "long",
-										day: "numeric",
-										year: "numeric",
-									})}
-								</p>
-								<p className="text-[#4A4640] mt-2">{n.excerpt}</p>
-							</li>
-						))}
-					</ul>
-				)}
+		<div className="container mx-auto max-w-6xl px-4 py-12">
+			<div className="mb-8">
+				<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">News</h1>
+				<p className="mt-2 text-lg text-muted-foreground">
+					The latest news and announcements from the Town of Harmony.
+				</p>
 			</div>
-		</section>
+
+			<div className="grid gap-8 lg:grid-cols-[1fr_280px]">
+				<div>
+					<NewsGrid page={page} category={category || undefined} search={search || undefined} />
+				</div>
+				<aside>
+					<NewsFilters currentCategory={category} currentSearch={search} />
+				</aside>
+			</div>
+		</div>
 	);
 }

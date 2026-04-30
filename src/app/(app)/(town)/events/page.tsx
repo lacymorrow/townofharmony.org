@@ -1,77 +1,39 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { events } from "@/data/town/events";
+import { Suspense } from "react";
+import { EventsList } from "@/components/town/events/events-list";
+import { EventsFilters } from "@/components/town/events/events-filters";
 
 export const metadata: Metadata = {
-	title: "Events | Town of Harmony",
-	description: "Upcoming community events in Harmony, NC.",
+	title: "Events | Town of Harmony, NC",
+	description:
+		"Discover community events, festivals, and activities happening in the Town of Harmony, North Carolina.",
 };
 
-export default function EventsPage() {
-	const upcoming = [...events]
-		.filter((e) => e.status !== "cancelled")
-		.sort(
-			(a, b) =>
-				new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime(),
-		);
+export default async function EventsPage({
+	searchParams,
+}: {
+	searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+	const params = await searchParams;
+	const category = typeof params.category === "string" ? params.category : undefined;
+	const month = typeof params.month === "string" ? params.month : undefined;
+	const page = typeof params.page === "string" ? params.page : "1";
 
 	return (
-		<section className="py-12 bg-cream">
-			<div className="container mx-auto px-4">
-				<header className="mb-8">
-					<h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark">
-						Upcoming Events
-					</h1>
-				</header>
-
-				{upcoming.length === 0 ? (
-					<p className="text-[#4A4640]">No upcoming events scheduled.</p>
-				) : (
-					<ul className="space-y-4">
-						{upcoming.map((e) => {
-							const date = new Date(e.eventDate);
-							const dateStr = date.toLocaleDateString("en-US", {
-								weekday: "long",
-								month: "long",
-								day: "numeric",
-								year: "numeric",
-							});
-							return (
-								<li
-									key={e.id}
-									className="bg-white rounded-lg border border-stone p-5"
-								>
-									<Link
-										href={`/events/${e.slug}`}
-										className="text-xl font-semibold text-sage-dark hover:underline"
-									>
-										{e.title}
-									</Link>
-									<p className="text-sm text-[#4A4640] mt-1">
-										{dateStr} · {e.eventTime}
-										{e.endTime && e.endTime !== e.eventTime && ` – ${e.endTime}`}
-									</p>
-									<p className="text-sm text-[#4A4640]">
-										{e.location} · {e.locationAddress}
-									</p>
-									<p className="text-[#4A4640] mt-2">{e.description}</p>
-									{e.contactPhone && (
-										<p className="text-sm text-[#635E56] mt-2">
-											Contact:{" "}
-											<a
-												href={`tel:${e.contactPhone.replace(/[^0-9+]/g, "")}`}
-												className="hover:underline"
-											>
-												{e.contactPhone}
-											</a>
-										</p>
-									)}
-								</li>
-							);
-						})}
-					</ul>
-				)}
+		<div className="container mx-auto max-w-6xl px-4 py-12">
+			<div className="mb-8">
+				<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Events</h1>
+				<p className="mt-2 text-lg text-muted-foreground">
+					Community events, festivals, and activities in the Town of Harmony.
+				</p>
 			</div>
-		</section>
+
+			<div className="mb-6">
+				<Suspense>
+					<EventsFilters />
+				</Suspense>
+			</div>
+			<EventsList category={category} month={month} page={page} />
+		</div>
 	);
 }
