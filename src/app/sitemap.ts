@@ -35,12 +35,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			priority: 0.9,
 		},
 		{
-			url: `${baseUrl}${routes.town.news}`,
-			lastModified: new Date(),
-			changeFrequency: "daily",
-			priority: 0.9,
-		},
-		{
 			url: `${baseUrl}${routes.town.emergency}`,
 			lastModified: new Date(),
 			changeFrequency: "monthly",
@@ -84,12 +78,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		},
 		{
 			url: `${baseUrl}${routes.town.business}`,
-			lastModified: new Date(),
-			changeFrequency: "monthly",
-			priority: 0.7,
-		},
-		{
-			url: `${baseUrl}${routes.town.elections}`,
 			lastModified: new Date(),
 			changeFrequency: "monthly",
 			priority: 0.7,

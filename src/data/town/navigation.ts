@@ -21,7 +21,6 @@ export const navigation: TownNavigation = {
 				{ name: "Interactive Map", href: "/map" },
 				{ name: "Points of Interest", href: "/points-of-interest" },
 				{ name: "Events", href: "/events" },
-				{ name: "News", href: "/news" },
 			],
 		},
 		{
@@ -111,7 +110,6 @@ export const navigation: TownNavigation = {
 				{ name: "Interactive Map", href: "/map" },
 				{ name: "Points of Interest", href: "/points-of-interest" },
 				{ name: "Events", href: "/events" },
-				{ name: "News", href: "/news" },
 				{ name: "Business Directory", href: "/business" },
 			],
 		},

@@ -7,11 +7,7 @@ export async function LatestNews() {
 	const { docs: articles } = await getNews({ limit: 3 });
 
 	if (articles.length === 0) {
-		return (
-			<div className="bg-cream rounded-xl p-8 text-center text-[#4A4640]">
-				No news articles available at this time.
-			</div>
-		);
+		return null;
 	}
 
 	return (

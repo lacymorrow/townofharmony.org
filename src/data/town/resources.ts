@@ -68,7 +68,7 @@ export const resources: TownResource[] = [
 		category: "External",
 		icon: "Globe",
 		description: "Official website of Iredell County Government, providing county services and information.",
-		externalUrl: "https://www.co.iredell.nc.us/",
+		externalUrl: "https://www.iredellcountync.gov/",
 		sortOrder: 3,
 	},
 	{
@@ -90,7 +90,7 @@ export const resources: TownResource[] = [
 		category: "External",
 		icon: "Globe",
 		description: "Iredell-Statesville Schools district serving the Harmony area.",
-		externalUrl: "https://www.iss.k12.nc.us/",
+		externalUrl: "https://www.issnc.org/",
 		sortOrder: 5,
 	},
 	{
@@ -109,10 +109,10 @@ export const resources: TownResource[] = [
 		title: "Harmony Volunteer Fire Department",
 		slug: "hvfd",
 		type: "link",
-		category: "External",
+		category: "Community",
 		icon: "Flame",
-		description: "Harmony Volunteer Fire Department — fire suppression, rescue, and emergency medical services.",
-		externalUrl: "https://hvfd.com/",
+		description: "Harmony Volunteer Fire Department — fire suppression, rescue, and emergency medical services. Call (704) 546-2300 for non-emergency inquiries.",
+		externalUrl: "/emergency",
 		sortOrder: 7,
 	},
 	{
@@ -123,7 +123,7 @@ export const resources: TownResource[] = [
 		category: "External",
 		icon: "Shield",
 		description: "Iredell County Veterans Services Office — assistance and benefits for veterans and their families.",
-		externalUrl: "https://www.co.iredell.nc.us/269/Veterans-Services",
+		externalUrl: "https://www.iredellcountync.gov/269/Veterans-Services",
 		sortOrder: 8,
 	},
 ];

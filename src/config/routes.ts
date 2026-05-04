@@ -38,7 +38,7 @@ export const routes = {
 	town: {
 		agendaMinutes: "/agenda-minutes",
 		business: "/business",
-		elections: "/elections",
+		// elections removed — redirects to /our-team
 		emergency: "/emergency",
 		events: "/events",
 		history: "/history",
