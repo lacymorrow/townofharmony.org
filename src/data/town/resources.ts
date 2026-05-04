@@ -123,7 +123,7 @@ export const resources: TownResource[] = [
 		category: "External",
 		icon: "Shield",
 		description: "Iredell County Veterans Services Office — assistance and benefits for veterans and their families.",
-		externalUrl: "https://www.iredellcountync.gov/269/Veterans-Services",
+		externalUrl: "https://www.iredellcountync.gov/426/Veteran-Services",
 		sortOrder: 8,
 	},
 ];

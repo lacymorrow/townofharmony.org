@@ -31,6 +31,8 @@ All critical data accuracy issues are fixed and verified against authoritative s
 | 11 | After-hours community center section | Removed (unverified data) | Commit 380b0fdc |
 | 12 | Unverified incorporation date (Feb 10) | Removed, kept "1927" only | Commit 919dcd46 |
 | 13 | Unverified Wanda Edwards phone | Removed personal number | Commit 604ae9a9 |
+| 14 | Brandon Angell term wrong (2024-2026) | Corrected to 2024-2028 | townofharmony.org/government/ |
+| 15 | Veterans Services URL wrong (id 269 → Erosion Control) | Fixed to /426/Veteran-Services | iredellcountync.gov (HTTP 200) |
 
 ---
 
@@ -47,11 +49,10 @@ All critical data accuracy issues are fixed and verified against authoritative s
 - **Action:** Town staff must add next Board of Aldermen meeting date
 - **Risk at launch:** Low — page gracefully shows "none scheduled" rather than wrong data
 
-### C. Council Term Dates (2024-2026)
-- Brandon Angell and Jared Clark terms listed as 2024-2026
-- It's now May 2026 — terms may have expired or been renewed
-- **Action:** Confirm with Mayor/Clerk whether these members are still serving
-- **Risk at launch:** Medium — if terms expired, site shows outdated officials
+### C. Council Term Dates
+- Brandon Angell: term corrected to 2024-2028 (matches legacy) — still serving
+- Jared Clark: term 2024-2026 (matches legacy) — term expired May 2026; **Town staff should confirm if he is still serving or has been replaced**
+- **Risk at launch:** Medium for Jared Clark only — site shows current term but it has expired; no replacement listed on legacy either, so this is a known open question
 
 ### D. Hospital Name
 - Site says "Iredell Memorial Hospital" — may have rebranded to "Iredell Health System"
