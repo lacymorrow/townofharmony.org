@@ -66,16 +66,7 @@ export default function CommunityCenterReservationPage() {
 					<li>Day-before decoration available 3:00 PM – 5:00 PM for an additional $50 (only if the building is unrented that day)</li>
 				</ul>
 
-				<h2 className="text-2xl font-serif font-bold text-sage-dark mb-3">
-					Issues During Your Reservation
-				</h2>
-				<p className="text-[#2D2A24] mb-2">
-					Report any issues to Town Hall at{" "}
-					<a href="tel:7045462339" className="text-sage-dark hover:underline">
-						(704) 546-2339
-					</a>
-					.
-				</p>
+
 			</div>
 		</article>
 	);
