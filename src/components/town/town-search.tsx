@@ -132,7 +132,7 @@ const buildSearchIndex = (): SearchResult[] => {
 			title: resource.title,
 			subtitle: resource.description.slice(0, 80),
 			href: resource.externalUrl ?? `/resources#${resource.slug}`,
-			openExternal: !!resource.externalUrl,
+			openExternal: resource.type === "document" || resource.externalUrl?.startsWith("http"),
 			category: "Resources",
 			icon: <FileText className="h-4 w-4" />,
 		});
@@ -241,6 +241,7 @@ const SUGGESTED_LINKS = [
 interface RecentSearch {
 	title: string;
 	href: string;
+	openExternal?: boolean;
 }
 
 const getRecentSearches = (): RecentSearch[] => {
@@ -331,10 +332,10 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 
 	const handleSelect = useCallback(
 		(result: { title: string; href: string; openExternal?: boolean }) => {
-			saveRecentSearch({ title: result.title, href: result.href });
+			saveRecentSearch({ title: result.title, href: result.href, openExternal: result.openExternal });
 			onOpenChange(false);
 			if (result.openExternal) {
-				window.location.href = result.href;
+				window.open(result.href, "_blank", "noopener,noreferrer");
 			} else {
 				router.push(result.href);
 			}
