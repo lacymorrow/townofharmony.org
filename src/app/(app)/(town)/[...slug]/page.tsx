@@ -67,11 +67,15 @@ async function getBuilderContent(
 		const page = results[0] as BuilderContent;
 
 		// Guard against Builder.io returning wildcard-targeted pages for paths
-		// that have no specific content. Template pages (data.url contains ":") use
-		// startsWith targeting and are exempt — their URL matching is handled by
-		// Builder.io's targeting rules. Regular pages must match exactly.
+		// that have no specific content. Template pages (data.url matches /:param)
+		// use startsWith targeting and are exempt — we can't validate :slug segments
+		// here. Regular pages must have data.url exactly matching the requested path
+		// (after trailing-slash normalization). Pages with no data.url are also
+		// rejected since they almost certainly came from over-broad targeting.
 		const pageUrl = page.data?.url as string | undefined;
-		if (pageUrl && !pageUrl.includes(":") && pageUrl !== urlPath) {
+		const normalize = (u: string) => u.toLowerCase().replace(/\/+$/, "") || "/";
+		const isTemplate = /\/:[^/]+/.test(pageUrl ?? "");
+		if (!pageUrl || (!isTemplate && normalize(pageUrl) !== normalize(urlPath))) {
 			return null;
 		}
 
