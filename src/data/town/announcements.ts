@@ -1,5 +1,13 @@
 import type { TownAnnouncement } from "./types";
 
-// Announcements — to be populated with real announcements from production site.
-// All previous entries were AI-generated fabrications and have been removed.
-export const announcements: TownAnnouncement[] = [];
+export const announcements: TownAnnouncement[] = [
+	{
+		id: 1,
+		title: "Welcome to Our New Website",
+		content:
+			"Welcome to the redesigned Town of Harmony website. We invite you to explore our updated pages and share feedback via the Contact page.",
+		level: "info",
+		isActive: true,
+		createdAt: "2026-05-05",
+	},
+];
