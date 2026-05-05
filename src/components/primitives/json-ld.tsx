@@ -173,7 +173,7 @@ export function JsonLd({
         })),
       },
       localBusiness && {
-        "@type": localBusiness.type || "SoftwareApplication",
+        "@type": localBusiness.type || "LocalBusiness",
         "@id": `${siteConfig.url}/#local-business`,
         name: localBusiness.name || siteConfig.title,
         description: localBusiness.description || siteConfig.description,

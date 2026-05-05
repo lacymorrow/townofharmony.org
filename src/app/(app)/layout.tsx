@@ -8,6 +8,7 @@ import { ReactGrab } from "@/components/modules/devtools/react-grab";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { fontSans, fontSerif } from "@/config/fonts";
 import { siteConfig } from "@/config/site-config";
+import { settings } from "@/data/town/settings";
 import {
   metadata as defaultMetadata,
   type HeadLinkHint,
@@ -55,24 +56,34 @@ export default async function Layout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
-              name: siteConfig.title,
-              description: siteConfig.description,
+              "@type": "GovernmentOrganization",
+              name: settings.siteTitle,
+              description: settings.siteDescription,
               url: siteConfig.url,
-              applicationCategory: "DeveloperApplication",
-              operatingSystem: "Any",
-              offers: {
-                "@type": "Offer",
-                price: "0",
-                priceCurrency: "USD",
+              telephone: settings.contactInfo.phone,
+              email: settings.contactInfo.email,
+              address: (() => {
+                const parts = settings.contactInfo.address.split(", ");
+                return {
+                  "@type": "PostalAddress",
+                  streetAddress: parts[0],
+                  addressLocality: parts[1],
+                  addressRegion: parts[2]?.split(" ")[0],
+                  postalCode: parts[2]?.split(" ")[1],
+                  addressCountry: "US",
+                };
+              })(),
+              areaServed: {
+                "@type": "City",
+                name: settings.contactInfo.address.split(", ")[1],
+                containedInPlace: {
+                  "@type": "AdministrativeArea",
+                  name: `${settings.branding.county}, ${settings.branding.state}`,
+                },
               },
-              author: {
-                "@type": "Person",
-                name: siteConfig.creator.name,
-                url: siteConfig.creator.url,
-              },
-              programmingLanguage: ["TypeScript", "JavaScript"],
-              runtimePlatform: "Node.js",
+              foundingDate: settings.branding.established,
+              logo: `${siteConfig.url}/logo.png`,
+              sameAs: [settings.socialMedia.facebook, settings.socialMedia.twitter, settings.socialMedia.youtube].filter(Boolean),
             }),
           }}
         />

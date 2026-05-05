@@ -148,7 +148,7 @@ export async function EmergencyAlertsList({
 								</div>
 
 								<Link
-									href={`/emergency/alerts/${alert.id}`}
+									href="/emergency"
 									className={`text-sm font-medium hover:underline ${
 										isActive ? colors.text : "text-sage font-semibold hover:text-sage-dark"
 									}`}
@@ -164,7 +164,7 @@ export async function EmergencyAlertsList({
 			{!showAll && alerts.length === limit && (
 				<div className="text-center pt-4">
 					<Link
-						href="/emergency/alerts"
+						href="/emergency"
 						className="inline-flex items-center gap-2 text-sage font-semibold hover:text-sage-dark transition-colors"
 					>
 						View All Emergency Alerts
