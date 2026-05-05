@@ -7,6 +7,10 @@ export const settings: TownSettings = {
 		phone: "(704) 546-2339",
 		address: "3389 Harmony Hwy, Harmony, NC 28634",
 		email: "info@townofharmony.org",
+		streetAddress: "3389 Harmony Hwy",
+		city: "Harmony",
+		stateCode: "NC",
+		zipCode: "28634",
 	},
 	officeHours: {
 		weekday: "Monday - Friday: 8:00 AM - 5:00 PM",
@@ -51,6 +55,10 @@ export const toTownSettings = (flat: BuilderSettingsFlat): TownSettings => ({
 		phone: flat.contactPhone ?? settings.contactInfo.phone,
 		address: flat.contactAddress ?? settings.contactInfo.address,
 		email: flat.contactEmail ?? settings.contactInfo.email,
+		streetAddress: settings.contactInfo.streetAddress,
+		city: settings.contactInfo.city,
+		stateCode: settings.contactInfo.stateCode,
+		zipCode: settings.contactInfo.zipCode,
 	},
 	officeHours: {
 		weekday: flat.officeHoursWeekday ?? settings.officeHours.weekday,

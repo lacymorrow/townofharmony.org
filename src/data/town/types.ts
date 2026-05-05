@@ -201,6 +201,10 @@ export interface TownSettings {
 		phone: string;
 		address: string;
 		email: string;
+		streetAddress: string;
+		city: string;
+		stateCode: string;
+		zipCode: string;
 	};
 	officeHours: {
 		weekday: string;

@@ -62,20 +62,17 @@ export default async function Layout({
               url: siteConfig.url,
               telephone: settings.contactInfo.phone,
               email: settings.contactInfo.email,
-              address: (() => {
-                const parts = settings.contactInfo.address.split(", ");
-                return {
-                  "@type": "PostalAddress",
-                  streetAddress: parts[0],
-                  addressLocality: parts[1],
-                  addressRegion: parts[2]?.split(" ")[0],
-                  postalCode: parts[2]?.split(" ")[1],
-                  addressCountry: "US",
-                };
-              })(),
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: settings.contactInfo.streetAddress,
+                addressLocality: settings.contactInfo.city,
+                addressRegion: settings.contactInfo.stateCode,
+                postalCode: settings.contactInfo.zipCode,
+                addressCountry: "US",
+              },
               areaServed: {
                 "@type": "City",
-                name: settings.contactInfo.address.split(", ")[1],
+                name: settings.contactInfo.city,
                 containedInPlace: {
                   "@type": "AdministrativeArea",
                   name: `${settings.branding.county}, ${settings.branding.state}`,
