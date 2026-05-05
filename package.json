@@ -332,7 +332,7 @@
     "utf-8-validate"
   ],
   "engines": {
-    "node": ">=18 <23"
+    "node": ">=18"
   },
   "overrides": {
     "react": "19.2.4",
