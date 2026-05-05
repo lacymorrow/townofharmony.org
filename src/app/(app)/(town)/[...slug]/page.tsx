@@ -64,7 +64,18 @@ async function getBuilderContent(
 			return null;
 		}
 
-		return results[0] as BuilderContent;
+		const page = results[0] as BuilderContent;
+
+		// Guard against Builder.io returning wildcard-targeted pages for paths
+		// that have no specific content. Template pages (data.url contains ":") use
+		// startsWith targeting and are exempt — their URL matching is handled by
+		// Builder.io's targeting rules. Regular pages must match exactly.
+		const pageUrl = page.data?.url as string | undefined;
+		if (pageUrl && !pageUrl.includes(":") && pageUrl !== urlPath) {
+			return null;
+		}
+
+		return page;
 	} catch {
 		return null;
 	}
