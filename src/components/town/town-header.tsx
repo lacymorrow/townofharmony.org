@@ -1,6 +1,7 @@
 "use client";
 
 import { Calendar, Menu, Phone, Search, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { TownSearch } from "@/components/town/town-search";
@@ -73,14 +74,14 @@ export function TownHeader({ settings }: TownHeaderProps) {
 					<div className="flex items-center justify-between py-4">
 						{/* Logo with shield */}
 						<Link href="/" className="flex items-center gap-4">
-							<div
-								className="w-14 h-16 bg-sage-dark flex items-center justify-center text-[#E8D5A3] font-serif text-lg font-bold flex-shrink-0"
-								style={{
-									clipPath: "polygon(50% 0%, 100% 15%, 100% 85%, 50% 100%, 0% 85%, 0% 15%)",
-								}}
-							>
-								TH
-							</div>
+							<Image
+								src="/images/town/logo.png"
+								alt="Town of Harmony Seal"
+								width={56}
+								height={56}
+								className="flex-shrink-0"
+								priority
+							/>
 							<div>
 								<h1 className="text-2xl font-serif font-bold text-sage-dark">{settings.siteTitle}</h1>
 								<p className="text-xs text-[#635E56] uppercase tracking-[1.5px] font-semibold">
