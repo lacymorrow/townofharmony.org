@@ -8,6 +8,7 @@ import { ReactGrab } from "@/components/modules/devtools/react-grab";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { fontSans, fontSerif } from "@/config/fonts";
 import { siteConfig } from "@/config/site-config";
+import { settings } from "@/data/town/settings";
 import {
   metadata as defaultMetadata,
   type HeadLinkHint,
@@ -55,24 +56,31 @@ export default async function Layout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
-              name: siteConfig.title,
-              description: siteConfig.description,
+              "@type": "GovernmentOrganization",
+              name: settings.siteTitle,
+              description: settings.siteDescription,
               url: siteConfig.url,
-              applicationCategory: "DeveloperApplication",
-              operatingSystem: "Any",
-              offers: {
-                "@type": "Offer",
-                price: "0",
-                priceCurrency: "USD",
+              telephone: settings.contactInfo.phone,
+              email: settings.contactInfo.email,
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "3389 Harmony Hwy",
+                addressLocality: "Harmony",
+                addressRegion: "NC",
+                postalCode: "28634",
+                addressCountry: "US",
               },
-              author: {
-                "@type": "Person",
-                name: siteConfig.creator.name,
-                url: siteConfig.creator.url,
+              areaServed: {
+                "@type": "City",
+                name: "Harmony",
+                containedInPlace: {
+                  "@type": "AdministrativeArea",
+                  name: `${settings.branding.county}, ${settings.branding.state}`,
+                },
               },
-              programmingLanguage: ["TypeScript", "JavaScript"],
-              runtimePlatform: "Node.js",
+              foundingDate: settings.branding.established,
+              logo: `${siteConfig.url}/icon.png`,
+              sameAs: ["https://www.townofharmony.org"],
             }),
           }}
         />
