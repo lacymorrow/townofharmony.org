@@ -22,7 +22,7 @@ export const routes = {
 	faq: "/faq",
 	pricing: "/pricing",
 	blog: "/blog",
-	docs: "/",
+	docs: "/", // aliased — referenced by ~40 shipkit upstream components for build compat
 	features: "/features",
 	download: "/download",
 	launch: "/launch",
@@ -287,10 +287,17 @@ export const createRedirects = (
 ): Redirect[] => {
 	if (!sources.length) return [];
 
-	return sources
-		.map((source) => {
-			if (source === destination) return null;
-			return { source, destination, permanent };
-		})
-		.filter((redirect): redirect is Redirect => redirect !== null);
+	const expanded = new Set<Route>();
+	for (const source of sources) {
+		expanded.add(source);
+		if (source.endsWith("/") && source.length > 1) {
+			expanded.add(source.slice(0, -1) as Route);
+		} else if (!source.endsWith("/")) {
+			expanded.add(`${source}/` as Route);
+		}
+	}
+
+	return Array.from(expanded)
+		.filter((source) => source !== destination)
+		.map((source) => ({ source, destination, permanent }));
 };
