@@ -62,25 +62,28 @@ export default async function Layout({
               url: siteConfig.url,
               telephone: settings.contactInfo.phone,
               email: settings.contactInfo.email,
-              address: {
-                "@type": "PostalAddress",
-                streetAddress: "3389 Harmony Hwy",
-                addressLocality: "Harmony",
-                addressRegion: "NC",
-                postalCode: "28634",
-                addressCountry: "US",
-              },
+              address: (() => {
+                const parts = settings.contactInfo.address.split(", ");
+                return {
+                  "@type": "PostalAddress",
+                  streetAddress: parts[0],
+                  addressLocality: parts[1],
+                  addressRegion: parts[2]?.split(" ")[0],
+                  postalCode: parts[2]?.split(" ")[1],
+                  addressCountry: "US",
+                };
+              })(),
               areaServed: {
                 "@type": "City",
-                name: "Harmony",
+                name: settings.contactInfo.address.split(", ")[1],
                 containedInPlace: {
                   "@type": "AdministrativeArea",
                   name: `${settings.branding.county}, ${settings.branding.state}`,
                 },
               },
               foundingDate: settings.branding.established,
-              logo: `${siteConfig.url}/icon.png`,
-              sameAs: ["https://www.townofharmony.org"],
+              logo: `${siteConfig.url}/logo.png`,
+              sameAs: [settings.socialMedia.facebook, settings.socialMedia.twitter, settings.socialMedia.youtube].filter(Boolean),
             }),
           }}
         />
