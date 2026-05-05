@@ -187,6 +187,7 @@ export interface TownAnnouncement {
 	endsAt?: string;
 	createdAt: string;
 	updatedAt?: string;
+	link?: string;
 	externalUrl?: string;
 	affectedAreas?: string[];
 	contactInfo?: string;

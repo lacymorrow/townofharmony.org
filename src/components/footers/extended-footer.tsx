@@ -68,7 +68,8 @@ const defaultGroups: FooterElement[] = [
       header: { label: "Legal" },
       items: [
         { href: routes.privacy, label: "Privacy Policy" },
-        { href: routes.terms, label: "Accessibility" },
+        { href: routes.terms, label: "Terms of Service" },
+        { href: "/accessibility", label: "Accessibility" },
         <li className="flex justify-start" key="feedback">
           <FeedbackPopover />
         </li>,
