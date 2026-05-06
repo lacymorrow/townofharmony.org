@@ -7,14 +7,6 @@ export const navigation: TownNavigation = {
 			href: "/",
 		},
 		{
-			name: "Agenda & Minutes",
-			href: "/meetings",
-			children: [
-				{ name: "Town Meetings", href: "/meetings" },
-				{ name: "Agendas & Minutes", href: "/meetings" },
-			],
-		},
-		{
 			name: "Explore",
 			href: "/map",
 			children: [
@@ -28,6 +20,8 @@ export const navigation: TownNavigation = {
 			href: "/our-team",
 			children: [
 				{ name: "Our Team", href: "/our-team" },
+				{ name: "Town Meetings", href: "/meetings" },
+				{ name: "Agendas & Minutes", href: "/meetings" },
 				{ name: "History", href: "/history" },
 				{ name: "Resources", href: "/resources" },
 				{ name: "Sewer Services", href: "/sewer" },
@@ -98,13 +92,6 @@ export const navigation: TownNavigation = {
 	],
 	footerLinks: [
 		{
-			category: "Agenda & Minutes",
-			links: [
-				{ name: "Town Meetings", href: "/meetings" },
-				{ name: "Agendas & Minutes", href: "/meetings" },
-			],
-		},
-		{
 			category: "Explore",
 			links: [
 				{ name: "Interactive Map", href: "/map" },
@@ -117,6 +104,8 @@ export const navigation: TownNavigation = {
 			category: "Town",
 			links: [
 				{ name: "Our Team", href: "/our-team" },
+				{ name: "Town Meetings", href: "/meetings" },
+				{ name: "Agendas & Minutes", href: "/meetings" },
 				{ name: "History", href: "/history" },
 				{ name: "Resources", href: "/resources" },
 				{ name: "Emergency Services", href: "/emergency" },
