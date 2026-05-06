@@ -66,6 +66,13 @@ export const sewerContactInfo = {
 };
 
 /**
+ * Whether the sewer section is visible at all. Uses a NEXT_PUBLIC_ var so it
+ * is safe to call from both server and client components.
+ */
+export const isSewerVisible = (): boolean =>
+	!!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
+/**
  * Online sewer payments are available only when Stripe is configured AND at
  * least one sewer rate-tier Stripe price ID is set in the environment.
  *

@@ -32,7 +32,10 @@ import { historyArticles } from "@/data/town/history";
 import { navigation } from "@/data/town/navigation";
 import { pointsOfInterest } from "@/data/town/points-of-interest";
 import { resources } from "@/data/town/resources";
+import { isSewerVisible } from "@/data/town/sewer-rates";
 import { teamMembers } from "@/data/town/team-members";
+
+const SEWER_HREFS = new Set(["/sewer", "/pay/sewer"]);
 
 const RECENT_SEARCHES_KEY = "toh-recent-searches";
 const MAX_RECENT = 5;
@@ -49,9 +52,11 @@ interface SearchResult {
 
 const buildSearchIndex = (): SearchResult[] => {
 	const results: SearchResult[] = [];
+	const hideSewer = !isSewerVisible();
 
 	// Navigation pages
 	for (const item of navigation.mainNav) {
+		if (hideSewer && SEWER_HREFS.has(item.href)) continue;
 		results.push({
 			id: `nav-${item.href}`,
 			title: item.name,
@@ -62,6 +67,7 @@ const buildSearchIndex = (): SearchResult[] => {
 		});
 		if (item.children) {
 			for (const child of item.children) {
+				if (hideSewer && SEWER_HREFS.has(child.href)) continue;
 				results.push({
 					id: `nav-${child.href}`,
 					title: child.name,

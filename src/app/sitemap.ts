@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
-import { isSewerPaymentEnabled } from "@/data/town/sewer-rates";
+import { isSewerPaymentEnabled, isSewerVisible } from "@/data/town/sewer-rates";
 
 /**
  * Town of Harmony sitemap
@@ -58,12 +58,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			changeFrequency: "monthly",
 			priority: 0.8,
 		},
-		{
-			url: `${baseUrl}${routes.town.sewer}`,
-			lastModified: new Date(),
-			changeFrequency: "monthly",
-			priority: 0.8,
-		},
+		...(isSewerVisible()
+			? [
+					{
+						url: `${baseUrl}${routes.town.sewer}`,
+						lastModified: new Date(),
+						changeFrequency: "monthly" as const,
+						priority: 0.8,
+					},
+				]
+			: []),
 		{
 			url: `${baseUrl}${routes.town.ourTeam}`,
 			lastModified: new Date(),

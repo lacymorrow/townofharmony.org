@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 
 import { navigation } from "@/data/town/navigation";
-import { isSewerPaymentEnabled } from "@/data/town/sewer-rates";
+import { isSewerVisible } from "@/data/town/sewer-rates";
 
 const iconMap: Record<string, LucideIcon> = {
 	FileText,
@@ -30,10 +30,12 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 export function QuickLinks() {
-	const onlinePaymentsEnabled = isSewerPaymentEnabled();
-	const quickLinks = onlinePaymentsEnabled
+	const sewerVisible = isSewerVisible();
+	const quickLinks = sewerVisible
 		? navigation.quickLinks
-		: navigation.quickLinks.filter((link) => link.href !== "/pay/sewer");
+		: navigation.quickLinks.filter(
+				(link) => link.href !== "/pay/sewer" && link.href !== "/sewer",
+			);
 
 	return (
 		<section className="py-16 bg-cream">
