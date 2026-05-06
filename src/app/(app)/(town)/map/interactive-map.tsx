@@ -139,7 +139,7 @@ export const InteractiveMap = () => {
 	return (
 		<div className="flex flex-col" style={{ height: "calc(100vh - 140px)" }}>
 			{/* Map toolbar */}
-			<div className="h-11 shrink-0 flex items-center justify-between px-4 bg-sage-deep text-cream z-20 shadow-sm">
+			<div className="h-11 shrink-0 flex items-center justify-between px-4 bg-sage-deep text-cream shadow-sm">
 				<div className="flex items-center gap-2.5">
 					<h1 className="text-sm font-bold leading-tight tracking-tight">
 						Interactive Business Map
