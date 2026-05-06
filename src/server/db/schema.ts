@@ -684,3 +684,37 @@ export type NewDeployment = typeof deployments.$inferInsert;
 export const deploymentsRelations = relations(deployments, ({ one }) => ({
   user: one(users, { fields: [deployments.userId], references: [users.id] }),
 }));
+
+// Contact form submission log — persists every submission for operational visibility and public records compliance
+export const contactSubmissions = createTable(
+  "contact_submission",
+  {
+    id: varchar("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    formType: varchar("form_type", { length: 20 })
+      .notNull()
+      .$type<"contact" | "town_contact">(),
+    inquiryType: varchar("inquiry_type", { length: 50 }), // town form only
+    // Partial email for privacy: e.g. "jo**@example.com"
+    submitterEmailPartial: varchar("submitter_email_partial", { length: 100 }),
+    ipHash: varchar("ip_hash", { length: 64 }), // SHA-256 hex of raw IP
+    status: varchar("status", { length: 20 })
+      .notNull()
+      .default("success")
+      .$type<"success" | "rejected" | "error">(),
+    rejectionReason: varchar("rejection_reason", { length: 100 }), // set when status != success
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (t) => ({
+    formTypeIdx: index("contact_submission_form_type_idx").on(t.formType),
+    statusIdx: index("contact_submission_status_idx").on(t.status),
+    createdAtIdx: index("contact_submission_created_at_idx").on(t.createdAt),
+  })
+);
+
+export type ContactSubmission = typeof contactSubmissions.$inferSelect;
+export type NewContactSubmission = typeof contactSubmissions.$inferInsert;

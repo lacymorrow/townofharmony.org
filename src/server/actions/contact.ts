@@ -1,15 +1,35 @@
 "use server";
 
+import { headers } from "next/headers";
 import { siteConfig } from "@/config/site-config";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
+import { addAudienceUser } from "@/server/actions/resend-actions";
+import { logContactSubmission } from "@/server/services/contact-submission-service";
 import { contactFormSchema } from "@/types/contact";
 
+async function getClientIp(): Promise<string | undefined> {
+	const h = await headers();
+	return (
+		h.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+		h.get("x-real-ip") ??
+		undefined
+	);
+}
+
 export async function submitContactForm(formData: FormData) {
+	const ip = await getClientIp();
+
 	try {
 		if (isTurnstileConfigured()) {
 			const token = formData.get("turnstileToken") as string | null;
 			if (!token || !(await verifyTurnstileToken(token))) {
+				await logContactSubmission({
+					formType: "contact",
+					ip,
+					status: "rejected",
+					rejectionReason: "turnstile_failed",
+				});
 				return { success: false, error: "Security check failed. Please try again." };
 			}
 		}
@@ -25,6 +45,13 @@ export async function submitContactForm(formData: FormData) {
 
 		if (!resend) {
 			console.warn("Resend client not initialized - RESEND_API_KEY not set");
+			await logContactSubmission({
+				formType: "contact",
+				submitterEmail: typeof validatedData.contactInfo === "string" ? validatedData.contactInfo : undefined,
+				ip,
+				status: "error",
+				rejectionReason: "email_service_not_configured",
+			});
 			return { success: false, error: "Email service not configured" };
 		}
 
@@ -43,12 +70,30 @@ export async function submitContactForm(formData: FormData) {
             `,
 		});
 
-		return {
-			success: true,
-			data: result,
-		};
+		if (validatedData.newsletter && validatedData.contactInfo?.includes("@")) {
+			try {
+				await addAudienceUser(validatedData.contactInfo);
+			} catch (error) {
+				console.error("Error subscribing to newsletter:", error);
+			}
+		}
+
+		await logContactSubmission({
+			formType: "contact",
+			submitterEmail: typeof validatedData.contactInfo === "string" ? validatedData.contactInfo : undefined,
+			ip,
+			status: "success",
+		});
+
+		return { success: true, data: result };
 	} catch (error) {
 		console.error("Error submitting contact form:", error);
+		await logContactSubmission({
+			formType: "contact",
+			ip,
+			status: "error",
+			rejectionReason: error instanceof Error ? error.message.slice(0, 100) : "unknown_error",
+		});
 		return {
 			success: false,
 			error: error instanceof Error ? error.message : "Failed to send message",

@@ -72,6 +72,7 @@ export const routes = {
 		integrations: "/admin/integrations",
 		feedback: "/admin/feedback",
 		payments: "/admin/payments",
+		contactSubmissions: "/admin/contact-submissions",
 	},
 
 	settings: {
