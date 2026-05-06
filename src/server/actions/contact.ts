@@ -2,8 +2,15 @@
 
 import { siteConfig } from "@/config/site-config";
 import { contactConfirmationEmail } from "@/lib/email-templates";
+import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
+import { addContactToAudience } from "@/server/actions/subscribe";
+import {
+	checkContactFormRateLimit,
+	getClientIp,
+	validateSubmissionTiming,
+} from "@/server/utils/contact-rate-limit";
 import { contactFormSchema } from "@/types/contact";
 
 export async function submitContactForm(formData: FormData) {
@@ -18,6 +25,19 @@ export async function submitContactForm(formData: FormData) {
 			if (!token || !(await verifyTurnstileToken(token))) {
 				return { success: false, error: "Security check failed. Please try again." };
 			}
+		}
+
+		const ip = await getClientIp();
+
+		const loadedAt = formData.get("_loadedAt") as string | null;
+		if (!validateSubmissionTiming(loadedAt)) {
+			logger.warn("Contact form rejected: submitted too quickly", { ip });
+			return { success: false, error: "Please take a moment before submitting." };
+		}
+
+		const rateLimit = await checkContactFormRateLimit(ip, "contact-form");
+		if (!rateLimit.allowed) {
+			return { success: false, error: rateLimit.error };
 		}
 
 		const data = {
@@ -66,6 +86,15 @@ export async function submitContactForm(formData: FormData) {
 				console.error("Error sending contact confirmation email:", error);
 			}
 		}
+
+		if (validatedData.newsletter && validatedData.contactInfo?.includes("@")) {
+			try {
+				await addContactToAudience(validatedData.contactInfo);
+			} catch (error) {
+				console.error("Error subscribing to newsletter:", error);
+			}
+		}
+
 
 		return {
 			success: true,

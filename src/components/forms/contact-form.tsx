@@ -33,6 +33,7 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
 	const { toast } = useToast();
 	const turnstileTokenRef = useRef<string | null>(null);
 	const [turnstileError, setTurnstileError] = useState(false);
+	const loadedAtRef = useRef(Date.now().toString());
 
 	const form = useForm<ContactFormData>({
 		resolver: zodResolver(contactFormSchema),
@@ -52,6 +53,7 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
 			for (const [key, value] of Object.entries(data)) {
 				formData.append(key, value?.toString() ?? "");
 			}
+			formData.append("_loadedAt", loadedAtRef.current);
 			if (turnstileTokenRef.current) {
 				formData.append("turnstileToken", turnstileTokenRef.current);
 			}

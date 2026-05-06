@@ -48,6 +48,7 @@ export const TownContactForm = () => {
 	const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 	const turnstileTokenRef = useRef<string | null>(null);
 	const [turnstileError, setTurnstileError] = useState(false);
+	const loadedAtRef = useRef(Date.now().toString());
 
 	const validate = (form: FormData): FormErrors => {
 		const errs: FormErrors = {};
@@ -108,6 +109,7 @@ export const TownContactForm = () => {
 				attachment,
 				turnstileToken: turnstileTokenRef.current ?? undefined,
 				website: (form.get("website") as string) || undefined,
+				_loadedAt: loadedAtRef.current,
 			});
 
 			if (result.success) {
