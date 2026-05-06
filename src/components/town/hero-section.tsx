@@ -1,10 +1,35 @@
 import Link from "next/link";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
 import { getHomepage } from "@/lib/town-data";
+import { fetchBuilderContent } from "@/lib/builder-data-server";
+
+interface BuilderHomepageSlide {
+	title: string;
+	subtitle?: string;
+	description?: string;
+	image?: string;
+	ctaText?: string;
+	ctaHref?: string;
+	sortOrder: number;
+}
 
 export async function HeroSection() {
 	const homepage = await getHomepage();
-	const firstSlide = (homepage as any)?.heroSlides?.[0];
+	const staticSlide = (homepage as any)?.heroSlides?.[0];
+
+	let firstSlide = staticSlide;
+	try {
+		const { results } = await fetchBuilderContent<BuilderHomepageSlide>("town-homepage-slide", {
+			sort: { "data.sortOrder": 1 },
+			limit: 1,
+		});
+		if (results.length > 0) {
+			firstSlide = results[0];
+		}
+	} catch (err) {
+		console.error("Failed to fetch homepage slides from Builder.io:", err);
+	}
+
 	const heroImageUrl = firstSlide?.image ? getMediaUrl(firstSlide.image) : null;
 
 	return (

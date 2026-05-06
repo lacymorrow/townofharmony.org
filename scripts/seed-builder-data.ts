@@ -32,6 +32,8 @@ import { events } from "../src/data/town/events";
 import { meetings } from "../src/data/town/meetings";
 import { businesses } from "../src/data/town/businesses";
 import { elections } from "../src/data/town/elections";
+import { sewerRateTiers } from "../src/data/town/sewer-rates";
+import { homepage } from "../src/data/town/homepage";
 
 const BUILDER_PRIVATE_KEY = process.env.BUILDER_PRIVATE_KEY;
 const BUILDER_API_KEY = process.env.NEXT_PUBLIC_BUILDER_API_KEY;
@@ -111,6 +113,30 @@ const seedData: Record<string, SeedEntry[]> = {
 	"town-meeting": toSeedEntries(meetings, "title"),
 	"town-business": toSeedEntries(businesses, "name"),
 	"town-election": toSeedEntries(elections, "title"),
+	"town-homepage-slide": homepage.heroSlides.map((slide, i) => ({
+		name: slide.title,
+		data: {
+			title: slide.title,
+			subtitle: slide.subtitle ?? "",
+			description: slide.description ?? "",
+			image: slide.image ?? "",
+			ctaText: slide.ctaText ?? "",
+			ctaHref: slide.ctaHref ?? "",
+			sortOrder: i,
+		},
+	})),
+	"town-sewer-rate": sewerRateTiers.map((tier, i) => ({
+		name: tier.name,
+		data: {
+			tierId: tier.id,
+			name: tier.name,
+			description: tier.description,
+			location: tier.location,
+			type: tier.type,
+			monthlyRate: tier.monthlyRate,
+			sortOrder: i,
+		},
+	})),
 };
 
 // ============================================================

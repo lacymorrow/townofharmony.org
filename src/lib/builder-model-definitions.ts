@@ -299,6 +299,36 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			url("sampleBallot"),
 		],
 	},
+
+	// --- Homepage ---
+	{
+		name: "town-homepage-slide",
+		kind: "data",
+		fields: [
+			text("title", true),
+			text("subtitle"),
+			longText("description"),
+			url("image"),
+			text("ctaText"),
+			text("ctaHref"),
+			num("sortOrder"),
+		],
+	},
+
+	// --- Sewer Rates ---
+	{
+		name: "town-sewer-rate",
+		kind: "data",
+		fields: [
+			text("tierId", true),
+			text("name", true),
+			longText("description"),
+			enumText("location", ["in-town", "out-of-town"]),
+			enumText("type", ["residential", "commercial"]),
+			num("monthlyRate"),
+			num("sortOrder"),
+		],
+	},
 ];
 
 export type { BuilderField, BuilderModelDefinition };
