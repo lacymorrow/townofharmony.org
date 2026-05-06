@@ -204,7 +204,7 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 	return (
 		<div
 			ref={mapContainerRef}
-			className="h-full w-full"
+			className="h-full w-full isolate"
 			role="application"
 			aria-label="Interactive map of Harmony, NC"
 		/>
