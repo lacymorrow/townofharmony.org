@@ -246,18 +246,18 @@ export async function EmergencyDetail({ alertId }: EmergencyDetailProps) {
 								</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<div className="text-sm text-[#4A4640] space-y-1">
+								<div className="text-[#4A4640] space-y-2">
 									{contactInfo.name && <p className="font-medium text-[#2D2A24]">{contactInfo.name}</p>}
 									{contactInfo.phone && (
-										<p>
-											Phone:{" "}
-											<a href={`tel:${contactInfo.phone}`} className="text-sage hover:text-sage-dark hover:underline">
+										<p className="flex items-center gap-2">
+											<span className="text-sm">Phone:</span>
+											<a href={`tel:${contactInfo.phone.replace(/[^\d+]/g, "")}`} className={`font-bold hover:underline ${contactInfo.phone === "911" ? "text-barn-red text-2xl" : "text-sage text-lg"}`}>
 												{contactInfo.phone}
 											</a>
 										</p>
 									)}
 									{contactInfo.email && (
-										<p>
+										<p className="text-sm">
 											Email:{" "}
 											<a href={`mailto:${contactInfo.email}`} className="text-sage hover:text-sage-dark hover:underline">
 												{contactInfo.email}
@@ -274,14 +274,14 @@ export async function EmergencyDetail({ alertId }: EmergencyDetailProps) {
 						<CardHeader>
 							<CardTitle className="text-lg text-barn-red font-serif">Emergency Services</CardTitle>
 						</CardHeader>
-						<CardContent className="space-y-2">
-							<div className="text-sm">
-								<div className="font-semibold text-barn-red">Emergency: 911</div>
-								<div className="text-[#4A4640]">Police, Fire, Medical</div>
+						<CardContent className="space-y-3">
+							<div>
+								<a href="tel:911" className="text-barn-red font-bold text-2xl hover:underline">911</a>
+								<div className="text-sm text-[#4A4640]">Police, Fire, Medical</div>
 							</div>
-							<div className="text-sm">
-								<div className="font-semibold text-barn-red">Town Emergency: (304) 555-0100</div>
-								<div className="text-[#4A4640]">Non-life-threatening emergencies</div>
+							<div>
+								<a href="tel:3045550100" className="text-barn-red font-bold text-lg hover:underline">(304) 555-0100</a>
+								<div className="text-sm text-[#4A4640]">Non-life-threatening emergencies</div>
 							</div>
 						</CardContent>
 					</Card>
