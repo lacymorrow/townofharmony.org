@@ -8,9 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function MapPage() {
-	return (
-		<main id="main-content">
-			<InteractiveMap />
-		</main>
-	);
+	return <InteractiveMap />;
 }
