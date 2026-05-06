@@ -238,10 +238,12 @@ const FieldWrapper = ({
   children: React.ReactNode;
 }) => {
   const errorId = `${id}-error`;
-  const child = React.Children.only(children) as React.ReactElement<Record<string, unknown>>;
-  const enhancedChild = React.cloneElement(child, {
-    ...(error ? { "aria-describedby": errorId, "aria-invalid": true } : {}),
-  });
+  const child = React.isValidElement(children) ? children : null;
+  const enhancedChild = child
+    ? React.cloneElement(child as React.ReactElement<Record<string, unknown>>, {
+        ...(error ? { "aria-describedby": errorId, "aria-invalid": true } : {}),
+      })
+    : children;
 
   return (
     <div>
