@@ -41,6 +41,7 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
 			contactInfo: "",
 			message: "",
 			newsletter: false,
+			website: "",
 			...defaultValues,
 		},
 	});
@@ -169,6 +170,18 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
 								</div>
 							</FormItem>
 						)}
+					/>
+				</div>
+
+				{/* honeypot — hidden from real users, filled only by bots */}
+				<div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
+					<label htmlFor="website">Website</label>
+					<input
+						id="website"
+						type="text"
+						autoComplete="off"
+						tabIndex={-1}
+						{...form.register("website")}
 					/>
 				</div>
 

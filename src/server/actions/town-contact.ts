@@ -35,6 +35,7 @@ const townContactSchema = z.object({
 	inquiryType: z.enum(INQUIRY_VALUES, { message: "Please select an inquiry type" }),
 	message: z.string().min(10, "Message must be at least 10 characters"),
 	turnstileToken: z.string().optional(),
+	website: z.string().optional(),
 });
 
 export type TownContactFormData = z.infer<typeof townContactSchema>;
@@ -48,7 +49,11 @@ export async function submitTownContactForm(formData: TownContactFormData) {
 		return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid form data" };
 	}
 
-	const { firstName, lastName, email, phone, inquiryType, message, turnstileToken } = parsed.data;
+	const { firstName, lastName, email, phone, inquiryType, message, turnstileToken, website } = parsed.data;
+
+	if (website) {
+		return { success: true };
+	}
 	const inquiryLabel = INQUIRY_LABELS[inquiryType];
 
 	if (isTurnstileConfigured()) {

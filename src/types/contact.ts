@@ -5,6 +5,7 @@ export const contactFormSchema = z.object({
   contactInfo: z.string().optional(),
   message: z.string().min(10, "Message must be at least 10 characters. Please provide more detail so we can assist you."),
   newsletter: z.boolean(),
+  website: z.string().optional(),
 });
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;

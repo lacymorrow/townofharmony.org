@@ -7,6 +7,10 @@ import { contactFormSchema } from "@/types/contact";
 
 export async function submitContactForm(formData: FormData) {
 	try {
+		if (formData.get("website")) {
+			return { success: true };
+		}
+
 		if (isTurnstileConfigured()) {
 			const token = formData.get("turnstileToken") as string | null;
 			if (!token || !(await verifyTurnstileToken(token))) {
