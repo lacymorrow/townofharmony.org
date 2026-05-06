@@ -160,10 +160,13 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 					${biz.phone ? `<p style="margin:0 0 3px; font-size:12px; color:#635E56;">${biz.phone}</p>` : ""}
 					<span style="display:inline-block; margin-top:4px; padding:2px 8px; border-radius:9999px; font-size:11px; font-weight:500; color:#fff; background:${color};">${biz.category}</span>
 					${biz.description ? `<p style="margin:6px 0 0; font-size:11px; color:#635E56; line-height:1.4;">${biz.description}</p>` : ""}
-					<a href="${directionsLink}" target="_blank" rel="noopener noreferrer"
-						style="display:inline-flex; align-items:center; gap:4px; margin-top:6px; padding:3px 10px; border-radius:9999px; font-size:11px; font-weight:500; color:#3D5038; background:#D4CBBD66; text-decoration:none;">
-						&#x2794; Directions
-					</a>
+					<div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
+						${biz.website ? `<a href="${biz.website}" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:9999px; font-size:11px; font-weight:500; color:#fff; background:#2E86AB; text-decoration:none;">&#x1F310; Website</a>` : ""}
+						<a href="${directionsLink}" target="_blank" rel="noopener noreferrer"
+							style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:9999px; font-size:11px; font-weight:500; color:#3D5038; background:#D4CBBD66; text-decoration:none;">
+							&#x2794; Directions
+						</a>
+					</div>
 				</div>`,
 				{ closeButton: true, maxWidth: 260 },
 			);
