@@ -27,7 +27,8 @@ export default function EmergencyPage() {
 						Stay informed and prepared with official emergency information for the Town of Harmony.
 					</p>
 					<p className="text-white font-semibold mt-3">
-						Life-threatening emergency? Call <strong className="text-xl">911</strong>
+						Life-threatening emergency? Call{" "}
+						<a href="tel:911" className="font-bold text-3xl md:text-4xl hover:underline">911</a>
 					</p>
 				</div>
 

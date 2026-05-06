@@ -64,8 +64,20 @@ export default function ResourcesPage() {
 								</h2>
 								<p className="text-sm text-[#4A4640] mt-2">{r.description}</p>
 								{r.contactPhone && (
-									<p className="text-sm text-[#635E56] mt-2">
-										<strong>Phone:</strong> {r.contactPhone}
+									<p className="mt-3 flex items-center gap-2">
+										<span className="text-sm font-medium text-[#635E56]">Phone:</span>
+										{r.externalUrl ? (
+											<span className={`font-bold ${r.contactPhone === "911" ? "text-barn-red text-xl" : "text-sage text-lg"}`}>
+												{r.contactPhone}
+											</span>
+										) : (
+											<a
+												href={`tel:${r.contactPhone.replace(/[^\d+]/g, "")}`}
+												className={`font-bold hover:underline ${r.contactPhone === "911" ? "text-barn-red text-xl" : "text-sage text-lg"}`}
+											>
+												{r.contactPhone}
+											</a>
+										)}
 									</p>
 								)}
 							</Wrapper>

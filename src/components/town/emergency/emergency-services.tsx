@@ -82,11 +82,11 @@ export const EmergencyServices = async () => {
 									<CardContent className="space-y-4">
 										<p className="text-[#4A4640] text-sm">{service.description}</p>
 
-										<div className="flex items-center gap-2">
+										<div className="flex items-center gap-2 flex-wrap">
 											<span className="font-semibold text-[#2D2A24]">Emergency Phone:</span>
 											<a
-												href={`tel:${service.phone}`}
-												className="text-barn-red font-bold text-lg hover:underline"
+												href={`tel:${service.phone.replace(/[^\d+]/g, "")}`}
+												className={`text-barn-red font-bold hover:underline ${service.phone === "911" ? "text-2xl" : "text-lg"}`}
 											>
 												{service.phone}
 											</a>
