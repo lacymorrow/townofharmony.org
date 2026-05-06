@@ -170,6 +170,7 @@ export const routes = {
 	external: {
 		email: `mailto:${siteConfig.creator.email}`,
 		github: siteConfig.repo.url,
+		builderCms: "https://builder.io/content",
 	},
 };
 
