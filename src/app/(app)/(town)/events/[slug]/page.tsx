@@ -51,6 +51,15 @@ export default async function EventDetailPage({ params }: PageProps) {
 					{event.location}
 					{event.locationAddress ? ` · ${event.locationAddress}` : ""}
 				</p>
+				{event.featuredImage && (
+					<div className="mb-8 overflow-hidden rounded-lg">
+						<img
+							src={event.featuredImage}
+							alt={event.title}
+							className="w-full h-72 object-cover"
+						/>
+					</div>
+				)}
 				<div className="prose prose-sage max-w-none text-[#2D2A24]">
 					<p>{event.content}</p>
 				</div>

@@ -10,6 +10,7 @@ interface EventCardProps {
 		title: string;
 		slug: string;
 		description: string | null;
+		featuredImage: string | null;
 		eventDate: string;
 		eventTime: string | null;
 		endTime: string | null;
@@ -29,6 +30,15 @@ export function EventCard({ event }: EventCardProps) {
 
 	return (
 		<Card className="hover:shadow-lg transition-shadow">
+			{event.featuredImage && (
+				<div className="h-48 overflow-hidden rounded-t-lg">
+					<img
+						src={event.featuredImage}
+						alt={event.title}
+						className="w-full h-full object-cover"
+					/>
+				</div>
+			)}
 			<CardHeader>
 				<div className="flex justify-between items-start gap-4">
 					<div className="flex-1">
