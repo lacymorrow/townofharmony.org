@@ -9,6 +9,8 @@ export interface SewerRateTier {
 	stripeSubPriceEnvVar: string;
 }
 
+export type SewerRateDisplay = Pick<SewerRateTier, "id" | "name" | "description" | "monthlyRate">;
+
 export const sewerRateTiers: SewerRateTier[] = [
 	{
 		id: "intown-residential",
