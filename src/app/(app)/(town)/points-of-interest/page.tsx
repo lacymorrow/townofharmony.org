@@ -22,19 +22,19 @@ export default function PointsOfInterestPage() {
 							key={p.id}
 							className="bg-white rounded-lg border border-stone p-5"
 						>
-							<p className="text-xs font-bold text-sage uppercase">
+							<p className="text-sm font-bold text-sage uppercase">
 								{p.category}
 							</p>
 							<h2 className="text-lg font-serif font-bold text-sage-dark mt-1">
 								{p.name}
 							</h2>
-							<p className="text-sm text-[#635E56] mt-1">{p.address}</p>
-							<p className="text-[#2D2A24] text-sm mt-2">{p.description}</p>
-							<p className="text-xs text-[#635E56] mt-3">
+							<p className="text-base text-[#635E56] mt-1">{p.address}</p>
+							<p className="text-[#2D2A24] text-base mt-2">{p.description}</p>
+							<p className="text-sm text-[#635E56] mt-3">
 								<strong>Hours:</strong> {p.hours}
 							</p>
 							{p.phone && (
-								<p className="text-xs text-[#635E56] mt-1">
+								<p className="text-sm text-[#635E56] mt-1">
 									<strong>Phone:</strong>{" "}
 									<a
 										href={`tel:${p.phone.replace(/[^0-9+]/g, "")}`}
@@ -45,7 +45,7 @@ export default function PointsOfInterestPage() {
 								</p>
 							)}
 							{p.amenities.length > 0 && (
-								<p className="text-xs text-[#635E56] mt-2">
+								<p className="text-sm text-[#635E56] mt-2">
 									<strong>Amenities:</strong> {p.amenities.join(", ")}
 								</p>
 							)}

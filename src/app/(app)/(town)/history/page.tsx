@@ -39,13 +39,13 @@ export default function HistoryPage() {
 							key={p.id}
 							className="bg-white rounded-lg border border-stone p-5"
 						>
-							<p className="text-xs font-bold text-sage uppercase">{p.era}</p>
+							<p className="text-sm font-bold text-sage uppercase">{p.era}</p>
 							<h3 className="text-xl font-serif font-bold text-sage-dark mt-1">
 								{p.title}
 							</h3>
 							<p className="text-[#2D2A24] mt-2">{p.content}</p>
 							{p.highlights && p.highlights.length > 0 && (
-								<ul className="mt-3 space-y-1 list-disc list-inside text-sm text-[#4A4640]">
+								<ul className="mt-3 space-y-1 list-disc list-inside text-base text-[#4A4640]">
 									{p.highlights.map((h) => (
 										<li key={h}>{h}</li>
 									))}
@@ -63,15 +63,15 @@ export default function HistoryPage() {
 							className="bg-white rounded-lg border border-stone p-5"
 						>
 							{l.year && (
-								<p className="text-xs font-bold text-sage uppercase">{l.year}</p>
+								<p className="text-sm font-bold text-sage uppercase">{l.year}</p>
 							)}
 							<h3 className="text-lg font-serif font-bold text-sage-dark mt-1">
 								{l.title}
 							</h3>
 							{l.address && (
-								<p className="text-sm text-[#635E56] mt-1">{l.address}</p>
+								<p className="text-base text-[#635E56] mt-1">{l.address}</p>
 							)}
-							<p className="text-[#2D2A24] text-sm mt-2">{l.content}</p>
+							<p className="text-[#2D2A24] text-base mt-2">{l.content}</p>
 						</div>
 					))}
 				</div>

@@ -258,7 +258,7 @@ export const TownMeetingsList = ({
 											<span className="text-3xl font-bold leading-tight">
 												{meetingDate.getDate()}
 											</span>
-											<span className="text-xs opacity-80">
+											<span className="text-sm opacity-80">
 												{meetingDate.getFullYear()}
 											</span>
 										</div>
@@ -285,12 +285,12 @@ export const TownMeetingsList = ({
 											<h2 className="text-lg font-semibold text-[#2D2A24] group-hover:text-sage-dark transition-colors mb-1">
 												{meeting.title}
 											</h2>
-											<div className="flex flex-wrap gap-4 text-sm text-[#635E56] mb-2">
+											<div className="flex flex-wrap gap-4 text-base text-[#635E56] mb-2">
 												<span>{meeting.meetingTime}</span>
 												<span>{meeting.location}</span>
 											</div>
 											{meeting.attendees.length > 0 && (
-												<p className="text-xs text-[#635E56]">
+												<p className="text-sm text-[#635E56]">
 													Attendees: {meeting.attendees.slice(0, 3).join(", ")}
 													{meeting.attendees.length > 3 &&
 														` +${meeting.attendees.length - 3} more`}

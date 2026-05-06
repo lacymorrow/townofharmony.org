@@ -66,11 +66,11 @@ export default function OurTeamPage() {
 												<h3 className="text-lg font-semibold text-[#2D2A24]">
 													{member.name}
 												</h3>
-												<p className="text-sm text-[#4A4640]">{member.title}</p>
+												<p className="text-base text-[#4A4640]">{member.title}</p>
 											</div>
 										</div>
 										{member.phone && (
-											<p className="text-sm">
+											<p className="text-base">
 												<a
 													href={`tel:${member.phone.replace(/[^0-9+]/g, "")}`}
 													className="text-[#4A4640] hover:text-sage-dark"
@@ -80,12 +80,12 @@ export default function OurTeamPage() {
 											</p>
 										)}
 										{member.mayorSince && (
-											<p className="text-xs text-[#635E56] pt-1">
+											<p className="text-sm text-[#635E56] pt-1">
 												Mayor since: {member.mayorSince}
 											</p>
 										)}
 										{member.termExpires && (
-											<p className="text-xs text-[#635E56] pt-1">
+											<p className="text-sm text-[#635E56] pt-1">
 												Term: {member.termExpires}
 											</p>
 										)}

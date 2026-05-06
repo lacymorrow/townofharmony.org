@@ -99,7 +99,7 @@ export const TownNewsDetail = ({ slug: slugProp }: TownNewsDetailProps) => {
 				</h1>
 
 				{/* Meta */}
-				<div className="flex flex-wrap items-center gap-4 text-sm text-sage-dark/60 mb-8 border-b border-stone pb-6">
+				<div className="flex flex-wrap items-center gap-4 text-base text-sage-dark/60 mb-8 border-b border-stone pb-6">
 					<time dateTime={article.publishedAt}>{publishedDate}</time>
 					{article.author && (
 						<>

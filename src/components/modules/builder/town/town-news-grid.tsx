@@ -204,10 +204,10 @@ export const TownNewsGrid = ({
 									<h2 className="text-lg font-semibold text-[#2D2A24] mb-2 group-hover:text-sage-dark transition-colors line-clamp-2">
 										{article.title}
 									</h2>
-									<p className="text-sm text-[#4A4640] mb-3 line-clamp-3">
+									<p className="text-base text-[#4A4640] mb-3 line-clamp-3">
 										{article.excerpt}
 									</p>
-									<time className="text-xs text-[#635E56]">
+									<time className="text-sm text-[#635E56]">
 										{new Date(article.publishedAt).toLocaleDateString("en-US", {
 											month: "long",
 											day: "numeric",

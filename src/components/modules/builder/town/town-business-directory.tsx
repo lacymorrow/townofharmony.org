@@ -235,11 +235,11 @@ export const TownBusinessDirectory = ({
 										)}
 									</div>
 
-									<p className="text-sm text-[#4A4640] mb-3 line-clamp-2">
+									<p className="text-base text-[#4A4640] mb-3 line-clamp-2">
 										{business.description}
 									</p>
 
-									<div className="space-y-1 text-xs text-[#635E56]">
+									<div className="space-y-1 text-sm text-[#635E56]">
 										<p>
 											{business.address}, {business.city}, {business.stateCode}{" "}
 											{business.zipCode}

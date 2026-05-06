@@ -99,12 +99,12 @@ export const TownHistoryTimeline = ({
 												{/* Era / Year Badge */}
 												<div className="flex items-center gap-2 mb-2">
 													{article.era && (
-														<span className="bg-sage-dark text-white px-2.5 py-0.5 rounded-full text-xs font-medium">
+														<span className="bg-sage-dark text-white px-2.5 py-0.5 rounded-full text-sm font-medium">
 															{article.era}
 														</span>
 													)}
 													{article.year && (
-														<span className="bg-wheat/30 text-[#5C4E1A] px-2.5 py-0.5 rounded-full text-xs font-medium">
+														<span className="bg-wheat/30 text-[#5C4E1A] px-2.5 py-0.5 rounded-full text-sm font-medium">
 															{article.year}
 														</span>
 													)}
@@ -117,7 +117,7 @@ export const TownHistoryTimeline = ({
 													{article.title}
 												</h2>
 
-												<p className="text-sm text-[#4A4640] mb-3">
+												<p className="text-base text-[#4A4640] mb-3">
 													{article.description}
 												</p>
 
@@ -130,7 +130,7 @@ export const TownHistoryTimeline = ({
 																.map((highlight, idx) => (
 																	<li
 																		key={idx}
-																		className="flex items-start gap-1.5 text-xs text-[#635E56]"
+																		className="flex items-start gap-1.5 text-sm text-[#635E56]"
 																	>
 																		<svg
 																			className="w-3 h-3 mt-0.5 text-sage flex-shrink-0"
@@ -151,7 +151,7 @@ export const TownHistoryTimeline = ({
 
 												{/* Address for landmarks */}
 												{article.address && (
-													<p className="text-xs text-[#635E56] mt-3 pt-3 border-t border-stone">
+													<p className="text-sm text-[#635E56] mt-3 pt-3 border-t border-stone">
 														{article.address}
 													</p>
 												)}

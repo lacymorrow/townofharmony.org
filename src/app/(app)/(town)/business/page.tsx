@@ -34,13 +34,13 @@ export default function BusinessDirectoryPage() {
 						key={b.id}
 						className="bg-white rounded-lg border border-stone p-5 mb-4"
 					>
-						<p className="text-xs font-bold text-sage uppercase">
+						<p className="text-sm font-bold text-sage uppercase">
 							{b.category}
 						</p>
 						<h2 className="text-lg font-serif font-bold text-sage-dark mt-1">
 							{b.name}
 						</h2>
-						<p className="text-[#2D2A24] text-sm mt-1">{b.description}</p>
+						<p className="text-[#2D2A24] text-base mt-1">{b.description}</p>
 						<dl className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 text-sm text-[#4A4640]">
 							<div>
 								<dt className="font-semibold inline">Address: </dt>

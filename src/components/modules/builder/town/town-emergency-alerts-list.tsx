@@ -122,11 +122,11 @@ export const TownEmergencyAlertsList = ({
 											>
 												{alert.level}
 											</span>
-											<span className="text-xs text-[#4A4640]">
+											<span className="text-base text-[#4A4640]">
 												Posted {createdDate}
 											</span>
 											{endsDate && (
-												<span className="text-xs text-[#4A4640]">
+												<span className="text-base text-[#4A4640]">
 													Expires {endsDate}
 												</span>
 											)}
@@ -143,7 +143,7 @@ export const TownEmergencyAlertsList = ({
 											{alert.title}
 										</h3>
 
-										<p className="text-sm text-[#4A4640] leading-relaxed mb-3">
+										<p className="text-base text-[#4A4640] leading-relaxed mb-3">
 											{alert.content}
 										</p>
 
@@ -182,7 +182,7 @@ export const TownEmergencyAlertsList = ({
 															) => (
 																<li
 																	key={i}
-																	className="text-sm text-[#4A4640]"
+																	className="text-base text-[#4A4640]"
 																>
 																	{
 																		instruction

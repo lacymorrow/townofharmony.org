@@ -211,7 +211,7 @@ export const TownEventsList = ({
 										<span className="text-3xl font-bold leading-tight">
 											{eventDate.getDate()}
 										</span>
-										<span className="text-xs opacity-80">
+										<span className="text-sm opacity-80">
 											{eventDate.toLocaleDateString("en-US", {
 												weekday: "short",
 											})}
@@ -238,10 +238,10 @@ export const TownEventsList = ({
 										<h2 className="text-lg font-semibold text-[#2D2A24] group-hover:text-sage-dark transition-colors mb-1">
 											{event.title}
 										</h2>
-										<p className="text-sm text-[#4A4640] mb-2 line-clamp-2">
+										<p className="text-base text-[#4A4640] mb-2 line-clamp-2">
 											{event.description}
 										</p>
-										<div className="flex flex-wrap gap-4 text-xs text-[#635E56]">
+										<div className="flex flex-wrap gap-4 text-sm text-[#635E56]">
 											<span>
 												{event.eventTime}
 												{event.endTime ? ` - ${event.endTime}` : ""}
