@@ -329,6 +329,35 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			num("sortOrder"),
 		],
 	},
+
+	// --- Map Businesses (dynamic sync from Google Places + manual overrides) ---
+	{
+		name: "town-map-business",
+		kind: "data",
+		fields: [
+			text("name", true),
+			text("address", true),
+			text("phone"),
+			enumText("category", [
+				"Restaurant & Food",
+				"Retail & Shopping",
+				"Auto & Transportation",
+				"Health & Wellness",
+				"Community & Government",
+				"Churches & Religious",
+				"Gas & Fuel",
+				"Banking & Finance",
+				"Services & Contractors",
+				"Other",
+			]),
+			num("lat"),
+			num("lng"),
+			longText("description"),
+			text("googlePlaceId"),
+			bool("isOverride", false),
+			text("businessStatus"),
+		],
+	},
 ];
 
 export type { BuilderField, BuilderModelDefinition };
