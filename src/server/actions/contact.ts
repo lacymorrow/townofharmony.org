@@ -2,6 +2,7 @@
 
 import { siteConfig } from "@/config/site-config";
 import { resend } from "@/lib/resend";
+import { contactConfirmationEmail } from "@/lib/email-templates";
 import { addContactToAudience } from "@/server/actions/subscribe";
 import { contactFormSchema } from "@/types/contact";
 
@@ -38,6 +39,25 @@ export async function submitContactForm(formData: FormData) {
                 <p><strong>Newsletter:</strong> ${validatedData.newsletter ? "Yes" : "No"}</p>
             `,
     });
+
+    // Send confirmation email to user if they provided an email address
+    const isEmail = validatedData.contactInfo?.includes("@");
+    if (isEmail && validatedData.contactInfo) {
+      try {
+        await resend.emails.send({
+          from: `Town of Harmony <${siteConfig.email.noreply}>`,
+          to: [validatedData.contactInfo],
+          subject: "We received your message — Town of Harmony",
+          html: contactConfirmationEmail({
+            name: validatedData.name,
+            contactInfo: validatedData.contactInfo,
+            message: validatedData.message,
+          }),
+        });
+      } catch (error) {
+        console.error("Error sending contact confirmation email:", error);
+      }
+    }
 
     // Handle newsletter subscription if requested
     if (validatedData.newsletter && validatedData.contactInfo?.includes("@")) {

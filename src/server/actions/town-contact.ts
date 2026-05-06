@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { siteConfig } from "@/config/site-config";
 import { resend } from "@/lib/resend";
+import { townContactConfirmationEmail } from "@/lib/email-templates";
 
 const INQUIRY_VALUES = [
   "general",
@@ -75,6 +76,25 @@ ${phone ? `<tr><td style="padding:4px 12px 4px 0;font-weight:bold;">Phone</td><t
 <p>${esc(message).replace(/\n/g, "<br>")}</p>
       `.trim(),
     });
+
+    // Send confirmation email to the submitter
+    try {
+      await resend.emails.send({
+        from: `Town of Harmony <${siteConfig.email.noreply}>`,
+        to: [email],
+        subject: "Your inquiry has been received — Town of Harmony",
+        html: townContactConfirmationEmail({
+          firstName,
+          lastName,
+          email,
+          phone,
+          inquiryType: inquiryLabel,
+          message,
+        }),
+      });
+    } catch (error) {
+      console.error("Error sending town contact confirmation email:", error);
+    }
 
     return { success: true };
   } catch (error) {
