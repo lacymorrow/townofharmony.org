@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { MeetingsList } from "@/components/town/meetings/meetings-list";
+import { MeetingsFilters } from "@/components/town/meetings/meetings-filters";
 
 export const metadata: Metadata = {
 	title: "Town Meetings | Town of Harmony, NC",
@@ -26,6 +28,12 @@ export default async function MeetingsPage({
 				<p className="mt-2 text-lg text-muted-foreground">
 					Stay informed about Board of Aldermen and Public Hearing meetings.
 				</p>
+			</div>
+
+			<div className="mb-6">
+				<Suspense>
+					<MeetingsFilters />
+				</Suspense>
 			</div>
 
 			<MeetingsList type={type} month={month} year={year} status={status} page={page} />
