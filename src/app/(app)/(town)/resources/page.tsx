@@ -52,13 +52,13 @@ export default function ResourcesPage() {
 
 						return (
 							<Wrapper key={r.id}>
-								<p className="text-xs font-bold text-sage uppercase">
+								<p className="text-sm font-bold text-sage uppercase">
 									{r.category}
 								</p>
 								<h2 className="text-lg font-serif font-bold text-sage-dark mt-1">
 									{r.title}
 								</h2>
-								<p className="text-sm text-[#4A4640] mt-2">{r.description}</p>
+								<p className="text-base text-[#4A4640] mt-2">{r.description}</p>
 								{r.contactPhone && (
 									<p className="text-sm text-[#635E56] mt-2">
 										<strong>Phone:</strong> {r.contactPhone}

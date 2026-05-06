@@ -114,7 +114,7 @@ export const TownElectionDetail = ({
 					</h2>
 					<dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<div>
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Election Day
 							</dt>
 							<dd className="text-sage-dark font-bold text-lg">
@@ -122,7 +122,7 @@ export const TownElectionDetail = ({
 							</dd>
 						</div>
 						<div>
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Voter Registration Deadline
 							</dt>
 							<dd className="text-sage-dark font-medium">
@@ -131,7 +131,7 @@ export const TownElectionDetail = ({
 						</div>
 						{election.earlyVotingStart && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Early Voting Begins
 								</dt>
 								<dd className="text-sage-dark font-medium">
@@ -143,7 +143,7 @@ export const TownElectionDetail = ({
 						)}
 						{election.earlyVotingEnd && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Early Voting Ends
 								</dt>
 								<dd className="text-sage-dark font-medium">
@@ -169,10 +169,10 @@ export const TownElectionDetail = ({
 									<h3 className="font-semibold text-sage-dark mb-1">
 										{location.name}
 									</h3>
-									<p className="text-sm text-sage-dark/70 mb-1">
+									<p className="text-base text-sage-dark/70 mb-1">
 										{location.address}
 									</p>
-									<p className="text-sm text-sage-dark/70">
+									<p className="text-base text-sage-dark/70">
 										<span className="font-medium text-sage-dark/80">
 											Hours:
 										</span>{" "}
@@ -213,7 +213,7 @@ export const TownElectionDetail = ({
 													<span className="inline-block bg-wheat/30 text-sage-dark px-2.5 py-0.5 rounded-full text-xs font-semibold mb-3">
 														{candidate.party}
 													</span>
-													<p className="text-sm text-sage-dark/75 leading-relaxed">
+													<p className="text-base text-sage-dark/75 leading-relaxed">
 														{candidate.bio}
 													</p>
 												</div>

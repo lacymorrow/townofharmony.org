@@ -36,13 +36,13 @@ export const EmergencyContacts = () => {
 							</div>
 
 							{service.description && (
-								<p className="text-sm text-[#4A4640] pt-2 border-t border-[#DDD7CC]">{service.description}</p>
+								<p className="text-base text-[#4A4640] pt-2 border-t border-[#DDD7CC]">{service.description}</p>
 							)}
 
 							{service.preparedness.length > 0 && (
 								<div className="pt-2">
-									<p className="text-xs font-medium text-[#2D2A24] mb-1">Be Prepared:</p>
-									<ul className="text-xs text-[#635E56] space-y-0.5 list-disc list-inside">
+									<p className="text-sm font-medium text-[#2D2A24] mb-1">Be Prepared:</p>
+									<ul className="text-sm text-[#635E56] space-y-0.5 list-disc list-inside">
 										{service.preparedness.slice(0, 3).map((tip) => (
 											<li key={tip}>{tip}</li>
 										))}
@@ -57,7 +57,7 @@ export const EmergencyContacts = () => {
 			<Card className="bg-sage/5 border-sage/20">
 				<CardContent className="p-6">
 					<h3 className="font-semibold text-sage-dark mb-3 font-serif">Additional Resources</h3>
-					<div className="space-y-2 text-sm text-[#4A4640]">
+					<div className="space-y-2 text-base text-[#4A4640]">
 						<p>
 							<strong className="text-[#2D2A24]">North Carolina Highway Patrol:</strong>{" "}
 							<a href="tel:1-800-662-7956" className="text-sage hover:text-sage-dark underline">

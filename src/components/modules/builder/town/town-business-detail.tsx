@@ -121,7 +121,7 @@ export const TownBusinessDetail = ({
 					<dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						{business.contactName && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Contact
 								</dt>
 								<dd className="text-sage-dark font-medium">
@@ -131,7 +131,7 @@ export const TownBusinessDetail = ({
 						)}
 						{business.phone && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Phone
 								</dt>
 								<dd>
@@ -146,7 +146,7 @@ export const TownBusinessDetail = ({
 						)}
 						{business.email && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Email
 								</dt>
 								<dd>
@@ -161,7 +161,7 @@ export const TownBusinessDetail = ({
 						)}
 						{business.website && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Website
 								</dt>
 								<dd>
@@ -177,7 +177,7 @@ export const TownBusinessDetail = ({
 							</div>
 						)}
 						<div className="sm:col-span-2">
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Address
 							</dt>
 							<dd className="text-sage-dark font-medium">
@@ -194,7 +194,7 @@ export const TownBusinessDetail = ({
 							Business Hours
 						</h2>
 						<div className="bg-cream border border-stone rounded-xl p-5">
-							<p className="text-sm text-sage-dark/80 whitespace-pre-line">
+							<p className="text-base text-sage-dark/80 whitespace-pre-line">
 								{business.hours}
 							</p>
 						</div>

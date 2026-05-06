@@ -23,7 +23,7 @@ export function CommunitySpotlight() {
 						</p>
 						<Link
 							href="/history"
-							className="text-sage font-semibold text-[15px] hover:text-sage-dark hover:underline transition-colors cursor-pointer"
+							className="text-sage font-semibold text-base hover:text-sage-dark hover:underline transition-colors cursor-pointer"
 						>
 							Learn More &rarr;
 						</Link>

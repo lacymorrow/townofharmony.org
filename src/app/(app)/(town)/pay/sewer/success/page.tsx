@@ -68,7 +68,7 @@ export default async function SewerPaymentSuccessPage({ searchParams }: PageProp
 							{isSubscription ? "Auto-Pay (Monthly)" : "One-Time Payment"}
 						</span>
 					</div>
-					<p className="pt-2 text-xs text-muted-foreground">
+					<p className="pt-2 text-sm text-muted-foreground">
 						A receipt has been sent to your email address.
 					</p>
 				</CardContent>
@@ -90,7 +90,7 @@ export default async function SewerPaymentSuccessPage({ searchParams }: PageProp
 				</Link>
 			</div>
 
-			<p className="mt-8 text-center text-xs text-muted-foreground">
+			<p className="mt-8 text-center text-sm text-muted-foreground">
 				Questions about your payment? Contact {sewerContactInfo.department} at{" "}
 				{sewerContactInfo.phone}
 			</p>

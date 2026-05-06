@@ -40,7 +40,7 @@ export function CandidateCard({ candidate }: CandidateCardProps) {
 
 					<div className="flex-1 min-w-0">
 						<CardTitle className="text-lg">{candidate.name}</CardTitle>
-						<p className="text-sm text-[#4A4640] mb-2">{candidate.position}</p>
+						<p className="text-base text-[#4A4640] mb-2">{candidate.position}</p>
 						{candidate.party && (
 							<Badge variant="outline" className="text-xs">
 								{candidate.party}
@@ -53,7 +53,7 @@ export function CandidateCard({ candidate }: CandidateCardProps) {
 			<CardContent className="space-y-4">
 				{candidate.bio && (
 					<div>
-						<p className="text-sm text-[#4A4640] leading-relaxed">
+						<p className="text-base text-[#4A4640] leading-relaxed">
 							{candidate.bio.length > 300 ? `${candidate.bio.substring(0, 300)}...` : candidate.bio}
 						</p>
 					</div>

@@ -94,7 +94,7 @@ export const TownTeamMembers = () => {
 												<h3 className="text-lg font-semibold text-[#2D2A24]">
 													{member.name}
 												</h3>
-												<p className="text-sm font-medium text-sage-dark">
+												<p className="text-base font-medium text-sage-dark">
 													{member.title}
 												</p>
 												{member.department && (
@@ -154,12 +154,12 @@ export const TownTeamMembers = () => {
 												</div>
 											)}
 											{member.mayorSince && (
-												<p className="text-xs text-[#635E56] pt-1">
+												<p className="text-sm text-[#635E56] pt-1">
 													Mayor since: {member.mayorSince}
 												</p>
 											)}
 											{member.termExpires && (
-												<p className="text-xs text-[#635E56] pt-1">
+												<p className="text-sm text-[#635E56] pt-1">
 													Term: {member.termExpires}
 												</p>
 											)}

@@ -124,7 +124,7 @@ export const TownEventDetail = ({ slug: slugProp }: TownEventDetailProps) => {
 					</h2>
 					<dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<div>
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Date
 							</dt>
 							<dd className="text-sage-dark font-medium">
@@ -132,7 +132,7 @@ export const TownEventDetail = ({ slug: slugProp }: TownEventDetailProps) => {
 							</dd>
 						</div>
 						<div>
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Time
 							</dt>
 							<dd className="text-sage-dark font-medium">
@@ -141,7 +141,7 @@ export const TownEventDetail = ({ slug: slugProp }: TownEventDetailProps) => {
 							</dd>
 						</div>
 						<div>
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Location
 							</dt>
 							<dd className="text-sage-dark font-medium">
@@ -150,7 +150,7 @@ export const TownEventDetail = ({ slug: slugProp }: TownEventDetailProps) => {
 						</div>
 						{event.locationAddress && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Address
 								</dt>
 								<dd className="text-sage-dark font-medium">
@@ -160,7 +160,7 @@ export const TownEventDetail = ({ slug: slugProp }: TownEventDetailProps) => {
 						)}
 						{event.organizer && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Organizer
 								</dt>
 								<dd className="text-sage-dark font-medium">
@@ -170,7 +170,7 @@ export const TownEventDetail = ({ slug: slugProp }: TownEventDetailProps) => {
 						)}
 						{event.contactEmail && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Email
 								</dt>
 								<dd>
@@ -185,7 +185,7 @@ export const TownEventDetail = ({ slug: slugProp }: TownEventDetailProps) => {
 						)}
 						{event.contactPhone && (
 							<div>
-								<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+								<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 									Phone
 								</dt>
 								<dd>

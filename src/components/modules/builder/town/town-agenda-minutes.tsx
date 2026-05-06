@@ -122,7 +122,7 @@ export const TownAgendaMinutes = () => {
 
 									{/* Meeting details */}
 									<div className="p-6">
-										<div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#4A4640] mb-4">
+										<div className="flex flex-wrap gap-x-6 gap-y-2 text-base text-[#4A4640] mb-4">
 											<span className="flex items-center gap-1.5">
 												<Calendar className="h-4 w-4 text-sage" />
 												{formatDate(
@@ -144,7 +144,7 @@ export const TownAgendaMinutes = () => {
 												<p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-2">
 													Agenda
 												</p>
-												<pre className="text-sm text-[#4A4640] whitespace-pre-wrap font-sans leading-relaxed">
+												<pre className="text-base text-[#4A4640] whitespace-pre-wrap font-sans leading-relaxed">
 													{meeting.agenda}
 												</pre>
 											</div>
@@ -155,7 +155,7 @@ export const TownAgendaMinutes = () => {
 												<p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-1">
 													Expected Attendees
 												</p>
-												<p className="text-sm text-[#4A4640]">
+												<p className="text-base text-[#4A4640]">
 													{meeting.attendees.join(
 														", ",
 													)}
@@ -194,7 +194,7 @@ export const TownAgendaMinutes = () => {
 
 									{/* Meeting details */}
 									<div className="p-6">
-										<div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#4A4640] mb-4">
+										<div className="flex flex-wrap gap-x-6 gap-y-2 text-base text-[#4A4640] mb-4">
 											<span className="flex items-center gap-1.5">
 												<Calendar className="h-4 w-4 text-sage" />
 												{formatDate(
@@ -213,7 +213,7 @@ export const TownAgendaMinutes = () => {
 												<p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-2">
 													Minutes
 												</p>
-												<pre className="text-sm text-[#4A4640] whitespace-pre-wrap font-sans leading-relaxed">
+												<pre className="text-base text-[#4A4640] whitespace-pre-wrap font-sans leading-relaxed">
 													{meeting.minutes}
 												</pre>
 											</div>

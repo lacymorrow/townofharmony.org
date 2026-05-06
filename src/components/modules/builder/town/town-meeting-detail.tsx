@@ -107,7 +107,7 @@ export const TownMeetingDetail = ({
 					</h2>
 					<dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<div>
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Date
 							</dt>
 							<dd className="text-sage-dark font-medium">
@@ -115,7 +115,7 @@ export const TownMeetingDetail = ({
 							</dd>
 						</div>
 						<div>
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Time
 							</dt>
 							<dd className="text-sage-dark font-medium">
@@ -123,7 +123,7 @@ export const TownMeetingDetail = ({
 							</dd>
 						</div>
 						<div>
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Location
 							</dt>
 							<dd className="text-sage-dark font-medium">
@@ -131,7 +131,7 @@ export const TownMeetingDetail = ({
 							</dd>
 						</div>
 						<div>
-							<dt className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+							<dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
 								Open to Public
 							</dt>
 							<dd className="text-sage-dark font-medium">
@@ -151,7 +151,7 @@ export const TownMeetingDetail = ({
 							{meeting.attendees.map((attendee) => (
 								<li
 									key={attendee}
-									className="px-5 py-3 text-sage-dark/85 text-sm"
+									className="px-5 py-3 text-sage-dark/85 text-base"
 								>
 									{attendee}
 								</li>
@@ -167,7 +167,7 @@ export const TownMeetingDetail = ({
 							Agenda
 						</h2>
 						<div className="bg-cream border border-stone rounded-xl p-6">
-							<pre className="whitespace-pre-wrap text-sm text-sage-dark/85 leading-relaxed font-sans">
+							<pre className="whitespace-pre-wrap text-base text-sage-dark/85 leading-relaxed font-sans">
 								{meeting.agenda}
 							</pre>
 						</div>
@@ -182,7 +182,7 @@ export const TownMeetingDetail = ({
 						</h2>
 						{meeting.minutes && (
 							<div className="bg-cream border border-stone rounded-xl p-6 mb-3">
-								<pre className="whitespace-pre-wrap text-sm text-sage-dark/85 leading-relaxed font-sans">
+								<pre className="whitespace-pre-wrap text-base text-sage-dark/85 leading-relaxed font-sans">
 									{meeting.minutes}
 								</pre>
 							</div>

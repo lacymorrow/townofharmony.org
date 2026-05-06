@@ -118,7 +118,7 @@ export function UpcomingMeetings({ limit = 5, className }: UpcomingMeetingsProps
 										</div>
 									</div>
 
-									<div className="text-xs text-muted-foreground text-right">
+									<div className="text-sm text-muted-foreground text-right">
 										{meeting.agenda && <div className="mb-1">Agenda available</div>}
 										{(meeting.videoUrl || meeting.audioUrl) && <div>Recording planned</div>}
 									</div>

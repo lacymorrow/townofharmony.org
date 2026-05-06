@@ -204,7 +204,7 @@ export const TownElectionsList = ({
 									<div className="bg-sage-dark text-white p-4">
 										<div className="flex items-center justify-between mb-2">
 											{getStatusBadge(election.electionDate)}
-											<span className="text-xs opacity-80">
+											<span className="text-sm opacity-80">
 												{election.candidates.length} candidate
 												{election.candidates.length !== 1 ? "s" : ""}
 											</span>
@@ -216,7 +216,7 @@ export const TownElectionsList = ({
 
 									{/* Body */}
 									<div className="p-5">
-										<p className="text-sm text-[#4A4640] mb-4 line-clamp-2">
+										<p className="text-base text-[#4A4640] mb-4 line-clamp-2">
 											{election.description}
 										</p>
 
@@ -266,7 +266,7 @@ export const TownElectionsList = ({
 
 										{/* Polling Locations Count */}
 										{election.pollingLocations.length > 0 && (
-											<p className="mt-3 text-xs text-[#635E56]">
+											<p className="mt-3 text-sm text-[#635E56]">
 												{election.pollingLocations.length} polling location
 												{election.pollingLocations.length !== 1 ? "s" : ""}
 											</p>

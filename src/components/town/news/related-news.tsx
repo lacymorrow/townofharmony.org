@@ -37,7 +37,7 @@ export async function RelatedNews({ currentArticleId, categories }: RelatedNewsP
 							>
 								<h4 className="font-medium mb-1 line-clamp-2">{article.title}</h4>
 								{article.publishedAt && (
-									<div className="flex items-center gap-1 text-xs text-[#635E56]">
+									<div className="flex items-center gap-1 text-sm text-[#635E56]">
 										<Calendar className="h-3 w-3" />
 										{new Date(article.publishedAt).toLocaleDateString("en-US", {
 											month: "short",

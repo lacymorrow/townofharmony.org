@@ -152,13 +152,13 @@ export const TownEmergencyServices = () => {
 														{service.phone}
 													</a>
 
-													<p className="text-sm text-[#4A4640] leading-relaxed">
+													<p className="text-base text-[#4A4640] leading-relaxed">
 														{service.description}
 													</p>
 
 													{service.preparedness.length > 0 && (
 														<details className="mt-4 pt-3 border-t border-[#DDD7CC]">
-															<summary className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider cursor-pointer hover:text-sage-dark transition-colors">
+															<summary className="text-sm font-semibold text-[#4A4640] uppercase tracking-wider cursor-pointer hover:text-sage-dark transition-colors">
 																Preparedness Tips
 															</summary>
 															<ul className="mt-2 space-y-1">
