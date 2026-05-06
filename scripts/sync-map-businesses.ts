@@ -16,11 +16,10 @@ config();
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-const GOOGLE_PLACES_API_KEY =
-	process.env.GOOGLE_PLACES_API_KEY ?? process.env.GOOGLE_API_KEY;
+const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
 
 if (!GOOGLE_PLACES_API_KEY) {
-	console.error("Missing GOOGLE_PLACES_API_KEY or GOOGLE_API_KEY env var");
+	console.error("Missing GOOGLE_PLACES_API_KEY env var");
 	process.exit(1);
 }
 

@@ -63,22 +63,23 @@ interface MergedBusiness {
 	isNew: boolean;
 }
 
+const ADDRESS_ABBREVS: Record<string, string> = {
+	street: "st", st: "st",
+	avenue: "ave", ave: "ave",
+	road: "rd", rd: "rd",
+	drive: "dr", dr: "dr",
+	highway: "hwy", hwy: "hwy",
+	lane: "ln", ln: "ln",
+	boulevard: "blvd", blvd: "blvd",
+};
+
 function normalizeAddress(addr: string): string {
 	return addr
 		.toLowerCase()
 		.replace(/[.,#]/g, "")
 		.replace(/\s+/g, " ")
 		.replace(/\b(street|st|avenue|ave|road|rd|drive|dr|highway|hwy|lane|ln|boulevard|blvd)\b/g, (m) => {
-			const abbrevs: Record<string, string> = {
-				street: "st", st: "st",
-				avenue: "ave", ave: "ave",
-				road: "rd", rd: "rd",
-				drive: "dr", dr: "dr",
-				highway: "hwy", hwy: "hwy",
-				lane: "ln", ln: "ln",
-				boulevard: "blvd", blvd: "blvd",
-			};
-			return abbrevs[m] ?? m;
+			return ADDRESS_ABBREVS[m] ?? m;
 		})
 		.trim();
 }
@@ -93,17 +94,29 @@ async function fetchBuilderBusinesses(): Promise<BuilderMapBusiness[]> {
 		return [];
 	}
 
-	const res = await fetch(
-		`https://cdn.builder.io/api/v3/content/town-map-business?apiKey=${BUILDER_API_KEY}&limit=100&fields=data`,
-	);
+	const all: BuilderMapBusiness[] = [];
+	const limit = 100;
+	let offset = 0;
 
-	if (!res.ok) {
-		console.error(`  Builder.io fetch failed: ${res.status}`);
-		return [];
+	while (true) {
+		const res = await fetch(
+			`https://cdn.builder.io/api/v3/content/town-map-business?apiKey=${BUILDER_API_KEY}&limit=${limit}&offset=${offset}&fields=data`,
+		);
+
+		if (!res.ok) {
+			console.error(`  Builder.io fetch failed: ${res.status}`);
+			return all;
+		}
+
+		const json = await res.json();
+		const results: BuilderMapBusiness[] = json.results ?? [];
+		all.push(...results);
+
+		if (results.length < limit) break;
+		offset += limit;
 	}
 
-	const json = await res.json();
-	return json.results ?? [];
+	return all;
 }
 
 function loadGoogleData(path: string): GoogleSyncedBusiness[] {
