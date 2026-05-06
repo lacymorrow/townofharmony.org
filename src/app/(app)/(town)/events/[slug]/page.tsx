@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { events } from "@/data/town/events";
 
@@ -52,11 +53,14 @@ export default async function EventDetailPage({ params }: PageProps) {
 					{event.locationAddress ? ` · ${event.locationAddress}` : ""}
 				</p>
 				{event.featuredImage && (
-					<div className="mb-8 overflow-hidden rounded-lg">
-						<img
+					<div className="relative mb-8 h-72 overflow-hidden rounded-lg">
+						<Image
 							src={event.featuredImage}
 							alt={event.title}
-							className="w-full h-72 object-cover"
+							fill
+							className="object-cover"
+							priority
+							sizes="(max-width: 768px) 100vw, 768px"
 						/>
 					</div>
 				)}

@@ -31,7 +31,7 @@ export default async function MeetingsPage({
 			</div>
 
 			<div className="mb-6">
-				<Suspense>
+				<Suspense fallback={null}>
 					<MeetingsFilters />
 				</Suspense>
 			</div>

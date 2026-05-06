@@ -1,4 +1,5 @@
 import { Calendar, Clock, MapPin, Repeat, Users } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -31,11 +32,13 @@ export function EventCard({ event }: EventCardProps) {
 	return (
 		<Card className="hover:shadow-lg transition-shadow">
 			{event.featuredImage && (
-				<div className="h-48 overflow-hidden rounded-t-lg">
-					<img
+				<div className="relative h-48 overflow-hidden rounded-t-lg">
+					<Image
 						src={event.featuredImage}
 						alt={event.title}
-						className="w-full h-full object-cover"
+						fill
+						className="object-cover"
+						sizes="(max-width: 768px) 100vw, 640px"
 					/>
 				</div>
 			)}
