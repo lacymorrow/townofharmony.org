@@ -19,6 +19,7 @@ export interface MapBusiness {
 	lat: number;
 	lng: number;
 	description?: string;
+	website?: string;
 }
 
 export const CATEGORY_CONFIG: Record<BusinessCategory, { color: string; icon: string }> = {
