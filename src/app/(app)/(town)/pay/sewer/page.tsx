@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SewerPaymentForm } from "@/components/town/sewer-payment-form";
-import { sewerContactInfo, isSewerPaymentEnabled } from "@/data/town/sewer-rates";
+import { sewerContactInfo, sewerRateTiers, isSewerPaymentEnabled, type SewerRateDisplay } from "@/data/town/sewer-rates";
+import { fetchBuilderContent } from "@/lib/builder-data-server";
 
 export const metadata: Metadata = {
 	title: "Pay Sewer Bill | Town of Harmony",
@@ -9,10 +10,39 @@ export const metadata: Metadata = {
 		"Pay your Town of Harmony sewer bill online with a credit or debit card.",
 };
 
-export default function SewerPaymentPage() {
+interface BuilderSewerRate {
+	tierId: string;
+	name: string;
+	description: string;
+	monthlyRate: number;
+	sortOrder: number;
+}
+
+export default async function SewerPaymentPage() {
 	if (!isSewerPaymentEnabled()) {
 		// Online payments not configured — page hidden until Stripe is set up.
 		notFound();
+	}
+
+	let rates: SewerRateDisplay[] = sewerRateTiers.map(
+		({ id, name, description, monthlyRate }) => ({ id, name, description, monthlyRate }),
+	);
+
+	try {
+		const { results } = await fetchBuilderContent<BuilderSewerRate>("town-sewer-rate", {
+			sort: { "data.sortOrder": 1 },
+			limit: 20,
+		});
+		if (results.length > 0) {
+			rates = results.map((r) => ({
+				id: r.tierId,
+				name: r.name,
+				description: r.description,
+				monthlyRate: r.monthlyRate,
+			}));
+		}
+	} catch {
+		// fall through to static rates
 	}
 
 	return (
@@ -24,7 +54,7 @@ export default function SewerPaymentPage() {
 				</p>
 			</div>
 
-			<SewerPaymentForm stripeEnabled={true} />
+			<SewerPaymentForm stripeEnabled={true} rates={rates} />
 
 			<p className="mt-6 text-center text-sm text-muted-foreground">
 				Questions? Contact {sewerContactInfo.department} at {sewerContactInfo.phone}

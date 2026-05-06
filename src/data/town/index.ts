@@ -1,5 +1,5 @@
 export { announcements } from "./announcements";
-export { sewerRateTiers, sewerContactInfo, SEWER_ACCOUNT_REGEX, isSewerVisible } from "./sewer-rates";
+export { sewerRateTiers, sewerContactInfo, SEWER_ACCOUNT_REGEX, isSewerVisible, type SewerRateDisplay } from "./sewer-rates";
 export { businesses } from "./businesses";
 export { harmonyBoundary } from "./harmony-boundary";
 export { mapBusinesses } from "./map-businesses";
