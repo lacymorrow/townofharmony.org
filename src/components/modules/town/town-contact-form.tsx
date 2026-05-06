@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { submitTownContactForm } from "@/server/actions/town-contact";
+import { submitTownContactForm, type TownContactFormData } from "@/server/actions/town-contact";
 
 const INQUIRY_OPTIONS = [
   { value: "general", label: "General Inquiry" },
@@ -60,7 +60,7 @@ export const TownContactForm = () => {
         lastName: form.get("lastName") as string,
         email: form.get("email") as string,
         phone: (form.get("phone") as string) || undefined,
-        inquiryType: form.get("inquiryType") as string,
+        inquiryType: form.get("inquiryType") as TownContactFormData["inquiryType"],
         message: form.get("message") as string,
       });
 
