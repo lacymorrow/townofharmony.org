@@ -2,9 +2,21 @@ import { Phone, Mail, Clock, MapPin } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { sewerContactInfo, sewerRateTiers, isSewerPaymentEnabled } from "@/data/town/sewer-rates";
+import type { SewerRateTier } from "@/data/town/sewer-rates";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { fetchBuilderContent } from "@/lib/builder-data-server";
+
+interface BuilderSewerRate {
+	tierId: string;
+	name: string;
+	description: string;
+	location: "in-town" | "out-of-town";
+	type: "residential" | "commercial";
+	monthlyRate: number;
+	sortOrder: number;
+}
 
 export const metadata: Metadata = {
 	title: "Sewer Services | Town of Harmony",
@@ -12,8 +24,33 @@ export const metadata: Metadata = {
 		"Sewer service rates and online payment for Town of Harmony residents and businesses.",
 };
 
-export default function SewerPage() {
+export default async function SewerPage() {
 	const onlinePaymentsEnabled = isSewerPaymentEnabled();
+
+	let displayRates: SewerRateTier[] = sewerRateTiers;
+	try {
+		const { results } = await fetchBuilderContent<BuilderSewerRate>("town-sewer-rate", {
+			sort: { "data.sortOrder": 1 },
+			limit: 20,
+		});
+		if (results.length > 0) {
+			displayRates = results.map((r) => {
+				const staticTier = sewerRateTiers.find((t) => t.id === r.tierId);
+				return {
+					id: r.tierId,
+					name: r.name,
+					description: r.description,
+					location: r.location,
+					type: r.type,
+					monthlyRate: r.monthlyRate,
+					stripePriceEnvVar: staticTier?.stripePriceEnvVar ?? "",
+					stripeSubPriceEnvVar: staticTier?.stripeSubPriceEnvVar ?? "",
+				};
+			});
+		}
+	} catch {
+		// Fall back to static data
+	}
 	return (
 		<div className="container mx-auto max-w-4xl px-4 py-12">
 			<div className="mb-8">
@@ -26,7 +63,7 @@ export default function SewerPage() {
 			<section className="mb-12">
 				<h2 className="mb-4 text-2xl font-semibold">Current Rates</h2>
 				<div className="grid gap-4 sm:grid-cols-2">
-					{sewerRateTiers.map((tier) => (
+					{displayRates.map((tier) => (
 						<Card key={tier.id}>
 							<CardHeader className="pb-2">
 								<CardTitle className="text-lg">{tier.name}</CardTitle>

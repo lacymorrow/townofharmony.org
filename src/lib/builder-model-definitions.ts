@@ -299,6 +299,21 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			url("sampleBallot"),
 		],
 	},
+
+	// --- Sewer Rates ---
+	{
+		name: "town-sewer-rate",
+		kind: "data",
+		fields: [
+			text("tierId", true),
+			text("name", true),
+			longText("description"),
+			enumText("location", ["in-town", "out-of-town"]),
+			enumText("type", ["residential", "commercial"]),
+			num("monthlyRate"),
+			num("sortOrder"),
+		],
+	},
 ];
 
 export type { BuilderField, BuilderModelDefinition };
