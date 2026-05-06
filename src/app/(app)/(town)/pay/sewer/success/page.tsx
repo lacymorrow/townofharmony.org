@@ -1,11 +1,12 @@
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getStripeCheckoutSession } from "@/lib/stripe";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { sewerContactInfo } from "@/data/town/sewer-rates";
+import { sewerContactInfo, isSewerVisible } from "@/data/town/sewer-rates";
 
 export const metadata: Metadata = {
 	title: "Payment Successful | Town of Harmony",
@@ -19,6 +20,9 @@ interface PageProps {
 }
 
 export default async function SewerPaymentSuccessPage({ searchParams }: PageProps) {
+	if (!isSewerVisible()) {
+		notFound();
+	}
 	const { session_id } = await searchParams;
 
 	let accountNumber: string | undefined;

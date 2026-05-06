@@ -1,9 +1,10 @@
 import { XCircle } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { sewerContactInfo } from "@/data/town/sewer-rates";
+import { sewerContactInfo, isSewerVisible } from "@/data/town/sewer-rates";
 
 export const metadata: Metadata = {
 	title: "Payment Cancelled | Town of Harmony",
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function SewerPaymentCancelPage() {
+	if (!isSewerVisible()) {
+		notFound();
+	}
 	return (
 		<div className="container mx-auto max-w-lg px-4 py-12 text-center">
 			<XCircle className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
