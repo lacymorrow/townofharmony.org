@@ -58,14 +58,14 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 					{hasRecordings && (
 						<div className="flex gap-1 shrink-0">
 							{meeting.videoUrl && (
-								<Badge variant="outline" className="flex items-center gap-1 text-xs px-1.5 py-0">
-									<Video className="h-3 w-3" />
+								<Badge variant="outline" className="inline-block align-middle text-xs px-1.5 py-0">
+									<Video className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
 									Video
 								</Badge>
 							)}
 							{meeting.audioUrl && (
-								<Badge variant="outline" className="flex items-center gap-1 text-xs px-1.5 py-0">
-									<Headphones className="h-3 w-3" />
+								<Badge variant="outline" className="inline-block align-middle text-xs px-1.5 py-0">
+									<Headphones className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
 									Audio
 								</Badge>
 							)}
@@ -74,21 +74,21 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 				</div>
 
 				<div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-muted-foreground">
-					<span className="flex items-center gap-1">
-						<Calendar className="h-3.5 w-3.5" />
+					<span className="align-middle">
+						<Calendar className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
 						{formatDate(meetingDate)}
 					</span>
 
 					{meeting.meetingTime && (
-						<span className="flex items-center gap-1">
-							<Clock className="h-3.5 w-3.5" />
+						<span className="align-middle">
+							<Clock className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
 							{formatTime(meeting.meetingTime)}
 						</span>
 					)}
 
 					{meeting.location && (
-						<span className="flex items-center gap-1">
-							<MapPin className="h-3.5 w-3.5" />
+						<span className="align-middle">
+							<MapPin className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
 							{meeting.location}
 						</span>
 					)}
@@ -96,8 +96,8 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 					{meeting.attendees &&
 						Array.isArray(meeting.attendees) &&
 						meeting.attendees.length > 0 && (
-							<span className="flex items-center gap-1">
-								<Users className="h-3.5 w-3.5" />
+							<span className="align-middle">
+								<Users className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
 								{meeting.attendees.length} attendees
 							</span>
 						)}
@@ -110,9 +110,9 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 								href={meeting.agendaUrl}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
+								className="align-middle text-sage hover:text-sage-dark font-medium"
 							>
-								<FileText className="h-3 w-3" />
+								<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
 								Agenda
 							</a>
 						)}
@@ -121,9 +121,9 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 								href={meeting.minutesUrl}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
+								className="align-middle text-sage hover:text-sage-dark font-medium"
 							>
-								<FileText className="h-3 w-3" />
+								<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
 								Minutes
 							</a>
 						)}
@@ -134,9 +134,9 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 									href={doc}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
+									className="align-middle text-sage hover:text-sage-dark font-medium"
 								>
-									<FileText className="h-3 w-3" />
+									<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
 									Doc {index + 1}
 								</a>
 							))}
@@ -145,9 +145,9 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 								href={meeting.videoUrl}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
+								className="align-middle text-sage hover:text-sage-dark font-medium"
 							>
-								<Video className="h-3 w-3" />
+								<Video className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
 								Video
 							</a>
 						)}
@@ -156,9 +156,9 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 								href={meeting.audioUrl}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
+								className="align-middle text-sage hover:text-sage-dark font-medium"
 							>
-								<Headphones className="h-3 w-3" />
+								<Headphones className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
 								Audio
 							</a>
 						)}

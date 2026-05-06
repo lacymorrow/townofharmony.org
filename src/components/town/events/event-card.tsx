@@ -31,7 +31,7 @@ export function EventCard({ event }: EventCardProps) {
 		<Card className="hover:shadow-md transition-shadow">
 			<div className="flex">
 				{event.featuredImage && (
-					<div className="hidden sm:block w-32 shrink-0 overflow-hidden rounded-l-lg">
+					<div className="hidden sm:block w-32 min-h-[64px] shrink-0 overflow-hidden rounded-l-lg">
 						<img
 							src={event.featuredImage}
 							alt={event.title}
@@ -58,8 +58,8 @@ export function EventCard({ event }: EventCardProps) {
 						</div>
 
 						{event.isRecurring && (
-							<Badge variant="outline" className="flex items-center gap-1 text-xs shrink-0">
-								<Repeat className="h-3 w-3" />
+							<Badge variant="outline" className="inline-block align-middle text-xs shrink-0">
+								<Repeat className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
 								Recurring
 							</Badge>
 						)}
@@ -70,29 +70,29 @@ export function EventCard({ event }: EventCardProps) {
 					)}
 
 					<div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-muted-foreground">
-						<span className="flex items-center gap-1">
-							<Calendar className="h-3.5 w-3.5" />
+						<span className="align-middle">
+							<Calendar className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
 							{formatDate(eventDate)}
 						</span>
 
 						{event.eventTime && (
-							<span className="flex items-center gap-1">
-								<Clock className="h-3.5 w-3.5" />
+							<span className="align-middle">
+								<Clock className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
 								{formatTime(event.eventTime)}
 								{event.endTime && ` - ${formatTime(event.endTime)}`}
 							</span>
 						)}
 
 						{event.location && (
-							<span className="flex items-center gap-1">
-								<MapPin className="h-3.5 w-3.5" />
+							<span className="align-middle">
+								<MapPin className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
 								{event.location}
 							</span>
 						)}
 
 						{event.maxAttendees && (
-							<span className="flex items-center gap-1">
-								<Users className="h-3.5 w-3.5" />
+							<span className="align-middle">
+								<Users className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
 								{event.currentAttendees || 0} / {event.maxAttendees}
 							</span>
 						)}
