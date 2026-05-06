@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { SEWER_ACCOUNT_REGEX, sewerRateTiers, sewerContactInfo } from "@/data/town/sewer-rates";
+import type { SewerRateTier } from "@/data/town/sewer-rates";
 import { createSewerCheckoutSession } from "@/server/actions/sewer-payments";
 
 const sewerPaymentFormSchema = z.object({
@@ -43,9 +44,10 @@ type SewerPaymentFormData = z.infer<typeof sewerPaymentFormSchema>;
 
 interface SewerPaymentFormProps {
 	stripeEnabled: boolean;
+	rates?: SewerRateTier[];
 }
 
-export const SewerPaymentForm = ({ stripeEnabled }: SewerPaymentFormProps) => {
+export const SewerPaymentForm = ({ stripeEnabled, rates = sewerRateTiers }: SewerPaymentFormProps) => {
 	const { toast } = useToast();
 	const [isRedirecting, setIsRedirecting] = useState(false);
 
@@ -62,7 +64,7 @@ export const SewerPaymentForm = ({ stripeEnabled }: SewerPaymentFormProps) => {
 	});
 
 	const selectedTierId = form.watch("tierId");
-	const selectedTier = sewerRateTiers.find((t) => t.id === selectedTierId);
+	const selectedTier = rates.find((t) => t.id === selectedTierId);
 	const paymentType = form.watch("paymentType");
 
 	const onSubmit = async (data: SewerPaymentFormData) => {
@@ -189,7 +191,7 @@ export const SewerPaymentForm = ({ stripeEnabled }: SewerPaymentFormProps) => {
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
-											{sewerRateTiers.map((tier) => (
+											{rates.map((tier) => (
 												<SelectItem key={tier.id} value={tier.id}>
 													{tier.name} - ${tier.monthlyRate.toFixed(2)}/mo
 												</SelectItem>
