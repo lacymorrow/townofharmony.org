@@ -20,7 +20,6 @@ export const navigation: TownNavigation = {
 			href: "/our-team",
 			children: [
 				{ name: "Our Team", href: "/our-team" },
-				{ name: "Town Meetings", href: "/meetings" },
 				{ name: "Agendas & Minutes", href: "/meetings" },
 				{ name: "History", href: "/history" },
 				{ name: "Resources", href: "/resources" },
@@ -104,7 +103,6 @@ export const navigation: TownNavigation = {
 			category: "Town",
 			links: [
 				{ name: "Our Team", href: "/our-team" },
-				{ name: "Town Meetings", href: "/meetings" },
 				{ name: "Agendas & Minutes", href: "/meetings" },
 				{ name: "History", href: "/history" },
 				{ name: "Resources", href: "/resources" },
