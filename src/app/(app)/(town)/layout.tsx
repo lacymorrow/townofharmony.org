@@ -1,16 +1,13 @@
 import { EmergencyBanner } from "@/components/town/emergency-banner";
 import { TownFooter } from "@/components/town/town-footer";
 import { TownHeader } from "@/components/town/town-header";
-import { fetchBuilderEntry } from "@/lib/builder-data-server";
-import { settings as staticSettings, toTownSettings, type BuilderSettingsFlat } from "@/data/town/settings";
+import { settings } from "@/data/town/settings";
 
-export default async function TownLayout({ children }: { children: React.ReactNode }) {
-	const builderSettings = await fetchBuilderEntry<BuilderSettingsFlat>(
-		"town-settings",
-		{},
-	);
-	const settings = builderSettings ? toTownSettings(builderSettings) : staticSettings;
-
+// Synchronous layout — do not make this async. An async layout causes streaming,
+// which commits HTTP 200 before the page's notFound() can set the 404 status.
+// Builder.io town-settings values are identical to the static fallback, so the
+// async fetch was providing no functional benefit.
+export default function TownLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<div className="min-h-screen flex flex-col">
 			<TownHeader settings={settings} />
