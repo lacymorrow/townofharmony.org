@@ -3,9 +3,9 @@ import type { TownAnnouncement } from "./types";
 export const announcements: TownAnnouncement[] = [
 	{
 		id: 1,
-		title: "New Website Launch",
+		title: "Welcome to the New Town of Harmony Website",
 		content:
-			"Explore our redesigned site and share feedback via the Contact page.",
+			"Take a look around and let us know what you think via the Contact page.",
 		link: "/contact",
 		level: "info",
 		isActive: true,
