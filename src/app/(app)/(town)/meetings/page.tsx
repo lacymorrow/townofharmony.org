@@ -30,13 +30,18 @@ export default async function MeetingsPage({
 				</p>
 			</div>
 
-			<div className="mb-6">
-				<Suspense>
-					<MeetingsFilters />
-				</Suspense>
+			<div className="flex flex-col lg:flex-row gap-8">
+				<aside className="lg:w-64 shrink-0">
+					<div className="lg:sticky lg:top-24">
+						<Suspense>
+							<MeetingsFilters />
+						</Suspense>
+					</div>
+				</aside>
+				<main className="flex-1 min-w-0">
+					<MeetingsList type={type} month={month} year={year} status={status} page={page} />
+				</main>
 			</div>
-
-			<MeetingsList type={type} month={month} year={year} status={status} page={page} />
 		</div>
 	);
 }

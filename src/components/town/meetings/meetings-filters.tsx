@@ -77,15 +77,15 @@ export function MeetingsFilters() {
 	};
 
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Filter Meetings</CardTitle>
+		<Card className="shadow-sm">
+			<CardHeader className="pb-3">
+				<CardTitle className="text-sm font-medium">Filters</CardTitle>
 			</CardHeader>
-			<CardContent className="space-y-4">
-				<div className="space-y-2">
-					<Label htmlFor="type">Meeting Type</Label>
+			<CardContent className="space-y-3">
+				<div className="space-y-1.5">
+					<Label htmlFor="type" className="text-xs">Meeting Type</Label>
 					<Select value={currentType} onValueChange={(value) => updateFilters("type", value)}>
-						<SelectTrigger id="type" aria-label="Filter by meeting type">
+						<SelectTrigger id="type" aria-label="Filter by meeting type" className="h-9 text-sm">
 							<SelectValue placeholder="All types" />
 						</SelectTrigger>
 						<SelectContent>
@@ -99,10 +99,10 @@ export function MeetingsFilters() {
 					</Select>
 				</div>
 
-				<div className="space-y-2">
-					<Label htmlFor="status">Status</Label>
+				<div className="space-y-1.5">
+					<Label htmlFor="status" className="text-xs">Status</Label>
 					<Select value={currentStatus} onValueChange={(value) => updateFilters("status", value)}>
-						<SelectTrigger id="status" aria-label="Filter by status">
+						<SelectTrigger id="status" aria-label="Filter by status" className="h-9 text-sm">
 							<SelectValue placeholder="All meetings" />
 						</SelectTrigger>
 						<SelectContent>
@@ -116,10 +116,10 @@ export function MeetingsFilters() {
 					</Select>
 				</div>
 
-				<div className="space-y-2">
-					<Label htmlFor="year">Year</Label>
+				<div className="space-y-1.5">
+					<Label htmlFor="year" className="text-xs">Year</Label>
 					<Select value={currentYear} onValueChange={(value) => updateFilters("year", value)}>
-						<SelectTrigger id="year" aria-label="Filter by year">
+						<SelectTrigger id="year" aria-label="Filter by year" className="h-9 text-sm">
 							<SelectValue placeholder="All years" />
 						</SelectTrigger>
 						<SelectContent>
@@ -133,10 +133,10 @@ export function MeetingsFilters() {
 					</Select>
 				</div>
 
-				<div className="space-y-2">
-					<Label htmlFor="month">Month</Label>
+				<div className="space-y-1.5">
+					<Label htmlFor="month" className="text-xs">Month</Label>
 					<Select value={currentMonth} onValueChange={(value) => updateFilters("month", value)}>
-						<SelectTrigger id="month" aria-label="Filter by month">
+						<SelectTrigger id="month" aria-label="Filter by month" className="h-9 text-sm">
 							<SelectValue placeholder="All months" />
 						</SelectTrigger>
 						<SelectContent>
@@ -151,7 +151,7 @@ export function MeetingsFilters() {
 				</div>
 
 				{hasActiveFilters && (
-					<Button variant="outline" onClick={clearFilters} className="w-full">
+					<Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
 						Clear filters
 					</Button>
 				)}
