@@ -250,8 +250,8 @@ export async function EmergencyDetail({ alertId }: EmergencyDetailProps) {
 									{contactInfo.name && <p className="font-medium text-[#2D2A24]">{contactInfo.name}</p>}
 									{contactInfo.phone && (
 										<p className="flex items-center gap-2">
-											<span className="text-sm">Phone:</span>
-											<a href={`tel:${contactInfo.phone.replace(/[^\d+]/g, "")}`} className={`font-bold hover:underline ${contactInfo.phone === "911" ? "text-barn-red text-2xl" : "text-sage text-lg"}`}>
+											<span className="text-base">Phone:</span>
+											<a href={`tel:${contactInfo.phone.replace(/[^\d+]/g, "")}`} className={`font-bold hover:underline ${contactInfo.phone === "911" ? "text-barn-red text-xl" : "text-sage text-lg"}`}>
 												{contactInfo.phone}
 											</a>
 										</p>

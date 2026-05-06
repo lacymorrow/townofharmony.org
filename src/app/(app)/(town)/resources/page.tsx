@@ -66,12 +66,18 @@ export default function ResourcesPage() {
 								{r.contactPhone && (
 									<p className="mt-3 flex items-center gap-2">
 										<span className="text-sm font-medium text-[#635E56]">Phone:</span>
-										<a
-											href={`tel:${r.contactPhone.replace(/[^\d+]/g, "")}`}
-											className={`font-bold hover:underline ${r.contactPhone === "911" ? "text-barn-red text-2xl" : "text-sage text-lg"}`}
-										>
-											{r.contactPhone}
-										</a>
+										{r.externalUrl ? (
+											<span className={`font-bold ${r.contactPhone === "911" ? "text-barn-red text-xl" : "text-sage text-lg"}`}>
+												{r.contactPhone}
+											</span>
+										) : (
+											<a
+												href={`tel:${r.contactPhone.replace(/[^\d+]/g, "")}`}
+												className={`font-bold hover:underline ${r.contactPhone === "911" ? "text-barn-red text-xl" : "text-sage text-lg"}`}
+											>
+												{r.contactPhone}
+											</a>
+										)}
 									</p>
 								)}
 							</Wrapper>
