@@ -1,7 +1,8 @@
 import { Phone, Mail, Clock, MapPin } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { sewerContactInfo, sewerRateTiers, isSewerPaymentEnabled } from "@/data/town/sewer-rates";
+import { notFound } from "next/navigation";
+import { sewerContactInfo, sewerRateTiers, isSewerPaymentEnabled, isSewerVisible } from "@/data/town/sewer-rates";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,9 @@ export const metadata: Metadata = {
 };
 
 export default function SewerPage() {
+	if (!isSewerVisible()) {
+		notFound();
+	}
 	const onlinePaymentsEnabled = isSewerPaymentEnabled();
 	return (
 		<div className="container mx-auto max-w-4xl px-4 py-12">
