@@ -25,28 +25,22 @@ export const viewport: Viewport = sharedViewport;
 
 await initializePaymentProviders();
 
-export default async function Layout({
+// Synchronous layout — do NOT make this async. An async layout causes React to
+// start streaming and commit HTTP 200 before child pages can call notFound(),
+// which prevents proper HTTP 404 status on unknown routes (soft-404 problem).
+export default function Layout({
   children,
   ...slots
 }: {
   children: React.ReactNode;
   [key: string]: React.ReactNode;
 }) {
-  // Intercepting routes
-  const resolvedSlots = (
-    await Promise.all(
-      Object.entries(slots).map(async ([key, slot]) => {
-        const resolvedSlot = slot instanceof Promise ? await slot : slot;
-        if (
-          !resolvedSlot ||
-          (typeof resolvedSlot === "object" && Object.keys(resolvedSlot).length === 0)
-        ) {
-          return null;
-        }
-        return [key, resolvedSlot] as [string, React.ReactNode];
-      })
-    )
-  ).filter((item): item is [string, React.ReactNode] => item !== null);
+  // In RSC, parallel route slots are synchronous ReactNodes — no await needed.
+  const resolvedSlots = Object.entries(slots).filter(
+    ([, slot]) =>
+      slot != null &&
+      !(typeof slot === "object" && Object.keys(slot as object).length === 0)
+  ) as [string, React.ReactNode][];
 
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
