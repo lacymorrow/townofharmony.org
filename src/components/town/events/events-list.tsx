@@ -41,7 +41,7 @@ export async function EventsList({ category, month, page = "1" }: EventsListProp
 
 	return (
 		<>
-			<div className="space-y-6">
+			<div className="space-y-3">
 				{items.map((event: any) => (
 					<EventCard key={event.id} event={event} />
 				))}

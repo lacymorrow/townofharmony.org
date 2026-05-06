@@ -28,12 +28,18 @@ export default async function EventsPage({
 				</p>
 			</div>
 
-			<div className="mb-6">
-				<Suspense>
-					<EventsFilters />
-				</Suspense>
+			<div className="flex flex-col lg:flex-row gap-8">
+				<aside className="lg:w-64 shrink-0">
+					<div className="lg:sticky lg:top-24">
+						<Suspense>
+							<EventsFilters />
+						</Suspense>
+					</div>
+				</aside>
+				<main className="flex-1 min-w-0">
+					<EventsList category={category} month={month} page={page} />
+				</main>
 			</div>
-			<EventsList category={category} month={month} page={page} />
 		</div>
 	);
 }

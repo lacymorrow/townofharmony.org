@@ -57,18 +57,18 @@ export function EventsFilters() {
 	};
 
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Filter Events</CardTitle>
+		<Card className="shadow-sm">
+			<CardHeader className="pb-3">
+				<CardTitle className="text-sm font-medium">Filters</CardTitle>
 			</CardHeader>
-			<CardContent className="space-y-4">
-				<div className="space-y-2">
-					<Label htmlFor="category">Category</Label>
+			<CardContent className="space-y-3">
+				<div className="space-y-1.5">
+					<Label htmlFor="category" className="text-xs">Category</Label>
 					<Select
 						value={currentCategory}
 						onValueChange={(value) => updateFilters("category", value)}
 					>
-						<SelectTrigger id="category" aria-label="Filter by category">
+						<SelectTrigger id="category" aria-label="Filter by category" className="h-9 text-sm">
 							<SelectValue placeholder="All categories" />
 						</SelectTrigger>
 						<SelectContent>
@@ -82,10 +82,10 @@ export function EventsFilters() {
 					</Select>
 				</div>
 
-				<div className="space-y-2">
-					<Label htmlFor="month">Month</Label>
+				<div className="space-y-1.5">
+					<Label htmlFor="month" className="text-xs">Month</Label>
 					<Select value={currentMonth} onValueChange={(value) => updateFilters("month", value)}>
-						<SelectTrigger id="month" aria-label="Filter by month">
+						<SelectTrigger id="month" aria-label="Filter by month" className="h-9 text-sm">
 							<SelectValue placeholder="All months" />
 						</SelectTrigger>
 						<SelectContent>
@@ -100,7 +100,7 @@ export function EventsFilters() {
 				</div>
 
 				{(currentCategory !== "all" || currentMonth !== "all") && (
-					<Button variant="outline" onClick={clearFilters} className="w-full">
+					<Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
 						Clear filters
 					</Button>
 				)}

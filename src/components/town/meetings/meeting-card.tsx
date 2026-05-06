@@ -1,7 +1,7 @@
 import { Calendar, Clock, FileText, Headphones, MapPin, Users, Video } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { formatDate, formatTime } from "@/lib/utils";
 
 interface MeetingCardProps {
@@ -33,38 +33,38 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 		meeting.agendaUrl || meeting.minutesUrl || (meeting.documents && meeting.documents.length > 0);
 
 	return (
-		<Card className="hover:shadow-lg transition-shadow">
-			<CardHeader>
-				<div className="flex justify-between items-start gap-4">
-					<div className="flex-1">
+		<Card className="hover:shadow-md transition-shadow">
+			<div className="p-4">
+				<div className="flex justify-between items-start gap-3">
+					<div className="flex-1 min-w-0">
 						<Link
 							href={`/meetings/${meeting.slug}`}
 							className="hover:text-sage-dark transition-colors"
 						>
-							<h3 className="text-xl font-semibold mb-2">{meeting.title}</h3>
+							<h3 className="text-base font-semibold leading-tight">{meeting.title}</h3>
 						</Link>
 
-						<div className="flex gap-2 flex-wrap mb-3">
-							{meeting.type && <Badge variant="secondary">{meeting.type}</Badge>}
-							{!meeting.isPublic && <Badge variant="outline">Private</Badge>}
+						<div className="flex gap-1.5 flex-wrap mt-1.5">
+							{meeting.type && <Badge variant="secondary" className="text-xs px-1.5 py-0">{meeting.type}</Badge>}
+							{!meeting.isPublic && <Badge variant="outline" className="text-xs px-1.5 py-0">Private</Badge>}
 							{isPastMeeting ? (
-								<Badge variant="default">Completed</Badge>
+								<Badge variant="default" className="text-xs px-1.5 py-0">Completed</Badge>
 							) : (
-								<Badge variant="outline">Upcoming</Badge>
+								<Badge variant="outline" className="text-xs px-1.5 py-0">Upcoming</Badge>
 							)}
 						</div>
 					</div>
 
 					{hasRecordings && (
-						<div className="flex gap-1">
+						<div className="flex gap-1 shrink-0">
 							{meeting.videoUrl && (
-								<Badge variant="outline" className="flex items-center gap-1">
+								<Badge variant="outline" className="flex items-center gap-1 text-xs px-1.5 py-0">
 									<Video className="h-3 w-3" />
 									Video
 								</Badge>
 							)}
 							{meeting.audioUrl && (
-								<Badge variant="outline" className="flex items-center gap-1">
+								<Badge variant="outline" className="flex items-center gap-1 text-xs px-1.5 py-0">
 									<Headphones className="h-3 w-3" />
 									Audio
 								</Badge>
@@ -72,111 +72,99 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 						</div>
 					)}
 				</div>
-			</CardHeader>
 
-			<CardContent>
-				<div className="space-y-2 text-sm mb-4">
-					<div className="flex items-center gap-2">
-						<Calendar className="h-4 w-4 text-muted-foreground" />
-						<span>{formatDate(meetingDate)}</span>
-					</div>
+				<div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-muted-foreground">
+					<span className="flex items-center gap-1">
+						<Calendar className="h-3.5 w-3.5" />
+						{formatDate(meetingDate)}
+					</span>
 
 					{meeting.meetingTime && (
-						<div className="flex items-center gap-2">
-							<Clock className="h-4 w-4 text-muted-foreground" />
-							<span>{formatTime(meeting.meetingTime)}</span>
-						</div>
+						<span className="flex items-center gap-1">
+							<Clock className="h-3.5 w-3.5" />
+							{formatTime(meeting.meetingTime)}
+						</span>
 					)}
 
 					{meeting.location && (
-						<div className="flex items-center gap-2">
-							<MapPin className="h-4 w-4 text-muted-foreground" />
-							<span>{meeting.location}</span>
-						</div>
+						<span className="flex items-center gap-1">
+							<MapPin className="h-3.5 w-3.5" />
+							{meeting.location}
+						</span>
 					)}
 
 					{meeting.attendees &&
 						Array.isArray(meeting.attendees) &&
 						meeting.attendees.length > 0 && (
-							<div className="flex items-center gap-2">
-								<Users className="h-4 w-4 text-muted-foreground" />
-								<span>{meeting.attendees.length} attendees</span>
-							</div>
+							<span className="flex items-center gap-1">
+								<Users className="h-3.5 w-3.5" />
+								{meeting.attendees.length} attendees
+							</span>
 						)}
 				</div>
 
-				{hasDocuments && (
-					<div className="space-y-2">
-						<div className="flex items-center gap-2 text-sm font-medium">
-							<FileText className="h-4 w-4 text-muted-foreground" />
-							<span>Available Documents:</span>
-						</div>
-						<div className="flex gap-2 flex-wrap text-xs">
-							{meeting.agendaUrl && (
+				{(hasDocuments || hasRecordings) && (
+					<div className="flex flex-wrap items-center gap-3 mt-2 pt-2 border-t text-xs">
+						{meeting.agendaUrl && (
+							<a
+								href={meeting.agendaUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
+							>
+								<FileText className="h-3 w-3" />
+								Agenda
+							</a>
+						)}
+						{meeting.minutesUrl && (
+							<a
+								href={meeting.minutesUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
+							>
+								<FileText className="h-3 w-3" />
+								Minutes
+							</a>
+						)}
+						{meeting.documents &&
+							meeting.documents.map((doc, index) => (
 								<a
-									href={meeting.agendaUrl}
+									key={index}
+									href={doc}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-sage hover:text-sage-dark underline"
+									className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
 								>
-									Agenda
+									<FileText className="h-3 w-3" />
+									Doc {index + 1}
 								</a>
-							)}
-							{meeting.minutesUrl && (
-								<a
-									href={meeting.minutesUrl}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-sage hover:text-sage-dark underline"
-								>
-									Minutes
-								</a>
-							)}
-							{meeting.documents &&
-								meeting.documents.map((doc, index) => (
-									<a
-										key={index}
-										href={doc}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-sage hover:text-sage-dark underline"
-									>
-										Document {index + 1}
-									</a>
-								))}
-						</div>
+							))}
+						{meeting.videoUrl && (
+							<a
+								href={meeting.videoUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
+							>
+								<Video className="h-3 w-3" />
+								Video
+							</a>
+						)}
+						{meeting.audioUrl && (
+							<a
+								href={meeting.audioUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="flex items-center gap-1 text-sage hover:text-sage-dark font-medium"
+							>
+								<Headphones className="h-3 w-3" />
+								Audio
+							</a>
+						)}
 					</div>
 				)}
-
-				{hasRecordings && (
-					<div className="mt-4 pt-4 border-t">
-						<div className="flex gap-3">
-							{meeting.videoUrl && (
-								<a
-									href={meeting.videoUrl}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex items-center gap-2 text-sage hover:text-sage-dark text-sm font-medium"
-								>
-									<Video className="h-4 w-4" />
-									Watch Recording
-								</a>
-							)}
-							{meeting.audioUrl && (
-								<a
-									href={meeting.audioUrl}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex items-center gap-2 text-sage hover:text-sage-dark text-sm font-medium"
-								>
-									<Headphones className="h-4 w-4" />
-									Listen to Audio
-								</a>
-							)}
-						</div>
-					</div>
-				)}
-			</CardContent>
+			</div>
 		</Card>
 	);
 }

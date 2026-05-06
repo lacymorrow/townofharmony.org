@@ -55,7 +55,7 @@ export async function MeetingsList({
 				</p>
 			</div>
 
-			<div className="grid gap-6">
+			<div className="grid gap-3">
 				{meetingsData.map((meeting) => (
 					<MeetingCard key={meeting.id} meeting={meeting as any} />
 				))}
