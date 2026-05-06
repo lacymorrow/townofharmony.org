@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
+import { Turnstile } from "@/components/turnstile";
 import { submitTownContactForm, type TownContactFormData } from "@/server/actions/town-contact";
 
 const INQUIRY_OPTIONS = [
@@ -27,6 +28,8 @@ export const TownContactForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
+  const turnstileTokenRef = useRef<string | null>(null);
+  const [turnstileError, setTurnstileError] = useState(false);
 
   const validate = (form: FormData): FormErrors => {
     const errs: FormErrors = {};
@@ -55,14 +58,17 @@ export const TownContactForm = () => {
     setServerError(null);
 
     startTransition(async () => {
-      const result = await submitTownContactForm({
-        firstName: form.get("firstName") as string,
-        lastName: form.get("lastName") as string,
-        email: form.get("email") as string,
-        phone: (form.get("phone") as string) || undefined,
-        inquiryType: form.get("inquiryType") as TownContactFormData["inquiryType"],
-        message: form.get("message") as string,
-      });
+      const result = await submitTownContactForm(
+        {
+          firstName: form.get("firstName") as string,
+          lastName: form.get("lastName") as string,
+          email: form.get("email") as string,
+          phone: (form.get("phone") as string) || undefined,
+          inquiryType: form.get("inquiryType") as TownContactFormData["inquiryType"],
+          message: form.get("message") as string,
+        },
+        turnstileTokenRef.current ?? undefined,
+      );
 
       if (result.success) {
         setSubmitted(true);
@@ -175,6 +181,22 @@ export const TownContactForm = () => {
           className={inputClass(!!errors.message)}
         />
       </FieldWrapper>
+
+      <Turnstile
+        onVerify={(token) => {
+          turnstileTokenRef.current = token;
+          setTurnstileError(false);
+        }}
+        onError={() => setTurnstileError(true)}
+        onExpire={() => {
+          turnstileTokenRef.current = null;
+        }}
+      />
+      {turnstileError && (
+        <p className="text-xs text-red-600" role="alert">
+          Security check failed. Please refresh and try again.
+        </p>
+      )}
 
       <button
         type="submit"

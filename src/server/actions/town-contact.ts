@@ -2,7 +2,21 @@
 
 import { z } from "zod";
 import { siteConfig } from "@/config/site-config";
+import { env } from "@/env";
 import { resend } from "@/lib/resend";
+
+async function verifyTurnstileToken(token: string): Promise<boolean> {
+  const secretKey = env.TURNSTILE_SECRET_KEY;
+  if (!secretKey) return true;
+
+  const resp = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ secret: secretKey, response: token }),
+  });
+  const result = (await resp.json()) as { success: boolean };
+  return result.success === true;
+}
 
 const INQUIRY_VALUES = [
   "general",
@@ -40,7 +54,20 @@ export type TownContactFormData = z.infer<typeof townContactSchema>;
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-export async function submitTownContactForm(formData: TownContactFormData) {
+export async function submitTownContactForm(
+  formData: TownContactFormData,
+  turnstileToken?: string,
+) {
+  if (env.TURNSTILE_SECRET_KEY) {
+    if (!turnstileToken) {
+      return { success: false, error: "Security check required. Please complete the CAPTCHA." };
+    }
+    const valid = await verifyTurnstileToken(turnstileToken);
+    if (!valid) {
+      return { success: false, error: "Security check failed. Please try again." };
+    }
+  }
+
   const parsed = townContactSchema.safeParse(formData);
   if (!parsed.success) {
     return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid form data" };
