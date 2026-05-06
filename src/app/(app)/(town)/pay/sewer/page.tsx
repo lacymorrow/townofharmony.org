@@ -33,8 +33,14 @@ export default async function SewerPaymentPage() {
 			sort: { "data.sortOrder": 1 },
 			limit: 20,
 		});
-		if (results.length > 0) {
-			rates = results.map((r) => ({
+		// Builder.io rates are display-only. The actual Stripe charge is determined
+		// by the tierId lookup in the server action against the static sewerRateTiers —
+		// keep those env vars and CMS values in sync when rates change.
+		const valid = results.filter(
+			(r) => r.tierId && typeof r.monthlyRate === "number",
+		);
+		if (valid.length > 0) {
+			rates = valid.map((r) => ({
 				id: r.tierId,
 				name: r.name,
 				description: r.description,
