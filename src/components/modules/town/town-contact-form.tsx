@@ -6,14 +6,30 @@ import { submitTownContactForm, type TownContactFormData } from "@/server/action
 
 const INQUIRY_OPTIONS = [
 	{ value: "general", label: "General Inquiry" },
-	{ value: "utilities", label: "Water/Sewer Utilities" },
+	{ value: "sewer-residential", label: "Sewer Residential Service" },
+	{ value: "sewer-commercial", label: "Sewer Commercial Service" },
 	{ value: "permits", label: "Permits & Zoning" },
 	{ value: "taxes", label: "Taxes & Billing" },
 	{ value: "parks", label: "Parks & Recreation" },
 	{ value: "roads", label: "Roads & Infrastructure" },
-	{ value: "complaint", label: "Complaint" },
+	{ value: "suggestion", label: "Suggestion" },
 	{ value: "other", label: "Other" },
 ];
+
+const ALLOWED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png"];
+const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3 MB
+
+async function readFileAsBase64(file: File): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			const result = reader.result as string;
+			resolve(result.split(",")[1] ?? "");
+		};
+		reader.onerror = reject;
+		reader.readAsDataURL(file);
+	});
+}
 
 interface FormErrors {
 	firstName?: string;
@@ -21,6 +37,7 @@ interface FormErrors {
 	email?: string;
 	inquiryType?: string;
 	message?: string;
+	attachment?: string;
 }
 
 export const TownContactForm = () => {
@@ -28,6 +45,7 @@ export const TownContactForm = () => {
 	const [submitted, setSubmitted] = useState(false);
 	const [serverError, setServerError] = useState<string | null>(null);
 	const [errors, setErrors] = useState<FormErrors>({});
+	const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 	const turnstileTokenRef = useRef<string | null>(null);
 	const [turnstileError, setTurnstileError] = useState(false);
 
@@ -44,10 +62,20 @@ export const TownContactForm = () => {
 		return errs;
 	};
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const form = new FormData(e.currentTarget);
 		const validationErrors = validate(form);
+
+		const file = form.get("attachment") as File | null;
+		const hasFile = file instanceof File && file.size > 0;
+		if (hasFile) {
+			if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+				validationErrors.attachment = "Only PDF, JPG, and PNG files are accepted.";
+			} else if (file.size > MAX_FILE_SIZE) {
+				validationErrors.attachment = "File must be 3 MB or smaller.";
+			}
+		}
 
 		if (Object.keys(validationErrors).length > 0) {
 			setErrors(validationErrors);
@@ -57,6 +85,12 @@ export const TownContactForm = () => {
 		setErrors({});
 		setServerError(null);
 
+		let attachment: TownContactFormData["attachment"] | undefined;
+		if (hasFile) {
+			const base64 = await readFileAsBase64(file);
+			attachment = { filename: file.name, content: base64, contentType: file.type };
+		}
+
 		startTransition(async () => {
 			const result = await submitTownContactForm({
 				firstName: form.get("firstName") as string,
@@ -65,6 +99,7 @@ export const TownContactForm = () => {
 				phone: (form.get("phone") as string) || undefined,
 				inquiryType: form.get("inquiryType") as TownContactFormData["inquiryType"],
 				message: form.get("message") as string,
+				attachment,
 				turnstileToken: turnstileTokenRef.current ?? undefined,
 			});
 
@@ -112,6 +147,9 @@ export const TownContactForm = () => {
 						type="text"
 						autoComplete="given-name"
 						required
+						aria-required="true"
+						aria-invalid={!!errors.firstName}
+						aria-describedby={errors.firstName ? "firstName-error" : undefined}
 						className={inputClass(!!errors.firstName)}
 					/>
 				</FieldWrapper>
@@ -123,6 +161,9 @@ export const TownContactForm = () => {
 						type="text"
 						autoComplete="family-name"
 						required
+						aria-required="true"
+						aria-invalid={!!errors.lastName}
+						aria-describedby={errors.lastName ? "lastName-error" : undefined}
 						className={inputClass(!!errors.lastName)}
 					/>
 				</FieldWrapper>
@@ -136,6 +177,9 @@ export const TownContactForm = () => {
 						type="email"
 						autoComplete="email"
 						required
+						aria-required="true"
+						aria-invalid={!!errors.email}
+						aria-describedby={errors.email ? "email-error" : undefined}
 						className={inputClass(!!errors.email)}
 					/>
 				</FieldWrapper>
@@ -156,6 +200,9 @@ export const TownContactForm = () => {
 					id="inquiryType"
 					name="inquiryType"
 					required
+					aria-required="true"
+					aria-invalid={!!errors.inquiryType}
+					aria-describedby={errors.inquiryType ? "inquiryType-error" : undefined}
 					defaultValue=""
 					className={inputClass(!!errors.inquiryType)}
 				>
@@ -176,8 +223,56 @@ export const TownContactForm = () => {
 					name="message"
 					rows={5}
 					required
+					aria-required="true"
+					aria-invalid={!!errors.message}
+					aria-describedby={errors.message ? "message-error" : undefined}
 					className={inputClass(!!errors.message)}
 				/>
+			</FieldWrapper>
+
+			<FieldWrapper
+				label="Attachment"
+				id="attachment"
+				error={errors.attachment}
+				hint="Optional — PDF, JPG, or PNG, max 3 MB"
+			>
+				<div>
+					<input
+						id="attachment"
+						name="attachment"
+						type="file"
+						accept=".pdf,.jpg,.jpeg,.png"
+						aria-describedby={errors.attachment ? "attachment-error" : undefined}
+						className="sr-only"
+						onChange={(e) => setSelectedFileName(e.target.files?.[0]?.name ?? null)}
+					/>
+					<label
+						htmlFor="attachment"
+						className={`inline-flex items-center gap-2 cursor-pointer px-4 py-2 rounded border text-sm font-medium transition-colors ${
+							errors.attachment
+								? "border-red-500 text-red-700 bg-red-50 hover:bg-red-100"
+								: "border-stone text-[#2D2A24] bg-white hover:bg-stone/20"
+						}`}
+					>
+						<svg
+							aria-hidden="true"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						>
+							<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.42 16.41a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+						</svg>
+						{selectedFileName ? "Change file" : "Choose file"}
+					</label>
+					{selectedFileName && (
+						<span className="ml-3 text-sm text-[#635E56]">{selectedFileName}</span>
+					)}
+				</div>
 			</FieldWrapper>
 
 			<Turnstile
