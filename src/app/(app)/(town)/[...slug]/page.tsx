@@ -4,6 +4,10 @@
  *
  * Explicit static routes (e.g. /our-team, /events, /meetings) take precedence
  * over this catch-all and render from verified static data.
+ *
+ * generateStaticParams enumerates all valid Builder.io paths at build time.
+ * dynamicParams = false ensures unknown paths receive HTTP 404 from the router
+ * before any async layout can stream HTTP 200.
  */
 
 import { siteConfig } from "@/config/site-config";
@@ -14,34 +18,104 @@ import { type BuilderContent } from "@builder.io/sdk";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+// Paths handled by explicit Next.js routes — these never reach this catch-all.
+const EXPLICIT_ROUTES = new Set([
+	"/",
+	"/accessibility",
+	"/business",
+	"/contact",
+	"/emergency",
+	"/events",
+	"/history",
+	"/map",
+	"/meetings",
+	"/news",
+	"/our-team",
+	"/pay/sewer",
+	"/pay/sewer/cancel",
+	"/pay/sewer/success",
+	"/points-of-interest",
+	"/privacy",
+	"/resources",
+	"/resources/community-center-reservation",
+	"/resources/park-reservation",
+	"/sewer",
+]);
+
+// Fallback used when the Builder.io API is unreachable at build time.
+const STATIC_FALLBACK_PARAMS = [
+	{ slug: ["agenda-minutes"] },
+	{ slug: ["permits"] },
+	{ slug: ["emergency", "alerts"] },
+	{ slug: ["elections"] },
+];
+
+export const dynamicParams = false;
+
+// ISR: regenerate known pages every hour so content edits appear without a full redeploy.
+export const revalidate = 3600;
+
+export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
+	if (
+		!env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED ||
+		!env.NEXT_PUBLIC_BUILDER_API_KEY
+	) {
+		return STATIC_FALLBACK_PARAMS;
+	}
+
+	try {
+		const url = new URL("https://cdn.builder.io/api/v3/content/page");
+		url.searchParams.set("apiKey", env.NEXT_PUBLIC_BUILDER_API_KEY);
+		url.searchParams.set("limit", "100");
+		url.searchParams.set("fields", "data.url");
+
+		const res = await fetch(url.toString(), { cache: "no-store" });
+		if (!res.ok) {
+			return STATIC_FALLBACK_PARAMS;
+		}
+
+		const data = (await res.json()) as {
+			results?: Array<{ data?: { url?: string } }>;
+		};
+		const results = data?.results ?? [];
+
+		const params = results
+			.map((page) => page.data?.url)
+			.filter((pageUrl): pageUrl is string => typeof pageUrl === "string")
+			// Exclude template definitions like /elections/:slug — actual instances
+			// have concrete URLs (e.g. /elections/2024-board-election) and are included.
+			.filter((pageUrl) => !pageUrl.includes(":"))
+			.map((pageUrl) => pageUrl.toLowerCase().replace(/\/+$/, "") || "/")
+			.filter((pageUrl) => !EXPLICIT_ROUTES.has(pageUrl))
+			.map((pageUrl) => ({
+				slug: pageUrl.replace(/^\//, "").split("/").filter(Boolean),
+			}))
+			// Exclude root path (handled by (town)/page.tsx)
+			.filter((p) => p.slug.length > 0);
+
+		return params.length > 0 ? params : STATIC_FALLBACK_PARAMS;
+	} catch {
+		return STATIC_FALLBACK_PARAMS;
+	}
+}
+
 interface PageProps {
 	params: Promise<{
 		slug: string[];
 	}>;
 }
 
-const shouldSkip = (slugString: string) => {
-	return (
-		slugString.startsWith("api/") ||
-		slugString.includes(".") ||
-		slugString.startsWith("_next/") ||
-		slugString.startsWith("static/")
-	);
-};
-
 async function getBuilderContent(
 	slug: string[],
 ): Promise<BuilderContent | null> {
-	if (!env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED || !env.NEXT_PUBLIC_BUILDER_API_KEY) {
+	if (
+		!env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED ||
+		!env.NEXT_PUBLIC_BUILDER_API_KEY
+	) {
 		return null;
 	}
 
-	const slugString = slug.join("/");
-	if (shouldSkip(slugString)) {
-		return null;
-	}
-
-	const urlPath = `/${slugString}`;
+	const urlPath = `/${slug.join("/")}`;
 
 	try {
 		const url = new URL("https://cdn.builder.io/api/v3/content/page");
@@ -115,10 +189,7 @@ export async function generateMetadata({
 				images: [{ url: content.data.ogImage as string }],
 			}),
 			...(content.data?.ogType && {
-				type: content.data.ogType as
-					| "website"
-					| "article"
-					| "profile",
+				type: content.data.ogType as "website" | "article" | "profile",
 			}),
 		},
 	};
