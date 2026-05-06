@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import React, { useEffect, useRef, useState, useTransition } from "react";
 import { submitTownContactForm, type TownContactFormData } from "@/server/actions/town-contact";
 
 const INQUIRY_OPTIONS = [
@@ -27,17 +27,28 @@ export const TownContactForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0 && formRef.current) {
+      const firstInvalid = formRef.current.querySelector<HTMLElement>('[aria-invalid="true"]');
+      firstInvalid?.focus();
+    }
+  }, [errors]);
 
   const validate = (form: FormData): FormErrors => {
     const errs: FormErrors = {};
-    if (!form.get("firstName")) errs.firstName = "First name is required";
-    if (!form.get("lastName")) errs.lastName = "Last name is required";
+    if (!form.get("firstName")) errs.firstName = "First name is required. Please enter your first name.";
+    if (!form.get("lastName")) errs.lastName = "Last name is required. Please enter your last name.";
     const email = form.get("email") as string;
-    if (!email) errs.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = "Please enter a valid email";
-    if (!form.get("inquiryType")) errs.inquiryType = "Please select an inquiry type";
+    if (!email) errs.email = "Email address is required. Please enter your email address.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      errs.email = "Please enter a valid email address (e.g., name@example.com).";
+    if (!form.get("inquiryType"))
+      errs.inquiryType = "Please select an inquiry type from the list.";
     const message = form.get("message") as string;
-    if (!message || message.length < 10) errs.message = "Message must be at least 10 characters";
+    if (!message || message.length < 10)
+      errs.message = "Message must be at least 10 characters. Please provide more detail so we can assist you.";
     return errs;
   };
 
@@ -67,7 +78,7 @@ export const TownContactForm = () => {
       if (result.success) {
         setSubmitted(true);
       } else {
-        setServerError(result.error ?? "Something went wrong.");
+        setServerError(result.error ?? "Something went wrong. Please try again.");
       }
     });
   };
@@ -85,73 +96,93 @@ export const TownContactForm = () => {
 
   return (
     <form
+      ref={formRef}
       onSubmit={handleSubmit}
       noValidate
       className="bg-white border border-stone rounded p-6 space-y-4"
+      aria-busy={isPending}
     >
       <h2 className="text-xl font-semibold text-sage-dark mb-2">Send a Message</h2>
 
+      <p className="text-sm text-[#635E56]">
+        Fields marked with{" "}
+        <span aria-hidden="true" className="text-red-500">
+          *
+        </span>{" "}
+        are required.
+      </p>
+
       {serverError && (
         <p
-          className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-3"
+          className="text-sm text-red-700 bg-red-50 border border-red-200 rounded p-3"
           role="alert"
         >
           {serverError}
         </p>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <FieldWrapper label="First Name" id="firstName" error={errors.firstName} required>
-          <input
-            id="firstName"
-            name="firstName"
-            type="text"
-            autoComplete="given-name"
-            required
-            className={inputClass(!!errors.firstName)}
-          />
-        </FieldWrapper>
+      <fieldset className="border-0 p-0 m-0 space-y-0">
+        <legend className="sr-only">Name</legend>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FieldWrapper label="First Name" id="firstName" error={errors.firstName} required>
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              autoComplete="given-name"
+              required
+              aria-required="true"
+              className={inputClass(!!errors.firstName)}
+            />
+          </FieldWrapper>
 
-        <FieldWrapper label="Last Name" id="lastName" error={errors.lastName} required>
-          <input
-            id="lastName"
-            name="lastName"
-            type="text"
-            autoComplete="family-name"
-            required
-            className={inputClass(!!errors.lastName)}
-          />
-        </FieldWrapper>
-      </div>
+          <FieldWrapper label="Last Name" id="lastName" error={errors.lastName} required>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              autoComplete="family-name"
+              required
+              aria-required="true"
+              className={inputClass(!!errors.lastName)}
+            />
+          </FieldWrapper>
+        </div>
+      </fieldset>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <FieldWrapper label="Email" id="email" error={errors.email} required>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            className={inputClass(!!errors.email)}
-          />
-        </FieldWrapper>
+      <fieldset className="border-0 p-0 m-0 space-y-0">
+        <legend className="sr-only">Contact Information</legend>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FieldWrapper label="Email" id="email" error={errors.email} required>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              aria-required="true"
+              className={inputClass(!!errors.email)}
+            />
+          </FieldWrapper>
 
-        <FieldWrapper label="Phone" id="phone" hint="Optional">
-          <input
-            id="phone"
-            name="phone"
-            type="tel"
-            autoComplete="tel"
-            className={inputClass(false)}
-          />
-        </FieldWrapper>
-      </div>
+          <FieldWrapper label="Phone" id="phone" hint="Optional">
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              autoComplete="tel"
+              className={inputClass(false)}
+            />
+          </FieldWrapper>
+        </div>
+      </fieldset>
 
       <FieldWrapper label="Inquiry Type" id="inquiryType" error={errors.inquiryType} required>
         <select
           id="inquiryType"
           name="inquiryType"
           required
+          aria-required="true"
           defaultValue=""
           className={inputClass(!!errors.inquiryType)}
         >
@@ -172,6 +203,7 @@ export const TownContactForm = () => {
           name="message"
           rows={5}
           required
+          aria-required="true"
           className={inputClass(!!errors.message)}
         />
       </FieldWrapper>
@@ -188,7 +220,7 @@ export const TownContactForm = () => {
 };
 
 const inputClass = (hasError: boolean) =>
-  `w-full rounded border ${hasError ? "border-red-400" : "border-stone"} bg-white px-3 py-2 text-sm text-[#2D2A24] placeholder:text-[#635E56]/60 focus:outline-none focus:ring-2 focus:ring-sage-dark/30 focus:border-sage-dark`;
+  `w-full rounded border ${hasError ? "border-red-500" : "border-stone"} bg-white px-3 py-2 text-sm text-[#2D2A24] placeholder:text-[#635E56]/60 focus:outline-none focus:ring-2 focus:ring-sage-dark/30 focus:border-sage-dark`;
 
 const FieldWrapper = ({
   label,
@@ -204,22 +236,30 @@ const FieldWrapper = ({
   hint?: string;
   required?: boolean;
   children: React.ReactNode;
-}) => (
-  <div>
-    <label htmlFor={id} className="block text-sm font-medium text-[#2D2A24] mb-1">
-      {label}
-      {required && (
-        <span className="text-red-500 ml-0.5" aria-hidden="true">
-          *
-        </span>
+}) => {
+  const errorId = `${id}-error`;
+  const child = React.Children.only(children) as React.ReactElement<Record<string, unknown>>;
+  const enhancedChild = React.cloneElement(child, {
+    ...(error ? { "aria-describedby": errorId, "aria-invalid": true } : {}),
+  });
+
+  return (
+    <div>
+      <label htmlFor={id} className="block text-sm font-medium text-[#2D2A24] mb-1">
+        {label}
+        {required && (
+          <span className="text-red-500 ml-0.5" aria-hidden="true">
+            *
+          </span>
+        )}
+        {hint && <span className="text-[#635E56] font-normal ml-1">({hint})</span>}
+      </label>
+      {enhancedChild}
+      {error && (
+        <p id={errorId} className="text-xs text-red-700 mt-1" role="alert">
+          {error}
+        </p>
       )}
-      {hint && <span className="text-[#635E56] font-normal ml-1">({hint})</span>}
-    </label>
-    {children}
-    {error && (
-      <p className="text-xs text-red-600 mt-1" role="alert">
-        {error}
-      </p>
-    )}
-  </div>
-);
+    </div>
+  );
+};
