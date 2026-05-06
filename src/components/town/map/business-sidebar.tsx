@@ -50,11 +50,11 @@ export const BusinessSidebar = ({
 		<div className="flex flex-col h-full overflow-hidden bg-white">
 			{/* Header with search */}
 			<div className="shrink-0 px-3 py-2.5 border-b border-stone">
-				<div className="flex items-center gap-2 mb-2">
-					<div className="flex items-center justify-center h-7 w-7 rounded-lg bg-sage-deep">
-						<MapPin className="h-3.5 w-3.5 text-cream" />
+				<div className="mb-2">
+					<div className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-sage-deep align-middle mr-2">
+						<MapPin className="h-3.5 w-3.5 text-cream" aria-hidden="true" />
 					</div>
-					<h2 className="text-sm font-bold text-[#2D2A24] leading-tight">Harmony Business Directory</h2>
+					<h2 className="text-sm font-bold text-[#2D2A24] leading-tight inline-block align-middle">Harmony Business Directory</h2>
 				</div>
 
 				<div className="relative">

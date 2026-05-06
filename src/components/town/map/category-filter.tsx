@@ -36,19 +36,20 @@ export const CategoryFilter = ({
 			<div className="flex items-center justify-between">
 				<button
 					onClick={() => setExpanded(!expanded)}
-					className="flex items-center gap-1.5 text-xs font-medium text-[#635E56] uppercase tracking-wide hover:text-[#2D2A24] transition-colors"
+					className="text-xs font-medium text-[#635E56] uppercase tracking-wide hover:text-[#2D2A24] transition-colors"
 					aria-expanded={expanded}
 					aria-controls="category-filter-pills"
 				>
 					<ChevronDown
 						className={cn(
-							"h-3.5 w-3.5 transition-transform duration-200",
+							"h-3.5 w-3.5 transition-transform duration-200 inline-block align-middle mr-1.5",
 							expanded && "rotate-180",
 						)}
+						aria-hidden="true"
 					/>
-					Categories
+					<span className="align-middle">Categories</span>
 					{!allActive && (
-						<span className="normal-case tracking-normal text-[#635E56]">
+						<span className="normal-case tracking-normal text-[#635E56] align-middle ml-1.5">
 							({activeCount}/{totalCount})
 						</span>
 					)}
