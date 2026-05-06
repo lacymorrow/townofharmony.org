@@ -1,5 +1,6 @@
 import { AlertTriangle, Info, Phone, Shield } from "lucide-react";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { EmergencyAlertsList } from "@/components/town/emergency/emergency-alerts-list";
 import { EmergencyContacts } from "@/components/town/emergency/emergency-contacts";
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function EmergencyPage() {
+	if (process.env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED !== "true") {
+		notFound();
+	}
 	return (
 		<div className="min-h-screen bg-cream">
 			<div className="container mx-auto px-4 py-8">

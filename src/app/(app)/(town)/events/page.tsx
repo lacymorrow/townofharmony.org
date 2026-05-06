@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { EventsList } from "@/components/town/events/events-list";
 import { EventsFilters } from "@/components/town/events/events-filters";
@@ -14,6 +15,9 @@ export default async function EventsPage({
 }: {
 	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+	if (process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED !== "true") {
+		notFound();
+	}
 	const params = await searchParams;
 	const category = typeof params.category === "string" ? params.category : undefined;
 	const month = typeof params.month === "string" ? params.month : undefined;

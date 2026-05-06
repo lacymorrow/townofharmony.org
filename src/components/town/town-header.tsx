@@ -17,21 +17,21 @@ import {
 import { cn } from "@/lib/utils";
 
 import { navigation as navData } from "@/data/town/navigation";
-import { isSewerVisible } from "@/data/town/sewer-rates";
 import type { TownSettings } from "@/data/town/types";
 
-const SEWER_HREFS = new Set(["/sewer", "/pay/sewer"]);
+const HIDDEN_HREFS = new Set<string>([
+	...(process.env.NEXT_PUBLIC_FEATURE_SEWER_ENABLED !== "true" ? ["/sewer", "/pay/sewer"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_MAP_ENABLED !== "true" ? ["/map"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED !== "true" ? ["/events"] : []),
+]);
 
-const sewerVisible = isSewerVisible();
-const navigation = sewerVisible
-	? navData.mainNav
-	: navData.mainNav
-			.filter((item) => !SEWER_HREFS.has(item.href))
-			.map((item) =>
-				item.children
-					? { ...item, children: item.children.filter((c) => !SEWER_HREFS.has(c.href)) }
-					: item,
-			);
+const navigation = navData.mainNav
+	.filter((item) => !HIDDEN_HREFS.has(item.href))
+	.map((item) =>
+		item.children
+			? { ...item, children: item.children.filter((c) => !HIDDEN_HREFS.has(c.href)) }
+			: item,
+	);
 
 interface TownHeaderProps {
 	settings: TownSettings;
@@ -65,16 +65,20 @@ export function TownHeader({ settings }: TownHeaderProps) {
 							<span className="hidden md:inline">{settings.contactInfo.address}</span>
 						</div>
 						<div className="flex items-center gap-4">
-							<Link
-								href="/events"
-								className="flex items-center gap-1 hover:text-white transition-colors"
-							>
-								<Calendar className="h-3 w-3" />
-								Events
-							</Link>
-							<Link href="/emergency" className="hover:text-white transition-colors">
-								Emergency Info
-							</Link>
+							{process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED === "true" && (
+								<Link
+									href="/events"
+									className="flex items-center gap-1 hover:text-white transition-colors"
+								>
+									<Calendar className="h-3 w-3" />
+									Events
+								</Link>
+							)}
+							{process.env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED === "true" && (
+								<Link href="/emergency" className="hover:text-white transition-colors">
+									Emergency Info
+								</Link>
+							)}
 						</div>
 					</div>
 				</div>

@@ -68,24 +68,22 @@ export const sewerContactInfo = {
 };
 
 /**
- * Whether the sewer section is visible at all. Uses a NEXT_PUBLIC_ var so it
- * is safe to call from both server and client components.
+ * Whether the sewer section is visible at all. Driven by NEXT_PUBLIC_FEATURE_SEWER_ENABLED
+ * (set when Stripe is configured and DISABLE_SEWER is not true).
  */
 export const isSewerVisible = (): boolean =>
-	!!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+	process.env.NEXT_PUBLIC_FEATURE_SEWER_ENABLED === "true";
 
 /**
- * Online sewer payments are available only when Stripe is configured AND at
- * least one sewer rate-tier Stripe price ID is set in the environment.
+ * Online sewer payments are available when SEWER_PAYMENTS_ENABLED is set AND
+ * at least one sewer rate-tier Stripe price ID is configured.
  *
- * Server-only — do not import from client components. The pre-rendered page
- * decides at build time whether the form or the "coming soon" notice ships.
+ * Server-only — do not import from client components.
  */
 export const isSewerPaymentEnabled = (
 	tiers: SewerRateTier[] = sewerRateTiers,
 ): boolean => {
-	if (!process.env.STRIPE_SECRET_KEY) return false;
-	if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) return false;
+	if (process.env.NEXT_PUBLIC_FEATURE_SEWER_PAYMENTS_ENABLED !== "true") return false;
 	return tiers.some(
 		(tier) =>
 			!!process.env[tier.stripePriceEnvVar] ||

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { InteractiveMap } from "./interactive-map";
 
 export const metadata: Metadata = {
@@ -8,5 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default function MapPage() {
+	if (process.env.NEXT_PUBLIC_FEATURE_MAP_ENABLED !== "true") {
+		notFound();
+	}
 	return <InteractiveMap />;
 }

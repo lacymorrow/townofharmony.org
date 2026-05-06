@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { NewsGrid } from "@/components/town/news/news-grid";
 import { NewsFilters } from "@/components/town/news/news-filters";
 
@@ -13,6 +14,9 @@ export default async function NewsPage({
 }: {
 	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+	if (process.env.NEXT_PUBLIC_FEATURE_NEWS_ENABLED !== "true") {
+		notFound();
+	}
 	const params = await searchParams;
 	const page = typeof params.page === "string" ? Number(params.page) : 1;
 	const category = typeof params.category === "string" ? params.category : "";
