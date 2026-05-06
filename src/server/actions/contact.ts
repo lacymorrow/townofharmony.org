@@ -22,7 +22,7 @@ async function verifyTurnstileToken(token: string): Promise<boolean> {
 
 export async function submitContactForm(formData: FormData) {
 	try {
-		if (env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+		if (env.TURNSTILE_SECRET_KEY) {
 			const token = formData.get("turnstileToken") as string | null;
 			if (!token || !(await verifyTurnstileToken(token))) {
 				return { success: false, error: "Security check failed. Please try again." };
