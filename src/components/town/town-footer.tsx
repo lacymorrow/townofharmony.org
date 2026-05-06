@@ -29,7 +29,7 @@ export function TownFooter({ settings }: TownFooterProps) {
 						<p className="text-sm leading-relaxed">
 							{settings.contactInfo.address}
 							<br />
-							{settings.contactInfo.phone} &middot; {settings.contactInfo.email}
+							<span className="whitespace-nowrap">{settings.contactInfo.phone}</span> &middot; {settings.contactInfo.email}
 						</p>
 
 						{/* Social Media */}
