@@ -56,10 +56,10 @@ export default function ResourcesPage() {
 								<p className="text-xs font-bold text-sage uppercase">
 									{r.category}
 								</p>
-								<h2 className="text-lg font-serif font-bold text-sage-dark mt-1 flex items-center gap-1.5">
+								<h2 className="text-lg font-serif font-bold text-sage-dark mt-1">
 									{r.title}
 									{r.externalUrl?.startsWith("http") && (
-										<ExternalLink className="w-4 h-4 text-sage flex-shrink-0" />
+										<ExternalLink className="inline-block ml-1.5 w-4 h-4 text-sage align-middle" aria-hidden="true" />
 									)}
 								</h2>
 								<p className="text-sm text-[#4A4640] mt-2">{r.description}</p>
