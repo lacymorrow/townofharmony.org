@@ -9,9 +9,10 @@ import { emergencyServices } from "@/data/town/emergency-services";
 import { announcements } from "@/data/town/announcements";
 import { businesses } from "@/data/town/businesses";
 import { elections } from "@/data/town/elections";
-import { settings } from "@/data/town/settings";
+import { settings, toTownSettings, type BuilderSettingsFlat } from "@/data/town/settings";
 import { navigation } from "@/data/town/navigation";
 import { homepage } from "@/data/town/homepage";
+import { fetchBuilderEntry } from "@/lib/builder-data-server";
 
 /**
  * Static data access layer for town content.
@@ -381,9 +382,20 @@ export const getElectionBySlug = async (slug: string) => {
 // --- Globals ---
 
 /**
- * Get settings global
+ * Get settings global — fetches from Builder.io with static fallback.
  */
 export const getSettings = async () => {
+	try {
+		const builderSettings = await fetchBuilderEntry<BuilderSettingsFlat>(
+			"town-settings",
+			{},
+		);
+		if (builderSettings) {
+			return toTownSettings(builderSettings);
+		}
+	} catch {
+		// Fall back to static data
+	}
 	return settings;
 };
 
