@@ -11,6 +11,7 @@ import { emergencyServices } from "@/data/town/emergency-services";
 import { events } from "@/data/town/events";
 import { historyArticles } from "@/data/town/history";
 import { homepage } from "@/data/town/homepage";
+import { mapBusinesses } from "@/data/town/map-businesses";
 import { meetings } from "@/data/town/meetings";
 import { navigation } from "@/data/town/navigation";
 import { news } from "@/data/town/news";
@@ -18,6 +19,7 @@ import { pointsOfInterest } from "@/data/town/points-of-interest";
 import { resources } from "@/data/town/resources";
 import { settings } from "@/data/town/settings";
 import { teamMembers } from "@/data/town/team-members";
+import type { BusinessCategory, MapBusiness } from "@/lib/map-utils";
 
 const paginate = <T>(items: T[], limit: number, page: number) => {
 	const totalDocs = items.length;
@@ -361,6 +363,37 @@ export const getElectionsSync = (options?: {
 
 export const getElectionBySlugSync = (slug: string) => {
 	return elections.find((e) => e.slug === slug) ?? null;
+};
+
+// --- Map Businesses ---
+
+export const getMapBusinessesSync = (options?: {
+	limit?: number;
+	page?: number;
+	category?: BusinessCategory;
+	search?: string;
+}): { docs: MapBusiness[]; totalDocs: number; totalPages: number; page: number } => {
+	const { limit = 100, page = 1, category, search } = options ?? {};
+
+	let filtered = [...mapBusinesses];
+
+	if (category) {
+		filtered = filtered.filter((b) => b.category === category);
+	}
+
+	if (search) {
+		filtered = filtered.filter(
+			(b) => likeMatch(b.name, search) || likeMatch(b.description, search),
+		);
+	}
+
+	filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+	return paginate(filtered, limit, page);
+};
+
+export const getMapBusinessByIdSync = (id: string): MapBusiness | null => {
+	return mapBusinesses.find((b) => b.id === id) ?? null;
 };
 
 // --- Globals ---
