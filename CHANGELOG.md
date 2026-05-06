@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- feat: fetch sewer payment rates from Builder.io with static fallback ([LAC-642](https://app.paperclip.so/LAC/issues/LAC-642))
 - feat: display featured images on event cards and event detail pages ([LAC-554](https://app.paperclip.so/LAC/issues/LAC-554))
 - feat: add meetings filter panel with type/status/year/month controls ([LAC-555](https://app.paperclip.so/LAC/issues/LAC-555))
 - fix: hide sewer pages/links when Stripe not configured ([LAC-620](https://app.paperclip.so/LAC/issues/LAC-620))
