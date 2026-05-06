@@ -34,6 +34,7 @@ import { businesses } from "../src/data/town/businesses";
 import { elections } from "../src/data/town/elections";
 import { sewerRateTiers } from "../src/data/town/sewer-rates";
 import { homepage } from "../src/data/town/homepage";
+import { mapBusinesses } from "../src/data/town/map-businesses";
 
 const BUILDER_PRIVATE_KEY = process.env.BUILDER_PRIVATE_KEY;
 const BUILDER_API_KEY = process.env.NEXT_PUBLIC_BUILDER_API_KEY;
@@ -135,6 +136,21 @@ const seedData: Record<string, SeedEntry[]> = {
 			type: tier.type,
 			monthlyRate: tier.monthlyRate,
 			sortOrder: i,
+		},
+	})),
+	"town-map-business": mapBusinesses.map((b) => ({
+		name: b.name,
+		data: {
+			name: b.name,
+			address: b.address,
+			phone: b.phone ?? "",
+			category: b.category,
+			lat: b.lat,
+			lng: b.lng,
+			description: b.description ?? "",
+			googlePlaceId: "",
+			isOverride: true,
+			businessStatus: "OPERATIONAL",
 		},
 	})),
 };
