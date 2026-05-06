@@ -3,7 +3,6 @@
 import { siteConfig } from "@/config/site-config";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
-import { addContactToAudience } from "@/server/actions/subscribe";
 import { contactFormSchema } from "@/types/contact";
 
 export async function submitContactForm(formData: FormData) {
@@ -43,14 +42,6 @@ export async function submitContactForm(formData: FormData) {
                 <p><strong>Newsletter:</strong> ${validatedData.newsletter ? "Yes" : "No"}</p>
             `,
 		});
-
-		if (validatedData.newsletter && validatedData.contactInfo?.includes("@")) {
-			try {
-				await addContactToAudience(validatedData.contactInfo);
-			} catch (error) {
-				console.error("Error subscribing to newsletter:", error);
-			}
-		}
 
 		return {
 			success: true,
