@@ -1,0 +1,65 @@
+name: Sync Map Businesses
+
+on:
+  schedule:
+    # Weekly on Sunday at 6:00 AM UTC
+    - cron: '0 6 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Sync from Google Places
+        env:
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+        run: npx tsx scripts/sync-map-businesses.ts
+
+      - name: Merge with Builder.io overrides
+        env:
+          NEXT_PUBLIC_BUILDER_API_KEY: ${{ secrets.NEXT_PUBLIC_BUILDER_API_KEY }}
+        run: npx tsx scripts/merge-map-businesses.ts
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet src/data/town/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create PR
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="chore/sync-map-businesses-$(date +%Y%m%d)"
+          git checkout -b "$BRANCH"
+          git add src/data/town/map-businesses-google.json src/data/town/map-businesses-merged.json
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: sync map businesses from Google Places $(date +%Y-%m-%d)"
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "chore: weekly map business sync $(date +%Y-%m-%d)" \
+            --body "Automated weekly sync of map businesses from Google Places API.
+
+          Review any new businesses detected and update Builder.io overrides as needed." \
+            --base main
