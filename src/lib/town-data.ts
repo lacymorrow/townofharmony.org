@@ -393,8 +393,8 @@ export const getSettings = async () => {
 		if (builderSettings) {
 			return toTownSettings(builderSettings);
 		}
-	} catch {
-		// Fall back to static data
+	} catch (err) {
+		console.error("Failed to fetch settings from Builder.io:", err);
 	}
 	return settings;
 };

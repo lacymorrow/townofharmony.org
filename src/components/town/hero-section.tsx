@@ -26,8 +26,8 @@ export async function HeroSection() {
 		if (results.length > 0) {
 			firstSlide = results[0];
 		}
-	} catch {
-		// Fall back to static data
+	} catch (err) {
+		console.error("Failed to fetch hero slides from Builder.io:", err);
 	}
 
 	const heroImageUrl = firstSlide?.image ? getMediaUrl(firstSlide.image) : null;

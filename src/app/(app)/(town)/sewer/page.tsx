@@ -1,7 +1,8 @@
 import { Phone, Mail, Clock, MapPin } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { sewerContactInfo, sewerRateTiers, isSewerPaymentEnabled } from "@/data/town/sewer-rates";
+import { notFound } from "next/navigation";
+import { sewerContactInfo, sewerRateTiers, isSewerPaymentEnabled, isSewerVisible } from "@/data/town/sewer-rates";
 import type { SewerRateTier } from "@/data/town/sewer-rates";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
@@ -25,6 +26,9 @@ export const metadata: Metadata = {
 };
 
 export default async function SewerPage() {
+	if (!isSewerVisible()) {
+		notFound();
+	}
 	const onlinePaymentsEnabled = isSewerPaymentEnabled();
 
 	let displayRates: SewerRateTier[] = sewerRateTiers;
@@ -48,8 +52,8 @@ export default async function SewerPage() {
 				};
 			});
 		}
-	} catch {
-		// Fall back to static data
+	} catch (err) {
+		console.error("Failed to fetch sewer rates from Builder.io:", err);
 	}
 	return (
 		<div className="container mx-auto max-w-4xl px-4 py-12">

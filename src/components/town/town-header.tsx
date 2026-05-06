@@ -17,9 +17,21 @@ import {
 import { cn } from "@/lib/utils";
 
 import { navigation as navData } from "@/data/town/navigation";
+import { isSewerVisible } from "@/data/town/sewer-rates";
 import type { TownSettings } from "@/data/town/types";
 
-const navigation = navData.mainNav;
+const SEWER_HREFS = new Set(["/sewer", "/pay/sewer"]);
+
+const sewerVisible = isSewerVisible();
+const navigation = sewerVisible
+	? navData.mainNav
+	: navData.mainNav
+			.filter((item) => !SEWER_HREFS.has(item.href))
+			.map((item) =>
+				item.children
+					? { ...item, children: item.children.filter((c) => !SEWER_HREFS.has(c.href)) }
+					: item,
+			);
 
 interface TownHeaderProps {
 	settings: TownSettings;
