@@ -1,28 +1,14 @@
 "use server";
 
-import { env } from "@/env";
 import { siteConfig } from "@/config/site-config";
 import { resend } from "@/lib/resend";
+import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
 import { addContactToAudience } from "@/server/actions/subscribe";
 import { contactFormSchema } from "@/types/contact";
 
-async function verifyTurnstileToken(token: string): Promise<boolean> {
-	const secretKey = env.TURNSTILE_SECRET_KEY;
-	if (!secretKey) return true;
-
-	const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-		method: "POST",
-		headers: { "Content-Type": "application/x-www-form-urlencoded" },
-		body: new URLSearchParams({ secret: secretKey, response: token }),
-	});
-
-	const result = (await response.json()) as { success: boolean };
-	return result.success;
-}
-
 export async function submitContactForm(formData: FormData) {
 	try {
-		if (env.TURNSTILE_SECRET_KEY) {
+		if (isTurnstileConfigured()) {
 			const token = formData.get("turnstileToken") as string | null;
 			if (!token || !(await verifyTurnstileToken(token))) {
 				return { success: false, error: "Security check failed. Please try again." };

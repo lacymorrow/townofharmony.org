@@ -1,9 +1,9 @@
 "use server";
 
 import { z } from "zod";
-import { env } from "@/env";
 import { siteConfig } from "@/config/site-config";
 import { resend } from "@/lib/resend";
+import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
 
 const INQUIRY_VALUES = [
 	"general",
@@ -42,20 +42,6 @@ export type TownContactFormData = z.infer<typeof townContactSchema>;
 const esc = (s: string) =>
 	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-async function verifyTurnstileToken(token: string): Promise<boolean> {
-	const secretKey = env.TURNSTILE_SECRET_KEY;
-	if (!secretKey) return true;
-
-	const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-		method: "POST",
-		headers: { "Content-Type": "application/x-www-form-urlencoded" },
-		body: new URLSearchParams({ secret: secretKey, response: token }),
-	});
-
-	const result = (await response.json()) as { success: boolean };
-	return result.success;
-}
-
 export async function submitTownContactForm(formData: TownContactFormData) {
 	const parsed = townContactSchema.safeParse(formData);
 	if (!parsed.success) {
@@ -65,7 +51,7 @@ export async function submitTownContactForm(formData: TownContactFormData) {
 	const { firstName, lastName, email, phone, inquiryType, message, turnstileToken } = parsed.data;
 	const inquiryLabel = INQUIRY_LABELS[inquiryType];
 
-	if (env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+	if (isTurnstileConfigured()) {
 		if (!turnstileToken || !(await verifyTurnstileToken(turnstileToken))) {
 			return { success: false, error: "Security check failed. Please try again." };
 		}
