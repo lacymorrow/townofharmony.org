@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
+import { env } from "@/env";
 import { routes } from "@/config/routes";
 
-/**
- * Admin page
- */
 export default async function AdminPage() {
-  redirect(routes.admin.users);
+  if (env.NEXT_PUBLIC_BUILDER_API_KEY) {
+    redirect(routes.external.builderCms);
+  } else {
+    redirect(routes.admin.integrations);
+  }
 }
