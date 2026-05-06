@@ -29,19 +29,25 @@ export default async function SewerPaymentPage() {
 			limit: 20,
 		});
 		if (results.length > 0) {
-			displayRates = results.map((r) => {
+			const mapped = results.reduce<SewerRateTier[]>((acc, r) => {
 				const staticTier = sewerRateTiers.find((t) => t.id === r.tierId);
-				return {
+				if (!staticTier) {
+					console.warn(`Sewer rate tierId "${r.tierId}" from Builder.io not found in static config — skipping.`);
+					return acc;
+				}
+				acc.push({
 					id: r.tierId,
 					name: r.name,
 					description: r.description,
 					location: r.location,
 					type: r.type,
 					monthlyRate: r.monthlyRate,
-					stripePriceEnvVar: staticTier?.stripePriceEnvVar ?? "",
-					stripeSubPriceEnvVar: staticTier?.stripeSubPriceEnvVar ?? "",
-				};
-			});
+					stripePriceEnvVar: staticTier.stripePriceEnvVar,
+					stripeSubPriceEnvVar: staticTier.stripeSubPriceEnvVar,
+				});
+				return acc;
+			}, []);
+			if (mapped.length > 0) displayRates = mapped;
 		}
 	} catch (err) {
 		console.error("Failed to fetch sewer rates from Builder.io:", err);
