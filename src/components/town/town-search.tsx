@@ -83,6 +83,7 @@ const buildSearchIndex = (): SearchResult[] => {
 	// Quick links (dedupe with nav)
 	const navHrefs = new Set(results.map((r) => r.href));
 	for (const link of navigation.quickLinks) {
+		if (hideSewer && SEWER_HREFS.has(link.href)) continue;
 		if (!navHrefs.has(link.href)) {
 			results.push({
 				id: `quick-${link.href}`,

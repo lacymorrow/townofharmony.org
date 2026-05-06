@@ -5,7 +5,7 @@ import { navigation } from "@/data/town/navigation";
 import { isSewerVisible } from "@/data/town/sewer-rates";
 import type { TownSettings } from "@/data/town/types";
 
-const SEWER_HREF = "/sewer";
+const SEWER_HREFS = new Set(["/sewer", "/pay/sewer"]);
 
 const sewerVisible = isSewerVisible();
 const footerLinks = Object.fromEntries(
@@ -13,7 +13,7 @@ const footerLinks = Object.fromEntries(
 		section.category,
 		sewerVisible
 			? section.links
-			: section.links.filter((link) => link.href !== SEWER_HREF),
+			: section.links.filter((link) => !SEWER_HREFS.has(link.href)),
 	]),
 );
 
