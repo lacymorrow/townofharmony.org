@@ -122,7 +122,7 @@ export async function EmergencyAlertsList({
 						</CardHeader>
 
 						<CardContent className="space-y-3">
-							<p className={`text-sm ${isActive ? colors.text : "text-[#4A4640]"}`}>
+							<p className={`text-base ${isActive ? colors.text : "text-[#4A4640]"}`}>
 								{messageText}
 							</p>
 
@@ -134,7 +134,7 @@ export async function EmergencyAlertsList({
 							)}
 
 							<div className="flex items-center justify-between pt-2 border-t border-[#DDD7CC]">
-								<div className="flex items-center gap-4 text-xs text-[#635E56]">
+								<div className="flex items-center gap-4 text-sm text-[#635E56]">
 									<div className="flex items-center gap-1">
 										<Calendar className="h-3 w-3" />
 										<span>Issued {new Date(alert.createdAt).toLocaleString()}</span>

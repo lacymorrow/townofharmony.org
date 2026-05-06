@@ -134,11 +134,11 @@ export const TownPointsOfInterest = ({
 									<h2 className="text-lg font-semibold text-[#2D2A24] mb-2">
 										{poi.name}
 									</h2>
-									<p className="text-sm text-[#4A4640] mb-3 line-clamp-2">
+									<p className="text-base text-[#4A4640] mb-3 line-clamp-2">
 										{poi.description}
 									</p>
 
-									<div className="space-y-1.5 text-xs text-[#635E56]">
+									<div className="space-y-1.5 text-sm text-[#635E56]">
 										<div className="flex items-start gap-1.5">
 											<svg
 												className="w-3.5 h-3.5 mt-0.5 flex-shrink-0"
@@ -185,13 +185,13 @@ export const TownPointsOfInterest = ({
 											{poi.amenities.slice(0, 3).map((amenity) => (
 												<span
 													key={amenity}
-													className="bg-cream text-[#635E56] px-1.5 py-0.5 rounded text-[10px]"
+													className="bg-cream text-[#635E56] px-1.5 py-0.5 rounded text-xs"
 												>
 													{amenity}
 												</span>
 											))}
 											{poi.amenities.length > 3 && (
-												<span className="text-[10px] text-[#635E56] py-0.5">
+												<span className="text-xs text-[#635E56] py-0.5">
 													+{poi.amenities.length - 3} more
 												</span>
 											)}

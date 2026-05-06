@@ -101,7 +101,7 @@ export const SewerPaymentForm = ({ stripeEnabled }: SewerPaymentFormProps) => {
 				<h3 className="mb-2 text-lg font-semibold text-yellow-800 dark:text-yellow-200">
 					Online Payments Unavailable
 				</h3>
-				<p className="text-sm text-yellow-700 dark:text-yellow-300">
+				<p className="text-base text-yellow-700 dark:text-yellow-300">
 					Online sewer bill payments are not currently available. Please visit Town Hall or
 					contact the {sewerContactInfo.department} at {sewerContactInfo.phone} to pay your bill.
 				</p>
@@ -227,14 +227,14 @@ export const SewerPaymentForm = ({ stripeEnabled }: SewerPaymentFormProps) => {
 												<RadioGroupItem value="one-time" />
 												<div>
 													<p className="text-sm font-medium">One-Time Payment</p>
-													<p className="text-xs text-muted-foreground">Pay this month only</p>
+													<p className="text-sm text-muted-foreground">Pay this month only</p>
 												</div>
 											</label>
 											<label className="flex cursor-pointer items-center gap-2 rounded-lg border p-3 transition-colors hover:bg-muted/50 [&:has([data-state=checked])]:border-primary">
 												<RadioGroupItem value="auto-pay" />
 												<div>
 													<p className="text-sm font-medium">Auto-Pay (Monthly)</p>
-													<p className="text-xs text-muted-foreground">
+													<p className="text-sm text-muted-foreground">
 														Automatic monthly billing
 													</p>
 												</div>

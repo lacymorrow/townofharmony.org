@@ -256,14 +256,14 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 																{resource.title}
 															</h3>
 
-															<p className="text-sm text-[#4A4640] mt-1 line-clamp-2">
+															<p className="text-base text-[#4A4640] mt-1 line-clamp-2">
 																{resource.description}
 															</p>
 
 															{/* Contact Info */}
 															{(resource.contactPhone ||
 																resource.contactEmail) && (
-																<div className="mt-2 space-y-0.5 text-xs text-[#635E56]">
+																<div className="mt-2 space-y-0.5 text-sm text-[#635E56]">
 																	{resource.contactPhone && (
 																		<p>Phone: {resource.contactPhone}</p>
 																	)}

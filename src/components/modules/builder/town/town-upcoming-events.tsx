@@ -63,7 +63,7 @@ export const TownUpcomingEvents = ({ limit = 5 }: TownUpcomingEventsProps) => {
 							>
 								<div className="w-2.5 h-2.5 rounded-full bg-wheat flex-shrink-0" />
 								<div className="flex-1">
-									<div className="text-xs text-sage font-semibold">
+									<div className="text-sm text-sage font-semibold">
 										{dateStr}
 										{event.eventTime && (
 											<> &middot; {event.eventTime}</>
@@ -73,7 +73,7 @@ export const TownUpcomingEvents = ({ limit = 5 }: TownUpcomingEventsProps) => {
 										{event.title}
 									</h3>
 									{event.location && (
-										<p className="text-[13px] text-[#4A4640]">
+										<p className="text-sm text-[#4A4640]">
 											{event.location}
 										</p>
 									)}

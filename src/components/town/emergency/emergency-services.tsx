@@ -80,7 +80,7 @@ export const EmergencyServices = async () => {
 									</CardHeader>
 
 									<CardContent className="space-y-4">
-										<p className="text-[#4A4640] text-sm">{service.description}</p>
+										<p className="text-[#4A4640] text-base">{service.description}</p>
 
 										<div className="flex items-center gap-2 flex-wrap">
 											<span className="font-semibold text-[#2D2A24]">Emergency Phone:</span>
@@ -97,7 +97,7 @@ export const EmergencyServices = async () => {
 												<h3 className="font-semibold text-[#2D2A24] mb-2 text-sm">
 													Preparedness Tips:
 												</h3>
-												<ul className="text-xs text-[#4A4640] space-y-1">
+												<ul className="text-sm text-[#4A4640] space-y-1">
 													{preparedness.map((tip, tipIndex) => (
 														<li key={tipIndex} className="flex items-start gap-2">
 															<span className="text-[#635E56] mt-1">&bull;</span>
@@ -120,7 +120,7 @@ export const EmergencyServices = async () => {
 					<h3 className="font-bold text-sage-dark mb-3 text-lg font-serif">
 						Stay Connected During Emergencies
 					</h3>
-					<div className="space-y-2 text-sm text-[#4A4640]">
+					<div className="space-y-2 text-base text-[#4A4640]">
 						<p>
 							<strong className="text-[#2D2A24]">Social Media:</strong> Follow Town of Harmony on Facebook for real-time updates
 						</p>

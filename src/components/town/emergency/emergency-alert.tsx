@@ -80,7 +80,7 @@ export const EmergencyAlert = ({
 							{alert.title}
 						</h3>
 
-						<p className={`${colors.text} ${compact ? "text-xs" : "text-sm"} mt-1`}>
+						<p className={`${colors.text} ${compact ? "text-sm" : "text-base"} mt-1`}>
 							{alert.message}
 						</p>
 
@@ -93,7 +93,7 @@ export const EmergencyAlert = ({
 
 						{!compact && alert.affectedAreas && alert.affectedAreas.length > 0 && (
 							<div className="mt-2">
-								<span className={`text-xs ${colors.text}`}>
+								<span className={`text-sm ${colors.text}`}>
 									Affected areas: {alert.affectedAreas.join(", ")}
 								</span>
 							</div>
@@ -113,7 +113,7 @@ export const EmergencyAlert = ({
 						)}
 
 						{!!alert.contactInfo && (
-							<div className="mt-3 text-xs text-[#4A4640]">
+							<div className="mt-3 text-sm text-[#4A4640]">
 								Contact:{" "}
 								{typeof alert.contactInfo === "string"
 									? alert.contactInfo
@@ -121,7 +121,7 @@ export const EmergencyAlert = ({
 							</div>
 						)}
 
-						<div className="mt-2 text-xs text-[#635E56]">
+						<div className="mt-2 text-sm text-[#635E56]">
 							{alert.startsAt && (
 								<span>Active from {new Date(alert.startsAt).toLocaleString()}</span>
 							)}

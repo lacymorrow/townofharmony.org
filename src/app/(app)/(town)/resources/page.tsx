@@ -53,7 +53,7 @@ export default function ResourcesPage() {
 
 						return (
 							<Wrapper key={r.id}>
-								<p className="text-xs font-bold text-sage uppercase">
+								<p className="text-sm font-bold text-sage uppercase">
 									{r.category}
 								</p>
 								<h2 className="text-lg font-serif font-bold text-sage-dark mt-1">
@@ -62,7 +62,7 @@ export default function ResourcesPage() {
 										<ExternalLink className="inline-block ml-1.5 w-4 h-4 text-sage align-middle" aria-hidden="true" />
 									)}
 								</h2>
-								<p className="text-sm text-[#4A4640] mt-2">{r.description}</p>
+								<p className="text-base text-[#4A4640] mt-2">{r.description}</p>
 								{r.contactPhone && (
 									<p className="mt-3 flex items-center gap-2">
 										<span className="text-sm font-medium text-[#635E56]">Phone:</span>

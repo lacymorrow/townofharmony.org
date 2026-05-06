@@ -26,7 +26,7 @@ export default function SewerPaymentPage() {
 
 			<SewerPaymentForm stripeEnabled={true} />
 
-			<p className="mt-6 text-center text-xs text-muted-foreground">
+			<p className="mt-6 text-center text-sm text-muted-foreground">
 				Questions? Contact {sewerContactInfo.department} at {sewerContactInfo.phone}
 			</p>
 		</div>

@@ -37,13 +37,13 @@ export const EmergencyContacts = () => {
 							</div>
 
 							{service.description && (
-								<p className="text-sm text-[#4A4640] pt-2 border-t border-[#DDD7CC]">{service.description}</p>
+								<p className="text-base text-[#4A4640] pt-2 border-t border-[#DDD7CC]">{service.description}</p>
 							)}
 
 							{service.preparedness.length > 0 && (
 								<div className="pt-2">
-									<p className="text-xs font-medium text-[#2D2A24] mb-1">Be Prepared:</p>
-									<ul className="text-xs text-[#635E56] space-y-0.5 list-disc list-inside">
+									<p className="text-sm font-medium text-[#2D2A24] mb-1">Be Prepared:</p>
+									<ul className="text-sm text-[#635E56] space-y-0.5 list-disc list-inside">
 										{service.preparedness.slice(0, 3).map((tip) => (
 											<li key={tip}>{tip}</li>
 										))}

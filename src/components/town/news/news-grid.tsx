@@ -73,7 +73,7 @@ export async function NewsGrid({ page, category, search }: NewsGridProps) {
 									</Link>
 								</CardTitle>
 
-								<div className="flex items-center gap-4 text-xs text-[#635E56] mt-2">
+								<div className="flex items-center gap-4 text-sm text-[#635E56] mt-2">
 									{article.publishedAt && (
 										<div className="flex items-center gap-1">
 											<Calendar className="h-3 w-3" />
@@ -101,7 +101,7 @@ export async function NewsGrid({ page, category, search }: NewsGridProps) {
 							</CardHeader>
 
 							<CardContent>
-								<p className="text-sm text-[#4A4640] line-clamp-3 mb-4">
+								<p className="text-base text-[#4A4640] line-clamp-3 mb-4">
 									{excerptText}
 								</p>
 

@@ -85,7 +85,7 @@ export function TownHeader({ settings }: TownHeaderProps) {
 							/>
 							<div>
 								<h1 className="text-2xl font-serif font-bold text-sage-dark">{settings.siteTitle}</h1>
-								<p className="text-xs text-[#635E56] uppercase tracking-[1.5px] font-semibold">
+								<p className="text-sm text-[#635E56] uppercase tracking-[1.5px] font-semibold">
 									{settings.branding.county}, {settings.branding.state}
 								</p>
 							</div>

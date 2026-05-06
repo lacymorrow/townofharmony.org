@@ -82,7 +82,7 @@ export const TownContactForm = () => {
 										<Icon className="h-5 w-5 text-wheat" />
 									</div>
 									<div>
-										<p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-1">
+										<p className="text-sm font-semibold text-[#4A4640] uppercase tracking-wider mb-1">
 											{card.label}
 										</p>
 										<p className="text-[15px] text-[#2D2A24] font-medium whitespace-pre-line">

@@ -65,14 +65,14 @@ export const TownLatestNews = ({ limit = 3 }: TownLatestNewsProps) => {
 								{/* Date header */}
 								<div className="bg-sage-dark text-white px-5 py-3 flex items-center gap-3">
 									<div className="text-center">
-										<div className="text-[11px] uppercase tracking-wider text-[#E8D5A3] font-bold">
+										<div className="text-xs uppercase tracking-wider text-[#E8D5A3] font-bold">
 											{month}
 										</div>
 										<div className="text-[22px] font-bold leading-tight">
 											{day}
 										</div>
 									</div>
-									<div className="text-xs text-white/80">
+									<div className="text-sm text-white/80">
 										{year}
 									</div>
 								</div>
@@ -82,7 +82,7 @@ export const TownLatestNews = ({ limit = 3 }: TownLatestNewsProps) => {
 									<h3 className="font-semibold text-[17px] text-[#2D2A24] mb-2 group-hover:text-sage-dark transition-colors line-clamp-2">
 										{article.title}
 									</h3>
-									<p className="text-sm text-[#4A4640] leading-relaxed line-clamp-3">
+									<p className="text-base text-[#4A4640] leading-relaxed line-clamp-3">
 										{article.excerpt}
 									</p>
 								</div>

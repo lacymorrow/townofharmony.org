@@ -30,7 +30,7 @@ export const MapLegend = () => {
 								className="inline-block w-5 border-t-2 border-dashed border-sage-deep"
 								aria-hidden="true"
 							/>
-							<span className="text-[11px] text-[#635E56]">Town Boundary</span>
+							<span className="text-xs text-[#635E56]">Town Boundary</span>
 						</div>
 						{ALL_CATEGORIES.map((cat) => (
 							<div key={cat} className="flex items-center gap-2">
@@ -39,7 +39,7 @@ export const MapLegend = () => {
 									style={{ backgroundColor: getCategoryColor(cat) }}
 									aria-hidden="true"
 								/>
-								<span className="text-[11px] text-[#635E56] truncate">{cat}</span>
+								<span className="text-xs text-[#635E56] truncate">{cat}</span>
 							</div>
 						))}
 					</div>

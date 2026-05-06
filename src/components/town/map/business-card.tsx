@@ -38,12 +38,12 @@ export const BusinessCard = ({ business, isSelected, onClick }: BusinessCardProp
 					</h3>
 					<div className="flex items-center gap-1 mt-1">
 						<MapPin className="h-3 w-3 text-[#635E56] shrink-0" aria-hidden="true" />
-						<p className="text-xs text-[#635E56] leading-tight truncate">{business.address}</p>
+						<p className="text-sm text-[#635E56] leading-tight truncate">{business.address}</p>
 					</div>
 					{business.phone && (
 						<div className="flex items-center gap-1 mt-0.5">
 							<Phone className="h-3 w-3 text-[#635E56] shrink-0" aria-hidden="true" />
-							<p className="text-xs text-[#635E56]">{business.phone}</p>
+							<p className="text-sm text-[#635E56]">{business.phone}</p>
 						</div>
 					)}
 					<div className="mt-1.5 flex items-center gap-1.5">
