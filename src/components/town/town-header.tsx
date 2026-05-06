@@ -75,11 +75,12 @@ export function TownHeader({ settings }: TownHeaderProps) {
 						{/* Logo with shield */}
 						<Link href="/" className="flex items-center gap-4">
 							<Image
-								src="/images/town/logo.png"
-								alt="Town of Harmony Seal"
-								width={56}
+								src="/images/town/shield.svg"
+								alt="Town of Harmony Shield"
+								width={66}
 								height={56}
 								className="flex-shrink-0"
+								unoptimized
 								priority
 							/>
 							<div>
