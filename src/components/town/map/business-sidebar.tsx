@@ -48,16 +48,13 @@ export const BusinessSidebar = ({
 
 	return (
 		<div className="flex flex-col h-full overflow-hidden bg-white">
-			{/* Header */}
-			<div className="shrink-0 px-4 pt-4 pb-3 border-b border-stone">
-				<div className="flex items-center gap-2 mb-3">
-					<div className="flex items-center justify-center h-8 w-8 rounded-lg bg-sage-deep">
-						<MapPin className="h-4 w-4 text-cream" />
+			{/* Header with search */}
+			<div className="shrink-0 px-3 py-2.5 border-b border-stone">
+				<div className="flex items-center gap-2 mb-2">
+					<div className="flex items-center justify-center h-7 w-7 rounded-lg bg-sage-deep">
+						<MapPin className="h-3.5 w-3.5 text-cream" />
 					</div>
-					<div>
-						<h2 className="text-base font-bold text-[#2D2A24] leading-tight">Harmony, NC</h2>
-						<p className="text-sm text-[#635E56]">Business Directory</p>
-					</div>
+					<h2 className="text-sm font-bold text-[#2D2A24] leading-tight">Harmony Business Directory</h2>
 				</div>
 
 				<div className="relative">
@@ -76,8 +73,8 @@ export const BusinessSidebar = ({
 				</div>
 			</div>
 
-			{/* Filters */}
-			<div className="shrink-0 px-4 py-3 border-b border-stone">
+			{/* Filters + count */}
+			<div className="shrink-0 px-3 py-2 border-b border-stone">
 				<CategoryFilter
 					activeCategories={activeCategories}
 					onToggleCategory={onToggleCategory}
@@ -85,11 +82,7 @@ export const BusinessSidebar = ({
 					onSelectAll={onSelectAll}
 					businesses={businesses}
 				/>
-			</div>
-
-			{/* Count */}
-			<div className="shrink-0 px-4 py-2 border-b border-stone">
-				<p className="text-sm text-[#635E56]" aria-live="polite" aria-atomic="true">
+				<p className="text-xs text-[#635E56] mt-1.5" aria-live="polite" aria-atomic="true">
 					Showing <span className="font-semibold text-[#2D2A24]">{visibleCount}</span> of{" "}
 					{totalCount} businesses
 				</p>
