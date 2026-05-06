@@ -36,8 +36,13 @@ export default async function SewerPaymentPage() {
 		// Builder.io rates are display-only. The actual Stripe charge is determined
 		// by the tierId lookup in the server action against the static sewerRateTiers —
 		// keep those env vars and CMS values in sync when rates change.
+		// Only show CMS tiers that have a matching static tier so the form never
+		// surfaces a rate the server action cannot process.
 		const valid = results.filter(
-			(r) => r.tierId && typeof r.monthlyRate === "number",
+			(r) =>
+				r.tierId &&
+				typeof r.monthlyRate === "number" &&
+				sewerRateTiers.some((t) => t.id === r.tierId),
 		);
 		if (valid.length > 0) {
 			rates = valid.map((r) => ({
