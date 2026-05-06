@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { resources } from "@/data/town/resources";
 
@@ -55,8 +56,11 @@ export default function ResourcesPage() {
 								<p className="text-xs font-bold text-sage uppercase">
 									{r.category}
 								</p>
-								<h2 className="text-lg font-serif font-bold text-sage-dark mt-1">
+								<h2 className="text-lg font-serif font-bold text-sage-dark mt-1 flex items-center gap-1.5">
 									{r.title}
+									{r.externalUrl?.startsWith("http") && (
+										<ExternalLink className="w-4 h-4 text-sage flex-shrink-0" />
+									)}
 								</h2>
 								<p className="text-sm text-[#4A4640] mt-2">{r.description}</p>
 								{r.contactPhone && (
