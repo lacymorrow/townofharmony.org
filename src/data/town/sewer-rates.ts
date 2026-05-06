@@ -79,10 +79,12 @@ export const isSewerVisible = (): boolean =>
  * Server-only — do not import from client components. The pre-rendered page
  * decides at build time whether the form or the "coming soon" notice ships.
  */
-export const isSewerPaymentEnabled = (): boolean => {
+export const isSewerPaymentEnabled = (
+	tiers: SewerRateTier[] = sewerRateTiers,
+): boolean => {
 	if (!process.env.STRIPE_SECRET_KEY) return false;
 	if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) return false;
-	return sewerRateTiers.some(
+	return tiers.some(
 		(tier) =>
 			!!process.env[tier.stripePriceEnvVar] ||
 			!!process.env[tier.stripeSubPriceEnvVar],

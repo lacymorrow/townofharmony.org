@@ -27,7 +27,7 @@ export async function HeroSection() {
 			firstSlide = results[0];
 		}
 	} catch (err) {
-		console.error("Failed to fetch hero slides from Builder.io:", err);
+		console.error("Failed to fetch homepage slides from Builder.io:", err);
 	}
 
 	const heroImageUrl = firstSlide?.image ? getMediaUrl(firstSlide.image) : null;

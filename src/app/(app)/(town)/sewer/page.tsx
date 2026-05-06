@@ -29,7 +29,6 @@ export default async function SewerPage() {
 	if (!isSewerVisible()) {
 		notFound();
 	}
-	const onlinePaymentsEnabled = isSewerPaymentEnabled();
 
 	let displayRates: SewerRateTier[] = sewerRateTiers;
 	try {
@@ -55,6 +54,9 @@ export default async function SewerPage() {
 	} catch (err) {
 		console.error("Failed to fetch sewer rates from Builder.io:", err);
 	}
+
+	const onlinePaymentsEnabled = isSewerPaymentEnabled(displayRates);
+
 	return (
 		<div className="container mx-auto max-w-4xl px-4 py-12">
 			<div className="mb-8">
