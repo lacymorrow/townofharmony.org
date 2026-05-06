@@ -300,6 +300,21 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		],
 	},
 
+	// --- Homepage ---
+	{
+		name: "town-homepage-slide",
+		kind: "data",
+		fields: [
+			text("title", true),
+			text("subtitle"),
+			longText("description"),
+			url("image"),
+			text("ctaText"),
+			text("ctaHref"),
+			num("sortOrder"),
+		],
+	},
+
 	// --- Sewer Rates ---
 	{
 		name: "town-sewer-rate",
