@@ -71,14 +71,20 @@ const ADDRESS_ABBREVS: Record<string, string> = {
 	highway: "hwy", hwy: "hwy",
 	lane: "ln", ln: "ln",
 	boulevard: "blvd", blvd: "blvd",
+	north: "n", n: "n",
+	south: "s", s: "s",
+	east: "e", e: "e",
+	west: "w", w: "w",
 };
 
 function normalizeAddress(addr: string): string {
-	return addr
+	// Take only the street portion before city/state/zip/country
+	const street = addr.split(",")[0];
+	return street
 		.toLowerCase()
-		.replace(/[.,#]/g, "")
+		.replace(/[.#]/g, "")
 		.replace(/\s+/g, " ")
-		.replace(/\b(street|st|avenue|ave|road|rd|drive|dr|highway|hwy|lane|ln|boulevard|blvd)\b/g, (m) => {
+		.replace(/\b(street|st|avenue|ave|road|rd|drive|dr|highway|hwy|lane|ln|boulevard|blvd|north|south|east|west|n|s|e|w)\b/g, (m) => {
 			return ADDRESS_ABBREVS[m] ?? m;
 		})
 		.trim();

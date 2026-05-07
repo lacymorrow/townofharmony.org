@@ -25,6 +25,8 @@ if (!GOOGLE_PLACES_API_KEY) {
 
 const HARMONY_CENTER = { latitude: 35.9545, longitude: -80.7725 };
 const SEARCH_RADIUS_METERS = 2000;
+// Google Places API caps maxResultCount at 20 per page; this limits total across all pages
+const MAX_TOTAL_RESULTS = 50;
 
 const GOOGLE_TO_CATEGORY: Record<string, string> = {
 	restaurant: "Restaurant & Food",
@@ -162,6 +164,9 @@ async function searchNearby(): Promise<GooglePlace[]> {
 			"beauty_salon",
 			"convenience_store",
 			"hardware_store",
+			"plumber",
+			"electrician",
+			"roofing_contractor",
 		],
 		locationRestriction: {
 			circle: {
@@ -184,6 +189,7 @@ async function searchNearby(): Promise<GooglePlace[]> {
 		"places.businessStatus",
 	].join(",");
 
+	const apiKey = GOOGLE_PLACES_API_KEY as string;
 	const allPlaces: GooglePlace[] = [];
 	let pageToken: string | undefined;
 
@@ -194,7 +200,7 @@ async function searchNearby(): Promise<GooglePlace[]> {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"X-Goog-Api-Key": GOOGLE_PLACES_API_KEY!,
+				"X-Goog-Api-Key": apiKey,
 				"X-Goog-FieldMask": fieldMask,
 			},
 			body: JSON.stringify(requestBody),
@@ -209,14 +215,14 @@ async function searchNearby(): Promise<GooglePlace[]> {
 		const places: GooglePlace[] = data.places ?? [];
 		allPlaces.push(...places);
 
-		pageToken = data.nextPageToken;
+		pageToken = allPlaces.length < MAX_TOTAL_RESULTS ? data.nextPageToken : undefined;
 
 		if (pageToken) {
 			await new Promise((r) => setTimeout(r, 2000));
 		}
 	} while (pageToken);
 
-	return allPlaces;
+	return allPlaces.slice(0, MAX_TOTAL_RESULTS);
 }
 
 function transformPlace(place: GooglePlace): SyncedBusiness | null {
