@@ -34,8 +34,8 @@ export const sewerRateTiers: SewerRateTier[] = [
 	},
 	{
 		id: "intown-commercial",
-		name: "In-Town Commercial",
-		description: "For commercial properties within town limits",
+		name: "In-Town Nonresidential",
+		description: "For nonresidential properties within town limits",
 		location: "in-town",
 		type: "commercial",
 		monthlyRate: 40,
@@ -44,8 +44,8 @@ export const sewerRateTiers: SewerRateTier[] = [
 	},
 	{
 		id: "outtown-commercial",
-		name: "Out-of-Town Commercial",
-		description: "For commercial properties outside town limits",
+		name: "Out-of-Town Nonresidential",
+		description: "For nonresidential properties outside town limits",
 		location: "out-of-town",
 		type: "commercial",
 		monthlyRate: 40,
