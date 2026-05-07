@@ -391,9 +391,9 @@ export const getEventFilterOptions = async () => {
 
 	for (const e of upcomingEvents) {
 		for (const cat of e.categories) categorySet.add(cat);
-		const d = new Date(e.eventDate);
-		const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-		monthSet.add(ym);
+		// Extract year/month directly from the date string to avoid timezone shifts
+		const [year, month] = e.eventDate.split("-");
+		if (year && month) monthSet.add(`${year}-${month}`);
 	}
 
 	return {
@@ -411,18 +411,30 @@ export const getMeetingFilterOptions = async () => {
 
 	const typeSet = new Set<string>();
 	const yearSet = new Set<number>();
+	const today = new Date().toISOString().split("T")[0]!;
+
+	let hasUpcoming = false;
+	let hasPast = false;
+	let hasMinutes = false;
+	let hasRecordings = false;
 
 	for (const m of publicMeetings) {
 		typeSet.add(m.type);
-		yearSet.add(new Date(m.meetingDate).getFullYear());
+		const [yearStr] = m.meetingDate.split("-");
+		if (yearStr) yearSet.add(Number(yearStr));
+
+		const dateOnly = m.meetingDate.split("T")[0]!;
+		if (!hasUpcoming && dateOnly >= today) hasUpcoming = true;
+		if (!hasPast && dateOnly < today) hasPast = true;
+		if (!hasMinutes && (m.minutes || m.minutesUrl)) hasMinutes = true;
+		if (!hasRecordings && (m.videoUrl || m.audioUrl)) hasRecordings = true;
 	}
 
-	const today = new Date().toISOString().split("T")[0]!;
 	const statuses: string[] = [];
-	if (publicMeetings.some((m) => m.meetingDate >= today)) statuses.push("upcoming");
-	if (publicMeetings.some((m) => m.meetingDate < today)) statuses.push("past");
-	if (publicMeetings.some((m) => m.minutes || m.minutesUrl)) statuses.push("has-minutes");
-	if (publicMeetings.some((m) => m.videoUrl || m.audioUrl)) statuses.push("has-recordings");
+	if (hasUpcoming) statuses.push("upcoming");
+	if (hasPast) statuses.push("past");
+	if (hasMinutes) statuses.push("has-minutes");
+	if (hasRecordings) statuses.push("has-recordings");
 
 	return {
 		types: [...typeSet].sort(),
@@ -443,9 +455,8 @@ export const getNewsFilterOptions = async () => {
 
 	for (const n of published) {
 		for (const cat of n.categories) categorySet.add(cat);
-		const d = new Date(n.publishedAt);
-		const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-		monthSet.add(ym);
+		const [year, month] = n.publishedAt.split("-");
+		if (year && month) monthSet.add(`${year}-${month}`);
 	}
 
 	return {

@@ -29,11 +29,20 @@ const INQUIRY_LABELS: Record<(typeof INQUIRY_VALUES)[number], string> = {
 	other: "Other",
 };
 
-const attachmentSchema = z.object({
-	filename: z.string(),
-	content: z.string(),
-	contentType: z.string(),
-});
+const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+const MAX_ATTACHMENT_BYTES = 3 * 1024 * 1024;
+
+const attachmentSchema = z
+	.object({
+		filename: z.string(),
+		content: z.string(),
+		contentType: z.string().refine((t) => ALLOWED_ATTACHMENT_TYPES.includes(t), {
+			message: "File type not allowed. Please upload a PDF or image.",
+		}),
+	})
+	.refine((data) => data.content.length * 0.75 <= MAX_ATTACHMENT_BYTES, {
+		message: "File must be 3 MB or smaller.",
+	});
 
 const townContactSchema = z.object({
 	firstName: z.string().min(1, "First name is required"),
