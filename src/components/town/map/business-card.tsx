@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import type { MapBusiness } from "@/lib/map-utils";
 import { getCategoryColor, getDirectionsUrl } from "@/lib/map-utils";
-import { MapPin, Phone, Navigation } from "lucide-react";
+import { MapPin, Phone, Navigation, Globe } from "lucide-react";
 
 interface BusinessCardProps {
 	business: MapBusiness;
@@ -46,13 +46,26 @@ export const BusinessCard = ({ business, isSelected, onClick }: BusinessCardProp
 							<p className="text-sm text-[#635E56]">{business.phone}</p>
 						</div>
 					)}
-					<div className="mt-1.5 flex items-center gap-1.5">
+					<div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
 						<span
 							className="inline-block rounded-full px-2 py-0.5 text-[10px] font-medium text-white"
 							style={{ backgroundColor: color }}
 						>
 							{business.category}
 						</span>
+						{business.website && (
+							<a
+								href={business.website}
+								target="_blank"
+								rel="noopener noreferrer"
+								onClick={(e) => e.stopPropagation()}
+								className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium text-sage-dark bg-stone/40 hover:bg-stone/60 transition-colors"
+								aria-label={`Visit ${business.name} website`}
+							>
+								<Globe className="h-2.5 w-2.5" />
+								Website
+							</a>
+						)}
 						<a
 							href={getDirectionsUrl(business.address)}
 							target="_blank"

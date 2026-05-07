@@ -2,18 +2,20 @@ import { Facebook, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
 
 import { navigation } from "@/data/town/navigation";
-import { isSewerVisible } from "@/data/town/sewer-rates";
 import type { TownSettings } from "@/data/town/types";
 
-const SEWER_HREFS = new Set(["/sewer", "/pay/sewer"]);
+const HIDDEN_HREFS = new Set<string>([
+	...(process.env.NEXT_PUBLIC_FEATURE_SEWER_ENABLED !== "true" ? ["/sewer", "/pay/sewer"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_MAP_ENABLED !== "true" ? ["/map"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED !== "true" ? ["/events"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED !== "true" ? ["/emergency"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_NEWS_ENABLED !== "true" ? ["/news"] : []),
+]);
 
-const sewerVisible = isSewerVisible();
 const footerLinks = Object.fromEntries(
 	navigation.footerLinks.map((section) => [
 		section.category,
-		sewerVisible
-			? section.links
-			: section.links.filter((link) => !SEWER_HREFS.has(link.href)),
+		section.links.filter((link) => !HIDDEN_HREFS.has(link.href)),
 	]),
 );
 

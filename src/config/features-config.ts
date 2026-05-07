@@ -298,6 +298,22 @@ buildTimeFeatures.TURNSTILE_ENABLED = hasEnv(
 buildTimeFeatures.FILE_UPLOAD_ENABLED =
   buildTimeFeatures.S3_ENABLED || buildTimeFeatures.VERCEL_BLOB_ENABLED;
 
+// ======== Town of Harmony Features =========
+// Map is on by default; set DISABLE_MAP=true to hide the interactive map page.
+buildTimeFeatures.MAP_ENABLED = !envIsTrue("DISABLE_MAP");
+// Alerts/Emergency is on by default; set DISABLE_ALERTS=true to hide emergency page.
+buildTimeFeatures.ALERTS_ENABLED = !envIsTrue("DISABLE_ALERTS");
+// Events is on by default; set DISABLE_EVENTS=true to hide events pages.
+buildTimeFeatures.EVENTS_ENABLED = !envIsTrue("DISABLE_EVENTS");
+// News is on by default; set DISABLE_NEWS=true to hide news pages.
+buildTimeFeatures.NEWS_ENABLED = !envIsTrue("DISABLE_NEWS");
+// Sewer info page requires Stripe to be configured; also respects DISABLE_SEWER.
+buildTimeFeatures.SEWER_ENABLED =
+  hasEnv("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY") && !envIsTrue("DISABLE_SEWER");
+// Sewer online payments require both Stripe keys; also respects DISABLE_SEWER.
+buildTimeFeatures.SEWER_PAYMENTS_ENABLED =
+  hasEnv("STRIPE_SECRET_KEY", "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY") && !envIsTrue("DISABLE_SEWER");
+
 // ======== Generate Feature Flags =========
 
 export { buildTimeFeatures };

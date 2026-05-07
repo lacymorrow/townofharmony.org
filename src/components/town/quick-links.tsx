@@ -14,7 +14,6 @@ import {
 import Link from "next/link";
 
 import { navigation } from "@/data/town/navigation";
-import { isSewerVisible } from "@/data/town/sewer-rates";
 
 const iconMap: Record<string, LucideIcon> = {
 	FileText,
@@ -29,13 +28,16 @@ const iconMap: Record<string, LucideIcon> = {
 	CreditCard,
 };
 
+const HIDDEN_HREFS = new Set<string>([
+	...(process.env.NEXT_PUBLIC_FEATURE_SEWER_ENABLED !== "true" ? ["/sewer", "/pay/sewer"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_MAP_ENABLED !== "true" ? ["/map"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED !== "true" ? ["/events"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_NEWS_ENABLED !== "true" ? ["/news"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED !== "true" ? ["/emergency"] : []),
+]);
+
 export function QuickLinks() {
-	const sewerVisible = isSewerVisible();
-	const quickLinks = sewerVisible
-		? navigation.quickLinks
-		: navigation.quickLinks.filter(
-				(link) => link.href !== "/pay/sewer" && link.href !== "/sewer",
-			);
+	const quickLinks = navigation.quickLinks.filter((link) => !HIDDEN_HREFS.has(link.href));
 
 	return (
 		<section className="py-16 bg-cream">
