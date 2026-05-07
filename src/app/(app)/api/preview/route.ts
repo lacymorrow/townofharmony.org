@@ -3,14 +3,15 @@ import { NextResponse } from "next/server";
 import { env } from "@/env";
 import { PREVIEW_COOKIE, FLAGS, type FeatureFlagName } from "@/lib/preview-flags";
 
-// GET /api/preview?token=SECRET&map=1&sewer=1
-// GET /api/preview?token=SECRET&clear=1
+// GET /api/preview?feature_flag_map=1&feature_flag_sewer=1
+// GET /api/preview?clear=1
+// When PREVIEW_SECRET is set, include ?token=SECRET to authenticate.
 // Redirects to ?redirect= path (default: /) after setting/clearing the cookie.
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
-	const token = searchParams.get("token");
 
-	if (!env.PREVIEW_SECRET || token !== env.PREVIEW_SECRET) {
+	// Auth: only enforce when PREVIEW_SECRET is configured
+	if (env.PREVIEW_SECRET && searchParams.get("token") !== env.PREVIEW_SECRET) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
 
@@ -24,7 +25,7 @@ export async function GET(request: Request) {
 
 	const overrides: Partial<Record<FeatureFlagName, boolean>> = {};
 	for (const name of Object.keys(FLAGS) as FeatureFlagName[]) {
-		const val = searchParams.get(name);
+		const val = searchParams.get(`feature_flag_${name}`);
 		if (val === "1" || val === "true") overrides[name] = true;
 		if (val === "0" || val === "false") overrides[name] = false;
 	}
