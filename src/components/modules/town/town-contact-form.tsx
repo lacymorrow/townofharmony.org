@@ -87,9 +87,15 @@ export const TownContactForm = () => {
 
 		let attachment: TownContactFormData["attachment"] | undefined;
 		if (hasFile) {
-			const base64 = await readFileAsBase64(file);
-			attachment = { filename: file.name, content: base64, contentType: file.type };
+			try {
+				const base64 = await readFileAsBase64(file);
+				attachment = { filename: file.name, content: base64, contentType: file.type };
+			} catch {
+				setServerError("Failed to read the attachment. Please try again.");
+				return;
+			}
 		}
+
 
 		startTransition(async () => {
 			const result = await submitTownContactForm({
@@ -248,7 +254,7 @@ export const TownContactForm = () => {
 					/>
 					<label
 						htmlFor="attachment"
-						className={`inline-flex items-center gap-2 cursor-pointer px-4 py-2 rounded border text-sm font-medium transition-colors ${
+						className={`inline-block cursor-pointer px-4 py-2 rounded border text-sm font-medium transition-colors ${
 							errors.attachment
 								? "border-red-500 text-red-700 bg-red-50 hover:bg-red-100"
 								: "border-stone text-[#2D2A24] bg-white hover:bg-stone/20"
@@ -256,6 +262,7 @@ export const TownContactForm = () => {
 					>
 						<svg
 							aria-hidden="true"
+							className="inline-block align-middle mr-2"
 							width="16"
 							height="16"
 							viewBox="0 0 24 24"
@@ -274,6 +281,7 @@ export const TownContactForm = () => {
 					)}
 				</div>
 			</FieldWrapper>
+
 
 			<Turnstile
 				onVerify={(token) => {

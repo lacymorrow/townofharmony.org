@@ -12,30 +12,36 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-const categories = [
-	{ value: "government", label: "Government" },
-	{ value: "community", label: "Community" },
-	{ value: "recreation", label: "Recreation" },
-	{ value: "education", label: "Education" },
-	{ value: "arts", label: "Arts & Culture" },
-	{ value: "sports", label: "Sports" },
-	{ value: "volunteer", label: "Volunteer" },
-	{ value: "meetings", label: "Meetings" },
-	{ value: "market", label: "Markets" },
-];
+const CATEGORY_LABELS: Record<string, string> = {
+	government: "Government",
+	community: "Community",
+	recreation: "Recreation",
+	education: "Education",
+	arts: "Arts & Culture",
+	sports: "Sports",
+	volunteer: "Volunteer",
+	meetings: "Meetings",
+	market: "Markets",
+	festival: "Festival",
+};
 
-const months = [
-	{ value: "2024-08", label: "August 2024" },
-	{ value: "2024-09", label: "September 2024" },
-	{ value: "2024-10", label: "October 2024" },
-	{ value: "2024-11", label: "November 2024" },
-	{ value: "2024-12", label: "December 2024" },
-	{ value: "2025-01", label: "January 2025" },
-	{ value: "2025-02", label: "February 2025" },
-	{ value: "2025-03", label: "March 2025" },
-];
+function formatCategoryLabel(value: string): string {
+	return CATEGORY_LABELS[value] ?? value.charAt(0).toUpperCase() + value.slice(1);
+}
 
-export function EventsFilters() {
+function formatMonthLabel(ym: string): string {
+	const [year, month] = ym.split("-");
+	if (!year || !month) return ym;
+	const d = new Date(Number(year), Number(month) - 1, 1);
+	return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
+interface EventsFiltersProps {
+	availableCategories: string[];
+	availableMonths: string[];
+}
+
+export function EventsFilters({ availableCategories, availableMonths }: EventsFiltersProps) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const currentCategory = searchParams?.get("category") || "all";
@@ -48,7 +54,7 @@ export function EventsFilters() {
 		} else {
 			params.delete(key);
 		}
-		params.delete("page"); // Reset to page 1 when filters change
+		params.delete("page");
 		router.push(`/events?${params.toString()}`);
 	};
 
@@ -56,50 +62,56 @@ export function EventsFilters() {
 		router.push("/events");
 	};
 
+	const hasActiveFilters = currentCategory !== "all" || currentMonth !== "all";
+
 	return (
 		<Card className="shadow-sm">
 			<CardHeader className="pb-3">
 				<CardTitle className="text-sm font-medium">Filters</CardTitle>
 			</CardHeader>
 			<CardContent className="space-y-3">
-				<div className="space-y-1.5">
-					<Label htmlFor="category" className="text-xs">Category</Label>
-					<Select
-						value={currentCategory}
-						onValueChange={(value) => updateFilters("category", value)}
-					>
-						<SelectTrigger id="category" aria-label="Filter by category" className="h-9 text-sm">
-							<SelectValue placeholder="All categories" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All categories</SelectItem>
-							{categories.map((cat) => (
-								<SelectItem key={cat.value} value={cat.value}>
-									{cat.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
+				{availableCategories.length > 0 && (
+					<div className="space-y-1.5">
+						<Label htmlFor="category" className="text-xs">Category</Label>
+						<Select
+							value={currentCategory}
+							onValueChange={(value) => updateFilters("category", value)}
+						>
+							<SelectTrigger id="category" aria-label="Filter by category" className="h-9 text-sm">
+								<SelectValue placeholder="All categories" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">All categories</SelectItem>
+								{availableCategories.map((cat) => (
+									<SelectItem key={cat} value={cat}>
+										{formatCategoryLabel(cat)}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+				)}
 
-				<div className="space-y-1.5">
-					<Label htmlFor="month" className="text-xs">Month</Label>
-					<Select value={currentMonth} onValueChange={(value) => updateFilters("month", value)}>
-						<SelectTrigger id="month" aria-label="Filter by month" className="h-9 text-sm">
-							<SelectValue placeholder="All months" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All months</SelectItem>
-							{months.map((month) => (
-								<SelectItem key={month.value} value={month.value}>
-									{month.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
+				{availableMonths.length > 0 && (
+					<div className="space-y-1.5">
+						<Label htmlFor="month" className="text-xs">Month</Label>
+						<Select value={currentMonth} onValueChange={(value) => updateFilters("month", value)}>
+							<SelectTrigger id="month" aria-label="Filter by month" className="h-9 text-sm">
+								<SelectValue placeholder="All months" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">All months</SelectItem>
+								{availableMonths.map((ym) => (
+									<SelectItem key={ym} value={ym}>
+										{formatMonthLabel(ym)}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+				)}
 
-				{(currentCategory !== "all" || currentMonth !== "all") && (
+				{hasActiveFilters && (
 					<Button variant="outline" size="sm" onClick={clearFilters} className="w-full">
 						Clear filters
 					</Button>

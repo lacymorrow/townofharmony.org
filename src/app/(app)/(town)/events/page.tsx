@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { EventsList } from "@/components/town/events/events-list";
 import { EventsFilters } from "@/components/town/events/events-filters";
+import { getEventFilterOptions } from "@/lib/town-data";
 import { env } from "@/env";
 
 export const metadata: Metadata = {
@@ -19,7 +20,10 @@ export default async function EventsPage({
 	if (!env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED) {
 		notFound();
 	}
-	const params = await searchParams;
+	const [params, filterOptions] = await Promise.all([
+		searchParams,
+		getEventFilterOptions(),
+	]);
 	const category = typeof params.category === "string" ? params.category : undefined;
 	const month = typeof params.month === "string" ? params.month : undefined;
 	const page = typeof params.page === "string" ? params.page : "1";
@@ -37,7 +41,10 @@ export default async function EventsPage({
 				<aside className="lg:w-64 shrink-0">
 					<div className="lg:sticky lg:top-24">
 						<Suspense>
-							<EventsFilters />
+							<EventsFilters
+								availableCategories={filterOptions.categories}
+								availableMonths={filterOptions.months}
+							/>
 						</Suspense>
 					</div>
 				</aside>
