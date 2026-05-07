@@ -1,4 +1,8 @@
 export const rateLimits = {
+	contactForm: {
+		requests: 3,
+		duration: 60 * 60, // 1 hour
+	},
 	api: {
 		default: {
 			requests: 100,

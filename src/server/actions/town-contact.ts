@@ -3,8 +3,14 @@
 import { z } from "zod";
 import { siteConfig } from "@/config/site-config";
 import { townContactConfirmationEmail } from "@/lib/email-templates";
+import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
+import {
+	checkContactFormRateLimit,
+	getClientIp,
+	validateSubmissionTiming,
+} from "@/server/utils/contact-rate-limit";
 
 const INQUIRY_VALUES = [
 	"general",
@@ -59,8 +65,12 @@ export type TownContactFormData = z.infer<typeof townContactSchema>;
 const esc = (s: string) =>
 	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-export async function submitTownContactForm(formData: TownContactFormData) {
-	const parsed = townContactSchema.safeParse(formData);
+// _loadedAt is an anti-bot timing field kept outside the validated schema
+export async function submitTownContactForm(
+	formData: TownContactFormData & { _loadedAt?: string },
+) {
+	const { _loadedAt, ...rest } = formData;
+	const parsed = townContactSchema.safeParse(rest);
 	if (!parsed.success) {
 		return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid form data" };
 	}
@@ -77,6 +87,18 @@ export async function submitTownContactForm(formData: TownContactFormData) {
 		if (!turnstileToken || !(await verifyTurnstileToken(turnstileToken))) {
 			return { success: false, error: "Security check failed. Please try again." };
 		}
+	}
+
+	const ip = await getClientIp();
+
+	if (!validateSubmissionTiming(_loadedAt)) {
+		logger.warn("Town contact form rejected: submitted too quickly", { ip });
+		return { success: false, error: "Please take a moment before submitting." };
+	}
+
+	const rateLimit = await checkContactFormRateLimit(ip, "town-contact-form");
+	if (!rateLimit.allowed) {
+		return { success: false, error: rateLimit.error };
 	}
 
 	if (!resend) {
