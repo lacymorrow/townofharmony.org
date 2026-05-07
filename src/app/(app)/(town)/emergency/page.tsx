@@ -7,6 +7,7 @@ import { EmergencyContacts } from "@/components/town/emergency/emergency-contact
 import { EmergencyServices } from "@/components/town/emergency/emergency-services";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { env } from "@/env";
 
 export const metadata: Metadata = {
 	title: "Emergency Information | Town of Harmony",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default function EmergencyPage() {
-	if (process.env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED !== "true") {
+	if (!env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED) {
 		notFound();
 	}
 	return (

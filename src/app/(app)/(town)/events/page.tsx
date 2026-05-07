@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { EventsList } from "@/components/town/events/events-list";
 import { EventsFilters } from "@/components/town/events/events-filters";
+import { env } from "@/env";
 
 export const metadata: Metadata = {
 	title: "Events | Town of Harmony, NC",
@@ -15,7 +16,7 @@ export default async function EventsPage({
 }: {
 	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-	if (process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED !== "true") {
+	if (!env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED) {
 		notFound();
 	}
 	const params = await searchParams;
