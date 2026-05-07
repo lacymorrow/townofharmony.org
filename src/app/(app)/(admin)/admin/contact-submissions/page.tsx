@@ -54,7 +54,7 @@ export default async function ContactSubmissionsPage() {
               {submissions.map((s) => (
                 <tr key={s.id} className="hover:bg-muted/50">
                   <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
-                    {new Date(s.createdAt).toLocaleString()}
+                    {new Date(s.createdAt).toLocaleString("en-US", { timeZone: "UTC" })}
                   </td>
                   <td className="px-4 py-3 font-medium">
                     {FORM_TYPE_LABELS[s.formType] ?? s.formType}

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { desc, eq } from "drizzle-orm";
 import { db } from "@/server/db";
 import { contactSubmissions } from "@/server/db/schema";
@@ -15,14 +16,8 @@ export interface LogSubmissionInput {
 }
 
 /** SHA-256 hex digest of a string — used for IP hashing */
-async function sha256hex(value: string): Promise<string> {
-  const buf = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(value)
-  );
-  return Array.from(new Uint8Array(buf))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+function sha256hex(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
 }
 
 /** Partial-mask an email: "john.doe@example.com" → "jo**@example.com" */
@@ -38,7 +33,7 @@ export async function logContactSubmission(input: LogSubmissionInput): Promise<v
     ? maskEmail(input.submitterEmail)
     : undefined;
 
-  const ipHash = input.ip ? await sha256hex(input.ip) : undefined;
+  const ipHash = input.ip ? sha256hex(input.ip) : undefined;
 
   if (!db) {
     // Structured console log as fallback when DB is unavailable
