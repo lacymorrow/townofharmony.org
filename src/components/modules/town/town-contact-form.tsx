@@ -332,7 +332,7 @@ const FieldWrapper = ({
 		</label>
 		{children}
 		{error && (
-			<p className="mt-1 text-xs text-red-600" role="alert">
+			<p id={`${id}-error`} className="mt-1 text-xs text-red-600" role="alert">
 				{error}
 			</p>
 		)}

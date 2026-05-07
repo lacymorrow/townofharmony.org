@@ -29,10 +29,12 @@ const INQUIRY_LABELS: Record<(typeof INQUIRY_VALUES)[number], string> = {
 	other: "Other",
 };
 
+const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/jpeg", "image/png"] as const;
+
 const attachmentSchema = z.object({
 	filename: z.string(),
 	content: z.string(),
-	contentType: z.string(),
+	contentType: z.enum(ALLOWED_ATTACHMENT_TYPES),
 });
 
 const townContactSchema = z.object({
