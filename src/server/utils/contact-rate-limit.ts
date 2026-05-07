@@ -7,10 +7,28 @@ import { rateLimits } from "@/config/rate-limits";
 const WINDOW_MS = rateLimits.contactForm.duration * 1000;
 const MAX_REQUESTS = rateLimits.contactForm.requests;
 
-// In-memory fallback when Redis is not available (best-effort per instance)
+// In-memory fallback when Redis is not available (best-effort, per-instance only).
+// Trade-off: resets on deploy/restart, not shared across instances.
 const inMemoryStore = new Map<string, { count: number; windowStart: number }>();
 
+// Sweep expired entries every N checks to prevent unbounded growth from unique IPs.
+const EVICTION_INTERVAL = 100;
+let checkCount = 0;
+
+function evictExpired(): void {
+	const now = Date.now();
+	for (const [key, entry] of inMemoryStore) {
+		if (now - entry.windowStart > WINDOW_MS) {
+			inMemoryStore.delete(key);
+		}
+	}
+}
+
 function inMemoryCheck(ip: string): boolean {
+	if (++checkCount % EVICTION_INTERVAL === 0) {
+		evictExpired();
+	}
+
 	const now = Date.now();
 	const entry = inMemoryStore.get(ip);
 
@@ -68,6 +86,7 @@ const TIMING_MIN_MS = 5_000;
 export function validateSubmissionTiming(loadedAtStr: string | null | undefined): boolean {
 	if (!loadedAtStr) return true;
 	const loadedAt = parseInt(loadedAtStr, 10);
-	if (Number.isNaN(loadedAt)) return true;
+	// Reject invalid or future timestamps — a present-but-bad value signals bot behaviour
+	if (Number.isNaN(loadedAt) || loadedAt > Date.now()) return false;
 	return Date.now() - loadedAt >= TIMING_MIN_MS;
 }
