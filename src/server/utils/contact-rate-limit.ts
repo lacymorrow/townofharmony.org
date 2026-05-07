@@ -84,9 +84,7 @@ export async function checkContactFormRateLimit(
 const TIMING_MIN_MS = 5_000;
 
 export function validateSubmissionTiming(loadedAtStr: string | null | undefined): boolean {
-	if (!loadedAtStr) return true;
+	if (!loadedAtStr) return false;
 	const loadedAt = parseInt(loadedAtStr, 10);
-	// Reject invalid or future timestamps — a present-but-bad value signals bot behaviour
-	if (Number.isNaN(loadedAt) || loadedAt > Date.now()) return false;
-	return Date.now() - loadedAt >= TIMING_MIN_MS;
+	return !Number.isNaN(loadedAt) && Date.now() - loadedAt >= TIMING_MIN_MS;
 }
