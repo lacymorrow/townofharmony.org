@@ -7,6 +7,11 @@ import { contactFormSchema } from "@/types/contact";
 
 export async function submitContactForm(formData: FormData) {
 	try {
+		const isLikelyBot = !!formData.get("website");
+		if (isLikelyBot) {
+			console.warn("[honeypot] contact form honeypot triggered — processing anyway");
+		}
+
 		if (isTurnstileConfigured()) {
 			const token = formData.get("turnstileToken") as string | null;
 			if (!token || !(await verifyTurnstileToken(token))) {
@@ -31,7 +36,7 @@ export async function submitContactForm(formData: FormData) {
 		const result = await resend.emails.send({
 			from: `Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
-			subject: "New Contact Form Submission",
+			subject: isLikelyBot ? "[POSSIBLE SPAM] New Contact Form Submission" : "New Contact Form Submission",
 			replyTo: validatedData.contactInfo,
 			html: `
                 <h2>New Contact Form Submission</h2>

@@ -50,6 +50,7 @@ const townContactSchema = z.object({
 	message: z.string().min(10, "Message must be at least 10 characters"),
 	attachment: attachmentSchema.optional(),
 	turnstileToken: z.string().optional(),
+	website: z.string().optional(),
 });
 
 export type TownContactFormData = z.infer<typeof townContactSchema>;
@@ -63,7 +64,12 @@ export async function submitTownContactForm(formData: TownContactFormData) {
 		return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid form data" };
 	}
 
-	const { firstName, lastName, email, phone, inquiryType, message, attachment, turnstileToken } = parsed.data;
+	const { firstName, lastName, email, phone, inquiryType, message, attachment, turnstileToken, website } = parsed.data;
+
+	const isLikelyBot = !!website;
+	if (isLikelyBot) {
+		console.warn("[honeypot] town contact form honeypot triggered — processing anyway");
+	}
 	const inquiryLabel = INQUIRY_LABELS[inquiryType];
 
 	if (isTurnstileConfigured()) {
@@ -84,7 +90,7 @@ export async function submitTownContactForm(formData: TownContactFormData) {
 		await resend.emails.send({
 			from: `Town of Harmony Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
-			subject: `Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
+			subject: `${isLikelyBot ? "[POSSIBLE SPAM] " : ""}Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
 			replyTo: email,
 			html: `
 <h2>New Contact Form Submission</h2>

@@ -107,6 +107,7 @@ export const TownContactForm = () => {
 				message: form.get("message") as string,
 				attachment,
 				turnstileToken: turnstileTokenRef.current ?? undefined,
+				website: (form.get("website") as string) || undefined,
 			});
 
 			if (result.success) {
@@ -282,6 +283,17 @@ export const TownContactForm = () => {
 				</div>
 			</FieldWrapper>
 
+			{/* honeypot — hidden from real users, filled only by bots */}
+			<div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
+				<label htmlFor="website">Website</label>
+				<input
+					id="website"
+					name="website"
+					type="text"
+					autoComplete="off"
+					tabIndex={-1}
+				/>
+			</div>
 
 			<Turnstile
 				onVerify={(token) => {
