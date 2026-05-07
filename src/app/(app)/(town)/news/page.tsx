@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NewsGrid } from "@/components/town/news/news-grid";
 import { NewsFilters } from "@/components/town/news/news-filters";
+import { getNewsFilterOptions } from "@/lib/town-data";
 import { env } from "@/env";
 
 export const metadata: Metadata = {
@@ -18,7 +19,10 @@ export default async function NewsPage({
 	if (!env.NEXT_PUBLIC_FEATURE_NEWS_ENABLED) {
 		notFound();
 	}
-	const params = await searchParams;
+	const [params, filterOptions] = await Promise.all([
+		searchParams,
+		getNewsFilterOptions(),
+	]);
 	const page = typeof params.page === "string" ? Number(params.page) : 1;
 	const category = typeof params.category === "string" ? params.category : "";
 	const search = typeof params.search === "string" ? params.search : "";
@@ -37,7 +41,12 @@ export default async function NewsPage({
 					<NewsGrid page={page} category={category || undefined} search={search || undefined} />
 				</div>
 				<aside>
-					<NewsFilters currentCategory={category} currentSearch={search} />
+					<NewsFilters
+						currentCategory={category}
+						currentSearch={search}
+						availableCategories={filterOptions.categories}
+						availableMonths={filterOptions.months}
+					/>
 				</aside>
 			</div>
 		</div>
