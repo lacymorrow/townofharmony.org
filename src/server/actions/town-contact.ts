@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { siteConfig } from "@/config/site-config";
+import { townContactConfirmationEmail } from "@/lib/email-templates";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
 
@@ -88,7 +89,7 @@ export async function submitTownContactForm(formData: TownContactFormData) {
 
 	try {
 		await resend.emails.send({
-			from: `Town of Harmony Contact Form <${siteConfig.email.noreply}>`,
+			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
 			subject: `${isLikelyBot ? "[POSSIBLE SPAM] " : ""}Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
 			replyTo: email,
@@ -125,19 +126,20 @@ ${phone ? `<tr><td style="padding:4px 12px 4px 0;font-weight:bold;">Phone</td><t
 
 	try {
 		await resend.emails.send({
-			from: `Town of Harmony <${siteConfig.email.noreply}>`,
+			from: `${siteConfig.name} <${siteConfig.email.noreply}>`,
 			to: [email],
-			subject: "Your message to the Town of Harmony",
-			html: `
-<p>Dear ${esc(firstName)},</p>
-<p>Thank you! Your message has been forwarded to the Town of Harmony.</p>
-<p>We will respond to your inquiry within 2 business days.</p>
-<p>Town of Harmony<br>
-<a href="https://townofharmony.org">townofharmony.org</a></p>
-      `.trim(),
+			subject: `Your inquiry has been received — ${siteConfig.name}`,
+			html: townContactConfirmationEmail({
+				firstName,
+				lastName,
+				email,
+				phone,
+				inquiryType: inquiryLabel,
+				message,
+			}),
 		});
 	} catch (error) {
-		console.error("Error sending auto-reply email:", error);
+		console.error("Error sending town contact confirmation email:", error);
 	}
 
 	return { success: true };
