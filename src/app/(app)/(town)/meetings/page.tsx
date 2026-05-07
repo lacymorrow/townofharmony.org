@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { MeetingsList } from "@/components/town/meetings/meetings-list";
 import { MeetingsFilters } from "@/components/town/meetings/meetings-filters";
+import { getMeetingFilterOptions } from "@/lib/town-data";
 
 export const metadata: Metadata = {
 	title: "Town Meetings | Town of Harmony, NC",
@@ -14,7 +15,10 @@ export default async function MeetingsPage({
 }: {
 	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-	const params = await searchParams;
+	const [params, filterOptions] = await Promise.all([
+		searchParams,
+		getMeetingFilterOptions(),
+	]);
 	const type = typeof params.type === "string" ? params.type : undefined;
 	const month = typeof params.month === "string" ? params.month : undefined;
 	const year = typeof params.year === "string" ? params.year : undefined;
@@ -34,7 +38,11 @@ export default async function MeetingsPage({
 				<aside className="lg:w-64 shrink-0">
 					<div className="lg:sticky lg:top-24">
 						<Suspense>
-							<MeetingsFilters />
+							<MeetingsFilters
+								availableTypes={filterOptions.types}
+								availableYears={filterOptions.years}
+								availableStatuses={filterOptions.statuses}
+							/>
 						</Suspense>
 					</div>
 				</aside>

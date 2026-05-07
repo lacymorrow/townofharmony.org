@@ -6,22 +6,30 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-const categories = [
-	{ value: "", label: "All Categories" },
-	{ value: "announcements", label: "Announcements" },
-	{ value: "public-safety", label: "Public Safety" },
-	{ value: "community", label: "Community" },
-	{ value: "government", label: "Government" },
-	{ value: "events", label: "Events" },
-	{ value: "public-works", label: "Public Works" },
-];
+const CATEGORY_LABELS: Record<string, string> = {
+	announcements: "Announcements",
+	"public-safety": "Public Safety",
+	community: "Community",
+	government: "Government",
+	events: "Events",
+	"public-works": "Public Works",
+};
+
+function formatMonthLabel(ym: string): string {
+	const [year, month] = ym.split("-");
+	if (!year || !month) return ym;
+	const d = new Date(Number(year), Number(month) - 1, 1);
+	return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
 
 interface NewsFiltersProps {
 	currentCategory: string;
 	currentSearch: string;
+	availableCategories: string[];
+	availableMonths: string[];
 }
 
-export function NewsFilters({ currentCategory, currentSearch }: NewsFiltersProps) {
+export function NewsFilters({ currentCategory, currentSearch, availableCategories, availableMonths }: NewsFiltersProps) {
 	const router = useRouter();
 
 	const handleCategoryChange = (category: string) => {
@@ -67,55 +75,61 @@ export function NewsFilters({ currentCategory, currentSearch }: NewsFiltersProps
 				</CardContent>
 			</Card>
 
-			{/* Categories */}
-			<Card>
-				<CardHeader>
-					<CardTitle>Categories</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<div className="space-y-2">
-						{categories.map((category) => (
+			{/* Categories — only shown when there are published articles with categories */}
+			{availableCategories.length > 0 && (
+				<Card>
+					<CardHeader>
+						<CardTitle>Categories</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className="space-y-2">
 							<button
-								key={category.value}
-								onClick={() => handleCategoryChange(category.value)}
+								onClick={() => handleCategoryChange("")}
 								className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-									currentCategory === category.value
+									currentCategory === ""
 										? "bg-stone text-[#2D2A24]"
 										: "hover:bg-stone"
 								}`}
 							>
-								{category.label}
+								All Categories
 							</button>
-						))}
-					</div>
-				</CardContent>
-			</Card>
+							{availableCategories.map((value) => (
+								<button
+									key={value}
+									onClick={() => handleCategoryChange(value)}
+									className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+										currentCategory === value
+											? "bg-stone text-[#2D2A24]"
+											: "hover:bg-stone"
+									}`}
+								>
+									{CATEGORY_LABELS[value] ?? value.charAt(0).toUpperCase() + value.slice(1)}
+								</button>
+							))}
+						</div>
+					</CardContent>
+				</Card>
+			)}
 
-			{/* Archive */}
-			<Card>
-				<CardHeader>
-					<CardTitle>Archive</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<ul className="space-y-2 text-sm">
-						<li>
-							<a href="/news?month=2024-08" className="text-sage hover:underline">
-								August 2024
-							</a>
-						</li>
-						<li>
-							<a href="/news?month=2024-07" className="text-sage hover:underline">
-								July 2024
-							</a>
-						</li>
-						<li>
-							<a href="/news?month=2024-06" className="text-sage hover:underline">
-								June 2024
-							</a>
-						</li>
-					</ul>
-				</CardContent>
-			</Card>
+			{/* Archive — only shown when there are published articles */}
+			{availableMonths.length > 0 && (
+				<Card>
+					<CardHeader>
+						<CardTitle>Archive</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<ul className="space-y-2 text-sm">
+							{availableMonths.map((ym) => (
+								<li key={ym}>
+									<a href={`/news?month=${ym}`} className="text-sage hover:underline">
+										{formatMonthLabel(ym)}
+									</a>
+								</li>
+							))}
+						</ul>
+					</CardContent>
+				</Card>
+			)}
 		</div>
 	);
 }

@@ -379,6 +379,92 @@ export const getElectionBySlug = async (slug: string) => {
 	return elections.find((e) => e.slug === slug) ?? null;
 };
 
+/**
+ * Derive available filter options for events from the actual data.
+ * Only categories/months that have at least one upcoming event are returned.
+ */
+export const getEventFilterOptions = async () => {
+	const upcomingEvents = events.filter((e) => e.status === "upcoming");
+
+	const categorySet = new Set<string>();
+	const monthSet = new Set<string>();
+
+	for (const e of upcomingEvents) {
+		for (const cat of e.categories) categorySet.add(cat);
+		// Extract year/month directly from the date string to avoid timezone shifts
+		const [year, month] = e.eventDate.split("-");
+		if (year && month) monthSet.add(`${year}-${month}`);
+	}
+
+	return {
+		categories: [...categorySet].sort(),
+		months: [...monthSet].sort(),
+	};
+};
+
+/**
+ * Derive available filter options for meetings from the actual data.
+ * Only types/years/statuses that match at least one public meeting are returned.
+ */
+export const getMeetingFilterOptions = async () => {
+	const publicMeetings = meetings.filter((m) => m.isPublic);
+
+	const typeSet = new Set<string>();
+	const yearSet = new Set<number>();
+	const today = new Date().toISOString().split("T")[0]!;
+
+	let hasUpcoming = false;
+	let hasPast = false;
+	let hasMinutes = false;
+	let hasRecordings = false;
+
+	for (const m of publicMeetings) {
+		typeSet.add(m.type);
+		const [yearStr] = m.meetingDate.split("-");
+		if (yearStr) yearSet.add(Number(yearStr));
+
+		const dateOnly = m.meetingDate.split("T")[0]!;
+		if (!hasUpcoming && dateOnly >= today) hasUpcoming = true;
+		if (!hasPast && dateOnly < today) hasPast = true;
+		if (!hasMinutes && (m.minutes || m.minutesUrl)) hasMinutes = true;
+		if (!hasRecordings && (m.videoUrl || m.audioUrl)) hasRecordings = true;
+	}
+
+	const statuses: string[] = [];
+	if (hasUpcoming) statuses.push("upcoming");
+	if (hasPast) statuses.push("past");
+	if (hasMinutes) statuses.push("has-minutes");
+	if (hasRecordings) statuses.push("has-recordings");
+
+	return {
+		types: [...typeSet].sort(),
+		years: [...yearSet].sort((a, b) => b - a),
+		statuses,
+	};
+};
+
+/**
+ * Derive available filter options for news from the actual data.
+ * Only categories/months that have at least one published article are returned.
+ */
+export const getNewsFilterOptions = async () => {
+	const published = news.filter((n) => n.status === "published");
+
+	const categorySet = new Set<string>();
+	const monthSet = new Set<string>();
+
+	for (const n of published) {
+		for (const cat of n.categories) categorySet.add(cat);
+		const [year, month] = n.publishedAt.split("-");
+		if (year && month) monthSet.add(`${year}-${month}`);
+	}
+
+	return {
+		categories: [...categorySet].sort(),
+		months: [...monthSet].sort().reverse(),
+	};
+};
+
 // --- Globals ---
 
 /**

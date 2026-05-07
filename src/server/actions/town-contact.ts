@@ -7,26 +7,40 @@ import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
 
 const INQUIRY_VALUES = [
 	"general",
-	"utilities",
+	"sewer-residential",
+	"sewer-commercial",
 	"permits",
 	"taxes",
 	"parks",
 	"roads",
-	"complaint",
+	"suggestion",
 	"other",
 ] as const;
 
 const INQUIRY_LABELS: Record<(typeof INQUIRY_VALUES)[number], string> = {
 	general: "General Inquiry",
-	utilities: "Water/Sewer Utilities",
+	"sewer-residential": "Sewer Residential Service",
+	"sewer-commercial": "Sewer Commercial Service",
 	permits: "Permits & Zoning",
 	taxes: "Taxes & Billing",
 	parks: "Parks & Recreation",
 	roads: "Roads & Infrastructure",
-	complaint: "Complaint",
+	suggestion: "Suggestion",
 	other: "Other",
 };
 
+const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/jpeg", "image/png"] as const;
+const MAX_ATTACHMENT_BYTES = 3 * 1024 * 1024;
+
+const attachmentSchema = z
+	.object({
+		filename: z.string(),
+		content: z.string(),
+		contentType: z.enum(ALLOWED_ATTACHMENT_TYPES),
+	})
+	.refine((data) => data.content.length * 0.75 <= MAX_ATTACHMENT_BYTES, {
+		message: "File must be 3 MB or smaller.",
+	});
 const townContactSchema = z.object({
 	firstName: z.string().min(1, "First name is required"),
 	lastName: z.string().min(1, "Last name is required"),
@@ -34,6 +48,7 @@ const townContactSchema = z.object({
 	phone: z.string().optional(),
 	inquiryType: z.enum(INQUIRY_VALUES, { message: "Please select an inquiry type" }),
 	message: z.string().min(10, "Message must be at least 10 characters"),
+	attachment: attachmentSchema.optional(),
 	turnstileToken: z.string().optional(),
 	website: z.string().optional(),
 });
@@ -49,7 +64,7 @@ export async function submitTownContactForm(formData: TownContactFormData) {
 		return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid form data" };
 	}
 
-	const { firstName, lastName, email, phone, inquiryType, message, turnstileToken, website } = parsed.data;
+	const { firstName, lastName, email, phone, inquiryType, message, attachment, turnstileToken, website } = parsed.data;
 
 	const isLikelyBot = !!website;
 	if (isLikelyBot) {
@@ -88,9 +103,18 @@ ${phone ? `<tr><td style="padding:4px 12px 4px 0;font-weight:bold;">Phone</td><t
 <h3>Message</h3>
 <p>${esc(message).replace(/\n/g, "<br>")}</p>
       `.trim(),
+			...(attachment
+				? {
+						attachments: [
+							{
+								filename: attachment.filename,
+								content: attachment.content,
+								contentType: attachment.contentType,
+							},
+						],
+					}
+				: {}),
 		});
-
-		return { success: true };
 	} catch (error) {
 		console.error("Error sending town contact form email:", error);
 		return {
@@ -98,4 +122,23 @@ ${phone ? `<tr><td style="padding:4px 12px 4px 0;font-weight:bold;">Phone</td><t
 			error: "Failed to send your message. Please try again or call Town Hall.",
 		};
 	}
+
+	try {
+		await resend.emails.send({
+			from: `Town of Harmony <${siteConfig.email.noreply}>`,
+			to: [email],
+			subject: "Your message to the Town of Harmony",
+			html: `
+<p>Dear ${esc(firstName)},</p>
+<p>Thank you! Your message has been forwarded to the Town of Harmony.</p>
+<p>We will respond to your inquiry within 2 business days.</p>
+<p>Town of Harmony<br>
+<a href="https://townofharmony.org">townofharmony.org</a></p>
+      `.trim(),
+		});
+	} catch (error) {
+		console.error("Error sending auto-reply email:", error);
+	}
+
+	return { success: true };
 }
