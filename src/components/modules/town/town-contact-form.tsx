@@ -96,6 +96,7 @@ export const TownContactForm = () => {
 			}
 		}
 
+
 		startTransition(async () => {
 			const result = await submitTownContactForm({
 				firstName: form.get("firstName") as string,
@@ -281,6 +282,7 @@ export const TownContactForm = () => {
 				</div>
 			</FieldWrapper>
 
+
 			<Turnstile
 				onVerify={(token) => {
 					turnstileTokenRef.current = token;
@@ -338,7 +340,7 @@ const FieldWrapper = ({
 		</label>
 		{children}
 		{error && (
-			<p className="mt-1 text-xs text-red-600" role="alert">
+			<p id={`${id}-error`} className="mt-1 text-xs text-red-600" role="alert">
 				{error}
 			</p>
 		)}
