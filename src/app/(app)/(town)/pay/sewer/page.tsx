@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SewerPaymentForm } from "@/components/town/sewer-payment-form";
-import { sewerContactInfo, sewerRateTiers, isSewerPaymentEnabled, type SewerRateDisplay } from "@/data/town/sewer-rates";
+import { sewerContactInfo, sewerRateTiers, type SewerRateDisplay } from "@/data/town/sewer-rates";
+import { isFeatureEnabled } from "@/lib/preview-flags";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
 
 export const metadata: Metadata = {
@@ -19,8 +20,7 @@ interface BuilderSewerRate {
 }
 
 export default async function SewerPaymentPage() {
-	if (!isSewerPaymentEnabled()) {
-		// Online payments not configured — page hidden until Stripe is set up.
+	if (!await isFeatureEnabled("sewer")) {
 		notFound();
 	}
 

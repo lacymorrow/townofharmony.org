@@ -7,7 +7,7 @@ import { EmergencyContacts } from "@/components/town/emergency/emergency-contact
 import { EmergencyServices } from "@/components/town/emergency/emergency-services";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { env } from "@/env";
+import { isFeatureEnabled } from "@/lib/preview-flags";
 
 export const metadata: Metadata = {
 	title: "Emergency Information | Town of Harmony",
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 		"Emergency services, contacts, and active alerts for the Town of Harmony, NC.",
 };
 
-export default function EmergencyPage() {
-	if (!env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED) {
+export default async function EmergencyPage() {
+	if (!await isFeatureEnabled("alerts")) {
 		notFound();
 	}
 	return (

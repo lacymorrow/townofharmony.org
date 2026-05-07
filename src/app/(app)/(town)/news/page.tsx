@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { NewsGrid } from "@/components/town/news/news-grid";
 import { NewsFilters } from "@/components/town/news/news-filters";
 import { getNewsFilterOptions } from "@/lib/town-data";
-import { env } from "@/env";
+import { isFeatureEnabled } from "@/lib/preview-flags";
 
 export const metadata: Metadata = {
 	title: "News | Town of Harmony, NC",
@@ -16,7 +16,7 @@ export default async function NewsPage({
 }: {
 	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-	if (!env.NEXT_PUBLIC_FEATURE_NEWS_ENABLED) {
+	if (!await isFeatureEnabled("news")) {
 		notFound();
 	}
 	const [params, filterOptions] = await Promise.all([
