@@ -379,6 +379,81 @@ export const getElectionBySlug = async (slug: string) => {
 	return elections.find((e) => e.slug === slug) ?? null;
 };
 
+/**
+ * Derive available filter options for events from the actual data.
+ * Only categories/months that have at least one upcoming event are returned.
+ */
+export const getEventFilterOptions = async () => {
+	const upcomingEvents = events.filter((e) => e.status === "upcoming");
+
+	const categorySet = new Set<string>();
+	const monthSet = new Set<string>();
+
+	for (const e of upcomingEvents) {
+		for (const cat of e.categories) categorySet.add(cat);
+		const d = new Date(e.eventDate);
+		const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+		monthSet.add(ym);
+	}
+
+	return {
+		categories: [...categorySet].sort(),
+		months: [...monthSet].sort(),
+	};
+};
+
+/**
+ * Derive available filter options for meetings from the actual data.
+ * Only types/years/statuses that match at least one public meeting are returned.
+ */
+export const getMeetingFilterOptions = async () => {
+	const publicMeetings = meetings.filter((m) => m.isPublic);
+
+	const typeSet = new Set<string>();
+	const yearSet = new Set<number>();
+
+	for (const m of publicMeetings) {
+		typeSet.add(m.type);
+		yearSet.add(new Date(m.meetingDate).getFullYear());
+	}
+
+	const today = new Date().toISOString().split("T")[0]!;
+	const statuses: string[] = [];
+	if (publicMeetings.some((m) => m.meetingDate >= today)) statuses.push("upcoming");
+	if (publicMeetings.some((m) => m.meetingDate < today)) statuses.push("past");
+	if (publicMeetings.some((m) => m.minutes || m.minutesUrl)) statuses.push("has-minutes");
+	if (publicMeetings.some((m) => m.videoUrl || m.audioUrl)) statuses.push("has-recordings");
+
+	return {
+		types: [...typeSet].sort(),
+		years: [...yearSet].sort((a, b) => b - a),
+		statuses,
+	};
+};
+
+/**
+ * Derive available filter options for news from the actual data.
+ * Only categories/months that have at least one published article are returned.
+ */
+export const getNewsFilterOptions = async () => {
+	const published = news.filter((n) => n.status === "published");
+
+	const categorySet = new Set<string>();
+	const monthSet = new Set<string>();
+
+	for (const n of published) {
+		for (const cat of n.categories) categorySet.add(cat);
+		const d = new Date(n.publishedAt);
+		const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+		monthSet.add(ym);
+	}
+
+	return {
+		categories: [...categorySet].sort(),
+		months: [...monthSet].sort().reverse(),
+	};
+};
+
 // --- Globals ---
 
 /**

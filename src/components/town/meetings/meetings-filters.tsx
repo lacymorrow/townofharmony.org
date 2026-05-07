@@ -12,19 +12,18 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-const MEETING_TYPES = [
-	// value must match meeting.type field in src/data/town/meetings.ts
-	{ value: "Council", label: "Board of Aldermen" },
-	{ value: "Planning", label: "Planning" },
-	{ value: "Public Hearing", label: "Public Hearing" },
-];
+const MEETING_TYPE_LABELS: Record<string, string> = {
+	Council: "Board of Aldermen",
+	Planning: "Planning",
+	"Public Hearing": "Public Hearing",
+};
 
-const STATUS_OPTIONS = [
-	{ value: "upcoming", label: "Upcoming" },
-	{ value: "past", label: "Past" },
-	{ value: "has-minutes", label: "Has Minutes" },
-	{ value: "has-recordings", label: "Has Recordings" },
-];
+const STATUS_LABELS: Record<string, string> = {
+	upcoming: "Upcoming",
+	past: "Past",
+	"has-minutes": "Has Minutes",
+	"has-recordings": "Has Recordings",
+};
 
 const MONTHS = [
 	{ value: "1", label: "January" },
@@ -41,13 +40,13 @@ const MONTHS = [
 	{ value: "12", label: "December" },
 ];
 
-const NOW_YEAR = new Date().getFullYear();
-const YEARS = [NOW_YEAR + 1, NOW_YEAR, NOW_YEAR - 1, NOW_YEAR - 2].map((y) => ({
-	value: String(y),
-	label: String(y),
-}));
+interface MeetingsFiltersProps {
+	availableTypes: string[];
+	availableYears: number[];
+	availableStatuses: string[];
+}
 
-export function MeetingsFilters() {
+export function MeetingsFilters({ availableTypes, availableYears, availableStatuses }: MeetingsFiltersProps) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const currentType = searchParams?.get("type") || "all";
@@ -82,56 +81,62 @@ export function MeetingsFilters() {
 				<CardTitle className="text-sm font-medium">Filters</CardTitle>
 			</CardHeader>
 			<CardContent className="space-y-3">
-				<div className="space-y-1.5">
-					<Label htmlFor="type" className="text-xs">Meeting Type</Label>
-					<Select value={currentType} onValueChange={(value) => updateFilters("type", value)}>
-						<SelectTrigger id="type" aria-label="Filter by meeting type" className="h-9 text-sm">
-							<SelectValue placeholder="All types" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All types</SelectItem>
-							{MEETING_TYPES.map((t) => (
-								<SelectItem key={t.value} value={t.value}>
-									{t.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
+				{availableTypes.length > 0 && (
+					<div className="space-y-1.5">
+						<Label htmlFor="type" className="text-xs">Meeting Type</Label>
+						<Select value={currentType} onValueChange={(value) => updateFilters("type", value)}>
+							<SelectTrigger id="type" aria-label="Filter by meeting type" className="h-9 text-sm">
+								<SelectValue placeholder="All types" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">All types</SelectItem>
+								{availableTypes.map((t) => (
+									<SelectItem key={t} value={t}>
+										{MEETING_TYPE_LABELS[t] ?? t}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+				)}
 
-				<div className="space-y-1.5">
-					<Label htmlFor="status" className="text-xs">Status</Label>
-					<Select value={currentStatus} onValueChange={(value) => updateFilters("status", value)}>
-						<SelectTrigger id="status" aria-label="Filter by status" className="h-9 text-sm">
-							<SelectValue placeholder="All meetings" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All meetings</SelectItem>
-							{STATUS_OPTIONS.map((s) => (
-								<SelectItem key={s.value} value={s.value}>
-									{s.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
+				{availableStatuses.length > 0 && (
+					<div className="space-y-1.5">
+						<Label htmlFor="status" className="text-xs">Status</Label>
+						<Select value={currentStatus} onValueChange={(value) => updateFilters("status", value)}>
+							<SelectTrigger id="status" aria-label="Filter by status" className="h-9 text-sm">
+								<SelectValue placeholder="All meetings" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">All meetings</SelectItem>
+								{availableStatuses.map((s) => (
+									<SelectItem key={s} value={s}>
+										{STATUS_LABELS[s] ?? s}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+				)}
 
-				<div className="space-y-1.5">
-					<Label htmlFor="year" className="text-xs">Year</Label>
-					<Select value={currentYear} onValueChange={(value) => updateFilters("year", value)}>
-						<SelectTrigger id="year" aria-label="Filter by year" className="h-9 text-sm">
-							<SelectValue placeholder="All years" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All years</SelectItem>
-							{YEARS.map((y) => (
-								<SelectItem key={y.value} value={y.value}>
-									{y.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
+				{availableYears.length > 0 && (
+					<div className="space-y-1.5">
+						<Label htmlFor="year" className="text-xs">Year</Label>
+						<Select value={currentYear} onValueChange={(value) => updateFilters("year", value)}>
+							<SelectTrigger id="year" aria-label="Filter by year" className="h-9 text-sm">
+								<SelectValue placeholder="All years" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">All years</SelectItem>
+								{availableYears.map((y) => (
+									<SelectItem key={y} value={String(y)}>
+										{y}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+				)}
 
 				<div className="space-y-1.5">
 					<Label htmlFor="month" className="text-xs">Month</Label>
