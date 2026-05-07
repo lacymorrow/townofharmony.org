@@ -51,8 +51,9 @@ export async function submitTownContactForm(formData: TownContactFormData) {
 
 	const { firstName, lastName, email, phone, inquiryType, message, turnstileToken, website } = parsed.data;
 
-	if (website) {
-		return { success: true };
+	const isLikelyBot = !!website;
+	if (isLikelyBot) {
+		console.warn("[honeypot] town contact form honeypot triggered — processing anyway");
 	}
 	const inquiryLabel = INQUIRY_LABELS[inquiryType];
 
@@ -74,7 +75,7 @@ export async function submitTownContactForm(formData: TownContactFormData) {
 		await resend.emails.send({
 			from: `Town of Harmony Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
-			subject: `Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
+			subject: `${isLikelyBot ? "[POSSIBLE SPAM] " : ""}Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
 			replyTo: email,
 			html: `
 <h2>New Contact Form Submission</h2>
