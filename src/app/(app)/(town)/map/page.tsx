@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { InteractiveMap } from "./interactive-map";
-import { env } from "@/env";
+import { isFeatureEnabled } from "@/lib/preview-flags";
 
 export const metadata: Metadata = {
 	title: "Interactive Map | Town of Harmony, NC",
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 		"Explore businesses, services, and points of interest in Harmony, NC with our interactive town map.",
 };
 
-export default function MapPage() {
-	if (!env.NEXT_PUBLIC_FEATURE_MAP_ENABLED) {
+export default async function MapPage() {
+	if (!await isFeatureEnabled("map")) {
 		notFound();
 	}
 	return <InteractiveMap />;

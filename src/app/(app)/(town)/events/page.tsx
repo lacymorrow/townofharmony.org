@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { EventsList } from "@/components/town/events/events-list";
 import { EventsFilters } from "@/components/town/events/events-filters";
 import { getEventFilterOptions } from "@/lib/town-data";
-import { env } from "@/env";
+import { isFeatureEnabled } from "@/lib/preview-flags";
 
 export const metadata: Metadata = {
 	title: "Events | Town of Harmony, NC",
@@ -17,7 +17,7 @@ export default async function EventsPage({
 }: {
 	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-	if (!env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED) {
+	if (!await isFeatureEnabled("events")) {
 		notFound();
 	}
 	const [params, filterOptions] = await Promise.all([

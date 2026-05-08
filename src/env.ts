@@ -15,6 +15,9 @@ const serverSchema = {
   // ======== App Secret (Master) ========
   APP_SECRET: z.string().optional(),
 
+  // ======== Preview / Feature-Flag Override ========
+  PREVIEW_SECRET: z.string().optional(),
+
   // ======== Database ========
   DATABASE_URL: z.string().url().optional(),
   DB_PREFIX: z.string().default("db"),

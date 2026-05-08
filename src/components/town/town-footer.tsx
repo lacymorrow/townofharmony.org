@@ -4,7 +4,7 @@ import Link from "next/link";
 import { navigation } from "@/data/town/navigation";
 import type { TownSettings } from "@/data/town/types";
 
-const HIDDEN_HREFS = new Set<string>([
+const BUILD_TIME_HIDDEN_HREFS = new Set<string>([
 	...(process.env.NEXT_PUBLIC_FEATURE_SEWER_ENABLED !== "true" ? ["/sewer", "/pay/sewer"] : []),
 	...(process.env.NEXT_PUBLIC_FEATURE_MAP_ENABLED !== "true" ? ["/map"] : []),
 	...(process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED !== "true" ? ["/events"] : []),
@@ -12,18 +12,19 @@ const HIDDEN_HREFS = new Set<string>([
 	...(process.env.NEXT_PUBLIC_FEATURE_NEWS_ENABLED !== "true" ? ["/news"] : []),
 ]);
 
-const footerLinks = Object.fromEntries(
-	navigation.footerLinks.map((section) => [
-		section.category,
-		section.links.filter((link) => !HIDDEN_HREFS.has(link.href)),
-	]),
-);
-
 interface TownFooterProps {
 	settings: TownSettings;
+	/** Override hidden hrefs from a server component (supports preview cookie). Falls back to build-time env. */
+	hiddenHrefs?: Set<string>;
 }
 
-export function TownFooter({ settings }: TownFooterProps) {
+export function TownFooter({ settings, hiddenHrefs = BUILD_TIME_HIDDEN_HREFS }: TownFooterProps) {
+	const footerLinks = Object.fromEntries(
+		navigation.footerLinks.map((section) => [
+			section.category,
+			section.links.filter((link) => !hiddenHrefs.has(link.href)),
+		]),
+	);
 	return (
 		<footer className="bg-[#1E2118] text-white/80">
 			<div className="container mx-auto px-4 py-12">

@@ -19,7 +19,8 @@ import { cn } from "@/lib/utils";
 import { navigation as navData } from "@/data/town/navigation";
 import type { TownSettings } from "@/data/town/types";
 
-const HIDDEN_HREFS = new Set<string>([
+// Build-time fallback used when rendering the Suspense skeleton before TownHeaderServer resolves
+const BUILD_TIME_HIDDEN_HREFS = new Set<string>([
 	...(process.env.NEXT_PUBLIC_FEATURE_SEWER_ENABLED !== "true" ? ["/sewer", "/pay/sewer"] : []),
 	...(process.env.NEXT_PUBLIC_FEATURE_MAP_ENABLED !== "true" ? ["/map"] : []),
 	...(process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED !== "true" ? ["/events"] : []),
@@ -27,21 +28,23 @@ const HIDDEN_HREFS = new Set<string>([
 	...(process.env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED !== "true" ? ["/emergency"] : []),
 ]);
 
-const navigation = navData.mainNav
-	.filter((item) => !HIDDEN_HREFS.has(item.href))
-	.map((item) =>
-		item.children
-			? { ...item, children: item.children.filter((c) => !HIDDEN_HREFS.has(c.href)) }
-			: item,
-	);
-
 interface TownHeaderProps {
 	settings: TownSettings;
+	/** Override hidden hrefs from a server component (supports preview cookie). Falls back to build-time env. */
+	hiddenHrefs?: Set<string>;
 }
 
-export function TownHeader({ settings }: TownHeaderProps) {
+export function TownHeader({ settings, hiddenHrefs = BUILD_TIME_HIDDEN_HREFS }: TownHeaderProps) {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [searchOpen, setSearchOpen] = useState(false);
+
+	const navigation = navData.mainNav
+		.filter((item) => !hiddenHrefs.has(item.href))
+		.map((item) =>
+			item.children
+				? { ...item, children: item.children.filter((c) => !hiddenHrefs.has(c.href)) }
+				: item,
+		);
 
 	return (
 		<header>
