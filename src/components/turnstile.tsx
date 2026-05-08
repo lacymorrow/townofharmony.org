@@ -56,9 +56,7 @@ function loadTurnstileScript(): Promise<void> {
       existing.addEventListener(
         "error",
         () => reject(new Error("Failed to load Turnstile script")),
-        {
-          once: true,
-        }
+        { once: true }
       );
       return;
     }
@@ -83,6 +81,14 @@ export const Turnstile = ({ onVerify, onError, onExpire, className }: TurnstileP
   const widgetIdRef = useRef<string | null>(null);
   const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
+  // Keep callback refs up-to-date without triggering widget re-mount on every render.
+  const onVerifyRef = useRef(onVerify);
+  const onErrorRef = useRef(onError);
+  const onExpireRef = useRef(onExpire);
+  onVerifyRef.current = onVerify;
+  onErrorRef.current = onError;
+  onExpireRef.current = onExpire;
+
   useEffect(() => {
     if (!siteKey) return;
     if (!containerRef.current) return;
@@ -103,13 +109,14 @@ export const Turnstile = ({ onVerify, onError, onExpire, className }: TurnstileP
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey: siteKey,
           theme: resolvedTheme === "dark" ? "dark" : "light",
-          callback: onVerify,
-          "error-callback": onError,
-          "expired-callback": onExpire,
+          callback: (token) => onVerifyRef.current(token),
+          "error-callback": () => onErrorRef.current?.(),
+          "expired-callback": () => onExpireRef.current?.(),
         });
       })
       .catch(() => {
-        onError?.();
+        if (isCancelled) return;
+        onErrorRef.current?.();
       });
 
     return () => {
@@ -119,7 +126,9 @@ export const Turnstile = ({ onVerify, onError, onExpire, className }: TurnstileP
         widgetIdRef.current = null;
       }
     };
-  }, [onError, onExpire, onVerify, resolvedTheme, siteKey]);
+  // Only re-mount the widget when the site key or theme changes — not on callback changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedTheme, siteKey]);
 
   if (!siteKey) {
     return null;
