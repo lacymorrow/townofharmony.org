@@ -15,7 +15,7 @@ interface BuilderSewerRate {
 	name: string;
 	description: string;
 	location: "in-town" | "out-of-town";
-	type: "residential" | "commercial";
+	type: "residential" | "nonresidential";
 	monthlyRate: number;
 	sortOrder: number;
 }
