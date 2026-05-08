@@ -127,12 +127,12 @@ const serverSchema = {
   // Sewer Payment Stripe Price IDs
   STRIPE_PRICE_SEWER_INTOWN_RESIDENTIAL: z.string().optional(),
   STRIPE_PRICE_SEWER_OUTTOWN_RESIDENTIAL: z.string().optional(),
-  STRIPE_PRICE_SEWER_INTOWN_COMMERCIAL: z.string().optional(),
-  STRIPE_PRICE_SEWER_OUTTOWN_COMMERCIAL: z.string().optional(),
+  STRIPE_PRICE_SEWER_INTOWN_NONRESIDENTIAL: z.string().optional(),
+  STRIPE_PRICE_SEWER_OUTTOWN_NONRESIDENTIAL: z.string().optional(),
   STRIPE_PRICE_SEWER_INTOWN_RESIDENTIAL_SUB: z.string().optional(),
   STRIPE_PRICE_SEWER_OUTTOWN_RESIDENTIAL_SUB: z.string().optional(),
-  STRIPE_PRICE_SEWER_INTOWN_COMMERCIAL_SUB: z.string().optional(),
-  STRIPE_PRICE_SEWER_OUTTOWN_COMMERCIAL_SUB: z.string().optional(),
+  STRIPE_PRICE_SEWER_INTOWN_NONRESIDENTIAL_SUB: z.string().optional(),
+  STRIPE_PRICE_SEWER_OUTTOWN_NONRESIDENTIAL_SUB: z.string().optional(),
 
   // Storage
   AWS_REGION: z.string().optional(),
