@@ -62,7 +62,7 @@ export default async function SewerPage() {
 			<div className="mb-8">
 				<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Sewer Services</h1>
 				<p className="mt-2 text-lg text-muted-foreground">
-					The Town of Harmony provides sewer services to residential and commercial properties.
+					The Town of Harmony provides sewer services to residential and nonresidential properties.
 				</p>
 			</div>
 

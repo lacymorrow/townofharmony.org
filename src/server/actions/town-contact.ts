@@ -15,7 +15,8 @@ import {
 const INQUIRY_VALUES = [
 	"general",
 	"sewer-residential",
-	"sewer-commercial",
+	"sewer-nonresidential-intown",
+	"sewer-nonresidential-outtown",
 	"permits",
 	"taxes",
 	"parks",
@@ -27,7 +28,8 @@ const INQUIRY_VALUES = [
 const INQUIRY_LABELS: Record<(typeof INQUIRY_VALUES)[number], string> = {
 	general: "General Inquiry",
 	"sewer-residential": "Sewer Residential Service",
-	"sewer-commercial": "Sewer Commercial Service",
+	"sewer-nonresidential-intown": "In Town Nonresidential",
+	"sewer-nonresidential-outtown": "Out of Town Nonresidential",
 	permits: "Permits & Zoning",
 	taxes: "Taxes & Billing",
 	parks: "Parks & Recreation",
