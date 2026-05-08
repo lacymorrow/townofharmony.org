@@ -115,6 +115,7 @@ export const Turnstile = ({ onVerify, onError, onExpire, className }: TurnstileP
         });
       })
       .catch(() => {
+        if (isCancelled) return;
         onErrorRef.current?.();
       });
 
