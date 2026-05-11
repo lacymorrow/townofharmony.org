@@ -22,8 +22,12 @@ export async function submitContactForm(formData: FormData) {
 
 		if (isTurnstileConfigured()) {
 			const token = formData.get("turnstileToken") as string | null;
-			if (!token || !(await verifyTurnstileToken(token))) {
-				return { success: false, error: "Security check failed. Please try again." };
+			if (token) {
+				if (!(await verifyTurnstileToken(token))) {
+					return { success: false, error: "Security check failed. Please try again." };
+				}
+			} else {
+				console.warn("[turnstile] no token provided — widget may have failed to load");
 			}
 		}
 
@@ -58,7 +62,7 @@ export async function submitContactForm(formData: FormData) {
 		const result = await resend.emails.send({
 			from: `Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
-			subject: isLikelyBot ? "[POSSIBLE SPAM] New Contact Form Submission" : "New Contact Form Submission",
+			subject: "New Contact Form Submission",
 			...(isEmail && validatedData.contactInfo ? { replyTo: validatedData.contactInfo } : {}),
 			html: `
                 <h2>New Contact Form Submission</h2>

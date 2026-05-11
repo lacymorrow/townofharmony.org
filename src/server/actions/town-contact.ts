@@ -86,8 +86,12 @@ export async function submitTownContactForm(
 	const inquiryLabel = INQUIRY_LABELS[inquiryType];
 
 	if (isTurnstileConfigured()) {
-		if (!turnstileToken || !(await verifyTurnstileToken(turnstileToken))) {
-			return { success: false, error: "Security check failed. Please try again." };
+		if (turnstileToken) {
+			if (!(await verifyTurnstileToken(turnstileToken))) {
+				return { success: false, error: "Security check failed. Please try again." };
+			}
+		} else {
+			console.warn("[turnstile] no token provided — widget may have failed to load");
 		}
 	}
 
@@ -115,7 +119,7 @@ export async function submitTownContactForm(
 		await resend.emails.send({
 			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
-			subject: `${isLikelyBot ? "[POSSIBLE SPAM] " : ""}Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
+			subject: `Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
 			replyTo: email,
 			html: `
 <h2>New Contact Form Submission</h2>
