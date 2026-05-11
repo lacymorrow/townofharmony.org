@@ -1,7 +1,7 @@
 "use server";
 
 import { siteConfig } from "@/config/site-config";
-import { contactConfirmationEmail } from "@/lib/email-templates";
+import { contactConfirmationEmail, esc } from "@/lib/email-templates";
 import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
@@ -54,22 +54,22 @@ export async function submitContactForm(formData: FormData) {
 			return { success: false, error: "Email service not configured" };
 		}
 
+		const isEmail = validatedData.contactInfo?.includes("@");
 		const result = await resend.emails.send({
 			from: `Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
 			subject: isLikelyBot ? "[POSSIBLE SPAM] New Contact Form Submission" : "New Contact Form Submission",
-			replyTo: validatedData.contactInfo,
+			...(isEmail && validatedData.contactInfo ? { replyTo: validatedData.contactInfo } : {}),
 			html: `
                 <h2>New Contact Form Submission</h2>
-                <p><strong>From:</strong> ${validatedData.name}</p>
-                ${validatedData.contactInfo ? `<p><strong>Contact:</strong> ${validatedData.contactInfo}</p>` : ""}
+                <p><strong>From:</strong> ${esc(validatedData.name)}</p>
+                ${validatedData.contactInfo ? `<p><strong>Contact:</strong> ${esc(validatedData.contactInfo)}</p>` : ""}
                 <p><strong>Message:</strong></p>
-                <p>${validatedData.message.replace(/\n/g, "<br>")}</p>
+                <p>${esc(validatedData.message).replace(/\n/g, "<br>")}</p>
                 <p><strong>Newsletter:</strong> ${validatedData.newsletter ? "Yes" : "No"}</p>
             `,
 		});
 
-		const isEmail = validatedData.contactInfo?.includes("@");
 		if (isEmail && validatedData.contactInfo) {
 			try {
 				await resend.emails.send({
@@ -87,7 +87,7 @@ export async function submitContactForm(formData: FormData) {
 			}
 		}
 
-		if (validatedData.newsletter && validatedData.contactInfo?.includes("@")) {
+		if (validatedData.newsletter && isEmail && validatedData.contactInfo) {
 			try {
 				await addContactToAudience(validatedData.contactInfo);
 			} catch (error) {

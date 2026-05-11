@@ -91,7 +91,7 @@ export const TownContactForm = () => {
 		if (hasFile) {
 			try {
 				const base64 = await readFileAsBase64(file);
-				attachment = { filename: file.name, content: base64, contentType: file.type };
+				attachment = { filename: file.name, content: base64, contentType: file.type as "application/pdf" | "image/jpeg" | "image/png" };
 			} catch {
 				setServerError("Failed to read the attachment. Please try again.");
 				return;
