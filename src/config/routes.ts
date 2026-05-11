@@ -19,14 +19,7 @@ export const routes = {
 	// Public routes
 	home: "/",
 	contact: "/contact",
-	faq: "/faq",
-	pricing: "/pricing",
-	blog: "/blog",
 	docs: "/", // aliased — referenced by ~40 shipkit upstream components for build compat
-	features: "/features",
-	download: "/download",
-	launch: "/launch",
-	checkoutSuccess: "/checkout/success",
 
 	// Legal routes
 	terms: "/terms-of-service",
@@ -88,73 +81,11 @@ export const routes = {
 		settings: "/settings",
 		billing: "/settings/account",
 		apiKeys: "/settings/api-keys",
-		deployments: "/deployments",
-		projects: "/projects",
-		teams: "/teams",
-		tools: "/tools",
-	},
-
-	// Demo routes (Shipkit feature demos — unused on TOH, stubs kept for build compatibility)
-	demo: {
-		payloadCms: "/cms",
-		builderio: "/builder",
-		trpc: "/trpc",
-		network: "/network",
-	},
-
-	// Examples routes (used by search/demo components)
-	examples: {
-		dashboard: "/",
-		index: "/",
-		authentication: "/sign-in",
-		forms: "/",
 	},
 
 	// CMS routes
 	cms: {
 		index: "/cms",
-	},
-
-	// Pages routes (Pages Router demos — unused on TOH)
-	pages: {
-		index: "/",
-		dynamic: "/",
-		markdown: "/",
-	},
-
-	// AI routes (Shipkit AI demo stubs — unused on TOH)
-	ai: {
-		index: "/",
-		codeCompletion: "/",
-		crossEncoder: "/",
-		deepseekWeb: "/",
-		florence: "/",
-		gemma: "/",
-		janusProWebgpu: "/",
-		janusWebgpu: "/",
-		llama: "/",
-		moonshineWeb: "/",
-		musicgenWeb: "/",
-		phi: "/",
-		removeBackground: "/",
-		removeBackgroundWeb: "/",
-		reportGen: "/",
-		semanticImageSearchWeb: "/",
-		semanticSearch: "/",
-		smollmWeb: "/",
-		smolvmWeb: "/",
-		spam: "/",
-		speecht: "/",
-		textToSpeechWebgpu: "/",
-		typeAhead: "/",
-		videoBackgroundRemoval: "/",
-		videoObjectDetection: "/",
-		webgpuClip: "/",
-		webgpuEmbeddingBenchmark: "/",
-		webgpuNomicEmbed: "/",
-		whisper: "/",
-		whisperTimestamped: "/",
-		zeroShotClassification: "/",
 	},
 
 	// API routes
@@ -232,8 +163,6 @@ export const redirects = async (): Promise<Redirect[]> => {
 		{ source: "/history/incorporation/", destination: "/history", permanent: true },
 		{ source: "/history/first-school", destination: "/history", permanent: true },
 		{ source: "/history/first-school/", destination: "/history", permanent: true },
-		{ source: "/news", destination: "/", permanent: false },
-		{ source: "/news/", destination: "/", permanent: false },
 		// Legacy event slugs → new event slugs (current 2026 occurrences).
 		{ source: "/events/farmers-market-may", destination: "/events/farmers-market-may-2026", permanent: true },
 		{ source: "/events/farmers-market-may/", destination: "/events/farmers-market-may-2026", permanent: true },

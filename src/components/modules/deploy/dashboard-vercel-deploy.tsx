@@ -71,7 +71,7 @@ export const DashboardVercelDeploy = ({
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const pathname = usePathname();
-  const isOnDeploymentsPage = pathname === routes.app.deployments;
+  const isOnDeploymentsPage = pathname === "/deployments";
   const currentUser = user ?? session?.user;
   const [open, setOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
@@ -429,7 +429,7 @@ export const DashboardVercelDeploy = ({
             </div>
             <div className="flex flex-col items-center gap-3 w-full">
               <LinkWithTransition
-                href={routes.app.deployments}
+                href={"/deployments"}
                 prefetch={false}
                 onClick={() => setOpen(false)}
                 className="w-full"
@@ -457,7 +457,7 @@ export const DashboardVercelDeploy = ({
                 You already have an active deployment. Starting a new one may cause conflicts.
               </p>
               <LinkWithTransition
-                href={routes.app.deployments}
+                href={"/deployments"}
                 onClick={() => setOpen(false)}
                 className="text-sm text-primary hover:underline"
               >

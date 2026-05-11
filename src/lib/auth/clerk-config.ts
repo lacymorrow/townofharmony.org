@@ -75,8 +75,6 @@ export const clerkConfig = {
 export const clerkProtectedRoutes = [
   routes.app.dashboard,
   routes.settings.index,
-  routes.app.projects,
-  routes.app.teams,
   routes.app.apiKeys,
   routes.admin.index,
 ] as const;
@@ -86,10 +84,7 @@ export const clerkProtectedRoutes = [
  */
 export const clerkPublicRoutes = [
   routes.home,
-  routes.features,
-  routes.pricing,
   routes.docs,
-  routes.blog,
   routes.contact,
   routes.auth.signIn,
   routes.auth.signUp,
