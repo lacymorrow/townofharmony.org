@@ -7,8 +7,8 @@ import { submitTownContactForm, type TownContactFormData } from "@/server/action
 const INQUIRY_OPTIONS = [
 	{ value: "general", label: "General Inquiry" },
 	{ value: "sewer-residential", label: "Sewer Residential Service" },
-	{ value: "sewer-nonresidential-intown", label: "Sewer Nonresidential Service (In Town)" },
-	{ value: "sewer-nonresidential-outtown", label: "Sewer Nonresidential Service (Out of Town)" },
+	{ value: "sewer-nonresidential-intown", label: "Sewer In-Town Nonresidential Service" },
+	{ value: "sewer-nonresidential-outtown", label: "Sewer Out-of-Town Nonresidential Service" },
 	{ value: "permits", label: "Permits & Zoning" },
 	{ value: "taxes", label: "Taxes & Billing" },
 	{ value: "parks", label: "Parks & Recreation" },

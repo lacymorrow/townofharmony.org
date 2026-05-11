@@ -3,7 +3,7 @@ export interface SewerRateTier {
 	name: string;
 	description: string;
 	location: "in-town" | "out-of-town";
-	type: "residential" | "commercial";
+	type: "residential" | "nonresidential";
 	monthlyRate: number;
 	stripePriceEnvVar: string;
 	stripeSubPriceEnvVar: string;
@@ -37,20 +37,20 @@ export const sewerRateTiers: SewerRateTier[] = [
 		name: "In-Town Nonresidential",
 		description: "For nonresidential properties within town limits",
 		location: "in-town",
-		type: "commercial",
+		type: "nonresidential",
 		monthlyRate: 40,
-		stripePriceEnvVar: "STRIPE_PRICE_SEWER_INTOWN_COMMERCIAL",
-		stripeSubPriceEnvVar: "STRIPE_PRICE_SEWER_INTOWN_COMMERCIAL_SUB",
+		stripePriceEnvVar: "STRIPE_PRICE_SEWER_INTOWN_NONRESIDENTIAL",
+		stripeSubPriceEnvVar: "STRIPE_PRICE_SEWER_INTOWN_NONRESIDENTIAL_SUB",
 	},
 	{
 		id: "outtown-commercial",
 		name: "Out-of-Town Nonresidential",
 		description: "For nonresidential properties outside town limits",
 		location: "out-of-town",
-		type: "commercial",
+		type: "nonresidential",
 		monthlyRate: 40,
-		stripePriceEnvVar: "STRIPE_PRICE_SEWER_OUTTOWN_COMMERCIAL",
-		stripeSubPriceEnvVar: "STRIPE_PRICE_SEWER_OUTTOWN_COMMERCIAL_SUB",
+		stripePriceEnvVar: "STRIPE_PRICE_SEWER_OUTTOWN_NONRESIDENTIAL",
+		stripeSubPriceEnvVar: "STRIPE_PRICE_SEWER_OUTTOWN_NONRESIDENTIAL_SUB",
 	},
 ];
 

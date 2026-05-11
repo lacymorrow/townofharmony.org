@@ -324,7 +324,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("name", true),
 			longText("description"),
 			enumText("location", ["in-town", "out-of-town"]),
-			enumText("type", ["residential", "commercial"]),
+			enumText("type", ["residential", "nonresidential"]),
 			num("monthlyRate"),
 			num("sortOrder"),
 		],
