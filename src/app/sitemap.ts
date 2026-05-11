@@ -75,12 +75,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			priority: 0.7,
 		},
 		{
-			url: `${baseUrl}${routes.town.agendaMinutes}`,
-			lastModified: new Date(),
-			changeFrequency: "weekly",
-			priority: 0.7,
-		},
-		{
 			url: `${baseUrl}${routes.town.business}`,
 			lastModified: new Date(),
 			changeFrequency: "monthly",
