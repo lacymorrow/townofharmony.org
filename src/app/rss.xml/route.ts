@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import type { NextRequest } from "next/server";
-import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { getBlogPosts } from "@/lib/blog";
 
@@ -51,12 +50,12 @@ export async function GET(_req: NextRequest): Promise<Response> {
     : new Date().toUTCString();
 
   const channelTitle = escapeXml(sanitizeText(`${siteConfig.title} Blog`));
-  const channelLink = escapeXml(`${siteConfig.url}${routes.blog}`);
+  const channelLink = escapeXml(`${siteConfig.url}/blog`);
   const channelDescription = escapeXml(sanitizeText(siteConfig.description));
 
   const itemsXml = sorted
     .map((post) => {
-      const link = escapeXml(`${siteConfig.url}${routes.blog}/${post.slug}`);
+      const link = escapeXml(`${siteConfig.url}/blog/${post.slug}`);
       const title = escapeXml(sanitizeText(post.title));
       const description = escapeCdata(
         sanitizeText(post.description || post.content?.slice(0, 280) || "")

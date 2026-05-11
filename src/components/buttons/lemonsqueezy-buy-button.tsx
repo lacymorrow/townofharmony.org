@@ -175,7 +175,7 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
             });
 
             // Fallback to success page redirect if API fails
-            const successUrl = new URL(routes.checkoutSuccess, window.location.origin);
+            const successUrl = new URL("/checkout/success", window.location.origin);
 
             // Add order data to URL
             successUrl.searchParams.set("order_id", orderData.attributes.identifier);
@@ -272,7 +272,7 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
     const checkoutUrl = new URL(`https://${storeId}.lemonsqueezy.com/checkout/buy/${checkoutId}`);
 
     // Add success page URL
-    const successUrl = new URL(routes.checkoutSuccess, window.location.origin);
+    const successUrl = new URL("/checkout/success", window.location.origin);
     checkoutUrl.searchParams.set("checkout[success_url]", successUrl.toString());
 
     if (userEmail) {

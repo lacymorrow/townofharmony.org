@@ -98,6 +98,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			changeFrequency: "monthly",
 			priority: 0.6,
 		},
+		{
+			url: `${baseUrl}${routes.town.news}`,
+			lastModified: new Date(),
+			changeFrequency: "weekly",
+			priority: 0.7,
+		},
 	];
 
 	if (isSewerPaymentEnabled()) {

@@ -101,10 +101,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   // Minimal variant: logo + a few text links + theme toggle
   if (variant === "minimal") {
-    const minimalLinks: NavLink[] = [
-      { href: routes.blog, label: "Blog" },
-      { href: "/changelog", label: "Changelog" },
-    ];
+    const minimalLinks: NavLink[] = [];
 
     return (
       <header className={cn(headerVariants({ variant: "minimal" }), className)}>
@@ -203,7 +200,7 @@ export const Header: React.FC<HeaderProps> = ({
                   {!isLoggedIn && (
                     <>
                       <Link
-                        href={routes.launch}
+                        href={"/"}
                         className={cn(
                           buttonVariants({ variant: "default" }),
                           "w-full justify-center"

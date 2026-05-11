@@ -2,7 +2,7 @@ import type { GetServerSideProps } from "next";
 import Link from "next/link";
 import { PagesRouterLayout } from "@/components/layouts/pages-router-layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { createRoute, routes } from "@/config/routes";
+import { createRoute } from "@/config/routes";
 
 interface DynamicPageProps {
   id: string;
@@ -15,7 +15,7 @@ export default function DynamicPage(props: DynamicPageProps) {
   const exampleId = `example-${(id ?? "0").replace(/\W/g, "").slice(0, 12) || "demo"}`;
 
   // Create a dynamic route using the routes configuration
-  const dynamicExampleRoute = createRoute(`${routes.pages.dynamic}/${exampleId}`);
+  const dynamicExampleRoute = createRoute(`/${exampleId}`);
 
   return (
     <PagesRouterLayout>

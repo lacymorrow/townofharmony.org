@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { routes } from "@/config/routes";
 import { validateProjectName } from "@/lib/schemas/deployment";
 import { auth } from "@/server/auth";
 import type { Deployment } from "@/server/db/schema";
@@ -65,7 +64,7 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
       status: "deploying",
     });
 
-    revalidatePath(routes.app.deployments);
+    revalidatePath("/deployments");
 
     // Trigger deployment in background
     void (async () => {
@@ -124,7 +123,7 @@ export async function createDeployment(
   }
 
   const result = await deploymentService.createDeployment(session.user.id, data);
-  revalidatePath(routes.app.deployments);
+  revalidatePath("/deployments");
   return result;
 }
 
@@ -151,7 +150,7 @@ export async function updateDeployment(
 
   // Only revalidate when called from a request context (not from background tasks)
   if (result && !userId) {
-    revalidatePath(routes.app.deployments);
+    revalidatePath("/deployments");
   }
 
   return result;
@@ -167,7 +166,7 @@ export async function deleteDeployment(id: string): Promise<boolean> {
   }
 
   const result = await deploymentService.deleteDeployment(id, session.user.id);
-  revalidatePath(routes.app.deployments);
+  revalidatePath("/deployments");
   return result;
 }
 
@@ -182,7 +181,7 @@ export async function cancelDeployment(id: string): Promise<Deployment | null> {
 
   const result = await deploymentService.cancelDeployment(id, session.user.id);
   if (result) {
-    revalidatePath(routes.app.deployments);
+    revalidatePath("/deployments");
   }
   return result;
 }
