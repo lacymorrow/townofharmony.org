@@ -20,7 +20,6 @@ export async function submitContactForm(formData: FormData) {
 			console.warn("[honeypot] contact form honeypot triggered — processing anyway");
 		}
 
-		let turnstileSkipped = false;
 		if (isTurnstileConfigured()) {
 			const token = formData.get("turnstileToken") as string | null;
 			if (token) {
@@ -29,7 +28,6 @@ export async function submitContactForm(formData: FormData) {
 				}
 			} else {
 				console.warn("[turnstile] no token provided — widget may have failed to load");
-				turnstileSkipped = true;
 			}
 		}
 
@@ -61,11 +59,10 @@ export async function submitContactForm(formData: FormData) {
 		}
 
 		const isEmail = validatedData.contactInfo?.includes("@");
-		const subjectPrefix = isLikelyBot ? "[POSSIBLE SPAM] " : turnstileSkipped ? "[NO CAPTCHA] " : "";
 		const result = await resend.emails.send({
 			from: `Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
-			subject: `${subjectPrefix}New Contact Form Submission`,
+			subject: "New Contact Form Submission",
 			...(isEmail && validatedData.contactInfo ? { replyTo: validatedData.contactInfo } : {}),
 			html: `
                 <h2>New Contact Form Submission</h2>

@@ -85,7 +85,6 @@ export async function submitTownContactForm(
 	}
 	const inquiryLabel = INQUIRY_LABELS[inquiryType];
 
-	let turnstileSkipped = false;
 	if (isTurnstileConfigured()) {
 		if (turnstileToken) {
 			if (!(await verifyTurnstileToken(turnstileToken))) {
@@ -93,7 +92,6 @@ export async function submitTownContactForm(
 			}
 		} else {
 			console.warn("[turnstile] no token provided — widget may have failed to load");
-			turnstileSkipped = true;
 		}
 	}
 
@@ -118,11 +116,10 @@ export async function submitTownContactForm(
 	}
 
 	try {
-		const subjectPrefix = isLikelyBot ? "[POSSIBLE SPAM] " : turnstileSkipped ? "[NO CAPTCHA] " : "";
 		await resend.emails.send({
 			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
-			subject: `${subjectPrefix}Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
+			subject: `Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
 			replyTo: email,
 			html: `
 <h2>New Contact Form Submission</h2>
