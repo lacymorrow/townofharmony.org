@@ -15,7 +15,8 @@ interface BuilderSewerRate {
 	name: string;
 	description: string;
 	location: "in-town" | "out-of-town";
-	type: "residential" | "nonresidential";
+	// "commercial" is the legacy value — normalize on read so old CMS records don't break
+	type: "residential" | "nonresidential" | "commercial";
 	monthlyRate: number;
 	sortOrder: number;
 }
@@ -45,7 +46,7 @@ export default async function SewerPage() {
 					name: r.name,
 					description: r.description,
 					location: r.location,
-					type: r.type,
+					type: r.type === "commercial" ? "nonresidential" : r.type,
 					monthlyRate: r.monthlyRate,
 					stripePriceEnvVar: staticTier?.stripePriceEnvVar ?? "",
 					stripeSubPriceEnvVar: staticTier?.stripeSubPriceEnvVar ?? "",
