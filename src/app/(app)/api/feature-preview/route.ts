@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import { env } from "@/env";
 import { PREVIEW_COOKIE, FLAGS, type FeatureFlagName } from "@/lib/preview-flags";
 
-// GET /api/preview?feature_flag_map=1&feature_flag_sewer=1
-// GET /api/preview?clear=1
+// GET /api/feature-preview?feature_flag_map=1&feature_flag_sewer=1
+// GET /api/feature-preview?clear=1
 // When PREVIEW_SECRET is set, include ?token=SECRET to authenticate.
 // Redirects to ?redirect= path (default: /) after setting/clearing the cookie.
 export async function GET(request: Request) {
