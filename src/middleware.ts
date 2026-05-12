@@ -44,6 +44,7 @@ const BYPASS_PREFIXES = [
 	"/pay/",
 	"/events/",
 	"/meetings/",
+	"/news/",
 	"/resources/",
 ];
 

@@ -23,7 +23,7 @@ export const routes = {
 
 	// Legal routes
 	terms: "/terms-of-service",
-	privacy: "/privacy-policy",
+	privacy: "/privacy",
 	accessibility: "/accessibility",
 	eula: "/eula",
 	legal: "/legal",
@@ -197,6 +197,8 @@ export const redirects = async (): Promise<Redirect[]> => {
 		},
 		{ source: "/elections", destination: "/our-team", permanent: false },
 		{ source: "/elections/", destination: "/our-team", permanent: false },
+		{ source: "/privacy-policy", destination: "/privacy", permanent: true },
+		{ source: "/privacy-policy/", destination: "/privacy", permanent: true },
 	];
 };
 
