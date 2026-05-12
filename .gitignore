@@ -86,3 +86,4 @@ gha-creds-*.json
 # AI
 ai.mdx
 .env*.local
+package-lock.json
