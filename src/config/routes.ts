@@ -124,21 +124,11 @@ export const redirects = async (): Promise<Redirect[]> => {
 		{ source: "/government/", destination: "/our-team", permanent: true },
 		{ source: "/emergency-services", destination: "/emergency", permanent: true },
 		{ source: "/emergency-services/", destination: "/emergency", permanent: true },
-		{
-			source: "/resources/ordinance",
-			destination: "/resources/town-ordinances",
-			permanent: true,
-		},
-		{
-			source: "/resources/ordinance/",
-			destination: "/resources/town-ordinances",
-			permanent: true,
-		},
-		{
-			source: "/docs/town-ordinance.pdf",
-			destination: "/resources/town-ordinances",
-			permanent: true,
-		},
+		...createRedirects(
+			["/resources/ordinance", "/docs/town-ordinance.pdf"],
+			`${routes.town.resources}/town-ordinances` as Route,
+			true,
+		),
 		{
 			source: "/resources/harmony-community-center-reservation-application-page",
 			destination: "/resources/community-center-reservation",

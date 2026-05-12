@@ -3,6 +3,7 @@ import { ArrowLeft, Download } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DocumentViewer } from "@/components/town/document-viewer";
+import { routes } from "@/config/routes";
 import { resources } from "@/data/town/resources";
 
 interface PageProps {
@@ -38,7 +39,7 @@ export default async function ResourceDocumentPage({ params }: PageProps) {
 		<article className="py-12 bg-cream">
 			<div className="container mx-auto px-4 max-w-4xl">
 				<Link
-					href="/resources"
+					href={routes.town.resources}
 					className="inline-flex items-center gap-2 text-sm text-sage hover:text-sage-dark font-medium mb-6"
 				>
 					<ArrowLeft className="h-4 w-4" />

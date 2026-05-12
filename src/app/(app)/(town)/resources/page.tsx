@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { routes } from "@/config/routes";
 import { resources } from "@/data/town/resources";
 
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ export default function ResourcesPage() {
 						) =>
 							isDocument ? (
 								<Link
-									href={`/resources/${r.slug}`}
+									href={`${routes.town.resources}/${r.slug}`}
 									className={cardClass}
 									id={r.slug}
 								>
