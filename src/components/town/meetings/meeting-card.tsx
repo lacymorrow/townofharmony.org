@@ -107,7 +107,7 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 					<div className="flex flex-wrap items-center gap-3 mt-2 pt-2 border-t text-xs">
 						{meeting.agendaUrl && (
 							<Link
-								href={`/meetings/${meeting.slug}`}
+								href={`/meetings/${meeting.slug}#agenda`}
 								className="align-middle text-sage hover:text-sage-dark font-medium"
 							>
 								<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
@@ -116,7 +116,7 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 						)}
 						{meeting.minutesUrl && (
 							<Link
-								href={`/meetings/${meeting.slug}`}
+								href={`/meetings/${meeting.slug}#minutes`}
 								className="align-middle text-sage hover:text-sage-dark font-medium"
 							>
 								<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
@@ -127,7 +127,7 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 							meeting.documents.map((doc, index) => (
 								<Link
 									key={index}
-									href={`/meetings/${meeting.slug}`}
+									href={`/meetings/${meeting.slug}#doc-${index}`}
 									className="align-middle text-sage hover:text-sage-dark font-medium"
 								>
 									<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />

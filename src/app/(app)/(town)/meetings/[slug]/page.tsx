@@ -53,7 +53,7 @@ export default async function MeetingDetailPage({ params }: PageProps) {
 				)}
 
 				{meeting.minutesUrl && (
-					<section className="mt-8">
+					<section id="minutes" className="mt-8">
 						<div className="flex items-center justify-between mb-3">
 							<h2 className="text-xl font-serif font-bold text-sage-dark">
 								Meeting Minutes

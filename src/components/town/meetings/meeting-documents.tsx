@@ -47,7 +47,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 		<div className="space-y-6">
 			{/* Inline Agenda Viewer */}
 			{meeting.agendaUrl && (
-				<Card>
+				<Card id="agenda">
 					<CardHeader>
 						<div className="flex items-center justify-between">
 							<CardTitle className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 
 			{/* Inline Minutes Viewer */}
 			{meeting.minutesUrl && (
-				<Card>
+				<Card id="minutes">
 					<CardHeader>
 						<div className="flex items-center justify-between">
 							<CardTitle className="flex items-center gap-2">
@@ -152,7 +152,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 			{/* Additional Documents */}
 			{meeting.documents && meeting.documents.length > 0 &&
 				meeting.documents.map((doc, index) => (
-					<Card key={index}>
+					<Card key={index} id={`doc-${index}`}>
 						<CardHeader>
 							<div className="flex items-center justify-between">
 								<CardTitle className="flex items-center gap-2">
@@ -181,18 +181,14 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 			{meeting.agenda && (
 				<div className="p-4 bg-cream rounded-lg border border-[#DDD7CC]">
 					<h4 className="font-medium mb-2 text-[#2D2A24]">Agenda Content</h4>
-					<div className="prose prose-sm max-w-none text-[#2D2A24]">
-						<div dangerouslySetInnerHTML={{ __html: meeting.agenda }} />
-					</div>
+					<p className="text-sm text-[#2D2A24] whitespace-pre-line">{meeting.agenda}</p>
 				</div>
 			)}
 
 			{meeting.minutes && (
 				<div className="p-4 bg-green-50 rounded-lg border border-green-200">
 					<h4 className="font-medium mb-2 text-green-900">Minutes Content</h4>
-					<div className="prose prose-sm max-w-none text-green-800">
-						<div dangerouslySetInnerHTML={{ __html: meeting.minutes }} />
-					</div>
+					<p className="text-sm text-green-800 whitespace-pre-line">{meeting.minutes}</p>
 				</div>
 			)}
 		</div>
