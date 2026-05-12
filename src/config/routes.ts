@@ -24,6 +24,7 @@ export const routes = {
 	// Legal routes
 	terms: "/terms-of-service",
 	privacy: "/privacy-policy",
+	accessibility: "/accessibility",
 	eula: "/eula",
 	legal: "/legal",
 

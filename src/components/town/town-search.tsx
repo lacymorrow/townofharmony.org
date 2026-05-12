@@ -163,7 +163,7 @@ const buildSearchIndex = (): SearchResult[] => {
 			id: `biz-${biz.id}`,
 			title: biz.name,
 			subtitle: `${biz.category} — ${biz.address}`,
-			href: `/business/${biz.slug}`,
+			href: "/business",
 			category: "Businesses",
 			icon: <Store className="h-4 w-4" />,
 		});
