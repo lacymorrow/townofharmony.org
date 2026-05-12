@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
 import { meetings } from "@/data/town/meetings";
 
 interface PageProps {
@@ -49,11 +50,26 @@ export default async function MeetingDetailPage({ params }: PageProps) {
 					<p className="mt-6 text-[#2D2A24]">{meeting.minutes}</p>
 				)}
 				{meeting.minutesUrl && (
-					<a
-						href={meeting.minutesUrl}
-						className="inline-block mt-6 px-5 py-3 rounded bg-sage-dark text-white font-semibold hover:bg-sage"
+					<DocumentViewerDialog
+						url={meeting.minutesUrl}
+						title={`Minutes - ${meeting.title}`}
 					>
-						Download Minutes
+						<button
+							type="button"
+							className="inline-block mt-6 px-5 py-3 rounded bg-sage-dark text-white font-semibold hover:bg-sage cursor-pointer"
+						>
+							View Minutes
+						</button>
+					</DocumentViewerDialog>
+				)}
+				{meeting.videoUrl && (
+					<a
+						href={meeting.videoUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="inline-block mt-4 ml-3 px-5 py-3 rounded border border-sage-dark text-sage-dark font-semibold hover:bg-sage-dark hover:text-white"
+					>
+						Watch Recording
 					</a>
 				)}
 			</div>

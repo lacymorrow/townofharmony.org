@@ -134,12 +134,13 @@ const buildSearchIndex = (): SearchResult[] => {
 
 	// Resources
 	for (const resource of resources) {
+		const isDoc = resource.type === "document";
 		results.push({
 			id: `resource-${resource.id}`,
 			title: resource.title,
 			subtitle: resource.description.slice(0, 80),
-			href: resource.externalUrl ?? `/resources#${resource.slug}`,
-			openExternal: resource.type === "document" || resource.externalUrl?.startsWith("http"),
+			href: isDoc ? `/resources#${resource.slug}` : (resource.externalUrl ?? `/resources#${resource.slug}`),
+			openExternal: !isDoc && !!resource.externalUrl?.startsWith("http"),
 			category: "Resources",
 			icon: <FileText className="h-4 w-4" />,
 		});
