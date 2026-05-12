@@ -126,18 +126,17 @@ export const redirects = async (): Promise<Redirect[]> => {
 		{ source: "/emergency-services/", destination: "/emergency", permanent: true },
 		{
 			source: "/resources/ordinance",
-			destination: "/town-ordinance.pdf",
+			destination: "/resources/town-ordinances",
 			permanent: true,
 		},
 		{
 			source: "/resources/ordinance/",
-			destination: "/town-ordinance.pdf",
+			destination: "/resources/town-ordinances",
 			permanent: true,
 		},
-		// Redirect old /docs/town-ordinance.pdf path (was incorrectly in docs dir)
 		{
 			source: "/docs/town-ordinance.pdf",
-			destination: "/town-ordinance.pdf",
+			destination: "/resources/town-ordinances",
 			permanent: true,
 		},
 		{
