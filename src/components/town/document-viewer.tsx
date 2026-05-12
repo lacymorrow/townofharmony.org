@@ -1,5 +1,6 @@
 "use client";
 
+import DOMPurify from "dompurify";
 import { Download, FileText, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ export const DocumentViewer = ({ url, title }: DocumentViewerProps) => {
 
 	const ext = typeof window !== "undefined" ? getFileExtension(url) : "";
 	const isPdf = ext === "pdf";
-	const isDocx = ext === "docx" || ext === "doc";
+	const isDocx = ext === "docx";
 
 	const loadDocx = useCallback(async () => {
 		setLoading(true);
@@ -32,7 +33,7 @@ export const DocumentViewer = ({ url, title }: DocumentViewerProps) => {
 			const arrayBuffer = await response.arrayBuffer();
 			const mammoth = await import("mammoth");
 			const result = await mammoth.convertToHtml({ arrayBuffer });
-			setDocHtml(result.value);
+			setDocHtml(DOMPurify.sanitize(result.value));
 		} catch (e) {
 			setError(e instanceof Error ? e.message : "Failed to load document");
 		} finally {

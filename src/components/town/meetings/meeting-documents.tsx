@@ -1,4 +1,4 @@
-import { Download, ExternalLink, FileText, Headphones, Video } from "lucide-react";
+import { ExternalLink, FileText, Headphones, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
@@ -155,7 +155,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 								</div>
 								<DocumentViewerDialog url={doc} title={`Document ${index + 1} - ${meeting.title}`}>
 									<Button size="sm" variant="outline" className="flex items-center gap-2">
-										<Download className="h-4 w-4" />
+										<FileText className="h-4 w-4" />
 										View
 									</Button>
 								</DocumentViewerDialog>
