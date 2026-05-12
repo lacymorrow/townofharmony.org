@@ -3,6 +3,7 @@ import {
 	Building,
 	Calendar,
 	Clock,
+	Download,
 	FileText,
 	Headphones,
 	MapPin,
@@ -13,7 +14,6 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
 import { formatDate, formatTime } from "@/lib/utils";
 import { MeetingDocuments } from "./meeting-documents";
 
@@ -236,21 +236,21 @@ export function MeetingDetail({ meeting }: MeetingDetailProps) {
 						</CardHeader>
 						<CardContent className="space-y-3">
 							{meeting.agendaUrl && (
-								<DocumentViewerDialog url={meeting.agendaUrl} title={`Agenda - ${meeting.title}`}>
-									<Button variant="outline" size="sm" className="w-full justify-start flex items-center gap-2">
-										<FileText className="h-4 w-4" />
-										View Agenda
-									</Button>
-								</DocumentViewerDialog>
+								<Button asChild variant="outline" size="sm" className="w-full justify-start">
+									<a href={meeting.agendaUrl} download className="flex items-center gap-2">
+										<Download className="h-4 w-4" />
+										Download Agenda
+									</a>
+								</Button>
 							)}
 
 							{meeting.minutesUrl && (
-								<DocumentViewerDialog url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`}>
-									<Button variant="outline" size="sm" className="w-full justify-start flex items-center gap-2">
-										<FileText className="h-4 w-4" />
-										View Minutes
-									</Button>
-								</DocumentViewerDialog>
+								<Button asChild variant="outline" size="sm" className="w-full justify-start">
+									<a href={meeting.minutesUrl} download className="flex items-center gap-2">
+										<Download className="h-4 w-4" />
+										Download Minutes
+									</a>
+								</Button>
 							)}
 
 							{meeting.videoUrl && (
