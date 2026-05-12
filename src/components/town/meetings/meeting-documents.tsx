@@ -1,7 +1,7 @@
-import { ExternalLink, FileText, Headphones, Video } from "lucide-react";
+import { Download, FileText, Headphones, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
+import { DocumentViewer } from "@/components/town/document-viewer";
 
 interface MeetingDocumentsProps {
 	meeting: {
@@ -44,64 +44,71 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 	}
 
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle className="flex items-center gap-2">
-					<FileText className="h-5 w-5" />
-					Meeting Documents & Media
-				</CardTitle>
-			</CardHeader>
-			<CardContent className="space-y-4">
-				{/* Agenda */}
-				{meeting.agendaUrl && (
-					<div className="flex items-center justify-between p-3 border rounded-lg">
-						<div className="flex items-center gap-3">
-							<FileText className="h-5 w-5 text-sage" />
-							<div>
-								<h4 className="font-medium">Meeting Agenda</h4>
-								<p className="text-sm text-muted-foreground">Agenda for {meeting.title}</p>
-							</div>
+		<div className="space-y-6">
+			{/* Inline Agenda Viewer */}
+			{meeting.agendaUrl && (
+				<Card>
+					<CardHeader>
+						<div className="flex items-center justify-between">
+							<CardTitle className="flex items-center gap-2">
+								<FileText className="h-5 w-5 text-sage" />
+								Meeting Agenda
+							</CardTitle>
+							<a
+								href={meeting.agendaUrl}
+								download
+								className="inline-flex items-center gap-2 text-sm text-sage hover:text-sage-dark font-medium"
+							>
+								<Download className="h-4 w-4" />
+								Download
+							</a>
 						</div>
-						<DocumentViewerDialog url={meeting.agendaUrl} title={`Agenda - ${meeting.title}`}>
-							<Button size="sm" variant="outline" className="flex items-center gap-2">
-								<ExternalLink className="h-4 w-4" />
-								View
-							</Button>
-						</DocumentViewerDialog>
-					</div>
-				)}
-
-				{/* Minutes */}
-				{meeting.minutesUrl && (
-					<div className="flex items-center justify-between p-3 border rounded-lg">
-						<div className="flex items-center gap-3">
-							<FileText className="h-5 w-5 text-green-600" />
-							<div>
-								<h4 className="font-medium">Meeting Minutes</h4>
-								<p className="text-sm text-muted-foreground">
-									Official minutes for {meeting.title}
-								</p>
-							</div>
+					</CardHeader>
+					<CardContent>
+						<div className="border rounded-lg overflow-hidden bg-white min-h-[50vh]">
+							<DocumentViewer url={meeting.agendaUrl} title={`Agenda - ${meeting.title}`} />
 						</div>
-						<DocumentViewerDialog url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`}>
-							<Button size="sm" variant="outline" className="flex items-center gap-2">
-								<ExternalLink className="h-4 w-4" />
-								View
-							</Button>
-						</DocumentViewerDialog>
-					</div>
-				)}
+					</CardContent>
+				</Card>
+			)}
 
-				{/* Video Recording */}
-				{meeting.videoUrl && (
-					<div className="flex items-center justify-between p-3 border rounded-lg">
-						<div className="flex items-center gap-3">
+			{/* Inline Minutes Viewer */}
+			{meeting.minutesUrl && (
+				<Card>
+					<CardHeader>
+						<div className="flex items-center justify-between">
+							<CardTitle className="flex items-center gap-2">
+								<FileText className="h-5 w-5 text-green-600" />
+								Meeting Minutes
+							</CardTitle>
+							<a
+								href={meeting.minutesUrl}
+								download
+								className="inline-flex items-center gap-2 text-sm text-sage hover:text-sage-dark font-medium"
+							>
+								<Download className="h-4 w-4" />
+								Download
+							</a>
+						</div>
+					</CardHeader>
+					<CardContent>
+						<div className="border rounded-lg overflow-hidden bg-white min-h-[50vh]">
+							<DocumentViewer url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`} />
+						</div>
+					</CardContent>
+				</Card>
+			)}
+
+			{/* Video Recording */}
+			{meeting.videoUrl && (
+				<Card>
+					<CardHeader>
+						<CardTitle className="flex items-center gap-2">
 							<Video className="h-5 w-5 text-red-600" />
-							<div>
-								<h4 className="font-medium">Video Recording</h4>
-								<p className="text-sm text-muted-foreground">Watch the full meeting recording</p>
-							</div>
-						</div>
+							Video Recording
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
 						<Button asChild size="sm" variant="outline">
 							<a
 								href={meeting.videoUrl}
@@ -113,19 +120,20 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 								Watch
 							</a>
 						</Button>
-					</div>
-				)}
+					</CardContent>
+				</Card>
+			)}
 
-				{/* Audio Recording */}
-				{meeting.audioUrl && (
-					<div className="flex items-center justify-between p-3 border rounded-lg">
-						<div className="flex items-center gap-3">
+			{/* Audio Recording */}
+			{meeting.audioUrl && (
+				<Card>
+					<CardHeader>
+						<CardTitle className="flex items-center gap-2">
 							<Headphones className="h-5 w-5 text-purple-600" />
-							<div>
-								<h4 className="font-medium">Audio Recording</h4>
-								<p className="text-sm text-muted-foreground">Listen to the meeting audio</p>
-							</div>
-						</div>
+							Audio Recording
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
 						<Button asChild size="sm" variant="outline">
 							<a
 								href={meeting.audioUrl}
@@ -137,54 +145,56 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 								Listen
 							</a>
 						</Button>
-					</div>
-				)}
+					</CardContent>
+				</Card>
+			)}
 
-				{/* Additional Documents */}
-				{meeting.documents && meeting.documents.length > 0 && (
-					<div className="space-y-3">
-						<h4 className="font-medium text-sm">Additional Documents:</h4>
-						{meeting.documents.map((doc, index) => (
-							<div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-								<div className="flex items-center gap-3">
+			{/* Additional Documents */}
+			{meeting.documents && meeting.documents.length > 0 &&
+				meeting.documents.map((doc, index) => (
+					<Card key={index}>
+						<CardHeader>
+							<div className="flex items-center justify-between">
+								<CardTitle className="flex items-center gap-2">
 									<FileText className="h-5 w-5 text-[#4A4640]" />
-									<div>
-										<h4 className="font-medium">Document {index + 1}</h4>
-										<p className="text-sm text-muted-foreground">Additional meeting document</p>
-									</div>
-								</div>
-								<DocumentViewerDialog url={doc} title={`Document ${index + 1} - ${meeting.title}`}>
-									<Button size="sm" variant="outline" className="flex items-center gap-2">
-										<FileText className="h-4 w-4" />
-										View
-									</Button>
-								</DocumentViewerDialog>
+									Document {index + 1}
+								</CardTitle>
+								<a
+									href={doc}
+									download
+									className="inline-flex items-center gap-2 text-sm text-sage hover:text-sage-dark font-medium"
+								>
+									<Download className="h-4 w-4" />
+									Download
+								</a>
 							</div>
-						))}
+						</CardHeader>
+						<CardContent>
+							<div className="border rounded-lg overflow-hidden bg-white min-h-[50vh]">
+								<DocumentViewer url={doc} title={`Document ${index + 1} - ${meeting.title}`} />
+							</div>
+						</CardContent>
+					</Card>
+				))}
+
+			{/* Inline Content (if plain text content exists) */}
+			{meeting.agenda && (
+				<div className="p-4 bg-cream rounded-lg border border-[#DDD7CC]">
+					<h4 className="font-medium mb-2 text-[#2D2A24]">Agenda Content</h4>
+					<div className="prose prose-sm max-w-none text-[#2D2A24]">
+						<div dangerouslySetInnerHTML={{ __html: meeting.agenda }} />
 					</div>
-				)}
-
-				{/* Inline Content */}
-				<div className="space-y-4">
-					{meeting.agenda && (
-						<div className="p-4 bg-cream rounded-lg border border-[#DDD7CC]">
-							<h4 className="font-medium mb-2 text-[#2D2A24]">Agenda Content</h4>
-							<div className="prose prose-sm max-w-none text-[#2D2A24]">
-								<div dangerouslySetInnerHTML={{ __html: meeting.agenda }} />
-							</div>
-						</div>
-					)}
-
-					{meeting.minutes && (
-						<div className="p-4 bg-green-50 rounded-lg border border-green-200">
-							<h4 className="font-medium mb-2 text-green-900">Minutes Content</h4>
-							<div className="prose prose-sm max-w-none text-green-800">
-								<div dangerouslySetInnerHTML={{ __html: meeting.minutes }} />
-							</div>
-						</div>
-					)}
 				</div>
-			</CardContent>
-		</Card>
+			)}
+
+			{meeting.minutes && (
+				<div className="p-4 bg-green-50 rounded-lg border border-green-200">
+					<h4 className="font-medium mb-2 text-green-900">Minutes Content</h4>
+					<div className="prose prose-sm max-w-none text-green-800">
+						<div dangerouslySetInnerHTML={{ __html: meeting.minutes }} />
+					</div>
+				</div>
+			)}
+		</div>
 	);
 }
