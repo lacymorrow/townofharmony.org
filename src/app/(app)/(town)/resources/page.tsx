@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { DocumentLink } from "@/components/town/document-link";
+import { routes } from "@/config/routes";
 import { resources } from "@/data/town/resources";
 
 export const metadata: Metadata = {
@@ -30,15 +30,14 @@ export default function ResourcesPage() {
 						const Wrapper = (
 							{ children }: { children: React.ReactNode },
 						) =>
-							isDocument && r.externalUrl ? (
-								<DocumentLink
-									url={r.externalUrl}
-									title={r.title}
+							isDocument ? (
+								<Link
+									href={`${routes.town.resources}/${r.slug}`}
 									className={cardClass}
 									id={r.slug}
 								>
 									{children}
-								</DocumentLink>
+								</Link>
 							) : r.externalUrl ? (
 								opensInBrowser ? (
 									<a
