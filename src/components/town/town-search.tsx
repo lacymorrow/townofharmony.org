@@ -139,7 +139,7 @@ const buildSearchIndex = (): SearchResult[] => {
 			id: `resource-${resource.id}`,
 			title: resource.title,
 			subtitle: resource.description.slice(0, 80),
-			href: isDoc ? `/resources#${resource.slug}` : (resource.externalUrl ?? `/resources#${resource.slug}`),
+			href: isDoc ? `/resources/${resource.slug}` : (resource.externalUrl ?? `/resources#${resource.slug}`),
 			openExternal: !isDoc && !!resource.externalUrl?.startsWith("http"),
 			category: "Resources",
 			icon: <FileText className="h-4 w-4" />,
