@@ -1,10 +1,8 @@
 import type { MetadataRoute } from "next";
+import { buildTimeFeatures } from "@/config/features-config";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { isSewerPaymentEnabled, isSewerVisible } from "@/data/town/sewer-rates";
-
-const isEnabled = (flag: string): boolean =>
-	process.env[`NEXT_PUBLIC_FEATURE_${flag}`] === "true";
 
 export default function sitemap(): MetadataRoute.Sitemap {
 	const baseUrl = siteConfig.url;
@@ -65,14 +63,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			priority: 0.4,
 		},
 		{
-			url: `${baseUrl}/accessibility`,
+			url: `${baseUrl}${routes.accessibility}`,
 			lastModified: new Date(),
 			changeFrequency: "monthly",
 			priority: 0.4,
 		},
 	];
 
-	if (isEnabled("EVENTS_ENABLED")) {
+	if (buildTimeFeatures.EVENTS_ENABLED) {
 		townRoutes.push({
 			url: `${baseUrl}${routes.town.events}`,
 			lastModified: new Date(),
@@ -81,7 +79,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		});
 	}
 
-	if (isEnabled("ALERTS_ENABLED")) {
+	if (buildTimeFeatures.ALERTS_ENABLED) {
 		townRoutes.push({
 			url: `${baseUrl}${routes.town.emergency}`,
 			lastModified: new Date(),
@@ -90,7 +88,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		});
 	}
 
-	if (isEnabled("NEWS_ENABLED")) {
+	if (buildTimeFeatures.NEWS_ENABLED) {
 		townRoutes.push({
 			url: `${baseUrl}${routes.town.news}`,
 			lastModified: new Date(),
@@ -99,7 +97,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		});
 	}
 
-	if (isEnabled("MAP_ENABLED")) {
+	if (buildTimeFeatures.MAP_ENABLED) {
 		townRoutes.push({
 			url: `${baseUrl}${routes.town.map}`,
 			lastModified: new Date(),
