@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
 import { formatDate, formatTime } from "@/lib/utils";
 import { MeetingDocuments } from "./meeting-documents";
 
@@ -235,31 +236,21 @@ export function MeetingDetail({ meeting }: MeetingDetailProps) {
 						</CardHeader>
 						<CardContent className="space-y-3">
 							{meeting.agendaUrl && (
-								<Button asChild variant="outline" size="sm" className="w-full justify-start">
-									<a
-										href={meeting.agendaUrl}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="flex items-center gap-2"
-									>
+								<DocumentViewerDialog url={meeting.agendaUrl} title={`Agenda - ${meeting.title}`}>
+									<Button variant="outline" size="sm" className="w-full justify-start flex items-center gap-2">
 										<FileText className="h-4 w-4" />
 										View Agenda
-									</a>
-								</Button>
+									</Button>
+								</DocumentViewerDialog>
 							)}
 
 							{meeting.minutesUrl && (
-								<Button asChild variant="outline" size="sm" className="w-full justify-start">
-									<a
-										href={meeting.minutesUrl}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="flex items-center gap-2"
-									>
+								<DocumentViewerDialog url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`}>
+									<Button variant="outline" size="sm" className="w-full justify-start flex items-center gap-2">
 										<FileText className="h-4 w-4" />
 										View Minutes
-									</a>
-								</Button>
+									</Button>
+								</DocumentViewerDialog>
 							)}
 
 							{meeting.videoUrl && (

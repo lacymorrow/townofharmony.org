@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { DocumentLink } from "@/components/town/document-link";
 import { resources } from "@/data/town/resources";
 
 export const metadata: Metadata = {
@@ -23,24 +24,34 @@ export default function ResourcesPage() {
 
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{sorted.map((r) => {
-						const opensInBrowser = r.type === "document" || r.externalUrl?.startsWith("http");
+						const isDocument = r.type === "document" && r.externalUrl;
+						const opensInBrowser = !isDocument && r.externalUrl?.startsWith("http");
+						const cardClass = "block bg-white rounded-lg border border-stone p-5 hover:border-sage transition-colors text-left w-full";
 						const Wrapper = (
 							{ children }: { children: React.ReactNode },
 						) =>
-							r.externalUrl ? (
+							isDocument && r.externalUrl ? (
+								<DocumentLink
+									url={r.externalUrl}
+									title={r.title}
+									className={cardClass}
+								>
+									{children}
+								</DocumentLink>
+							) : r.externalUrl ? (
 								opensInBrowser ? (
 									<a
 										href={r.externalUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="block bg-white rounded-lg border border-stone p-5 hover:border-sage transition-colors"
+										className={cardClass}
 									>
 										{children}
 									</a>
 								) : (
 									<Link
 										href={r.externalUrl}
-										className="block bg-white rounded-lg border border-stone p-5 hover:border-sage transition-colors"
+										className={cardClass}
 									>
 										{children}
 									</Link>

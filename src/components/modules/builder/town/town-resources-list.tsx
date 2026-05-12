@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
 import { useBuilderData } from "@/lib/builder-data";
 import { resources as staticResources } from "@/data/town/resources";
 import type { TownResource } from "@/data/town/types";
@@ -276,6 +277,20 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 													</div>
 												</div>
 											);
+
+											if (resource.type === "document" && resource.externalUrl) {
+												return (
+													<DocumentViewerDialog
+														key={resource.slug}
+														url={resource.externalUrl}
+														title={resource.title}
+													>
+														<button type="button" className="text-left w-full">
+															{content}
+														</button>
+													</DocumentViewerDialog>
+												);
+											}
 
 											if (resource.externalUrl) {
 												return (

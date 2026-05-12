@@ -2,6 +2,7 @@ import { Calendar, Clock, FileText, Headphones, MapPin, Users, Video } from "luc
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
 import { formatDate, formatTime } from "@/lib/utils";
 
 interface MeetingCardProps {
@@ -106,39 +107,38 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
 				{(hasDocuments || hasRecordings) && (
 					<div className="flex flex-wrap items-center gap-3 mt-2 pt-2 border-t text-xs">
 						{meeting.agendaUrl && (
-							<a
-								href={meeting.agendaUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="align-middle text-sage hover:text-sage-dark font-medium"
-							>
-								<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
-								Agenda
-							</a>
+							<DocumentViewerDialog url={meeting.agendaUrl} title={`Agenda - ${meeting.title}`}>
+								<button
+									type="button"
+									className="align-middle text-sage hover:text-sage-dark font-medium cursor-pointer"
+								>
+									<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
+									Agenda
+								</button>
+							</DocumentViewerDialog>
 						)}
 						{meeting.minutesUrl && (
-							<a
-								href={meeting.minutesUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="align-middle text-sage hover:text-sage-dark font-medium"
-							>
-								<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
-								Minutes
-							</a>
+							<DocumentViewerDialog url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`}>
+								<button
+									type="button"
+									className="align-middle text-sage hover:text-sage-dark font-medium cursor-pointer"
+								>
+									<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
+									Minutes
+								</button>
+							</DocumentViewerDialog>
 						)}
 						{meeting.documents &&
 							meeting.documents.map((doc, index) => (
-								<a
-									key={index}
-									href={doc}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="align-middle text-sage hover:text-sage-dark font-medium"
-								>
-									<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
-									Doc {index + 1}
-								</a>
+								<DocumentViewerDialog key={index} url={doc} title={`Document ${index + 1} - ${meeting.title}`}>
+									<button
+										type="button"
+										className="align-middle text-sage hover:text-sage-dark font-medium cursor-pointer"
+									>
+										<FileText className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
+										Doc {index + 1}
+									</button>
+								</DocumentViewerDialog>
 							))}
 						{meeting.videoUrl && (
 							<a

@@ -1,6 +1,7 @@
-import { Download, ExternalLink, FileText, Headphones, Video } from "lucide-react";
+import { ExternalLink, FileText, Headphones, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
 
 interface MeetingDocumentsProps {
 	meeting: {
@@ -61,17 +62,12 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 								<p className="text-sm text-muted-foreground">Agenda for {meeting.title}</p>
 							</div>
 						</div>
-						<Button asChild size="sm" variant="outline">
-							<a
-								href={meeting.agendaUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center gap-2"
-							>
+						<DocumentViewerDialog url={meeting.agendaUrl} title={`Agenda - ${meeting.title}`}>
+							<Button size="sm" variant="outline" className="flex items-center gap-2">
 								<ExternalLink className="h-4 w-4" />
 								View
-							</a>
-						</Button>
+							</Button>
+						</DocumentViewerDialog>
 					</div>
 				)}
 
@@ -87,17 +83,12 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 								</p>
 							</div>
 						</div>
-						<Button asChild size="sm" variant="outline">
-							<a
-								href={meeting.minutesUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center gap-2"
-							>
+						<DocumentViewerDialog url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`}>
+							<Button size="sm" variant="outline" className="flex items-center gap-2">
 								<ExternalLink className="h-4 w-4" />
 								View
-							</a>
-						</Button>
+							</Button>
+						</DocumentViewerDialog>
 					</div>
 				)}
 
@@ -162,17 +153,12 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 										<p className="text-sm text-muted-foreground">Additional meeting document</p>
 									</div>
 								</div>
-								<Button asChild size="sm" variant="outline">
-									<a
-										href={doc}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="flex items-center gap-2"
-									>
-										<Download className="h-4 w-4" />
-										Download
-									</a>
-								</Button>
+								<DocumentViewerDialog url={doc} title={`Document ${index + 1} - ${meeting.title}`}>
+									<Button size="sm" variant="outline" className="flex items-center gap-2">
+										<FileText className="h-4 w-4" />
+										View
+									</Button>
+								</DocumentViewerDialog>
 							</div>
 						))}
 					</div>
