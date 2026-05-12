@@ -78,15 +78,15 @@ export const DocumentViewer = ({ url, title }: DocumentViewerProps) => {
 			<iframe
 				src={url}
 				title={title ?? "Document"}
-				className="w-full h-full min-h-[70vh] border-0 rounded"
+				className="w-full h-full border-0 rounded"
 			/>
 		);
 	}
 
-	if (isDocx && docHtml) {
+	if (isDocx && docHtml !== null) {
 		return (
 			<div
-				className="prose prose-sm max-w-none p-6 bg-white rounded overflow-auto max-h-[70vh]"
+				className="prose prose-sm max-w-none p-6 bg-white rounded overflow-auto h-full"
 				dangerouslySetInnerHTML={{ __html: docHtml }}
 			/>
 		);
