@@ -35,6 +35,7 @@ export default function ResourcesPage() {
 									url={r.externalUrl}
 									title={r.title}
 									className={cardClass}
+									id={r.slug}
 								>
 									{children}
 								</DocumentLink>

@@ -7,6 +7,7 @@ interface DocumentLinkProps {
 	title: string;
 	className?: string;
 	children: React.ReactNode;
+	id?: string;
 }
 
 export const DocumentLink = ({
@@ -14,10 +15,11 @@ export const DocumentLink = ({
 	title,
 	className,
 	children,
+	id,
 }: DocumentLinkProps) => {
 	return (
 		<DocumentViewerDialog url={url} title={title}>
-			<button type="button" className={className}>
+			<button type="button" className={className} id={id}>
 				{children}
 			</button>
 		</DocumentViewerDialog>
