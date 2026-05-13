@@ -50,7 +50,7 @@ const STATIC_FALLBACK_PARAMS = [
 	{ slug: ["elections"] },
 ];
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 // ISR: regenerate known pages every hour so content edits appear without a full redeploy.
 export const revalidate = 3600;
@@ -103,6 +103,7 @@ interface PageProps {
 	params: Promise<{
 		slug: string[];
 	}>;
+	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 async function getBuilderContent(
@@ -161,18 +162,20 @@ async function getBuilderContent(
 
 export async function generateMetadata({
 	params: paramsPromise,
+	searchParams: searchParamsPromise,
 }: PageProps): Promise<Metadata> {
-	const params = await paramsPromise;
+	const [params, searchParams] = await Promise.all([paramsPromise, searchParamsPromise]);
+	const isPreview = "builder.preview" in searchParams;
 	const content = await getBuilderContent(params.slug);
 
-	if (!content) {
+	if (!content && !isPreview) {
 		return notFound();
 	}
 
 	const slugPath = `/${params.slug.join("/")}`;
-	const pageTitle = content.data?.title ?? "Town of Harmony";
+	const pageTitle = content?.data?.title ?? "Town of Harmony";
 	const pageDescription =
-		content.data?.description ??
+		content?.data?.description ??
 		`${pageTitle} - Town of Harmony, NC. Find local information, services, and community resources.`;
 
 	return {
@@ -185,10 +188,10 @@ export async function generateMetadata({
 			title: pageTitle,
 			description: pageDescription,
 			url: `${siteConfig.url}${slugPath}`,
-			...(content.data?.ogImage && {
+			...(content?.data?.ogImage && {
 				images: [{ url: content.data.ogImage as string }],
 			}),
-			...(content.data?.ogType && {
+			...(content?.data?.ogType && {
 				type: content.data.ogType as "website" | "article" | "profile",
 			}),
 		},
@@ -197,11 +200,13 @@ export async function generateMetadata({
 
 export default async function TownCatchAllPage({
 	params: paramsPromise,
+	searchParams: searchParamsPromise,
 }: PageProps) {
-	const params = await paramsPromise;
+	const [params, searchParams] = await Promise.all([paramsPromise, searchParamsPromise]);
+	const isPreview = "builder.preview" in searchParams;
 	const content = await getBuilderContent(params.slug);
 
-	if (!content) {
+	if (!content && !isPreview) {
 		notFound();
 	}
 

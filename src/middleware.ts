@@ -63,9 +63,15 @@ function isTownCatchAllCandidate(pathname: string): boolean {
 }
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
-	const { pathname } = request.nextUrl;
+	const { pathname, searchParams } = request.nextUrl;
 
 	if (!isTownCatchAllCandidate(pathname)) {
+		return NextResponse.next();
+	}
+
+	// Builder.io visual editor loads the site in an iframe with this query param.
+	// Bypass the content-existence check so draft/unpublished pages can render.
+	if (searchParams.has("builder.preview")) {
 		return NextResponse.next();
 	}
 
