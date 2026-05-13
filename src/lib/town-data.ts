@@ -90,10 +90,15 @@ export const getEvents = async (options?: {
 
 	let filtered = [...events];
 
-	if (status) {
+	const now = new Date();
+	if (status === "upcoming") {
+		filtered = filtered.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
+	} else if (status === "past") {
+		filtered = filtered.filter((e) => new Date(e.eventDate) < now);
+	} else if (status) {
 		filtered = filtered.filter((e) => e.status === status);
 	} else {
-		filtered = filtered.filter((e) => e.status === "upcoming");
+		filtered = filtered.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
 	}
 
 	if (category) {
@@ -384,7 +389,8 @@ export const getElectionBySlug = async (slug: string) => {
  * Only categories/months that have at least one upcoming event are returned.
  */
 export const getEventFilterOptions = async () => {
-	const upcomingEvents = events.filter((e) => e.status === "upcoming");
+	const now = new Date();
+	const upcomingEvents = events.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
 
 	const categorySet = new Set<string>();
 	const monthSet = new Set<string>();
