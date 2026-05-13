@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { BuilderPreviewInit } from "@/components/modules/builder/builder-preview-init";
 import { EmergencyBanner } from "@/components/town/emergency-banner";
 import { TownFooter } from "@/components/town/town-footer";
 import { TownFooterServer } from "@/components/town/town-footer-server";
@@ -13,6 +14,7 @@ import { settings } from "@/data/town/settings";
 export default function TownLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<div className="min-h-screen flex flex-col">
+			<BuilderPreviewInit />
 			<Suspense fallback={<TownHeader settings={settings} />}>
 				<TownHeaderServer />
 			</Suspense>
