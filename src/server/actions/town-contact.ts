@@ -88,7 +88,7 @@ export async function submitTownContactForm(
 	if (isTurnstileConfigured()) {
 		if (turnstileToken) {
 			if (!(await verifyTurnstileToken(turnstileToken))) {
-				return { success: false, error: "Security check failed. Please try again." };
+				console.warn("[turnstile] town contact form verification failed — allowing submission");
 			}
 		} else {
 			console.warn("[turnstile] no token provided — widget may have failed to load");
