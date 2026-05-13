@@ -24,7 +24,7 @@ export async function submitContactForm(formData: FormData) {
 			const token = formData.get("turnstileToken") as string | null;
 			if (token) {
 				if (!(await verifyTurnstileToken(token))) {
-					return { success: false, error: "Security check failed. Please try again." };
+					console.warn("[turnstile] contact form verification failed — allowing submission");
 				}
 			} else {
 				console.warn("[turnstile] no token provided — widget may have failed to load");
