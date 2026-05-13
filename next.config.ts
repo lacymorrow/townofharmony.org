@@ -109,11 +109,7 @@ const nextConfig: NextConfig = {
 				headers: [
 					{
 						key: "Content-Security-Policy",
-						value: "frame-ancestors 'self' https://*.builder.io;",
-					},
-					{
-						key: "X-Frame-Options",
-						value: "SAMEORIGIN",
+						value: "frame-ancestors 'self' https://builder.io https://*.builder.io;",
 					},
 					{
 						key: "X-Content-Type-Options",
