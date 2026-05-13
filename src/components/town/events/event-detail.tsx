@@ -47,10 +47,12 @@ interface EventDetailProps {
 
 export function EventDetail({ event }: EventDetailProps) {
 	const eventDate = new Date(event.eventDate);
+	const now = new Date();
+	const isPast = eventDate < now;
 	const registrationDeadline = event.registrationDeadline
 		? new Date(event.registrationDeadline)
 		: null;
-	const isRegistrationOpen = registrationDeadline ? new Date() < registrationDeadline : true;
+	const isRegistrationOpen = registrationDeadline ? now < registrationDeadline : true;
 	const spotsAvailable = event.maxAttendees
 		? event.maxAttendees - (event.currentAttendees || 0)
 		: null;
@@ -73,6 +75,11 @@ export function EventDetail({ event }: EventDetailProps) {
 							{cat}
 						</Badge>
 					))}
+					{isPast && (
+						<Badge variant="secondary" className="bg-muted text-muted-foreground">
+							Past Event
+						</Badge>
+					)}
 					{event.isRecurring && (
 						<Badge variant="outline" className="flex items-center gap-1">
 							<Repeat className="h-3 w-3" />

@@ -26,6 +26,7 @@ interface EventCardProps {
 
 export function EventCard({ event }: EventCardProps) {
 	const eventDate = new Date(event.eventDate);
+	const isPast = eventDate < new Date();
 
 	return (
 		<Card className="hover:shadow-md transition-shadow">
@@ -57,12 +58,19 @@ export function EventCard({ event }: EventCardProps) {
 							)}
 						</div>
 
-						{event.isRecurring && (
-							<Badge variant="outline" className="inline-block align-middle text-xs shrink-0">
-								<Repeat className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
-								Recurring
-							</Badge>
-						)}
+						<div className="flex gap-1.5 shrink-0">
+							{isPast && (
+								<Badge variant="secondary" className="inline-block align-middle text-xs bg-muted text-muted-foreground">
+									Past Event
+								</Badge>
+							)}
+							{event.isRecurring && (
+								<Badge variant="outline" className="inline-block align-middle text-xs">
+									<Repeat className="h-3 w-3 inline-block align-middle mr-1" aria-hidden="true" />
+									Recurring
+								</Badge>
+							)}
+						</div>
 					</div>
 
 					{event.description && (

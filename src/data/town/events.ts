@@ -45,7 +45,7 @@ export const events: TownEvent[] = [
 		organizer: "Town of Harmony",
 		contactEmail: "",
 		contactPhone: "(704) 881-8094",
-		status: "upcoming",
+		status: "past",
 		isRecurring: true,
 		categories: ["community", "recreation"],
 		tags: ["farmers-market", "local"],
