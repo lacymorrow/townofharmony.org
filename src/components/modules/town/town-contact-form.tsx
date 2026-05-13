@@ -48,7 +48,6 @@ export const TownContactForm = () => {
 	const [errors, setErrors] = useState<FormErrors>({});
 	const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 	const turnstileTokenRef = useRef<string | null>(null);
-	const [turnstileError, setTurnstileError] = useState(false);
 	const loadedAtRef = useRef(Date.now().toString());
 
 	const validate = (form: FormData): FormErrors => {
@@ -301,18 +300,11 @@ export const TownContactForm = () => {
 			<Turnstile
 				onVerify={(token) => {
 					turnstileTokenRef.current = token;
-					setTurnstileError(false);
 				}}
-				onError={() => setTurnstileError(true)}
 				onExpire={() => {
 					turnstileTokenRef.current = null;
 				}}
 			/>
-			{turnstileError && (
-				<p className="text-sm text-red-600" role="alert">
-					Security check failed. Please refresh and try again.
-				</p>
-			)}
 
 			<button
 				type="submit"

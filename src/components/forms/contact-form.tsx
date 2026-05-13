@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Turnstile } from "@/components/turnstile";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,6 @@ interface ContactFormProps {
 export function ContactForm({ defaultValues, onSuccess, className }: ContactFormProps) {
 	const { toast } = useToast();
 	const turnstileTokenRef = useRef<string | null>(null);
-	const [turnstileError, setTurnstileError] = useState(false);
 	const loadedAtRef = useRef(Date.now().toString());
 
 	const form = useForm<ContactFormData>({
@@ -190,19 +189,12 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
 				<Turnstile
 					onVerify={(token) => {
 						turnstileTokenRef.current = token;
-						setTurnstileError(false);
 					}}
-					onError={() => setTurnstileError(true)}
 					onExpire={() => {
 						turnstileTokenRef.current = null;
 					}}
 					className="mt-6"
 				/>
-				{turnstileError && (
-					<p className="mt-2 text-sm text-destructive">
-						Security check failed. Please refresh and try again.
-					</p>
-				)}
 
 				<Button type="submit" className="mt-8 w-full" disabled={form.formState.isSubmitting}>
 					{form.formState.isSubmitting ? (
