@@ -212,7 +212,7 @@ export const TownContactForm = () => {
 					aria-required="true"
 					aria-invalid={!!errors.inquiryType}
 					aria-describedby={errors.inquiryType ? "inquiryType-error" : undefined}
-					defaultValue=""
+					defaultValue="general"
 					className={inputClass(!!errors.inquiryType)}
 				>
 					<option value="" disabled>
