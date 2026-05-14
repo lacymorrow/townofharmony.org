@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
 /*
@@ -33,13 +34,13 @@ export default function robots(): MetadataRoute.Robots {
 
         disallow: [
           "/api/",
-          "/admin/",
-          "/sign-in",
-          "/sign-up",
-          "/forgot-password",
-          "/reset-password",
-          "/error",
-          "/settings/",
+          routes.admin.index,
+          routes.auth.signIn,
+          routes.auth.signUp,
+          routes.auth.forgotPassword,
+          routes.auth.resetPassword,
+          routes.auth.error,
+          routes.settings.index,
         ],
       },
     ],
