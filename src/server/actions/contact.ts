@@ -17,17 +17,17 @@ export async function submitContactForm(formData: FormData) {
 	try {
 		const isLikelyBot = !!formData.get("website");
 		if (isLikelyBot) {
-			console.warn("[honeypot] contact form honeypot triggered — processing anyway");
+			logger.warn("[honeypot] contact form honeypot triggered — processing anyway");
 		}
 
 		if (isTurnstileConfigured()) {
 			const token = formData.get("turnstileToken") as string | null;
 			if (token) {
 				if (!(await verifyTurnstileToken(token))) {
-					console.warn("[turnstile] contact form verification failed — allowing submission");
+					logger.warn("[turnstile] contact form verification failed — allowing submission");
 				}
 			} else {
-				console.warn("[turnstile] no token provided — widget may have failed to load");
+				logger.warn("[turnstile] no token provided — widget may have failed to load");
 			}
 		}
 
