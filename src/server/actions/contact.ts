@@ -24,7 +24,7 @@ export async function submitContactForm(formData: FormData) {
 			const token = formData.get("turnstileToken") as string | null;
 			if (token) {
 				if (!(await verifyTurnstileToken(token))) {
-					logger.warn("[turnstile] contact form verification failed — allowing submission");
+					logger.warn("Turnstile verification failed", { context: "contact-form", action: "allowing_submission" });
 				}
 			} else {
 				logger.warn("[turnstile] no token provided — widget may have failed to load");
