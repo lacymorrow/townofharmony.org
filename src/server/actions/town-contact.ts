@@ -91,7 +91,7 @@ export async function submitTownContactForm(
 				logger.warn("[turnstile] town contact form verification failed — allowing submission");
 			}
 		} else {
-			logger.warn("[turnstile] no token provided — widget may have failed to load");
+			logger.warn("Turnstile token missing", { context: "town-contact-form", reason: "widget_load_failure" });
 		}
 	}
 
