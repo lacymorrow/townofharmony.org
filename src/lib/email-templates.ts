@@ -163,7 +163,7 @@ export function townContactNotificationEmail(opts: {
 	message: string;
 }): string {
 	const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
-	const safeEmail = esc(opts.email);
+	const safeEmail = esc(opts.email).replace(/"/g, "&quot;");
 	const safePhone = opts.phone ? esc(opts.phone) : null;
 	const safeInquiry = esc(opts.inquiryType);
 	const safeMessage = esc(opts.message).replace(/\n/g, "<br>");

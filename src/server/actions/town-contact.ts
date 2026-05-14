@@ -116,7 +116,7 @@ export async function submitTownContactForm(
 		await resend.emails.send({
 			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
-			subject: `Contact Form: ${inquiryLabel} — ${firstName} ${lastName}`,
+			subject: `Contact Form: ${inquiryLabel} — ${firstName.replace(/[\r\n]/g, " ")} ${lastName.replace(/[\r\n]/g, " ")}`,
 			replyTo: email,
 			html: townContactNotificationEmail({
 				firstName,

@@ -66,7 +66,7 @@ export async function submitContactForm(formData: FormData) {
 			...(isEmail && validatedData.contactInfo ? { replyTo: validatedData.contactInfo } : {}),
 			html: contactNotificationEmail({
 				name: validatedData.name,
-				contactInfo: validatedData.contactInfo ?? undefined,
+				contactInfo: validatedData.contactInfo,
 				message: validatedData.message,
 				newsletter: validatedData.newsletter,
 			}),
