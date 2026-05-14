@@ -88,7 +88,7 @@ export async function submitTownContactForm(
 	if (isTurnstileConfigured()) {
 		if (turnstileToken) {
 			if (!(await verifyTurnstileToken(turnstileToken))) {
-				logger.warn("[turnstile] town contact form verification failed — allowing submission");
+				logger.warn("Turnstile verification failed", { context: "town-contact-form", action: "allowing_submission" });
 			}
 		} else {
 			logger.warn("Turnstile token missing", { context: "town-contact-form", reason: "widget_load_failure" });
