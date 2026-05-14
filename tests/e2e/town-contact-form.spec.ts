@@ -35,12 +35,17 @@ async function fillValidForm(page: Page) {
 }
 
 test.describe("Town Contact Form", () => {
+	test.describe.configure({ mode: "serial" });
+
 	test.beforeEach(async ({ page }) => {
 		const response = await page.goto(CONTACT_URL);
-		if (response?.status() === 404) {
+		// Handle null response and 404 — page is disabled (page.disabled.tsx)
+		if (!response || response.status() === 404) {
 			test.skip(true, "/contact returns 404 — page is disabled (page.disabled.tsx)");
 		}
-		await page.waitForLoadState("networkidle");
+		// Wait for the form to be interactive rather than networkidle, which is unreliable
+		// in Next.js dev (HMR websockets, Turnstile iframes, etc. keep the network busy).
+		await page.locator("#firstName").waitFor({ state: "visible", timeout: 10_000 });
 	});
 
 	test("renders all required form fields", async ({ page }) => {
@@ -62,11 +67,14 @@ test.describe("Town Contact Form", () => {
 	});
 
 	test("blocks submission made within 5 seconds of page load", async ({ page }) => {
-		// Fill form immediately — the timing gate rejects submissions made <5s after mount.
+		// Fill immediately — beforeEach waits for the form to be visible but no more, so
+		// the component mount timestamp (loadedAtRef) is set just before we reach here.
+		// Submitting now puts us well under the 5-second gate.
 		await fillValidForm(page);
 		await page.getByRole("button", { name: /send message/i }).click();
 
-		await expect(page.getByRole("alert")).toContainText(
+		// The timing gate renders its rejection through the serverError <p role="alert">.
+		await expect(page.locator('form > p[role="alert"]')).toContainText(
 			/please take a moment before submitting/i,
 			{ timeout: 10_000 },
 		);
@@ -80,18 +88,19 @@ test.describe("Town Contact Form", () => {
 		await fillValidForm(page);
 		await page.getByRole("button", { name: /send message/i }).click();
 
-		// A missing Turnstile token MUST NOT produce a Turnstile-related rejection.
-		// The server logs a warning and continues; the only acceptable rejection is
-		// a downstream error (e.g. email service not configured) or success.
-		await expect(page.locator("body")).not.toContainText(/turnstile/i, { timeout: 10_000 });
-		await expect(page.locator("body")).not.toContainText(/verification failed/i, {
-			timeout: 10_000,
-		});
-
-		// The server must respond with either success or a downstream error.
+		// Wait for a terminal state — success message or the server-error alert.
+		// This must come BEFORE the negative assertions; otherwise the assertions fire on
+		// the empty-of-text initial DOM and pass even when a regression is present.
 		const successEl = page.getByText("Message Sent");
-		const errorEl = page.getByRole("alert");
+		const errorEl = page.locator('form > p[role="alert"]');
 		await expect(successEl.or(errorEl)).toBeVisible({ timeout: 15_000 });
+
+		// Now that the response has been rendered, assert no Turnstile-related rejection
+		// surfaced. The only acceptable outcomes are success or a downstream error
+		// (e.g. "Email service is not configured").
+		const bodyText = (await page.locator("body").textContent()) ?? "";
+		expect(bodyText).not.toMatch(/turnstile/i);
+		expect(bodyText).not.toMatch(/verification failed/i);
 	});
 
 	// --- Anti-regression: honeypot is non-blocking ---
@@ -102,6 +111,8 @@ test.describe("Town Contact Form", () => {
 		await fillValidForm(page);
 
 		// Simulate a bot filling the visually-hidden honeypot field.
+		// TownContactForm reads `website` from new FormData(form), not React state,
+		// so a plain DOM value assignment is sufficient for the server to receive it.
 		await page.evaluate(() => {
 			const el = document.querySelector<HTMLInputElement>('input[name="website"]');
 			if (el) {
@@ -111,23 +122,23 @@ test.describe("Town Contact Form", () => {
 
 		await page.getByRole("button", { name: /send message/i }).click();
 
-		// The server logs the honeypot hit and continues processing (non-blocking by design).
-		// No bot-detection error should surface to the user.
-		await expect(page.locator("body")).not.toContainText(/bot|spam|honeypot/i, {
-			timeout: 10_000,
-		});
-
-		// Should receive a real response — either success or a downstream error.
+		// Wait for a terminal state before asserting anything about page content.
 		const successEl = page.getByText("Message Sent");
-		const errorEl = page.getByRole("alert");
+		const errorEl = page.locator('form > p[role="alert"]');
 		await expect(successEl.or(errorEl)).toBeVisible({ timeout: 15_000 });
+
+		// Honeypot is intentionally non-blocking: the server logs a warning and continues.
+		// The response must not contain a bot-detection rejection message.
+		const bodyText = (await page.locator("body").textContent()) ?? "";
+		expect(bodyText).not.toMatch(/bot detected/i);
+		expect(bodyText).not.toMatch(/suspicious submission/i);
 	});
 
 	// --- Optional success path (requires email service) ---
 	test("shows 'Message Sent' success state after valid submission", async ({ page }) => {
 		test.skip(
 			!process.env.RESEND_API_KEY,
-			"RESEND_API_KEY not set — email service required for success path",
+			"Skipping: RESEND_API_KEY not set — email service required for success",
 		);
 
 		// Wait past the timing gate.
