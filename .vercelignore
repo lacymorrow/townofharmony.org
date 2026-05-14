@@ -60,3 +60,7 @@ docs/**
 CLAUDE.md
 TODO.md
 CHANGELOG.md
+
+# QA / walkthrough screenshots (kept in git for review history but not deployed)
+qa-screenshots/
+walkthrough-screenshots/

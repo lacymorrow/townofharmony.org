@@ -1,14 +1,31 @@
 /**
  * Seed Builder.io pages via the Write API.
  *
+ * Idempotent: matches existing pages by `data.url`. Creates new pages,
+ * updates seed-only pages in place, skips human-edited pages by default.
+ *
  * Usage:
  *   pnpm exec tsx scripts/seed-builder-pages.ts
+ *   pnpm exec tsx scripts/seed-builder-pages.ts --dry-run
+ *   pnpm exec tsx scripts/seed-builder-pages.ts --overwrite-edited
+ *   pnpm exec tsx scripts/seed-builder-pages.ts --only-new
  *
  * Requires a Builder.io private API key (Account Settings → API Keys).
  */
 
 import { config } from "dotenv";
 config(); // Load .env
+
+import {
+	emptyCounters,
+	fetchExisting,
+	formatResult,
+	indexExistingBy,
+	parseUpsertFlags,
+	printSummary,
+	tallyResult,
+	upsert,
+} from "./lib/builder-upsert";
 
 const BUILDER_PRIVATE_KEY = process.env.BUILDER_PRIVATE_KEY;
 const BUILDER_API_KEY = process.env.NEXT_PUBLIC_BUILDER_API_KEY;
@@ -22,6 +39,9 @@ if (!BUILDER_API_KEY) {
 	console.error("Missing NEXT_PUBLIC_BUILDER_API_KEY env var");
 	process.exit(1);
 }
+
+const client = { apiKey: BUILDER_API_KEY, privateKey: BUILDER_PRIVATE_KEY };
+const opts = parseUpsertFlags(process.argv.slice(2));
 
 interface BuilderBlock {
 	"@type": "@builder.io/sdk:Element";
@@ -326,7 +346,7 @@ const pages: PageDef[] = [
 	},
 ];
 
-async function createPage(page: PageDef) {
+function buildPageBody(page: PageDef) {
 	// Detail pages use :slug patterns — match with startsWith on the base path
 	const isDetailPage = page.url.includes(":");
 	const queryValue = isDetailPage
@@ -334,7 +354,7 @@ async function createPage(page: PageDef) {
 		: page.url;
 	const queryOperator = isDetailPage ? "startsWith" : "is";
 
-	const body = {
+	return {
 		name: page.name,
 		data: {
 			title: page.title,
@@ -350,51 +370,45 @@ async function createPage(page: PageDef) {
 				value: queryValue,
 			},
 		],
-		published: "published" as const,
 	};
-
-	const res = await fetch(
-		`https://builder.io/api/v1/write/page?apiKey=${BUILDER_API_KEY}`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${BUILDER_PRIVATE_KEY}`,
-			},
-			body: JSON.stringify(body),
-		},
-	);
-
-	if (!res.ok) {
-		const text = await res.text();
-		throw new Error(`Failed to create "${page.name}": ${res.status} ${text}`);
-	}
-
-	const data = await res.json();
-	return data;
 }
 
 async function main() {
-	console.log(`Seeding ${pages.length} Builder.io pages...\n`);
+	console.log(
+		`Upserting ${pages.length} Builder.io pages${opts.dryRun ? " (dry run)" : ""}...\n`,
+	);
 
-	let success = 0;
-	let failed = 0;
+	const existing = await fetchExisting(client, "page");
+	const byUrl = indexExistingBy(
+		existing,
+		(e) => (e.data?.url as string | undefined) ?? undefined,
+	);
+
+	const counters = emptyCounters();
 
 	for (const page of pages) {
+		const label = `${page.name.padEnd(22)} ${page.url}`;
 		try {
-			const result = await createPage(page);
-			console.log(`  [OK] ${page.name} (${page.url}) → ${result.id}`);
-			success++;
+			const result = await upsert(
+				client,
+				"page",
+				buildPageBody(page),
+				page.url,
+				byUrl,
+				opts,
+			);
+			console.log(formatResult(label, result));
+			tallyResult(counters, result);
 		} catch (err) {
 			console.error(
-				`  [FAIL] ${page.name} (${page.url}): ${err instanceof Error ? err.message : err}`,
+				`  [FAIL]     ${label}: ${err instanceof Error ? err.message : err}`,
 			);
-			failed++;
+			counters.failed++;
 		}
 	}
 
-	console.log(`\nDone: ${success} created, ${failed} failed.`);
-	if (failed > 0) process.exit(1);
+	printSummary(counters, opts);
+	if (counters.failed > 0) process.exit(1);
 }
 
 main();
