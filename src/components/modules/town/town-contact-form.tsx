@@ -53,7 +53,11 @@ export const TownContactForm = () => {
 
 	useEffect(() => {
 		if (submitted && successRef.current) {
-			successRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+			const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+			successRef.current.scrollIntoView({
+				behavior: prefersReducedMotion ? "auto" : "smooth",
+				block: "nearest",
+			});
 			successRef.current.focus();
 		}
 	}, [submitted]);
@@ -133,9 +137,9 @@ export const TownContactForm = () => {
 			<output
 				ref={successRef}
 				tabIndex={-1}
-				className="block rounded-lg border-2 border-sage bg-sage/10 p-8 text-center shadow-sm outline-none"
+				className="block rounded-lg border-2 border-sage bg-sage/10 p-8 text-center shadow-sm outline-none focus:ring-2 focus:ring-sage focus:ring-offset-2"
 				aria-live="polite"
-				aria-label="Message sent successfully"
+				aria-labelledby="town-contact-success-title"
 			>
 				<div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-sage text-white shadow-md">
 					<svg
@@ -151,7 +155,7 @@ export const TownContactForm = () => {
 						<polyline points="20 6 9 17 4 12" />
 					</svg>
 				</div>
-				<h2 className="mb-3 text-2xl font-semibold text-sage-dark">Message Sent</h2>
+				<h2 id="town-contact-success-title" className="mb-3 text-2xl font-semibold text-sage-dark">Message Sent</h2>
 				<p className="mx-auto max-w-sm text-base text-[#2D2A24]">
 					Thank you for contacting the Town of Harmony. We will respond within 2 business days.
 				</p>
