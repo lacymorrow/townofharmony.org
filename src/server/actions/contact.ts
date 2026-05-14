@@ -17,7 +17,7 @@ export async function submitContactForm(formData: FormData) {
 	try {
 		const isLikelyBot = !!formData.get("website");
 		if (isLikelyBot) {
-			logger.warn("[honeypot] contact form honeypot triggered — processing anyway");
+			logger.warn("Honeypot triggered", { context: "contact-form", action: "processing_anyway" });
 		}
 
 		if (isTurnstileConfigured()) {
