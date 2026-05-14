@@ -81,7 +81,7 @@ export async function submitTownContactForm(
 
 	const isLikelyBot = !!website;
 	if (isLikelyBot) {
-		logger.warn("[honeypot] town contact form honeypot triggered — processing anyway");
+		logger.warn("Honeypot triggered", { context: "town-contact-form", action: "processing_anyway" });
 	}
 	const inquiryLabel = INQUIRY_LABELS[inquiryType];
 
