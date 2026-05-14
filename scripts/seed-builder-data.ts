@@ -18,6 +18,16 @@ config(); // Load .env
 
 import { createAdminApiClient } from "@builder.io/admin-sdk";
 import { modelDefinitions } from "../src/lib/builder-model-definitions";
+import {
+	emptyCounters,
+	fetchExisting,
+	formatResult,
+	indexExistingBy,
+	parseUpsertFlags,
+	printSummary,
+	tallyResult,
+	upsert,
+} from "./lib/builder-upsert";
 
 // Import real static data
 import { teamMembers } from "../src/data/town/team-members";
@@ -49,13 +59,15 @@ if (!BUILDER_API_KEY) {
 }
 
 const adminClient = createAdminApiClient(BUILDER_PRIVATE_KEY);
+const client = { apiKey: BUILDER_API_KEY, privateKey: BUILDER_PRIVATE_KEY };
 
 // --- CLI flags ---
 const args = process.argv.slice(2);
 const modelsOnly = args.includes("--models-only");
 const dataOnly = args.includes("--data-only");
-const dryRun = args.includes("--dry-run");
 const modelFilter = args.find((a) => a.startsWith("--model="))?.split("=")[1];
+const opts = parseUpsertFlags(args);
+const { dryRun } = opts;
 
 // ============================================================
 // Transform static data → Builder seed entries
@@ -207,42 +219,6 @@ async function createModel(definition: (typeof modelDefinitions)[0]) {
 }
 
 // ============================================================
-// Data seeding via Write API
-// ============================================================
-
-async function seedEntry(modelName: string, entry: SeedEntry) {
-	if (dryRun) {
-		console.log(`    [DRY] Would seed "${entry.name}" to ${modelName}`);
-		return { id: "dry-run" };
-	}
-
-	const res = await fetch(
-		`https://builder.io/api/v1/write/${modelName}?apiKey=${BUILDER_API_KEY}`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${BUILDER_PRIVATE_KEY}`,
-			},
-			body: JSON.stringify({
-				name: entry.name,
-				data: entry.data,
-				published: "published",
-			}),
-		},
-	);
-
-	if (!res.ok) {
-		const text = await res.text();
-		throw new Error(
-			`Failed to seed "${entry.name}" to ${modelName}: ${res.status} ${text}`,
-		);
-	}
-
-	return res.json();
-}
-
-// ============================================================
 // Main
 // ============================================================
 
@@ -294,9 +270,10 @@ async function main() {
 	}
 
 	// Phase 2: Seed data
-	console.log("Seeding data entries...\n");
-	let dataSuccess = 0;
-	let dataFailed = 0;
+	console.log(
+		`Upserting data entries${opts.dryRun ? " (dry run)" : ""}...\n`,
+	);
+	const counters = emptyCounters();
 
 	for (const model of models) {
 		const entries = seedData[model.name];
@@ -305,24 +282,34 @@ async function main() {
 			continue;
 		}
 
-		console.log(`  ${model.name} (${entries.length} entries):`);
+		console.log(`\n  ${model.name} (${entries.length} entries):`);
+
+		const existing = await fetchExisting(client, model.name);
+		const byName = indexExistingBy(existing, (e) => e.name);
 
 		for (const entry of entries) {
 			try {
-				const result = await seedEntry(model.name, entry);
-				console.log(`    [OK] ${entry.name} → ${result.id}`);
-				dataSuccess++;
+				const result = await upsert(
+					client,
+					model.name,
+					{ name: entry.name, data: entry.data },
+					entry.name,
+					byName,
+					opts,
+				);
+				console.log(`  ${formatResult(entry.name, result)}`);
+				tallyResult(counters, result);
 			} catch (err) {
 				console.error(
-					`    [FAIL] ${entry.name}: ${err instanceof Error ? err.message : err}`,
+					`    [FAIL]    ${entry.name}: ${err instanceof Error ? err.message : err}`,
 				);
-				dataFailed++;
+				counters.failed++;
 			}
 		}
 	}
 
-	console.log(`\nData: ${dataSuccess} seeded, ${dataFailed} failed.`);
-	if (dataFailed > 0) process.exit(1);
+	printSummary(counters, opts);
+	if (counters.failed > 0) process.exit(1);
 }
 
 main().catch((err) => {
