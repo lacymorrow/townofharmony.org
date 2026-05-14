@@ -14,6 +14,7 @@ import { SignUpForm } from "./_components/sign-up-form";
 export const metadata: Metadata = constructMetadata({
   title: "Create Account",
   description: `Create your ${siteConfig.name} account to start building and deploying your applications.`,
+  noIndex: true,
 });
 
 export default async function SignUpPage() {
