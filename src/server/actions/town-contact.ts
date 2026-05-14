@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { siteConfig } from "@/config/site-config";
-import { townContactConfirmationEmail } from "@/lib/email-templates";
+import { townContactConfirmationEmail, townContactNotificationEmail } from "@/lib/email-templates";
 import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
@@ -64,9 +64,6 @@ const townContactSchema = z.object({
 
 export type TownContactFormData = z.infer<typeof townContactSchema>;
 
-const esc = (s: string) =>
-	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
 // _loadedAt is an anti-bot timing field kept outside the validated schema
 export async function submitTownContactForm(
 	formData: TownContactFormData & { _loadedAt?: string },
@@ -119,19 +116,16 @@ export async function submitTownContactForm(
 		await resend.emails.send({
 			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
 			to: [siteConfig.email.support],
-			subject: `Contact Form: ${inquiryLabel} — ${esc(firstName)} ${esc(lastName)}`,
+			subject: `Contact Form: ${inquiryLabel} — ${firstName.replace(/[\r\n]/g, " ")} ${lastName.replace(/[\r\n]/g, " ")}`,
 			replyTo: email,
-			html: `
-<h2>New Contact Form Submission</h2>
-<table style="border-collapse:collapse;">
-<tr><td style="padding:4px 12px 4px 0;font-weight:bold;">Name</td><td>${esc(firstName)} ${esc(lastName)}</td></tr>
-<tr><td style="padding:4px 12px 4px 0;font-weight:bold;">Email</td><td>${esc(email)}</td></tr>
-${phone ? `<tr><td style="padding:4px 12px 4px 0;font-weight:bold;">Phone</td><td>${esc(phone)}</td></tr>` : ""}
-<tr><td style="padding:4px 12px 4px 0;font-weight:bold;">Inquiry Type</td><td>${esc(inquiryLabel)}</td></tr>
-</table>
-<h3>Message</h3>
-<p>${esc(message).replace(/\n/g, "<br>")}</p>
-      `.trim(),
+			html: townContactNotificationEmail({
+				firstName,
+				lastName,
+				email,
+				phone,
+				inquiryType: inquiryLabel,
+				message,
+			}),
 			...(attachment
 				? {
 						attachments: [

@@ -125,3 +125,64 @@ export function townContactConfirmationEmail(opts: {
 
 	return layout(body);
 }
+
+export function contactNotificationEmail(opts: {
+	name: string;
+	contactInfo?: string;
+	message: string;
+	newsletter: boolean;
+}): string {
+	const safeName = esc(opts.name);
+	const safeContact = opts.contactInfo ? esc(opts.contactInfo) : null;
+	const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
+
+	const body = `
+    <h2 style="margin:0 0 8px;font-size:20px;font-weight:normal;color:${BRAND.primary};">New Contact Form Submission</h2>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.text};">
+      A visitor has submitted the contact form on the ${siteConfig.name} website.
+    </p>
+
+    <h3 style="margin:0 0 10px;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.muted};">Submission Details</h3>
+    <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+      ${row("Name:", safeName)}
+      ${safeContact ? row("Contact:", safeContact) : ""}
+      ${row("Newsletter:", opts.newsletter ? "Yes" : "No")}
+      ${row("Message:", safeMessage)}
+    </table>
+  `;
+
+	return layout(body);
+}
+
+export function townContactNotificationEmail(opts: {
+	firstName: string;
+	lastName: string;
+	email: string;
+	phone?: string;
+	inquiryType: string;
+	message: string;
+}): string {
+	const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
+	const safeEmail = esc(opts.email).replace(/"/g, "&quot;");
+	const safePhone = opts.phone ? esc(opts.phone) : null;
+	const safeInquiry = esc(opts.inquiryType);
+	const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
+
+	const body = `
+    <h2 style="margin:0 0 8px;font-size:20px;font-weight:normal;color:${BRAND.primary};">New Contact Form Submission</h2>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.text};">
+      A visitor has submitted the contact form on the ${siteConfig.name} website. Reply to this email to respond directly.
+    </p>
+
+    <h3 style="margin:0 0 10px;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.muted};">Submission Details</h3>
+    <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+      ${row("Name:", safeName)}
+      ${row("Email:", `<a href="mailto:${safeEmail}" style="color:${BRAND.primary};">${safeEmail}</a>`)}
+      ${safePhone ? row("Phone:", safePhone) : ""}
+      ${row("Inquiry Type:", safeInquiry)}
+      ${row("Message:", safeMessage)}
+    </table>
+  `;
+
+	return layout(body);
+}
