@@ -1,7 +1,7 @@
 "use server";
 
 import { siteConfig } from "@/config/site-config";
-import { contactConfirmationEmail, esc } from "@/lib/email-templates";
+import { contactConfirmationEmail, contactNotificationEmail } from "@/lib/email-templates";
 import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
@@ -64,14 +64,12 @@ export async function submitContactForm(formData: FormData) {
 			to: [siteConfig.email.support],
 			subject: "New Contact Form Submission",
 			...(isEmail && validatedData.contactInfo ? { replyTo: validatedData.contactInfo } : {}),
-			html: `
-                <h2>New Contact Form Submission</h2>
-                <p><strong>From:</strong> ${esc(validatedData.name)}</p>
-                ${validatedData.contactInfo ? `<p><strong>Contact:</strong> ${esc(validatedData.contactInfo)}</p>` : ""}
-                <p><strong>Message:</strong></p>
-                <p>${esc(validatedData.message).replace(/\n/g, "<br>")}</p>
-                <p><strong>Newsletter:</strong> ${validatedData.newsletter ? "Yes" : "No"}</p>
-            `,
+			html: contactNotificationEmail({
+				name: validatedData.name,
+				contactInfo: validatedData.contactInfo ?? undefined,
+				message: validatedData.message,
+				newsletter: validatedData.newsletter,
+			}),
 		});
 
 		if (isEmail && validatedData.contactInfo) {
