@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Turnstile } from "@/components/turnstile";
 import { submitTownContactForm, type TownContactFormData } from "@/server/actions/town-contact";
 
@@ -49,6 +49,14 @@ export const TownContactForm = () => {
 	const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 	const turnstileTokenRef = useRef<string | null>(null);
 	const loadedAtRef = useRef(Date.now().toString());
+	const successRef = useRef<HTMLOutputElement | null>(null);
+
+	useEffect(() => {
+		if (submitted && successRef.current) {
+			successRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+			successRef.current.focus();
+		}
+	}, [submitted]);
 
 	const validate = (form: FormData): FormErrors => {
 		const errs: FormErrors = {};
@@ -122,9 +130,29 @@ export const TownContactForm = () => {
 
 	if (submitted) {
 		return (
-			<output className="block rounded border border-stone bg-white p-6" aria-live="polite">
-				<h2 className="mb-2 text-xl font-semibold text-sage-dark">Message Sent</h2>
-				<p className="text-[#2D2A24]">
+			<output
+				ref={successRef}
+				tabIndex={-1}
+				className="block rounded-lg border-2 border-sage bg-sage/10 p-8 text-center shadow-sm outline-none"
+				aria-live="polite"
+				aria-label="Message sent successfully"
+			>
+				<div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-sage text-white shadow-md">
+					<svg
+						aria-hidden="true"
+						className="h-8 w-8"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2.5"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<polyline points="20 6 9 17 4 12" />
+					</svg>
+				</div>
+				<h2 className="mb-3 text-2xl font-semibold text-sage-dark">Message Sent</h2>
+				<p className="mx-auto max-w-sm text-base text-[#2D2A24]">
 					Thank you for contacting the Town of Harmony. We will respond within 2 business days.
 				</p>
 			</output>
