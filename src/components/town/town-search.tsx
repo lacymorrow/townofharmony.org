@@ -360,10 +360,9 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 		for (const result of searchIndex) {
 			const text = `${result.title} ${result.subtitle}`.toLowerCase();
 			if (text.includes(query.toLowerCase())) {
-				if (!groups[result.category]) {
-					groups[result.category] = [];
-				}
-				groups[result.category].push(result);
+				const bucket = groups[result.category] ?? [];
+				bucket.push(result);
+				groups[result.category] = bucket;
 			}
 		}
 		return groups;
@@ -393,7 +392,7 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 				{/* Search results */}
 				{sortedCategories.map((category) => (
 					<CommandGroup key={category} heading={category}>
-						{groupedResults[category].map((result) => (
+						{(groupedResults[category] ?? []).map((result) => (
 							<CommandItem
 								key={result.id}
 								value={`${result.title} ${result.subtitle}`}

@@ -54,7 +54,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 	const content = await getBuilderHomepage();
 
 	if (content || isPreview) {
-		return <RenderBuilderContent content={content ?? null} model="page" />;
+		return <RenderBuilderContent content={content ?? undefined} model="page" />;
 	}
 
 	const { docs: newsArticles } = await getNews({ limit: 1 });

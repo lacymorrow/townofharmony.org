@@ -203,5 +203,5 @@ export default async function TownCatchAllPage({
 		notFound();
 	}
 
-	return <RenderBuilderContent content={content} model="page" />;
+	return <RenderBuilderContent content={content ?? undefined} model="page" />;
 }

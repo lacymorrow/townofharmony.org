@@ -1,3 +1,4 @@
+import type { Where } from "payload";
 import type { Config } from "@/payload-types";
 import { getPayloadClient } from "@/lib/payload/payload";
 
@@ -7,7 +8,7 @@ type CollectionKey = keyof Collections;
 interface GetCollectionOptions {
 	limit?: number;
 	page?: number;
-	where?: Record<string, unknown>;
+	where?: Where;
 	sort?: string;
 	depth?: number;
 }

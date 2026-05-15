@@ -51,7 +51,8 @@ const platformIcon: Record<SocialPlatform, ComponentType<SVGProps<SVGSVGElement>
 function getEnabled(
   platforms?: SocialPlatform[]
 ): Array<{ platform: SocialPlatform; url: string }> {
-  const entries = Object.entries(siteConfig.social ?? {}) as Array<
+  const social = (siteConfig as { social?: Partial<Record<SocialPlatform, string>> }).social ?? {};
+  const entries = Object.entries(social) as Array<
     [SocialPlatform, string | undefined]
   >;
   const filtered = entries

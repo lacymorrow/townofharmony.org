@@ -92,8 +92,16 @@ export const routes = {
 	// API routes
 	api: {
 		docsSearch: "/api/docs/search",
-		github: "/api/github",
-		payments: "/api/payments",
+		github: {
+			index: "/api/github",
+			checkInvitation: "/api/github/check-invitation",
+			checkRepoAvailability: "/api/github/check-repo-availability",
+		},
+		payments: {
+			index: "/api/payments",
+			checkSubscription: "/api/payments/check-subscription",
+			checkPurchase: "/api/payments/check-purchase",
+		},
 		projects: "/api/projects",
 		teams: "/api/teams",
 	},

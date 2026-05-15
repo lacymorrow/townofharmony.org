@@ -92,7 +92,7 @@ export function VotingInfo({ election }: VotingInfoProps) {
 						</div>
 					</div>
 
-					{pollingLocations.length > 0 && pollingLocations[0].hours && (
+					{pollingLocations[0]?.hours && (
 						<div className="flex items-start gap-3">
 							<Clock className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
 							<div>
