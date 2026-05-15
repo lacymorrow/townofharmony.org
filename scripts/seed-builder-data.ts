@@ -45,6 +45,7 @@ import { elections } from "../src/data/town/elections";
 import { sewerRateTiers } from "../src/data/town/sewer-rates";
 import { homepage } from "../src/data/town/homepage";
 import { mapBusinesses } from "../src/data/town/map-businesses";
+import { navigation } from "../src/data/town/navigation";
 
 const BUILDER_PRIVATE_KEY = process.env.BUILDER_PRIVATE_KEY;
 const BUILDER_API_KEY = process.env.NEXT_PUBLIC_BUILDER_API_KEY;
@@ -88,6 +89,34 @@ function toSeedEntries<T extends Record<string, any>>(
 	}));
 }
 
+/** Flatten the navigation tree into the flat-list shape Builder stores. */
+function flattenNavigation(n: typeof navigation): SeedEntry[] {
+	const mainNav: Array<{ name: string; href: string; parentName?: string }> = [];
+	for (const item of n.mainNav) {
+		mainNav.push({ name: item.name, href: item.href });
+		for (const child of item.children ?? []) {
+			mainNav.push({ name: child.name, href: child.href, parentName: item.name });
+		}
+	}
+	const footerLinks: Array<{ category: string; name: string; href: string }> = [];
+	for (const section of n.footerLinks) {
+		for (const link of section.links) {
+			footerLinks.push({ category: section.category, name: link.name, href: link.href });
+		}
+	}
+	return [
+		{
+			name: "Town of Harmony Navigation",
+			data: {
+				mainNav,
+				topBarLinks: n.topBarLinks,
+				quickLinks: n.quickLinks,
+				footerLinks,
+			},
+		},
+	];
+}
+
 /** Flatten nested settings object for Builder's flat field model */
 function flattenSettings(s: typeof settings): SeedEntry[] {
 	return [
@@ -121,6 +150,7 @@ const seedData: Record<string, SeedEntry[]> = {
 	"town-resource": toSeedEntries(resources, "title"),
 	"town-announcement": toSeedEntries(announcements, "title"),
 	"town-settings": flattenSettings(settings),
+	"town-navigation": flattenNavigation(navigation),
 	"town-news": toSeedEntries(news, "title"),
 	"town-event": toSeedEntries(events, "title"),
 	"town-meeting": toSeedEntries(meetings, "title"),

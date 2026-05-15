@@ -1,5 +1,83 @@
 import type { TownNavigation } from "./types";
 
+/**
+ * Flat shape returned by Builder.io for the `town-navigation` data model.
+ * Lists are flat (no nested children) for editor usability — the transform
+ * below re-nests mainNav children via `parentName`, and footer links via
+ * `category`.
+ */
+export interface BuilderNavigationFlat {
+	mainNav?: Array<{ name?: string; href?: string; parentName?: string }>;
+	topBarLinks?: Array<{ name?: string; href?: string; icon?: string }>;
+	quickLinks?: Array<{
+		title?: string;
+		description?: string;
+		href?: string;
+		icon?: string;
+		color?: string;
+	}>;
+	footerLinks?: Array<{ category?: string; name?: string; href?: string }>;
+}
+
+/** Re-nest the flat Builder shape into the structured TownNavigation tree. */
+export const toTownNavigation = (flat: BuilderNavigationFlat): TownNavigation => {
+	const mainNav = (flat.mainNav ?? []).filter((i) => i.name && i.href);
+	const parents = mainNav.filter((i) => !i.parentName);
+	const childrenByParent = new Map<string, { name: string; href: string }[]>();
+	for (const item of mainNav) {
+		if (!item.parentName) continue;
+		const list = childrenByParent.get(item.parentName) ?? [];
+		list.push({ name: item.name!, href: item.href! });
+		childrenByParent.set(item.parentName, list);
+	}
+
+	const mainNavNested = parents.map((p) => {
+		const children = childrenByParent.get(p.name!);
+		return children
+			? { name: p.name!, href: p.href!, children }
+			: { name: p.name!, href: p.href! };
+	});
+
+	const footerByCategory = new Map<string, { name: string; href: string }[]>();
+	const footerOrder: string[] = [];
+	for (const link of flat.footerLinks ?? []) {
+		if (!link.category || !link.name || !link.href) continue;
+		if (!footerByCategory.has(link.category)) {
+			footerByCategory.set(link.category, []);
+			footerOrder.push(link.category);
+		}
+		footerByCategory.get(link.category)!.push({ name: link.name, href: link.href });
+	}
+
+	const hasMainNav = mainNavNested.length > 0;
+	const hasFooter = footerOrder.length > 0;
+	const hasQuickLinks = (flat.quickLinks ?? []).some((l) => l.title && l.href);
+	const hasTopBar = (flat.topBarLinks ?? []).some((l) => l.name && l.href);
+
+	return {
+		mainNav: hasMainNav ? mainNavNested : navigation.mainNav,
+		topBarLinks: hasTopBar
+			? (flat.topBarLinks ?? [])
+					.filter((l) => l.name && l.href)
+					.map((l) => ({ name: l.name!, href: l.href!, icon: l.icon ?? "" }))
+			: navigation.topBarLinks,
+		quickLinks: hasQuickLinks
+			? (flat.quickLinks ?? [])
+					.filter((l) => l.title && l.href)
+					.map((l) => ({
+						title: l.title!,
+						description: l.description ?? "",
+						href: l.href!,
+						icon: l.icon ?? "",
+						color: l.color ?? "bg-sage",
+					}))
+			: navigation.quickLinks,
+		footerLinks: hasFooter
+			? footerOrder.map((c) => ({ category: c, links: footerByCategory.get(c)! }))
+			: navigation.footerLinks,
+	};
+};
+
 export const navigation: TownNavigation = {
 	mainNav: [
 		{

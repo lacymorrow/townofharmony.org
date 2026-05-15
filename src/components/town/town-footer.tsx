@@ -1,8 +1,8 @@
 import { Facebook, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
 
-import { navigation } from "@/data/town/navigation";
-import type { TownSettings } from "@/data/town/types";
+import { navigation as defaultNavData } from "@/data/town/navigation";
+import type { TownNavigation, TownSettings } from "@/data/town/types";
 
 const BUILD_TIME_HIDDEN_HREFS = new Set<string>([
 	...(process.env.NEXT_PUBLIC_FEATURE_SEWER_ENABLED !== "true" ? ["/sewer", "/pay/sewer"] : []),
@@ -16,11 +16,17 @@ interface TownFooterProps {
 	settings: TownSettings;
 	/** Override hidden hrefs from a server component (supports preview cookie). Falls back to build-time env. */
 	hiddenHrefs?: Set<string>;
+	/** Navigation tree (defaults to static data). Server wrapper passes the Builder-merged version. */
+	navData?: TownNavigation;
 }
 
-export function TownFooter({ settings, hiddenHrefs = BUILD_TIME_HIDDEN_HREFS }: TownFooterProps) {
+export function TownFooter({
+	settings,
+	hiddenHrefs = BUILD_TIME_HIDDEN_HREFS,
+	navData = defaultNavData,
+}: TownFooterProps) {
 	const footerLinks = Object.fromEntries(
-		navigation.footerLinks.map((section) => [
+		navData.footerLinks.map((section) => [
 			section.category,
 			section.links.filter((link) => !hiddenHrefs.has(link.href)),
 		]),

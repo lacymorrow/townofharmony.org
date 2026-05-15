@@ -2,12 +2,14 @@
  * Catch-all page for Builder.io visual CMS pages within the town layout.
  * Inherits TownHeader + EmergencyBanner + TownFooter from (town)/layout.tsx.
  *
- * Explicit static routes (e.g. /our-team, /events, /meetings) take precedence
- * over this catch-all and render from verified static data.
+ * A small set of paths still has hardcoded Next.js routes (homepage, sewer,
+ * map, pay/sewer/*, accessibility, privacy, resource reservation pages) —
+ * see EXPLICIT_ROUTES below. Everything else under (town) is served by
+ * Builder.io content via this catch-all.
  *
- * generateStaticParams enumerates all valid Builder.io paths at build time.
- * dynamicParams = false ensures unknown paths receive HTTP 404 from the router
- * before any async layout can stream HTTP 200.
+ * generateStaticParams enumerates Builder.io paths at build time. With
+ * dynamicParams = true, paths not in the list are rendered on-demand and
+ * 404 if Builder has no matching content.
  */
 
 import { siteConfig } from "@/config/site-config";
@@ -19,24 +21,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 // Paths handled by explicit Next.js routes — these never reach this catch-all.
+// Keep in sync with src/middleware.ts.
 const EXPLICIT_ROUTES = new Set([
 	"/",
 	"/accessibility",
-	"/business",
-	"/contact",
-	"/emergency",
-	"/events",
-	"/history",
 	"/map",
-	"/meetings",
-	"/news",
-	"/our-team",
 	"/pay/sewer",
 	"/pay/sewer/cancel",
 	"/pay/sewer/success",
-	"/points-of-interest",
 	"/privacy",
-	"/resources",
 	"/resources/community-center-reservation",
 	"/resources/park-reservation",
 	"/sewer",

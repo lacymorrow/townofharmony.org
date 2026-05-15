@@ -17,8 +17,14 @@ import type { TownMeeting } from "@/data/town/types";
 
 type Tab = "agenda" | "minutes";
 
-export const TownAgendaMinutes = () => {
-	const [activeTab, setActiveTab] = useState<Tab>("agenda");
+interface TownAgendaMinutesProps {
+	defaultTab?: Tab;
+}
+
+export const TownAgendaMinutes = ({
+	defaultTab = "agenda",
+}: TownAgendaMinutesProps = {}) => {
+	const [activeTab, setActiveTab] = useState<Tab>(defaultTab);
 
 	const today = new Date().toISOString().split("T")[0];
 

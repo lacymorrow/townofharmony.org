@@ -124,7 +124,18 @@ Builder.registerComponent(TownElectionsList, {
 
 Builder.registerComponent(TownTeamMembers, {
 	name: "TownTeamMembers",
-	inputs: [],
+	inputs: [
+		{
+			name: "categoryFilter",
+			type: "string",
+			helperText: "Show only one category (Executive / Board of Aldermen / Staff). Empty = all.",
+		},
+		{
+			name: "limit",
+			type: "number",
+			helperText: "Max members to show. Empty = all active members.",
+		},
+	],
 });
 
 Builder.registerComponent(TownPointsOfInterest, {
@@ -223,6 +234,8 @@ Builder.registerComponent(TownPageHeader, {
 	],
 });
 
+// Content fully driven by the town-emergency-service data model — edit
+// individual services there, not on this block.
 Builder.registerComponent(TownEmergencyServices, {
 	name: "TownEmergencyServices",
 	inputs: [],
@@ -236,6 +249,8 @@ Builder.registerComponent(TownEmergencyAlertsList, {
 	],
 });
 
+// Form labels, validation, and submit handler are owned by the component
+// for security/consistency — no instance config exposed.
 Builder.registerComponent(TownContactForm, {
 	name: "TownContactForm",
 	inputs: [],
@@ -243,10 +258,32 @@ Builder.registerComponent(TownContactForm, {
 
 Builder.registerComponent(TownAgendaMinutes, {
 	name: "TownAgendaMinutes",
-	inputs: [],
+	inputs: [
+		{
+			name: "defaultTab",
+			type: "string",
+			defaultValue: "agenda",
+			enum: [
+				{ label: "Agenda", value: "agenda" },
+				{ label: "Minutes", value: "minutes" },
+			],
+		},
+	],
 });
 
 Builder.registerComponent(TownInteractiveMap, {
 	name: "TownInteractiveMap",
-	inputs: [],
+	inputs: [
+		{
+			name: "height",
+			type: "string",
+			defaultValue: "calc(100vh - 200px)",
+			helperText: "CSS height (e.g. '500px', '70vh').",
+		},
+		{
+			name: "minHeight",
+			type: "string",
+			defaultValue: "500px",
+		},
+	],
 });
