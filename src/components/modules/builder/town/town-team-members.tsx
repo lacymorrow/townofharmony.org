@@ -19,14 +19,28 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
 		"Dedicated professionals managing essential town services.",
 };
 
-export const TownTeamMembers = () => {
+interface TownTeamMembersProps {
+	limit?: number;
+	categoryFilter?: string;
+}
+
+export const TownTeamMembers = ({
+	limit,
+	categoryFilter,
+}: TownTeamMembersProps = {}) => {
 	const fallback = staticTeamMembers.filter((m) => m.isActive).sort((a, b) => a.sortOrder - b.sortOrder);
 	const { data: allMembers, loading } = useBuilderData<TownTeamMember>(
 		"town-team-member",
 		{ sort: { "data.sortOrder": 1 }, limit: 50, fallback: staticTeamMembers },
 	);
 
-	const members = allMembers.filter((m) => m.isActive).sort((a, b) => a.sortOrder - b.sortOrder);
+	let members = allMembers.filter((m) => m.isActive).sort((a, b) => a.sortOrder - b.sortOrder);
+	if (categoryFilter) {
+		members = members.filter((m) => m.category === categoryFilter);
+	}
+	if (typeof limit === "number" && limit > 0) {
+		members = members.slice(0, limit);
+	}
 
 	if (loading) {
 		return (

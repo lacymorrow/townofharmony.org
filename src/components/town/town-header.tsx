@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
-import { navigation as navData } from "@/data/town/navigation";
-import type { TownSettings } from "@/data/town/types";
+import { navigation as defaultNavData } from "@/data/town/navigation";
+import type { TownNavigation, TownSettings } from "@/data/town/types";
 
 // Build-time fallback used when rendering the Suspense skeleton before TownHeaderServer resolves
 const BUILD_TIME_HIDDEN_HREFS = new Set<string>([
@@ -32,9 +32,15 @@ interface TownHeaderProps {
 	settings: TownSettings;
 	/** Override hidden hrefs from a server component (supports preview cookie). Falls back to build-time env. */
 	hiddenHrefs?: Set<string>;
+	/** Navigation tree (defaults to static data). Server wrapper passes the Builder-merged version. */
+	navData?: TownNavigation;
 }
 
-export function TownHeader({ settings, hiddenHrefs = BUILD_TIME_HIDDEN_HREFS }: TownHeaderProps) {
+export function TownHeader({
+	settings,
+	hiddenHrefs = BUILD_TIME_HIDDEN_HREFS,
+	navData = defaultNavData,
+}: TownHeaderProps) {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [searchOpen, setSearchOpen] = useState(false);
 

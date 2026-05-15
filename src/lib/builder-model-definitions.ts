@@ -185,6 +185,34 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("brandingState"),
 		],
 	},
+	{
+		name: "town-navigation",
+		kind: "data",
+		fields: [
+			list("mainNav", [
+				text("name", true),
+				text("href", true),
+				text("parentName"),
+			]),
+			list("topBarLinks", [
+				text("name", true),
+				text("href", true),
+				text("icon"),
+			]),
+			list("quickLinks", [
+				text("title", true),
+				text("href", true),
+				longText("description"),
+				text("icon"),
+				text("color"),
+			]),
+			list("footerLinks", [
+				text("category", true),
+				text("name", true),
+				text("href", true),
+			]),
+		],
+	},
 
 	// --- Collection Models (Phase 3) ---
 	{

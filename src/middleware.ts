@@ -1,30 +1,26 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 // Explicit routes handled by dedicated Next.js pages — always allow through.
+// Keep in sync with src/app/(app)/(town)/[...slug]/page.tsx.
 const EXPLICIT_ROUTES = new Set([
 	"/",
 	"/accessibility",
-	"/business",
-	"/contact",
-	"/emergency",
-	"/events",
-	"/history",
 	"/map",
-	"/meetings",
-	"/news",
-	"/our-team",
 	"/pay/sewer",
 	"/pay/sewer/cancel",
 	"/pay/sewer/success",
-	"/points-of-interest",
 	"/privacy",
-	"/resources",
 	"/resources/community-center-reservation",
 	"/resources/park-reservation",
 	"/sewer",
 ]);
 
-// Path prefixes that are NOT the town catch-all — bypass the Builder.io check.
+// Path prefixes that bypass the Builder.io content check. Three categories:
+// 1. Non-town zones (/api, /_next, /cms, …).
+// 2. /pay and /resources prefixes that still have hardcoded sub-routes.
+// 3. Detail page prefixes (/events, /meetings, /news) — Builder uses
+//    startsWith template targeting, so the catch-all + template handle these;
+//    skipping a middleware fetch keeps invalid-slug requests fast.
 const BYPASS_PREFIXES = [
 	"/api/",
 	"/_next/",
