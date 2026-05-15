@@ -7,9 +7,9 @@ import { getEventFilterOptions } from "@/lib/town-data";
 import { isFeatureEnabled } from "@/lib/preview-flags";
 
 export const metadata: Metadata = {
-	title: "Events | Town of Harmony, NC",
+	title: "Community Events & Activities",
 	description:
-		"Discover community events, festivals, and activities happening in the Town of Harmony, North Carolina.",
+		"Discover upcoming community events, festivals, and activities in Harmony, NC. Find things to do in the Town of Harmony, North Carolina.",
 };
 
 export default async function EventsPage({

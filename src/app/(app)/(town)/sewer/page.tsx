@@ -22,9 +22,9 @@ interface BuilderSewerRate {
 }
 
 export const metadata: Metadata = {
-	title: "Sewer Services | Town of Harmony",
+	title: "Sewer Services & Online Bill Pay",
 	description:
-		"Sewer service rates and online payment for Town of Harmony residents and businesses.",
+		"View sewer service rates and pay your bill online for the Town of Harmony, NC. Residential and commercial sewer information for Harmony, North Carolina.",
 };
 
 export default async function SewerPage() {

@@ -19,6 +19,10 @@ export const metadata: Metadata = {
 	alternates: {
 		canonical: siteConfig.url,
 	},
+	openGraph: {
+		title: "Town of Harmony, NC — Official Site",
+		description: routeMetadata.home.description,
+	},
 };
 
 interface HomePageProps {

@@ -169,7 +169,7 @@ export async function generateMetadata({
 	const pageTitle = content?.data?.title ?? "Town of Harmony";
 	const pageDescription =
 		content?.data?.description ??
-		`${pageTitle} - Town of Harmony, NC. Find local information, services, and community resources.`;
+		`${pageTitle} — Town of Harmony, NC. Find local government information, services, and community resources in Harmony, North Carolina.`;
 
 	return {
 		title: pageTitle,

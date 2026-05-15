@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { TownContactForm } from "@/components/modules/town/town-contact-form";
 
 export const metadata: Metadata = {
-  title: "Contact | Town of Harmony",
+  title: "Contact Us — Phone, Email & Office Hours",
   description:
-    "Contact the Town of Harmony, NC — send a message or find our phone, address, and office hours.",
+    "Contact the Town of Harmony, NC. Find office hours, phone numbers, email, and directions to Town Hall in Harmony, North Carolina.",
 };
 
 export default function ContactPage() {

@@ -175,7 +175,7 @@ export const siteConfig: SiteConfig = {
 	url: "https://www.townofharmony.org",
 	ogImage: "https://www.townofharmony.org/app/og-image.png",
 	description:
-		"Official website of the Town of Harmony, NC. Find local news, events, meetings, sewer services, and community information.",
+		"Official website of the Town of Harmony, NC. Explore community events, government services, town meetings, and local resources in Harmony, North Carolina.",
 
 	branding: {
 		projectName: "Town of Harmony",
@@ -253,11 +253,13 @@ export const siteConfig: SiteConfig = {
 		keywords: [
 			"Town of Harmony",
 			"Harmony NC",
-			"North Carolina",
+			"Harmony North Carolina",
+			"Harmony community center",
 			"local government",
-			"community",
+			"community events",
 			"sewer services",
 			"town meetings",
+			"Iredell County",
 		],
 		themeColor: {
 			light: "white",

@@ -50,7 +50,7 @@ export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.title,
-    template: `%s | ${siteConfig.tagline}`,
+    template: `%s | Town of Harmony, NC`,
   },
   description: siteConfig.description,
   applicationName: siteConfig.title,
@@ -170,19 +170,30 @@ export const constructMetadata = ({
 // Route-specific metadata for better CTR
 export const routeMetadata = {
   home: {
-    title: `${siteConfig.title} - ${siteConfig.tagline}`,
-    description: `Official website of the Town of Harmony, North Carolina. Find town news, meeting agendas, events, emergency services, and community resources.`,
+    title: {
+      absolute: "Town of Harmony, NC — Official Site | Harmony, North Carolina",
+    },
+    description:
+      "Welcome to the Town of Harmony, North Carolina. Access town meetings, community events, sewer services, and local government resources in Harmony, NC.",
   },
   news: {
-    title: `Town News | ${siteConfig.title}`,
-    description: `Stay up to date with the latest news and announcements from the Town of Harmony, North Carolina.`,
+    title: "Town News & Announcements",
+    description:
+      "Latest news and announcements from the Town of Harmony, NC. Stay informed about community updates, public notices, and local government decisions.",
   },
   contact: {
-    title: `Contact Us | ${siteConfig.title}`,
-    description: `Get in touch with the Town of Harmony. Find office hours, phone numbers, and contact information for town departments.`,
+    title: "Contact Us — Phone, Email & Office Hours",
+    description:
+      "Contact the Town of Harmony, NC. Find office hours, phone numbers, email, and directions to Town Hall in Harmony, North Carolina.",
   },
   meetings: {
-    title: `Town Meetings | ${siteConfig.title}`,
-    description: `View upcoming Town of Harmony board meetings, agendas, and minutes. Stay informed about local government decisions.`,
+    title: "Town Meetings & Agendas",
+    description:
+      "View upcoming Board of Aldermen meetings, agendas, and minutes for the Town of Harmony, NC. Attend public meetings in Harmony, North Carolina.",
+  },
+  events: {
+    title: "Community Events & Activities",
+    description:
+      "Discover upcoming community events, festivals, and activities in Harmony, NC. Find things to do in the Town of Harmony, North Carolina.",
   },
 };
