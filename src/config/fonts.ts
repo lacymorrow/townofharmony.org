@@ -14,8 +14,16 @@ export const fontSans = FontSans({
 	variable: "--font-sans",
 });
 
+export type FontCategory =
+	| "serif"
+	| "sans-serif"
+	| "display"
+	| "handwriting"
+	| "monospace";
+
 export interface GoogleFont {
 	family: string;
+	category?: FontCategory;
 }
 
 export const GOOGLE_FONTS: GoogleFont[] = [

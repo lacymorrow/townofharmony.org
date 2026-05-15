@@ -162,13 +162,13 @@ export const getMeetings = async (options?: {
 	}
 
 	if (status) {
-		const today = new Date().toISOString().split("T")[0];
+		const today = new Date().toISOString().split("T")[0]!;
 		switch (status) {
 			case "upcoming":
-				filtered = filtered.filter((m) => m.meetingDate.split("T")[0] >= today!);
+				filtered = filtered.filter((m) => (m.meetingDate.split("T")[0] ?? "") >= today);
 				break;
 			case "past":
-				filtered = filtered.filter((m) => m.meetingDate.split("T")[0] <= today!);
+				filtered = filtered.filter((m) => (m.meetingDate.split("T")[0] ?? "") <= today);
 				break;
 			case "has-recordings":
 				filtered = filtered.filter((m) => m.videoUrl || m.audioUrl);
@@ -356,14 +356,14 @@ export const getElections = async (options?: {
 	const { limit = 10, page = 1, status, search } = options ?? {};
 
 	let filtered = [...elections];
-	const today = new Date().toISOString().split("T")[0];
+	const today = new Date().toISOString().split("T")[0]!;
 
 	if (status === "upcoming") {
-		filtered = filtered.filter((e) => e.electionDate.split("T")[0] > today!);
+		filtered = filtered.filter((e) => (e.electionDate.split("T")[0] ?? "") > today);
 	} else if (status === "today") {
 		filtered = filtered.filter((e) => e.electionDate.split("T")[0] === today);
 	} else if (status === "past") {
-		filtered = filtered.filter((e) => e.electionDate.split("T")[0]! < today!);
+		filtered = filtered.filter((e) => (e.electionDate.split("T")[0] ?? "") < today);
 	}
 
 	if (search) {

@@ -39,4 +39,14 @@ export const rateLimits = {
 		requests: 10,
 		duration: 60 * 10,
 	},
+	deployments: {
+		create: {
+			requests: 5,
+			duration: 60 * 10,
+		},
+		status: {
+			requests: 30,
+			duration: 60,
+		},
+	},
 };

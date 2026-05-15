@@ -61,10 +61,9 @@ export const TownEmergencyServices = () => {
 	// Group non-immediate by category
 	const grouped: Record<string, typeof services> = {};
 	for (const service of other) {
-		if (!grouped[service.category]) {
-			grouped[service.category] = [];
-		}
-		grouped[service.category].push(service);
+		const bucket = grouped[service.category] ?? [];
+		bucket.push(service);
+		grouped[service.category] = bucket;
 	}
 
 	const categoryOrder = ["public-safety", "utility", "health"];

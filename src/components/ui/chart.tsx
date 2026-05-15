@@ -6,8 +6,9 @@ import type {
   LegendPayload,
   TooltipContentProps,
   TooltipPayloadEntry,
-  TooltipValueType,
 } from "recharts";
+
+type TooltipValueType = string | number | Array<string | number>;
 import * as RechartsPrimitive from "recharts";
 
 import { cn } from "@/lib/utils";
@@ -175,7 +176,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
           {payload.map((item, index) => {
-            const payloadItem = item as TooltipPayloadEntry;
+            const payloadItem = item as TooltipPayloadEntry<TooltipValueType, string>;
             const key = `${nameKey || item.name || item.dataKey || "value"}`;
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
             const payloadShape = payloadItem.payload as Record<string, unknown> | undefined;

@@ -79,7 +79,7 @@ const ADDRESS_ABBREVS: Record<string, string> = {
 
 function normalizeAddress(addr: string): string {
 	// Take only the street portion before city/state/zip/country
-	const street = addr.split(",")[0];
+	const street = addr.split(",")[0] ?? "";
 	return street
 		.toLowerCase()
 		.replace(/[.#]/g, "")
