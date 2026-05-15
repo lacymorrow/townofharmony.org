@@ -5,9 +5,9 @@ import { MeetingsFilters } from "@/components/town/meetings/meetings-filters";
 import { getMeetingFilterOptions } from "@/lib/town-data";
 
 export const metadata: Metadata = {
-	title: "Town Meetings | Town of Harmony, NC",
+	title: "Town Meetings & Agendas",
 	description:
-		"View upcoming and past Board of Aldermen meetings for the Town of Harmony, North Carolina.",
+		"View upcoming Board of Aldermen meetings, agendas, and minutes for the Town of Harmony, NC. Attend public meetings in Harmony, North Carolina.",
 };
 
 export default async function MeetingsPage({
