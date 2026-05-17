@@ -13,7 +13,7 @@ export const settings: TownSettings = {
 		zipCode: "28634",
 	},
 	officeHours: {
-		weekday: "Monday - Friday: 8:00 AM - 5:00 PM",
+		weekday: "Monday - Friday: 9:00 AM - 5:00 PM",
 		weekend: "Saturday - Sunday: Closed",
 	},
 	socialMedia: {
