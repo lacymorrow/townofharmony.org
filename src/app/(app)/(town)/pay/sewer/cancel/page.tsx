@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { sewerContactInfo, isSewerVisible } from "@/data/town/sewer-rates";
 
 export const metadata: Metadata = {
-	title: "Payment Cancelled | Town of Harmony",
+	title: "Payment Cancelled",
 	description: "Your sewer bill payment was cancelled.",
 };
 

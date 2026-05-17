@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Privacy Policy | Town of Harmony, NC",
+	title: "Privacy Policy",
 	description:
 		"Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your information.",
 };

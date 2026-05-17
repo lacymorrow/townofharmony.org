@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Tomlinson-Moore Family Park Reservation | Town of Harmony",
+	title: "Tomlinson-Moore Family Park Reservation",
 	description:
 		"How to reserve the Tomlinson-Moore Family Park picnic shelter, including rules and contact information.",
 };

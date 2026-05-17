@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Community Center Reservation | Town of Harmony",
+	title: "Community Center Reservation",
 	description:
 		"How to reserve the Harmony Community Center, including rules, capacity, and contact information.",
 };

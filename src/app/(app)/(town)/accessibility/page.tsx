@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Accessibility Statement | Town of Harmony, NC",
+	title: "Accessibility Statement",
 	description:
 		"Accessibility statement for the Town of Harmony website. We are committed to making our website accessible to all users.",
 };
