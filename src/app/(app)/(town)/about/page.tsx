@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { settings } from "@/data/town/settings";
 
 export const metadata: Metadata = {
-	title: "About the Town of Harmony",
+	title: "About",
+	alternates: { canonical: `${siteConfig.url}/about` },
 	description:
 		"Learn about the Town of Harmony, North Carolina. Discover our history, government structure, community values, and what makes Harmony a great place to live.",
-	alternates: {
-		canonical: `${siteConfig.url}/about`,
-	},
 };
 
 export default function AboutPage() {
@@ -66,9 +65,9 @@ export default function AboutPage() {
 					We provide essential municipal services to keep Harmony safe, clean,
 					and functioning well. These include sewer operations for in-town and
 					out-of-town properties, maintenance of public streets and common areas,
-					and oversight of community facilities. Town Hall is open Monday through
-					Friday, 8:00 AM to 5:00 PM, and staff are available to assist residents
-					with billing questions, permits, and general inquiries.
+					and oversight of community facilities. Town Hall is open{" "}
+					{settings.officeHours.weekday}, and staff are available to assist
+					residents with billing questions, permits, and general inquiries.
 				</p>
 
 				<h2 className="text-xl font-semibold text-sage-dark mt-8">
@@ -89,19 +88,19 @@ export default function AboutPage() {
 					Have questions about the Town of Harmony? We're here to help. Reach
 					us at{" "}
 					<a
-						href="mailto:info@townofharmony.org"
+						href={`mailto:${settings.contactInfo.email}`}
 						className="text-sage hover:text-sage-dark underline"
 					>
-						info@townofharmony.org
+						{settings.contactInfo.email}
 					</a>{" "}
 					or call{" "}
 					<a
-						href="tel:7045462339"
+						href={`tel:${settings.contactInfo.phone.replace(/\D/g, "")}`}
 						className="text-sage hover:text-sage-dark underline"
 					>
-						(704) 546-2339
+						{settings.contactInfo.phone}
 					</a>
-					. Town Hall is located at 3389 Harmony Hwy, Harmony, NC 28634.
+					. Town Hall is located at {settings.contactInfo.address}.
 				</p>
 			</div>
 		</main>
