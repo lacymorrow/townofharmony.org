@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { settings } from "@/data/town/settings";
 
 export const metadata: Metadata = {
-	title: "About the Town of Harmony",
+	title: "About",
 	alternates: { canonical: `${siteConfig.url}/about` },
 	description:
 		"Learn about the Town of Harmony, North Carolina. Discover our history, government structure, community values, and what makes Harmony a great place to live.",
@@ -56,17 +57,17 @@ export default function AboutPage() {
 				<p>
 					Have questions about the Town of Harmony? Contact us at{" "}
 					<a
-						href="mailto:info@townofharmony.org"
+						href={`mailto:${settings.contactInfo.email}`}
 						className="text-sage hover:text-sage-dark underline"
 					>
-						info@townofharmony.org
+						{settings.contactInfo.email}
 					</a>{" "}
 					or call{" "}
 					<a
-						href="tel:7045462339"
+						href={`tel:${settings.contactInfo.phone.replace(/\D/g, "")}`}
 						className="text-sage hover:text-sage-dark underline"
 					>
-						(704) 546-2339
+						{settings.contactInfo.phone}
 					</a>
 					.
 				</p>
