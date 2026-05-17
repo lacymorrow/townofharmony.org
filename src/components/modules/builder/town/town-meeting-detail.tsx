@@ -22,7 +22,15 @@ const safeArray = (arr: unknown): string[] => (Array.isArray(arr) ? arr : []);
 const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
   const pathname = usePathname();
   const rawSlug = slugProp || pathname?.split("/").filter(Boolean).pop() || "";
-  const slug = decodeURIComponent(rawSlug).replace(/[^a-z0-9-]/gi, "");
+  const slug = (() => {
+    try {
+      return decodeURIComponent(rawSlug)
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "");
+    } catch {
+      return rawSlug.toLowerCase().replace(/[^a-z0-9-]/g, "");
+    }
+  })();
 
   const staticFallback = staticMeetings.find((m) => m.slug === slug) ?? null;
   const { data: meeting, loading } = useBuilderEntry<TownMeeting>(

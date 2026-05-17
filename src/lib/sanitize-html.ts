@@ -38,13 +38,14 @@ const ALLOWED_TAGS = [
 
 const ALLOWED_ATTRS = ["href", "target", "rel", "src", "alt", "width", "height", "class", "id"];
 
-export const sanitizeHtml = (html: string): string => {
+export const sanitizeHtml = (html: string | null | undefined): string => {
+  if (!html) return "";
+
   if (typeof window === "undefined") {
     return html
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-      .replace(/on\w+\s*=\s*"[^"]*"/gi, "")
-      .replace(/on\w+\s*=\s*'[^']*'/gi, "")
-      .replace(/javascript:/gi, "");
+      .replace(/on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+      .replace(/(?:javascript|data|vbscript):/gi, "");
   }
 
   return DOMPurify.sanitize(html, {
