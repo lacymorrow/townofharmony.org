@@ -107,9 +107,9 @@ export default async function SewerPage() {
 						<a href={`tel:${sewerContactInfo.phone.replace(/[^0-9+]/g, "")}`} className="font-medium underline">
 							{sewerContactInfo.phone}
 						</a>{" "}
-						or email{" "}
-						<a href={`mailto:${sewerContactInfo.email}`} className="font-medium underline">
-							{sewerContactInfo.email}
+						or use our{" "}
+						<a href="/contact" className="font-medium underline">
+							contact form
 						</a>.
 					</p>
 				)}
@@ -129,8 +129,8 @@ export default async function SewerPage() {
 						<div className="flex items-start gap-3">
 							<Mail className="mt-0.5 h-5 w-5 text-muted-foreground" />
 							<div>
-								<p className="text-sm font-medium">Email</p>
-								<p className="text-sm text-muted-foreground">{sewerContactInfo.email}</p>
+								<p className="text-sm font-medium">Contact</p>
+								<a href="/contact" className="text-sm text-muted-foreground underline hover:text-foreground">Contact form</a>
 							</div>
 						</div>
 						<div className="flex items-start gap-3">

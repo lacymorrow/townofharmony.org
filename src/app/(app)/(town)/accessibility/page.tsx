@@ -63,12 +63,9 @@ export default function AccessibilityPage() {
 				</p>
 				<ul className="list-disc pl-6 space-y-2">
 					<li>
-						Email:{" "}
-						<a
-							href="mailto:admin@townofharmony.org"
-							className="text-sage hover:text-sage-dark underline"
-						>
-							admin@townofharmony.org
+						Contact:{" "}
+						<a href="/contact" className="text-sage hover:text-sage-dark underline">
+							Contact form
 						</a>
 					</li>
 					<li>
