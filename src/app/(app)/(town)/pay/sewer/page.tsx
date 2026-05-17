@@ -9,6 +9,9 @@ export const metadata: Metadata = {
 	title: "Pay Sewer Bill",
 	description:
 		"Pay your Town of Harmony sewer bill online with a credit or debit card.",
+	alternates: {
+		canonical: "https://www.townofharmony.org/pay/sewer",
+	},
 };
 
 interface BuilderSewerRate {

@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
 	title: "Community Center Reservation",
 	description:
 		"How to reserve the Harmony Community Center, including rules, capacity, and contact information.",
+	alternates: {
+		canonical: `${siteConfig.url}/resources/community-center-reservation`,
+	},
 };
 
 export default function CommunityCenterReservationPage() {

@@ -11,6 +11,7 @@ import { sewerContactInfo, isSewerVisible } from "@/data/town/sewer-rates";
 export const metadata: Metadata = {
 	title: "Payment Successful",
 	description: "Your sewer bill payment was processed successfully.",
+	robots: { index: false, follow: false },
 };
 
 interface PageProps {

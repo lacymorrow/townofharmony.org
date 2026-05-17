@@ -9,6 +9,7 @@ import { sewerContactInfo, isSewerVisible } from "@/data/town/sewer-rates";
 export const metadata: Metadata = {
 	title: "Payment Cancelled",
 	description: "Your sewer bill payment was cancelled.",
+	robots: { index: false, follow: false },
 };
 
 export default function SewerPaymentCancelPage() {
