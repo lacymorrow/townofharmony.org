@@ -56,10 +56,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -m "chore: sync map businesses from Google Places $(date +%Y-%m-%d)"
-          git push origin "$BRANCH"
-          gh pr create \
-            --title "chore: weekly map business sync $(date +%Y-%m-%d)" \
-            --body "Automated weekly sync of map businesses from Google Places API.
+          git push -f origin "$BRANCH"
+          # Create PR only if one doesn't already exist for this branch
+          if ! gh pr view "$BRANCH" --json number 2>/dev/null; then
+            gh pr create \
+              --title "chore: weekly map business sync $(date +%Y-%m-%d)" \
+              --body "Automated weekly sync of map businesses from Google Places API.
 
           Review any new businesses detected and update Builder.io overrides as needed." \
-            --base main
+              --base main
+          fi
