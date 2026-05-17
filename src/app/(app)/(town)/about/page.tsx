@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
 	title: "About the Town of Harmony",
+	alternates: { canonical: `${siteConfig.url}/about` },
 	description:
 		"Learn about the Town of Harmony, North Carolina. Discover our history, government structure, community values, and what makes Harmony a great place to live.",
 };

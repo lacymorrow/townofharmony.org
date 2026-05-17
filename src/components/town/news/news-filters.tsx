@@ -82,9 +82,11 @@ export function NewsFilters({ currentCategory, currentSearch, availableCategorie
 						<CardTitle>Categories</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="space-y-2">
+						<div className="space-y-2" role="group" aria-label="Filter by category">
 							<button
+								type="button"
 								onClick={() => handleCategoryChange("")}
+								aria-pressed={currentCategory === ""}
 								className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
 									currentCategory === ""
 										? "bg-stone text-[#2D2A24]"
@@ -96,7 +98,9 @@ export function NewsFilters({ currentCategory, currentSearch, availableCategorie
 							{availableCategories.map((value) => (
 								<button
 									key={value}
+									type="button"
 									onClick={() => handleCategoryChange(value)}
+									aria-pressed={currentCategory === value}
 									className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
 										currentCategory === value
 											? "bg-stone text-[#2D2A24]"
