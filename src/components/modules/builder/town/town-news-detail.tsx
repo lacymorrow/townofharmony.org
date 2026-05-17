@@ -17,7 +17,15 @@ const safeArray = (arr: unknown): string[] => (Array.isArray(arr) ? arr : []);
 const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
   const pathname = usePathname();
   const rawSlug = slugProp || pathname?.split("/").filter(Boolean).pop() || "";
-  const slug = decodeURIComponent(rawSlug).replace(/[^a-z0-9-]/gi, "");
+  const slug = (() => {
+    try {
+      return decodeURIComponent(rawSlug)
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "");
+    } catch {
+      return rawSlug.toLowerCase().replace(/[^a-z0-9-]/g, "");
+    }
+  })();
 
   const staticFallback = staticNews.find((n) => n.slug === slug) ?? null;
   const { data: article, loading } = useBuilderEntry<TownNews>(

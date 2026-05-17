@@ -30,7 +30,15 @@ const statusColors: Record<string, string> = {
 const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
   const pathname = usePathname();
   const rawSlug = slugProp || pathname?.split("/").filter(Boolean).pop() || "";
-  const slug = decodeURIComponent(rawSlug).replace(/[^a-z0-9-]/gi, "");
+  const slug = (() => {
+    try {
+      return decodeURIComponent(rawSlug)
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "");
+    } catch {
+      return rawSlug.toLowerCase().replace(/[^a-z0-9-]/g, "");
+    }
+  })();
 
   const staticFallback = staticEvents.find((e) => e.slug === slug) ?? null;
   const { data: event, loading } = useBuilderEntry<TownEvent>(
