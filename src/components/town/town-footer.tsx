@@ -46,6 +46,13 @@ export function TownFooter({
 							<br />
 							<span className="whitespace-nowrap">{settings.contactInfo.phone}</span>
 						</p>
+						{(settings.officeHours.weekday || settings.officeHours.weekend) && (
+							<p className="text-sm leading-relaxed mt-2">
+								{settings.officeHours.weekday && <span>{settings.officeHours.weekday}</span>}
+								{settings.officeHours.weekday && settings.officeHours.weekend && <br />}
+								{settings.officeHours.weekend && <span>{settings.officeHours.weekend}</span>}
+							</p>
+						)}
 
 						{/* Social Media */}
 						{(settings.socialMedia.facebook || settings.socialMedia.twitter || settings.socialMedia.youtube) && (
