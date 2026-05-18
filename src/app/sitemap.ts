@@ -44,12 +44,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			changeFrequency: "monthly",
 			priority: 0.7,
 		},
-		{
-			url: `${baseUrl}${routes.town.business}`,
-			lastModified: new Date(),
-			changeFrequency: "monthly",
-			priority: 0.7,
-		},
+		...(buildTimeFeatures.BUSINESS_ENABLED
+			? [
+					{
+						url: `${baseUrl}${routes.town.business}`,
+						lastModified: new Date(),
+						changeFrequency: "monthly" as const,
+						priority: 0.7,
+					},
+				]
+			: []),
 		{
 			url: `${baseUrl}${routes.town.pointsOfInterest}`,
 			lastModified: new Date(),

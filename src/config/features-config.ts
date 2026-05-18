@@ -307,6 +307,8 @@ buildTimeFeatures.ALERTS_ENABLED = !envIsTrue("DISABLE_ALERTS");
 buildTimeFeatures.EVENTS_ENABLED = !envIsTrue("DISABLE_EVENTS");
 // News is on by default; set DISABLE_NEWS=true to hide news pages.
 buildTimeFeatures.NEWS_ENABLED = !envIsTrue("DISABLE_NEWS");
+// Business directory is on by default; set DISABLE_BUSINESS=true to hide business pages.
+buildTimeFeatures.BUSINESS_ENABLED = !envIsTrue("DISABLE_BUSINESS");
 // Sewer info page requires Stripe to be configured; also respects DISABLE_SEWER.
 buildTimeFeatures.SEWER_ENABLED =
   hasEnv("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY") && !envIsTrue("DISABLE_SEWER");
