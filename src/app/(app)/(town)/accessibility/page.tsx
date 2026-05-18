@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
 	title: "Accessibility Statement",
 	description:
 		"Accessibility statement for the Town of Harmony website. We are committed to making our website accessible to all users.",
+	alternates: {
+		canonical: `${siteConfig.url}/accessibility`,
+	},
 };
 
 export default function AccessibilityPage() {

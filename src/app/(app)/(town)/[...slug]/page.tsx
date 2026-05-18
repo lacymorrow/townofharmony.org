@@ -166,7 +166,8 @@ export async function generateMetadata({
 	}
 
 	const slugPath = `/${params.slug.join("/")}`;
-	const slugTitle = params.slug[params.slug.length - 1]
+	const lastSegment = params.slug[params.slug.length - 1] ?? "";
+	const slugTitle = lastSegment
 		.split("-")
 		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
 		.join(" ");

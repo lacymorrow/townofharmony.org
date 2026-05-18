@@ -6,9 +6,11 @@ import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
 	title: "Interactive Town Map",
-	alternates: { canonical: `${siteConfig.url}/map` },
 	description:
 		"Explore businesses, services, and points of interest in Harmony, NC with our interactive map. Find locations across the Town of Harmony, North Carolina.",
+	alternates: {
+		canonical: `${siteConfig.url}/map`,
+	},
 };
 
 export default async function MapPage() {

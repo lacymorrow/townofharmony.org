@@ -27,6 +27,9 @@ export async function generateMetadata({
 	return {
 		title: resource.title,
 		description: resource.description,
+		alternates: {
+			canonical: `https://www.townofharmony.org/resources/${slug}`,
+		},
 	};
 }
 
