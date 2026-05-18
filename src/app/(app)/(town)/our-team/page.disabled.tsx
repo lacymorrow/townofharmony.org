@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 		"Meet the elected officials and staff of the Town of Harmony, North Carolina.",
 };
 
-const CATEGORIES = ["Executive", "Board of Aldermen", "Staff"] as const;
+const CATEGORIES = ["Executive", "Town Council", "Staff"] as const;
 
 export default function OurTeamPage() {
 	const active = teamMembers

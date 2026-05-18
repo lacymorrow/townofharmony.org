@@ -128,7 +128,7 @@ Builder.registerComponent(TownTeamMembers, {
 		{
 			name: "categoryFilter",
 			type: "string",
-			helperText: "Show only one category (Executive / Board of Aldermen / Staff). Empty = all.",
+			helperText: "Show only one category (Executive / Town Council / Staff). Empty = all.",
 		},
 		{
 			name: "limit",

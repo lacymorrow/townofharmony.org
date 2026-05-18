@@ -7,7 +7,7 @@ import { getMeetingFilterOptions } from "@/lib/town-data";
 export const metadata: Metadata = {
 	title: "Town Meetings & Agendas",
 	description:
-		"View upcoming Board of Aldermen meetings, agendas, and minutes for the Town of Harmony, NC. Attend public meetings in Harmony, North Carolina.",
+		"View upcoming Town Council meetings, agendas, and minutes for the Town of Harmony, NC. Attend public meetings in Harmony, North Carolina.",
 };
 
 export default async function MeetingsPage({
@@ -30,7 +30,7 @@ export default async function MeetingsPage({
 			<div className="mb-8">
 				<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Town Meetings</h1>
 				<p className="mt-2 text-lg text-muted-foreground">
-					Stay informed about Board of Aldermen and Public Hearing meetings.
+					Stay informed about Town Council and Public Hearing meetings.
 				</p>
 			</div>
 
