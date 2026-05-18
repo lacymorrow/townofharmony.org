@@ -29,6 +29,7 @@ const EXPLICIT_ROUTES = new Set([
 	"/business",
 	"/events",
 	"/map",
+	"/our-team",
 	"/pay/sewer",
 	"/pay/sewer/cancel",
 	"/pay/sewer/success",

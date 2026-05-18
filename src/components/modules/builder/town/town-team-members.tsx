@@ -28,7 +28,6 @@ export const TownTeamMembers = ({
 	limit,
 	categoryFilter,
 }: TownTeamMembersProps = {}) => {
-	const fallback = staticTeamMembers.filter((m) => m.isActive).sort((a, b) => a.sortOrder - b.sortOrder);
 	const { data: allMembers, loading } = useBuilderData<TownTeamMember>(
 		"town-team-member",
 		{ sort: { "data.sortOrder": 1 }, limit: 50, fallback: staticTeamMembers },
@@ -99,11 +98,21 @@ export const TownTeamMembers = ({
 									<div className="p-5">
 										<div className="flex items-start gap-4 mb-4">
 											{/* Avatar */}
-											<div className="w-14 h-14 rounded-full bg-sage-dark text-white flex items-center justify-center flex-shrink-0">
-												<span className="text-lg font-semibold">
-													{getInitials(member.name)}
-												</span>
-											</div>
+											{member.image ? (
+												<img
+													src={member.image}
+													alt={member.name}
+													width={56}
+													height={56}
+													className="w-14 h-14 rounded-full object-cover flex-shrink-0"
+												/>
+											) : (
+												<div className="w-14 h-14 rounded-full bg-sage-dark text-white flex items-center justify-center flex-shrink-0">
+													<span className="text-lg font-semibold">
+														{getInitials(member.name)}
+													</span>
+												</div>
+											)}
 											<div className="flex-1 min-w-0">
 												<h3 className="text-lg font-semibold text-[#2D2A24]">
 													{member.name}

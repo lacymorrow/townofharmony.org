@@ -58,7 +58,7 @@ export const teamMembers: TownTeamMember[] = [
 		email: "",
 		phone: "(704) 546-2339",
 		image: "/images/team/brandon-angell.webp",
-		termExpires: "2024-2028",
+		termExpires: "2024-2026",
 		sortOrder: 2,
 		isActive: true,
 	},

@@ -6,6 +6,7 @@ const EXPLICIT_ROUTES = new Set([
 	"/",
 	"/accessibility",
 	"/map",
+	"/our-team",
 	"/pay/sewer",
 	"/pay/sewer/cancel",
 	"/pay/sewer/success",
