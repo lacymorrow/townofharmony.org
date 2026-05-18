@@ -31,7 +31,7 @@ export default function AboutPage() {
 				</h2>
 				<p>
 					The Town of Harmony is governed by a Town Council and a Mayor.
-					The board meets regularly to address town business, hear from
+					The Council meets regularly to address town business, hear from
 					residents, and make decisions that shape the community. All meetings
 					are open to the public and we encourage residents to attend and
 					participate. Meeting agendas and minutes are posted to this website so
