@@ -44,7 +44,7 @@ export function TownFooter({
 						<p className="text-sm leading-relaxed">
 							{settings.contactInfo.address}
 							<br />
-							<span className="whitespace-nowrap">{settings.contactInfo.phone}</span> &middot; {settings.contactInfo.email}
+							<span className="whitespace-nowrap">{settings.contactInfo.phone}</span>
 						</p>
 
 						{/* Social Media */}

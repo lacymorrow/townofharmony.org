@@ -67,12 +67,9 @@ export default function PrivacyPage() {
 					Contact Us
 				</h2>
 				<p>
-					If you have questions about this privacy policy, please contact us at{" "}
-					<a
-						href="mailto:admin@townofharmony.org"
-						className="text-sage hover:text-sage-dark underline"
-					>
-						admin@townofharmony.org
+					If you have questions about this privacy policy, please use our{" "}
+					<a href="/contact" className="text-sage hover:text-sage-dark underline">
+						contact form
 					</a>{" "}
 					or call <a href="tel:7045462339" className="text-sage hover:text-sage-dark underline">(704) 546-2339</a>.
 				</p>
