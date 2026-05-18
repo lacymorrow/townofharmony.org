@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { type BuilderContent } from "@builder.io/sdk";
 import { teamMembers } from "@/data/town/team-members";
+import { env } from "@/env";
+import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
+import "@/styles/builder-io.css";
 
 export const metadata: Metadata = {
 	title: "Our Team | Town of Harmony",
@@ -10,7 +14,42 @@ export const metadata: Metadata = {
 
 const CATEGORIES = ["Executive", "Board of Aldermen", "Staff"] as const;
 
-export default function OurTeamPage() {
+async function getBuilderOurTeamPage(): Promise<BuilderContent | null> {
+	if (!env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED || !env.NEXT_PUBLIC_BUILDER_API_KEY) {
+		return null;
+	}
+	try {
+		const url = new URL("https://cdn.builder.io/api/v3/content/page");
+		url.searchParams.set("apiKey", env.NEXT_PUBLIC_BUILDER_API_KEY);
+		url.searchParams.set("userAttributes.urlPath", "/our-team");
+		url.searchParams.set("limit", "1");
+		url.searchParams.set("noCache", "true");
+		const res = await fetch(url.toString(), { next: { revalidate: 0 } });
+		if (!res.ok) return null;
+		const data = (await res.json()) as { results?: BuilderContent[] };
+		const page = data?.results?.[0];
+		if (!page) return null;
+		const pageUrl = page.data?.url as string | undefined;
+		if (pageUrl && pageUrl !== "/our-team") return null;
+		return page;
+	} catch {
+		return null;
+	}
+}
+
+interface OurTeamPageProps {
+	searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+export default async function OurTeamPage({ searchParams }: OurTeamPageProps) {
+	const sp = await searchParams;
+	const isPreview = "builder.preview" in sp;
+	const content = await getBuilderOurTeamPage();
+
+	if (content || isPreview) {
+		return <RenderBuilderContent content={content ?? undefined} model="page" />;
+	}
+
 	const active = teamMembers
 		.filter((m) => m.isActive)
 		.sort((a, b) => a.sortOrder - b.sortOrder);
