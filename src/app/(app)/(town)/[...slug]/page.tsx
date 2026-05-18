@@ -25,6 +25,7 @@ import { notFound } from "next/navigation";
 const EXPLICIT_ROUTES = new Set([
 	"/",
 	"/accessibility",
+	"/business",
 	"/map",
 	"/pay/sewer",
 	"/pay/sewer/cancel",

@@ -10,6 +10,7 @@ const FLAGS = {
 	news: { featureKey: "NEWS_ENABLED" as const, hrefs: ["/news"] },
 	alerts: { featureKey: "ALERTS_ENABLED" as const, hrefs: ["/emergency"] },
 	sewer: { featureKey: "SEWER_ENABLED" as const, hrefs: ["/sewer", "/pay/sewer"] },
+	business: { featureKey: "BUSINESS_ENABLED" as const, hrefs: ["/business"] },
 } as const;
 
 export type FeatureFlagName = keyof typeof FLAGS;

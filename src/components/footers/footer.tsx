@@ -51,7 +51,9 @@ const defaultGroups: FooterElement[] = [
       items: [
         { href: routes.town.ourTeam, label: "Our Team" },
         { href: routes.town.emergency, label: "Emergency Services" },
-        { href: routes.town.business, label: "Businesses" },
+        ...(process.env.NEXT_PUBLIC_FEATURE_BUSINESS_ENABLED !== "false"
+          ? [{ href: routes.town.business, label: "Businesses" }]
+          : []),
         { href: routes.contact, label: "Contact Us" },
       ],
     },
