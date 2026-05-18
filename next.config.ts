@@ -43,6 +43,10 @@ const nextConfig: NextConfig = {
 				protocol: "https",
 				hostname: "better-auth.com",
 			},
+			{
+				protocol: "https",
+				hostname: "cdn.builder.io",
+			},
 		],
 		/*
 		 * Next.js 15+ Enhanced Image Optimization

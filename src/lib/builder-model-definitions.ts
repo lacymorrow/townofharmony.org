@@ -79,6 +79,8 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			enumText("category", ["Executive", "Board of Aldermen", "Staff"]),
 			text("email"),
 			text("phone"),
+			url("image"),
+			text("mayorSince"),
 			text("termExpires"),
 			text("department"),
 			num("sortOrder"),
