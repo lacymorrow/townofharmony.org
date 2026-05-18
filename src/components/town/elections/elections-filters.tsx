@@ -75,20 +75,22 @@ export function ElectionsFilters({ currentStatus, currentSearch }: ElectionsFilt
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<div className="space-y-2">
+					<div className="space-y-2" role="group" aria-label="Filter by election status">
 						{statusFilters.map((status) => {
 							const Icon = status.icon;
 							return (
 								<button
 									key={status.value}
+									type="button"
 									onClick={() => handleStatusChange(status.value)}
+									aria-pressed={(currentStatus || "all") === status.value}
 									className={`w-full flex items-center gap-3 text-left px-3 py-2 rounded-md transition-colors ${
 										(currentStatus || "all") === status.value
 											? "bg-stone text-[#2D2A24]"
 											: "hover:bg-stone"
 									}`}
 								>
-									<Icon className="h-4 w-4" />
+									<Icon className="h-4 w-4" aria-hidden="true" />
 									{status.label}
 								</button>
 							);
@@ -109,7 +111,7 @@ export function ElectionsFilters({ currentStatus, currentSearch }: ElectionsFilt
 					<ul className="space-y-2 text-sm">
 						<li>
 							<a
-								href="https://ovr.sos.wv.gov/Register"
+								href="https://www.ncsbe.gov/registering/how-register"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="text-sage hover:underline"
@@ -119,7 +121,7 @@ export function ElectionsFilters({ currentStatus, currentSearch }: ElectionsFilt
 						</li>
 						<li>
 							<a
-								href="https://apps.sos.wv.gov/elections/voter/amiregisteredtovote"
+								href="https://www.ncsbe.gov/registering/checking-your-registration"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="text-sage hover:underline"
@@ -129,7 +131,7 @@ export function ElectionsFilters({ currentStatus, currentSearch }: ElectionsFilt
 						</li>
 						<li>
 							<a
-								href="https://sos.wv.gov/elections/Pages/VoterEducation.aspx"
+								href="https://www.ncsbe.gov/voting"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="text-sage hover:underline"
@@ -139,7 +141,7 @@ export function ElectionsFilters({ currentStatus, currentSearch }: ElectionsFilt
 						</li>
 						<li>
 							<a
-								href="https://sos.wv.gov/elections/Pages/AbsenteeBallot.aspx"
+								href="https://www.ncsbe.gov/voting/vote-mail"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="text-sage hover:underline"

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
+import { siteConfig } from "@/config/site-config";
 
 interface BuilderSewerRate {
 	tierId: string;
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
 	description:
 		"View sewer service rates and pay your bill online for the Town of Harmony, NC. Residential and commercial sewer information for Harmony, North Carolina.",
 	alternates: {
-		canonical: "https://www.townofharmony.org/sewer",
+		canonical: `${siteConfig.url}/sewer`,
 	},
 };
 

@@ -43,21 +43,21 @@ export const mediaUrls = {
 	"landmark-community-center": `${TOWN_IMG}/community-center-2.webp`,
 
 	// Emergency & civic
-	"emergency-fire-dept": `${TOWN_IMG}/fire-department.png`,
-	"emergency-911": `${TOWN_IMG}/911-building.jpg`,
+	"emergency-fire-dept": `${TOWN_IMG}/fire-department.webp`,
+	"emergency-911": `${TOWN_IMG}/911-building.webp`,
 
 	// Additional landmarks
-	"poi-thread-trail": `${TOWN_IMG}/thread-trail.jpg`,
-	"poi-about-hero": `${TOWN_IMG}/about-hero.png`,
-	"contact-map": `${TOWN_IMG}/contact-map.png`,
+	"poi-thread-trail": `${TOWN_IMG}/thread-trail.webp`,
+	"poi-about-hero": `${TOWN_IMG}/about-hero.webp`,
+	"contact-map": `${TOWN_IMG}/contact-map.webp`,
 
 	// Businesses (civic institutions) — no specific photos available
 	"biz-general-store": `${TOWN_IMG}/harmony-town-view.webp`,
-	"biz-diner": `${TOWN_IMG}/logo.png`,
-	"biz-medical": `${TOWN_IMG}/logo.png`,
-	"biz-hardware": `${TOWN_IMG}/logo.png`,
-	"biz-auto": `${TOWN_IMG}/logo.png`,
-	"biz-thrift": `${TOWN_IMG}/logo.png`,
+	"biz-diner": `${TOWN_IMG}/logo.webp`,
+	"biz-medical": `${TOWN_IMG}/logo.webp`,
+	"biz-hardware": `${TOWN_IMG}/logo.webp`,
+	"biz-auto": `${TOWN_IMG}/logo.webp`,
+	"biz-thrift": `${TOWN_IMG}/logo.webp`,
 } as const;
 
 export type MediaKey = keyof typeof mediaUrls;

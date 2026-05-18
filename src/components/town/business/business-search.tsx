@@ -51,8 +51,9 @@ export function BusinessSearch() {
 							type="button"
 							onClick={clearSearch}
 							className="absolute right-3 top-1/2 -translate-y-1/2"
+							aria-label="Clear search"
 						>
-							<X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+							<X className="h-4 w-4 text-muted-foreground hover:text-foreground" aria-hidden="true" />
 						</button>
 					)}
 				</div>
