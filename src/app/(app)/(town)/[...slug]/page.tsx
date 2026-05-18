@@ -14,6 +14,7 @@
 
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
+import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import "@/styles/builder-io.css";
 import { type BuilderContent } from "@builder.io/sdk";
@@ -26,6 +27,7 @@ const EXPLICIT_ROUTES = new Set([
 	"/",
 	"/accessibility",
 	"/business",
+	"/events",
 	"/map",
 	"/pay/sewer",
 	"/pay/sewer/cancel",
@@ -111,47 +113,7 @@ async function getBuilderContent(
 	}
 
 	const urlPath = `/${slug.join("/")}`;
-
-	try {
-		const url = new URL("https://cdn.builder.io/api/v3/content/page");
-		url.searchParams.set("apiKey", env.NEXT_PUBLIC_BUILDER_API_KEY);
-		url.searchParams.set("userAttributes.urlPath", urlPath);
-		url.searchParams.set("limit", "1");
-		url.searchParams.set("noCache", "true");
-
-		const res = await fetch(url.toString(), {
-			next: { revalidate: 0 },
-		});
-
-		if (!res.ok) {
-			return null;
-		}
-
-		const data = await res.json();
-		const results = data?.results;
-		if (!results || results.length === 0) {
-			return null;
-		}
-
-		const page = results[0] as BuilderContent;
-
-		// Guard against Builder.io returning wildcard-targeted pages for paths
-		// that have no specific content. Template pages (data.url matches /:param)
-		// use startsWith targeting and are exempt — we can't validate :slug segments
-		// here. Regular pages must have data.url exactly matching the requested path
-		// (after trailing-slash normalization). Pages with no data.url are also
-		// rejected since they almost certainly came from over-broad targeting.
-		const pageUrl = page.data?.url as string | undefined;
-		const normalize = (u: string) => u.toLowerCase().replace(/\/+$/, "") || "/";
-		const isTemplate = /\/:[^/]+/.test(pageUrl ?? "");
-		if (!pageUrl || (!isTemplate && normalize(pageUrl) !== normalize(urlPath))) {
-			return null;
-		}
-
-		return page;
-	} catch {
-		return null;
-	}
+	return getBuilderPageContent(urlPath) as Promise<BuilderContent | null>;
 }
 
 export async function generateMetadata({

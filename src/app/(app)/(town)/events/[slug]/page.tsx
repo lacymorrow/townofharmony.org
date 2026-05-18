@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { events } from "@/data/town/events";
+import { getBuilderPageContent } from "@/lib/builder-data-server";
+import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 
 interface PageProps {
 	params: Promise<{ slug: string }>;
@@ -24,6 +26,12 @@ export async function generateMetadata({
 
 export default async function EventDetailPage({ params }: PageProps) {
 	const { slug } = await params;
+
+	const builderContent = await getBuilderPageContent(`/events/${slug}`);
+	if (builderContent) {
+		return <RenderBuilderContent content={builderContent} model="page" />;
+	}
+
 	const event = events.find((e) => e.slug === slug);
 	if (!event) notFound();
 

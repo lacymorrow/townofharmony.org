@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { EventsList } from "@/components/town/events/events-list";
 import { EventsFilters } from "@/components/town/events/events-filters";
 import { getEventFilterOptions } from "@/lib/town-data";
+import { getBuilderPageContent } from "@/lib/builder-data-server";
+import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { isFeatureEnabled } from "@/lib/preview-flags";
 
 export const metadata: Metadata = {
@@ -20,6 +22,12 @@ export default async function EventsPage({
 	if (!await isFeatureEnabled("events")) {
 		notFound();
 	}
+
+	const builderContent = await getBuilderPageContent("/events");
+	if (builderContent) {
+		return <RenderBuilderContent content={builderContent} model="page" />;
+	}
+
 	const [params, filterOptions] = await Promise.all([
 		searchParams,
 		getEventFilterOptions(),

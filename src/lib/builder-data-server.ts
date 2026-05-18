@@ -83,5 +83,53 @@ async function fetchBuilderEntry<T>(
 	return results[0] ?? null;
 }
 
-export { fetchBuilderContent, fetchBuilderEntry };
+/**
+ * Fetch a Builder.io visual page by URL path.
+ * Returns the full BuilderContent object for rendering with RenderBuilderContent,
+ * or null when no page targets the given path.
+ */
+async function getBuilderPageContent(
+	urlPath: string,
+): Promise<Record<string, unknown> | null> {
+	if (!BUILDER_API_KEY) {
+		return null;
+	}
+
+	try {
+		const url = new URL(`${BUILDER_CDN_BASE}/page`);
+		url.searchParams.set("apiKey", BUILDER_API_KEY);
+		url.searchParams.set("userAttributes.urlPath", urlPath);
+		url.searchParams.set("limit", "1");
+		url.searchParams.set("noCache", "true");
+
+		const res = await fetch(url.toString(), {
+			next: { revalidate: 0 },
+		});
+
+		if (!res.ok) {
+			return null;
+		}
+
+		const data = await res.json();
+		const results = data?.results;
+		if (!results || results.length === 0) {
+			return null;
+		}
+
+		const page = results[0] as Record<string, unknown>;
+		const pageData = page.data as Record<string, unknown> | undefined;
+		const pageUrl = pageData?.url as string | undefined;
+		const normalize = (u: string) => u.toLowerCase().replace(/\/+$/, "") || "/";
+		const isTemplate = /\/:[^/]+/.test(pageUrl ?? "");
+		if (!pageUrl || (!isTemplate && normalize(pageUrl) !== normalize(urlPath))) {
+			return null;
+		}
+
+		return page;
+	} catch {
+		return null;
+	}
+}
+
+export { fetchBuilderContent, fetchBuilderEntry, getBuilderPageContent };
 export type { FetchOptions };
