@@ -25,8 +25,11 @@ export async function generateMetadata({
 	const resource = documentResources.find((r) => r.slug === slug);
 	if (!resource) return { title: "Document Not Found" };
 	return {
-		title: `${resource.title} | Town of Harmony`,
+		title: resource.title,
 		description: resource.description,
+		alternates: {
+			canonical: `https://www.townofharmony.org/resources/${slug}`,
+		},
 	};
 }
 

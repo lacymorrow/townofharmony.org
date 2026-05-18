@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
-	title: "Community Center Reservation | Town of Harmony",
+	title: "Community Center Reservation",
 	description:
 		"How to reserve the Harmony Community Center, including rules, capacity, and contact information.",
+	alternates: {
+		canonical: `${siteConfig.url}/resources/community-center-reservation`,
+	},
 };
 
 export default function CommunityCenterReservationPage() {
@@ -31,7 +35,7 @@ export default function CommunityCenterReservationPage() {
 					</p>
 					<p className="text-sm text-[#4A4640] mt-2">
 						3389 Harmony Hwy, Harmony, NC 28634<br />
-						Monday – Friday, 8:00 AM – 5:00 PM
+						Monday – Friday, 9:00 AM – 5:00 PM
 					</p>
 				</div>
 

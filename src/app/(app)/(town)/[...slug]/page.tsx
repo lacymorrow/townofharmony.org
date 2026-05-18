@@ -166,7 +166,12 @@ export async function generateMetadata({
 	}
 
 	const slugPath = `/${params.slug.join("/")}`;
-	const pageTitle = content?.data?.title ?? "Town of Harmony";
+	const lastSegment = params.slug[params.slug.length - 1] ?? "";
+	const slugTitle = lastSegment
+		.split("-")
+		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+		.join(" ");
+	const pageTitle = content?.data?.title ?? `${slugTitle} — Town of Harmony, NC`;
 	const pageDescription =
 		content?.data?.description ??
 		`${pageTitle} — Town of Harmony, NC. Find local government information, services, and community resources in Harmony, North Carolina.`;

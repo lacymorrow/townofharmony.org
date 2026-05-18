@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
-	title: "Privacy Policy | Town of Harmony, NC",
+	title: "Privacy Policy",
 	description:
 		"Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your information.",
+	alternates: {
+		canonical: `${siteConfig.url}/privacy`,
+	},
 };
 
 export default function PrivacyPage() {

@@ -25,6 +25,9 @@ export const metadata: Metadata = {
 	title: "Sewer Services & Online Bill Pay",
 	description:
 		"View sewer service rates and pay your bill online for the Town of Harmony, NC. Residential and commercial sewer information for Harmony, North Carolina.",
+	alternates: {
+		canonical: "https://www.townofharmony.org/sewer",
+	},
 };
 
 export default async function SewerPage() {

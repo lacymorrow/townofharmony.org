@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
-	title: "Tomlinson-Moore Family Park Reservation | Town of Harmony",
+	title: "Tomlinson-Moore Family Park Reservation",
 	description:
 		"How to reserve the Tomlinson-Moore Family Park picnic shelter, including rules and contact information.",
+	alternates: {
+		canonical: `${siteConfig.url}/resources/park-reservation`,
+	},
 };
 
 export default function ParkReservationPage() {

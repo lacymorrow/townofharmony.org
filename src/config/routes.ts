@@ -18,6 +18,7 @@ export const createRoute = (path: Route, params: RouteParams = {}): RouteObject 
 export const routes = {
 	// Public routes
 	home: "/",
+	about: "/about",
 	contact: "/contact",
 	docs: "/", // aliased — referenced by ~40 shipkit upstream components for build compat
 
