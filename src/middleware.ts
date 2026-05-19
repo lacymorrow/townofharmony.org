@@ -4,7 +4,10 @@ import { NextResponse, type NextRequest } from "next/server";
 // Keep in sync with src/app/(app)/(town)/[...slug]/page.tsx.
 const EXPLICIT_ROUTES = new Set([
 	"/",
+	"/about",
 	"/accessibility",
+	"/business",
+	"/events",
 	"/map",
 	"/our-team",
 	"/pay/sewer",
