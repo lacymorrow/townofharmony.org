@@ -69,16 +69,6 @@ export default function OurTeamPage() {
 												<p className="text-base text-[#4A4640]">{member.title}</p>
 											</div>
 										</div>
-										{member.phone && (
-											<p className="text-base">
-												<a
-													href={`tel:${member.phone.replace(/[^0-9+]/g, "")}`}
-													className="text-[#4A4640] hover:text-sage-dark"
-												>
-													{member.phone}
-												</a>
-											</p>
-										)}
 										{member.mayorSince && (
 											<p className="text-sm text-[#635E56] pt-1">
 												Mayor since: {member.mayorSince}
