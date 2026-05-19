@@ -59,7 +59,7 @@ export default function ContactPage() {
             {contactCards.map((card) => {
               const Icon = card.icon;
               const content = (
-                <div key={card.label} className="flex items-start gap-4 bg-warm-white rounded-xl border border-[#DDD7CC] p-5 hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-4 bg-warm-white rounded-xl border border-[#DDD7CC] p-5 hover:shadow-md transition-shadow">
                   <div className="w-11 h-11 bg-sage-dark rounded-lg flex items-center justify-center flex-shrink-0">
                     <Icon className="h-5 w-5 text-wheat" />
                   </div>
