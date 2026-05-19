@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Town of Harmony, NC — Official Site",
 		description: routeMetadata.home.description,
+		url: siteConfig.url,
 	},
 };
 
