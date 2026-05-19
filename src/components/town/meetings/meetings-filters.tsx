@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 
 const MEETING_TYPE_LABELS: Record<string, string> = {
-	Council: "Board of Aldermen",
+	Council: "Town Council",
 	Planning: "Planning",
 	"Public Hearing": "Public Hearing",
 };

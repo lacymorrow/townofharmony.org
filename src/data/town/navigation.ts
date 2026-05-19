@@ -132,7 +132,7 @@ export const navigation: TownNavigation = {
 			color: "bg-red-500",
 		},
 		{
-			title: "Board of Aldermen",
+			title: "Town Council",
 			description: "Meeting schedules and agendas",
 			href: "/meetings",
 			icon: "Users",

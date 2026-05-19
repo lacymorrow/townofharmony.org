@@ -189,7 +189,7 @@ export const routeMetadata = {
   meetings: {
     title: "Town Meetings & Agendas",
     description:
-      "View upcoming Board of Aldermen meetings, agendas, and minutes for the Town of Harmony, NC. Attend public meetings in Harmony, North Carolina.",
+      "View upcoming Town Council meetings, agendas, and minutes for the Town of Harmony, NC. Attend public meetings in Harmony, North Carolina.",
   },
   events: {
     title: "Community Events & Activities",

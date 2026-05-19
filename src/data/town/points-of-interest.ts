@@ -21,7 +21,7 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		slug: "town-hall",
 		category: "Government",
 		description:
-			"The seat of town government and center of civic life in Harmony. Town Hall houses administrative offices and serves as the meeting place for the Board of Aldermen. Residents can access various town services here.",
+			"The seat of town government and center of civic life in Harmony. Town Hall houses administrative offices and serves as the meeting place for the Town Council. Residents can access various town services here.",
 		image: mediaUrls["poi-town-hall"],
 		address: "3389 Harmony Hwy, Harmony, NC 28634",
 		hours: "Monday - Friday: 8:00 AM - 5:00 PM",

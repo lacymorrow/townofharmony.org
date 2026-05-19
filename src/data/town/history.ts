@@ -82,7 +82,7 @@ export const historyArticles: TownHistoryArticle[] = [
 		description:
 			"The seat of town government since Harmony's incorporation, serving as the center of civic life.",
 		content:
-			"Town Hall has served as the center of government and civic life in Harmony since the town's incorporation in 1927. It continues to house town offices and serve as the meeting place for the Board of Aldermen.",
+			"Town Hall has served as the center of government and civic life in Harmony since the town's incorporation in 1927. It continues to house town offices and serve as the meeting place for the Town Council.",
 		image: mediaUrls["landmark-town-hall"],
 		sortOrder: 0,
 	},

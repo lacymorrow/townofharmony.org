@@ -60,7 +60,7 @@ export interface TownTeamMember {
 	id: number;
 	name: string;
 	title: string;
-	category: "Executive" | "Board of Aldermen" | "Staff";
+	category: "Executive" | "Town Council" | "Staff";
 	email: string;
 	phone: string;
 	image?: string;
