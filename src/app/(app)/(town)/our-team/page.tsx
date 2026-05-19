@@ -7,11 +7,17 @@ import { TownTeamMembers } from "@/components/modules/builder/town/town-team-mem
 import "@/styles/builder-io.css";
 
 export const metadata: Metadata = {
-	title: "Our Team | Town of Harmony",
+	title: "Our Team | Town of Harmony, NC",
 	description:
-		"Meet the elected officials and staff of the Town of Harmony, North Carolina.",
+		"Meet the elected officials and staff of the Town of Harmony, North Carolina. Learn about our Board of Aldermen and town administration.",
 	alternates: {
 		canonical: `${siteConfig.url}/our-team`,
+	},
+	openGraph: {
+		title: "Our Team — Town of Harmony, NC",
+		description:
+			"Meet the elected officials and staff of the Town of Harmony, North Carolina. Learn about our Board of Aldermen and town administration.",
+		url: `${siteConfig.url}/our-team`,
 	},
 };
 

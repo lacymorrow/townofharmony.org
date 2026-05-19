@@ -9,9 +9,14 @@ import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { isFeatureEnabled } from "@/lib/preview-flags";
 
 export const metadata: Metadata = {
-	title: "Community Events & Activities",
+	title: "Community Events & Activities | Town of Harmony, NC",
 	description:
 		"Discover upcoming community events, festivals, and activities in Harmony, NC. Find things to do in the Town of Harmony, North Carolina.",
+	openGraph: {
+		title: "Community Events — Town of Harmony, NC",
+		description:
+			"Discover upcoming community events, festivals, and activities in Harmony, NC. Find things to do in the Town of Harmony, North Carolina.",
+	},
 };
 
 export default async function EventsPage({

@@ -2,11 +2,17 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
-	title: "Accessibility Statement",
+	title: "Accessibility Statement | Town of Harmony, NC",
 	description:
-		"Accessibility statement for the Town of Harmony website. We are committed to making our website accessible to all users.",
+		"Accessibility statement for the Town of Harmony website. We are committed to making our website accessible to all users in Harmony, North Carolina.",
 	alternates: {
 		canonical: `${siteConfig.url}/accessibility`,
+	},
+	openGraph: {
+		title: "Accessibility Statement — Town of Harmony, NC",
+		description:
+			"Accessibility statement for the Town of Harmony website. We are committed to making our website accessible to all users in Harmony, North Carolina.",
+		url: `${siteConfig.url}/accessibility`,
 	},
 };
 

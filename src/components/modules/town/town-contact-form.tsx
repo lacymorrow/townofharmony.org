@@ -167,7 +167,7 @@ export const TownContactForm = () => {
 		<form
 			onSubmit={handleSubmit}
 			noValidate
-			className="space-y-4 rounded border border-stone bg-white p-6"
+			className="space-y-4 rounded-xl border border-[#DDD7CC] bg-warm-white p-6"
 		>
 			<h2 className="mb-2 text-xl font-semibold text-sage-dark">Send a Message</h2>
 
@@ -289,10 +289,10 @@ export const TownContactForm = () => {
 					/>
 					<label
 						htmlFor="attachment"
-						className={`inline-block cursor-pointer px-4 py-2 rounded border text-sm font-medium transition-colors ${
+						className={`inline-block cursor-pointer px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
 							errors.attachment
 								? "border-red-500 text-red-700 bg-red-50 hover:bg-red-100"
-								: "border-stone text-[#2D2A24] bg-white hover:bg-stone/20"
+								: "border-[#DDD7CC] text-[#2D2A24] bg-white hover:bg-[#DDD7CC]/20"
 						}`}
 					>
 						<svg
@@ -341,7 +341,7 @@ export const TownContactForm = () => {
 			<button
 				type="submit"
 				disabled={isPending}
-				className="w-full rounded bg-sage-dark px-6 py-2.5 font-medium text-white transition-colors hover:bg-sage-dark/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-dark disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+				className="w-full rounded-lg bg-sage-dark px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-sage-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-dark disabled:cursor-not-allowed disabled:opacity-50"
 			>
 				{isPending ? "Sending…" : "Send Message"}
 			</button>
@@ -350,7 +350,7 @@ export const TownContactForm = () => {
 };
 
 const inputClass = (hasError: boolean) =>
-	`w-full rounded border ${hasError ? "border-red-400" : "border-stone"} bg-white px-3 py-2 text-sm text-[#2D2A24] placeholder:text-[#635E56]/60 focus:outline-none focus:ring-2 focus:ring-sage-dark/30 focus:border-sage-dark`;
+	`w-full rounded-lg border ${hasError ? "border-red-400" : "border-[#DDD7CC]"} bg-white px-4 py-2.5 text-sm text-[#2D2A24] placeholder:text-[#635E56]/60 focus:outline-none focus:ring-1 focus:ring-sage focus:border-sage`;
 
 const FieldWrapper = ({
 	label,
