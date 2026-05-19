@@ -2,11 +2,17 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
-	title: "Privacy Policy",
+	title: "Privacy Policy | Town of Harmony, NC",
 	description:
-		"Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your information.",
+		"Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your personal information.",
 	alternates: {
 		canonical: `${siteConfig.url}/privacy`,
+	},
+	openGraph: {
+		title: "Privacy Policy — Town of Harmony, NC",
+		description:
+			"Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your personal information.",
+		url: `${siteConfig.url}/privacy`,
 	},
 };
 

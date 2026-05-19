@@ -3,10 +3,16 @@ import { siteConfig } from "@/config/site-config";
 import { settings } from "@/data/town/settings";
 
 export const metadata: Metadata = {
-	title: "About",
-	alternates: { canonical: `${siteConfig.url}/about` },
+	title: "About Harmony, NC | Town of Harmony",
 	description:
 		"Learn about the Town of Harmony, North Carolina. Discover our history, government structure, community values, and what makes Harmony a great place to live.",
+	alternates: { canonical: `${siteConfig.url}/about` },
+	openGraph: {
+		title: "About the Town of Harmony, NC",
+		description:
+			"Learn about the Town of Harmony, North Carolina. Discover our history, government structure, community values, and what makes Harmony a great place to live.",
+		url: `${siteConfig.url}/about`,
+	},
 };
 
 export default function AboutPage() {

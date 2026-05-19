@@ -2,11 +2,17 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
-	title: "Community Center Reservation",
+	title: "Community Center Reservation | Town of Harmony, NC",
 	description:
-		"How to reserve the Harmony Community Center, including rules, capacity, and contact information.",
+		"How to reserve the Harmony Community Center for your event, including capacity, rental rules, and contact information for the Town of Harmony, NC.",
 	alternates: {
 		canonical: `${siteConfig.url}/resources/community-center-reservation`,
+	},
+	openGraph: {
+		title: "Harmony Community Center Reservation",
+		description:
+			"How to reserve the Harmony Community Center for your event, including capacity, rental rules, and contact information for the Town of Harmony, NC.",
+		url: `${siteConfig.url}/resources/community-center-reservation`,
 	},
 };
 

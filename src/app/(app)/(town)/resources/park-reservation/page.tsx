@@ -2,11 +2,17 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
-	title: "Tomlinson-Moore Family Park Reservation",
+	title: "Tomlinson-Moore Family Park Reservation | Town of Harmony, NC",
 	description:
-		"How to reserve the Tomlinson-Moore Family Park picnic shelter, including rules and contact information.",
+		"Reserve the Tomlinson-Moore Family Park picnic shelter in Harmony, NC. Find rental rules, availability, and contact information for park reservations.",
 	alternates: {
 		canonical: `${siteConfig.url}/resources/park-reservation`,
+	},
+	openGraph: {
+		title: "Tomlinson-Moore Family Park Reservation",
+		description:
+			"Reserve the Tomlinson-Moore Family Park picnic shelter in Harmony, NC. Find rental rules, availability, and contact information for park reservations.",
+		url: `${siteConfig.url}/resources/park-reservation`,
 	},
 };
 
