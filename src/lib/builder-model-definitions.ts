@@ -12,6 +12,10 @@ interface BuilderField {
 	enum?: string[];
 	subFields?: BuilderField[];
 	model?: string;
+	regex?: { pattern: string; message: string };
+	helperText?: string;
+	friendlyName?: string;
+	advanced?: boolean;
 }
 
 interface BuilderModelDefinition {
@@ -62,6 +66,20 @@ const tags = (name: string): BuilderField => ({
 	type: "Tags",
 });
 
+const emailField = (name: string): BuilderField => ({
+	name,
+	type: "email",
+});
+
+const phone = (name: string): BuilderField => ({
+	name,
+	type: "text",
+	regex: {
+		pattern: "^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$",
+		message: "Enter a valid phone number (e.g. 555-555-5555)",
+	},
+});
+
 const enumText = (name: string, values: string[]): BuilderField => ({
 	name,
 	type: "text",
@@ -89,7 +107,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("name", true),
 			text("title", true),
 			enumText("category", ["Executive", "Town Council", "Staff"]),
-			text("email"),
+			emailField("email"),
 			url("image"),
 			text("mayorSince"),
 			text("termExpires"),
@@ -104,7 +122,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("title", true),
 			longText("description"),
-			text("phone", true),
+			{ ...phone("phone"), required: true },
 			enumText("category", ["immediate", "public-safety", "utility", "health"]),
 			text("icon"),
 			tags("preparedness"),
@@ -183,9 +201,9 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("siteTitle", true),
 			longText("siteDescription"),
-			text("contactPhone"),
+			phone("contactPhone"),
 			text("contactAddress"),
-			text("contactEmail"),
+			emailField("contactEmail"),
 			text("officeHoursWeekday"),
 			text("officeHoursWeekend"),
 			url("socialFacebook"),
@@ -259,8 +277,8 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("location"),
 			text("locationAddress"),
 			reference("organizer", "town-team-member"),
-			text("contactEmail"),
-			text("contactPhone"),
+			emailField("contactEmail"),
+			phone("contactPhone"),
 			enumText("status", ["upcoming", "past", "cancelled"]),
 			bool("isRecurring"),
 			tags("categories"),
@@ -296,8 +314,8 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			url("logo"),
 			text("category"),
 			text("contactName"),
-			text("email"),
-			text("phone"),
+			emailField("email"),
+			phone("phone"),
 			url("website"),
 			text("address"),
 			text("city"),

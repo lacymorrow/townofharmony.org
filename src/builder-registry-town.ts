@@ -258,6 +258,13 @@ Builder.registerComponent(TownPageHeader, {
 				{ label: "Barn Red", value: "barn-red" },
 			],
 		},
+		{
+			name: "customBgColor",
+			type: "color",
+			friendlyName: "Custom Background Color",
+			helperText: "Overrides the variant preset when set.",
+			advanced: true,
+		},
 	],
 });
 
