@@ -25,6 +25,7 @@ import { notFound } from "next/navigation";
 // Keep in sync with src/middleware.ts.
 const EXPLICIT_ROUTES = new Set([
 	"/",
+	"/about",
 	"/accessibility",
 	"/business",
 	"/events",
