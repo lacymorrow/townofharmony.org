@@ -32,8 +32,6 @@ const EXPLICIT_ROUTES = new Set([
 	"/events",
 	"/history",
 	"/meetings",
-	"/news",
-	"/emergency",
 	"/points-of-interest",
 	"/resources",
 	"/map",
