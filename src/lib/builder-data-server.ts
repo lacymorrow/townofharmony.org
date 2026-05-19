@@ -131,5 +131,30 @@ async function getBuilderPageContent(
 	}
 }
 
-export { fetchBuilderContent, fetchBuilderEntry, getBuilderPageContent };
+/**
+ * Fetch a single Builder.io Section model entry for a given URL path.
+ * Returns the full content object for rendering with RenderBuilderSection,
+ * or null when no active section targets the given model/path.
+ */
+async function fetchBuilderSection(
+	model: string,
+	urlPath?: string,
+): Promise<Record<string, unknown> | null> {
+	if (!BUILDER_API_KEY) return null;
+	try {
+		const url = new URL(`${BUILDER_CDN_BASE}/${model}`);
+		url.searchParams.set("apiKey", BUILDER_API_KEY);
+		if (urlPath) url.searchParams.set("userAttributes.urlPath", urlPath);
+		url.searchParams.set("limit", "1");
+		url.searchParams.set("noCache", "true");
+		const res = await fetch(url.toString(), { next: { revalidate: 60 } });
+		if (!res.ok) return null;
+		const data = await res.json();
+		return (data?.results?.[0] as Record<string, unknown>) ?? null;
+	} catch {
+		return null;
+	}
+}
+
+export { fetchBuilderContent, fetchBuilderEntry, fetchBuilderSection, getBuilderPageContent };
 export type { FetchOptions };
