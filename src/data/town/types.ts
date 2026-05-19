@@ -19,7 +19,7 @@ export interface TownNews {
 }
 
 export interface TownEvent {
-	id: number;
+	id: number | string;
 	title: string;
 	slug: string;
 	description: string;

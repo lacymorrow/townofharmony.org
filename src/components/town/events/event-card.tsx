@@ -6,7 +6,7 @@ import { formatDate, formatTime } from "@/lib/utils";
 
 interface EventCardProps {
 	event: {
-		id: number;
+		id: number | string;
 		title: string;
 		slug: string;
 		description: string | null;
