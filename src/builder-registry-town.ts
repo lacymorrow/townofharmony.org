@@ -201,6 +201,7 @@ Builder.registerComponent(TownResourcesList, {
 
 Builder.registerComponent(TownNewsDetail, {
 	name: "TownNewsDetail",
+	models: ["page"],
 	inputs: [
 		{ name: "slug", type: "string", helperText: "Override slug (auto-detected from URL if empty)" },
 	],
@@ -208,6 +209,7 @@ Builder.registerComponent(TownNewsDetail, {
 
 Builder.registerComponent(TownEventDetail, {
 	name: "TownEventDetail",
+	models: ["page"],
 	inputs: [
 		{ name: "slug", type: "string", helperText: "Override slug (auto-detected from URL if empty)" },
 	],
@@ -215,6 +217,7 @@ Builder.registerComponent(TownEventDetail, {
 
 Builder.registerComponent(TownMeetingDetail, {
 	name: "TownMeetingDetail",
+	models: ["page"],
 	inputs: [
 		{ name: "slug", type: "string", helperText: "Override slug (auto-detected from URL if empty)" },
 	],
@@ -222,6 +225,7 @@ Builder.registerComponent(TownMeetingDetail, {
 
 Builder.registerComponent(TownBusinessDetail, {
 	name: "TownBusinessDetail",
+	models: ["page"],
 	inputs: [
 		{ name: "slug", type: "string", helperText: "Override slug (auto-detected from URL if empty)" },
 	],
@@ -229,6 +233,7 @@ Builder.registerComponent(TownBusinessDetail, {
 
 Builder.registerComponent(TownElectionDetail, {
 	name: "TownElectionDetail",
+	models: ["page"],
 	inputs: [
 		{ name: "slug", type: "string", helperText: "Override slug (auto-detected from URL if empty)" },
 	],
@@ -275,6 +280,7 @@ Builder.registerComponent(TownContactForm, {
 
 Builder.registerComponent(TownAgendaMinutes, {
 	name: "TownAgendaMinutes",
+	models: ["page"],
 	inputs: [
 		{
 			name: "defaultTab",
@@ -290,6 +296,7 @@ Builder.registerComponent(TownAgendaMinutes, {
 
 Builder.registerComponent(TownInteractiveMap, {
 	name: "TownInteractiveMap",
+	models: ["page"],
 	inputs: [
 		{
 			name: "height",
