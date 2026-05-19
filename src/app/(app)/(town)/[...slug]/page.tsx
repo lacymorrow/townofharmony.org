@@ -4,12 +4,10 @@
  *
  * A small set of paths still has hardcoded Next.js routes (homepage, sewer,
  * map, pay/sewer/*, accessibility, privacy, resource reservation pages) —
- * see EXPLICIT_ROUTES below. Everything else under (town) is served by
- * Builder.io content via this catch-all.
- *
- * generateStaticParams enumerates Builder.io paths at build time. With
- * dynamicParams = true, paths not in the list are rendered on-demand and
- * 404 if Builder has no matching content.
+ * these are excluded from generateStaticParams via EXPLICIT_ROUTES so Builder
+ * doesn't accidentally shadow them. Everything else under (town) is served by
+ * Builder.io content via this catch-all; unknown paths call notFound() which
+ * returns a proper HTTP 404 via the synchronous (app) layout.
  */
 
 import { siteConfig } from "@/config/site-config";
@@ -21,8 +19,8 @@ import { type BuilderContent } from "@builder.io/sdk";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-// Paths handled by explicit Next.js routes — these never reach this catch-all.
-// Keep in sync with src/middleware.ts.
+// Paths handled by explicit Next.js routes — excluded from generateStaticParams
+// so Builder.io doesn't shadow them.
 const EXPLICIT_ROUTES = new Set([
 	"/",
 	"/about",
