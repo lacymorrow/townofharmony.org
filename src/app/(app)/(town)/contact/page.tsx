@@ -4,9 +4,14 @@ import { TownContactForm } from "@/components/modules/town/town-contact-form";
 import { settings } from "@/data/town/settings";
 
 export const metadata: Metadata = {
-  title: "Contact Us — Phone, Email & Office Hours",
+  title: "Contact Us | Town of Harmony, NC",
   description:
     "Contact the Town of Harmony, NC. Find office hours, phone numbers, email, and directions to Town Hall in Harmony, North Carolina.",
+  openGraph: {
+    title: "Contact the Town of Harmony, NC",
+    description:
+      "Contact the Town of Harmony, NC. Find office hours, phone numbers, email, and directions to Town Hall in Harmony, North Carolina.",
+  },
 };
 
 const contactCards = [
