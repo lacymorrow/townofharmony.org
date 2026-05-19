@@ -64,7 +64,14 @@ const nextConfig: NextConfig = {
 	/*
 	 * Redirects are located in the `src/config/routes.ts` file
 	 */
-	redirects,
+	async redirects() {
+		const internalRedirects = await redirects();
+		return [
+			...internalRedirects,
+			{ source: "/admin", destination: "https://builder.io/content", permanent: false },
+			{ source: "/admin/", destination: "https://builder.io/content", permanent: false },
+		];
+	},
 
 	/*
 	 * PostHog reverse proxy configuration
