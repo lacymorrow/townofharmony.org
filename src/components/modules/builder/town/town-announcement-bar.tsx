@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownAnnouncementBarProps {
 	message?: string;
@@ -54,7 +55,10 @@ export const TownAnnouncementBar = ({
 					<span className={`${style.badge} px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wide flex-shrink-0`}>
 						{style.badgeLabel}
 					</span>
-					<span className="text-[#2D2A24] flex-1">{message}</span>
+					<div
+						className="text-[#2D2A24] flex-1"
+						dangerouslySetInnerHTML={{ __html: sanitizeHtml(message) }}
+					/>
 					{ctaText && ctaHref && (
 						<Link
 							href={ctaHref}

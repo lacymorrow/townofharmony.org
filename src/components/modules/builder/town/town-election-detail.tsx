@@ -6,6 +6,7 @@ import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import { elections as staticElections } from "@/data/town/elections";
 import type { TownElection } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownElectionDetailProps {
   slug?: string;
@@ -114,7 +115,10 @@ const TownElectionDetailInner = ({ slug: slugProp }: TownElectionDetailProps) =>
         </h1>
 
         {/* Description */}
-        <p className="text-lg text-sage-dark/80 leading-relaxed mb-8">{election.description}</p>
+        <div
+          className="prose prose-lg max-w-none text-sage-dark/80 leading-relaxed mb-8"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(election.description || "") }}
+        />
 
         {/* Key dates card */}
         <div className="bg-cream border border-stone rounded-xl p-6 mb-8">

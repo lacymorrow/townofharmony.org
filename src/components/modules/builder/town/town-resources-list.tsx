@@ -6,6 +6,7 @@ import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
 import { useBuilderData } from "@/lib/builder-data";
 import { resources as staticResources } from "@/data/town/resources";
 import type { TownResource } from "@/data/town/types";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownResourcesListProps {
 	type?: "document" | "service" | "link";
@@ -257,9 +258,10 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 																{resource.title}
 															</h3>
 
-															<p className="text-base text-[#4A4640] mt-1 line-clamp-2">
-																{resource.description}
-															</p>
+															<div
+																className="text-base text-[#4A4640] mt-1 line-clamp-2"
+																dangerouslySetInnerHTML={{ __html: sanitizeHtml(resource.description || "") }}
+															/>
 
 															{/* Contact Info */}
 															{(resource.contactPhone ||
