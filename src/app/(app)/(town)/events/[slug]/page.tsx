@@ -10,11 +10,7 @@ interface PageProps {
 }
 
 async function getEvent(slug: string): Promise<TownEvent | null> {
-	const builderEvent = await fetchBuilderEntry<TownEvent>("town-event", {
-		"data.slug": slug,
-	});
-	if (builderEvent) return builderEvent;
-	return events.find((e) => e.slug === slug) ?? null;
+	return fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
 }
 
 export async function generateStaticParams() {

@@ -1,5 +1,4 @@
 import { news } from "@/data/town/news";
-import { events } from "@/data/town/events";
 import { meetings } from "@/data/town/meetings";
 import { teamMembers } from "@/data/town/team-members";
 import { historyArticles } from "@/data/town/history";
@@ -77,14 +76,12 @@ export const incrementNewsViewCount = async (_id: number, _currentCount: number)
 };
 
 /**
- * Resolve the event list: prefer Builder.io town-event entries, fall back to static data.
+ * Fetch events exclusively from Builder.io's town-event data model.
+ * Static data is not a valid fallback — events must reflect real, current information.
  */
 const resolveEvents = async (): Promise<TownEvent[]> => {
-	try {
-		const { results } = await fetchBuilderContent<TownEvent>("town-event");
-		if (results.length > 0) return results;
-	} catch { /* fall through to static */ }
-	return events;
+	const { results } = await fetchBuilderContent<TownEvent>("town-event");
+	return results;
 };
 
 /**
@@ -132,14 +129,10 @@ export const getEvents = async (options?: {
 };
 
 /**
- * Get a single event by slug
+ * Get a single event by slug from Builder.io only.
  */
 export const getEventBySlug = async (slug: string) => {
-	const builderEvent = await fetchBuilderEntry<TownEvent>("town-event", {
-		"data.slug": slug,
-	});
-	if (builderEvent) return builderEvent;
-	return events.find((e) => e.slug === slug) ?? null;
+	return fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
 };
 
 /**
