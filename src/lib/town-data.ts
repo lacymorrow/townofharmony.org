@@ -79,7 +79,7 @@ export const incrementNewsViewCount = async (_id: number, _currentCount: number)
  * Fetch events exclusively from Builder.io's town-event data model.
  * Static data is not a valid fallback — events must reflect real, current information.
  */
-const resolveEvents = async (): Promise<TownEvent[]> => {
+export const resolveEvents = async (): Promise<TownEvent[]> => {
 	const { results } = await fetchBuilderContent<TownEvent>("town-event", { limit: 1000 });
 	return results;
 };

@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
-import { getEvents, getEventBySlug } from "@/lib/town-data";
+import { resolveEvents, getEventBySlug } from "@/lib/town-data";
 
 interface PageProps {
 	params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-	const { docs } = await getEvents({ limit: 1000 });
-	return docs.map((e) => ({ slug: e.slug }));
+	const allEvents = await resolveEvents();
+	return allEvents.map((e) => ({ slug: e.slug }));
 }
 
 export async function generateMetadata({

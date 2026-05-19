@@ -5,7 +5,7 @@ import { formatDate, formatTime } from "@/lib/utils";
 import { getEvents } from "@/lib/town-data";
 
 interface RelatedEventsProps {
-	currentEventId: number;
+	currentEventId: number | string;
 	categories?: string[] | null;
 }
 
