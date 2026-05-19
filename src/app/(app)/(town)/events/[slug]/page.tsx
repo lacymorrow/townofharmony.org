@@ -1,27 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { events } from "@/data/town/events";
-import type { TownEvent } from "@/data/town/types";
-import { fetchBuilderEntry, getBuilderPageContent } from "@/lib/builder-data-server";
+import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
+import { getEvents, getEventBySlug } from "@/lib/town-data";
 
 interface PageProps {
 	params: Promise<{ slug: string }>;
 }
 
-async function getEvent(slug: string): Promise<TownEvent | null> {
-	return fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
-}
-
 export async function generateStaticParams() {
-	return events.map((e) => ({ slug: e.slug }));
+	const { docs } = await getEvents({ limit: 1000 });
+	return docs.map((e) => ({ slug: e.slug }));
 }
 
 export async function generateMetadata({
 	params,
 }: PageProps): Promise<Metadata> {
 	const { slug } = await params;
-	const event = await getEvent(slug);
+	const event = await getEventBySlug(slug);
 	if (!event) return { title: "Event Not Found" };
 	return {
 		title: `${event.title} | Town of Harmony`,
@@ -37,7 +33,7 @@ export default async function EventDetailPage({ params }: PageProps) {
 		return <RenderBuilderContent content={builderContent} model="page" />;
 	}
 
-	const event = await getEvent(slug);
+	const event = await getEventBySlug(slug);
 	if (!event) notFound();
 
 	const date = new Date(event.eventDate);
