@@ -21,9 +21,9 @@ body {
 	background-color: rgba(201, 181, 126, 0.55);
 }
 
-/* Prevent phone numbers from breaking across lines */
-a[href^="tel:"],
-a[href^="sms:"] {
+/* Prevent phone numbers from breaking across lines (inline links only) */
+a[href^="tel:"]:not([class*="block"]),
+a[href^="sms:"]:not([class*="block"]) {
 	white-space: nowrap;
 }
 
