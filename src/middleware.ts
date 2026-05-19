@@ -33,6 +33,7 @@ const EXPLICIT_ROUTES = new Set([
 const BYPASS_PREFIXES = [
 	"/api/",
 	"/_next/",
+	"/admin",
 	"/builder.io/",
 	"/blog/",
 	"/changelog/",
@@ -113,11 +114,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 		return NextResponse.next();
 	}
 
-	// No Builder.io content found for this path — return proper HTTP 404.
-	// Rewrite to /_not-found which Next.js serves with HTTP 404 status natively.
-	const notFoundUrl = request.nextUrl.clone();
-	notFoundUrl.pathname = "/_not-found";
-	return NextResponse.rewrite(notFoundUrl);
+	// No Builder.io content found — let the request through so the catch-all
+	// page calls notFound() within the (app) layout, producing a styled 404
+	// with proper HTTP 404 status (the layout is synchronous to prevent soft-404).
+	return NextResponse.next();
 }
 
 export const config = {
