@@ -88,7 +88,7 @@ export const TownEmergencyServices = () => {
 									<a
 										key={service.title}
 										href={`tel:${service.phone.replace(/[^0-9+]/g, "")}`}
-										className={`block rounded-2xl p-8 transition-shadow hover:shadow-lg ${
+										className={`block whitespace-normal rounded-2xl p-8 transition-shadow hover:shadow-lg ${
 											is911
 												? "bg-red-600 text-white col-span-full"
 												: "bg-red-50 border-2 border-red-200 text-red-900"
@@ -100,7 +100,7 @@ export const TownEmergencyServices = () => {
 												{service.title}
 											</span>
 										</div>
-										<div className={`font-bold font-mono tracking-wide ${is911 ? "text-6xl md:text-7xl" : "text-4xl md:text-5xl"}`}>
+										<div className={`font-bold font-mono tracking-wide ${is911 ? "text-6xl md:text-7xl" : "text-3xl sm:text-4xl md:text-5xl"}`}>
 											{service.phone}
 										</div>
 										<p className={`mt-3 text-base leading-relaxed ${is911 ? "text-white/80" : "text-red-700"}`}>
