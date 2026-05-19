@@ -10,6 +10,7 @@ export const teamMembers: TownTeamMember[] = [
 		email: "",
 		image: "/images/team/sean-turner.webp",
 		mayorSince: "12/2023",
+		termExpires: "2024-2028",
 		sortOrder: 0,
 		isActive: true,
 	},
