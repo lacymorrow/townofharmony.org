@@ -12,7 +12,8 @@ import { elections } from "@/data/town/elections";
 import { settings, toTownSettings, type BuilderSettingsFlat } from "@/data/town/settings";
 import { navigation } from "@/data/town/navigation";
 import { homepage } from "@/data/town/homepage";
-import { fetchBuilderEntry } from "@/lib/builder-data-server";
+import type { TownEvent } from "@/data/town/types";
+import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-server";
 
 /**
  * Static data access layer for town content.
@@ -76,6 +77,17 @@ export const incrementNewsViewCount = async (_id: number, _currentCount: number)
 };
 
 /**
+ * Resolve the event list: prefer Builder.io town-event entries, fall back to static data.
+ */
+const resolveEvents = async (): Promise<TownEvent[]> => {
+	try {
+		const { results } = await fetchBuilderContent<TownEvent>("town-event");
+		if (results.length > 0) return results;
+	} catch { /* fall through to static */ }
+	return events;
+};
+
+/**
  * Get upcoming events
  */
 export const getEvents = async (options?: {
@@ -88,7 +100,7 @@ export const getEvents = async (options?: {
 }) => {
 	const { limit = 10, page = 1, category, status, month, year } = options ?? {};
 
-	let filtered = [...events];
+	let filtered = [...(await resolveEvents())];
 
 	const now = new Date();
 	if (status === "upcoming") {
@@ -123,6 +135,10 @@ export const getEvents = async (options?: {
  * Get a single event by slug
  */
 export const getEventBySlug = async (slug: string) => {
+	const builderEvent = await fetchBuilderEntry<TownEvent>("town-event", {
+		"data.slug": slug,
+	});
+	if (builderEvent) return builderEvent;
 	return events.find((e) => e.slug === slug) ?? null;
 };
 
@@ -390,7 +406,8 @@ export const getElectionBySlug = async (slug: string) => {
  */
 export const getEventFilterOptions = async () => {
 	const now = new Date();
-	const upcomingEvents = events.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
+	const allEvents = await resolveEvents();
+	const upcomingEvents = allEvents.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
 
 	const categorySet = new Set<string>();
 	const monthSet = new Set<string>();
