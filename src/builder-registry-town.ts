@@ -37,8 +37,8 @@ Builder.registerComponent(TownHero, {
 		{ name: "title", type: "string", defaultValue: "Welcome to Harmony" },
 		{ name: "subtitle", type: "string", defaultValue: "A community rooted in tradition" },
 		{ name: "image", type: "file", allowedFileTypes: ["jpeg", "png", "webp"] },
-		{ name: "ctaText", type: "string", defaultValue: "Explore Our Town" },
-		{ name: "ctaHref", type: "string", defaultValue: "/about" },
+		{ name: "ctaText", type: "string", defaultValue: "Explore Our Town", friendlyName: "CTA Button Text" },
+		{ name: "ctaHref", type: "string", defaultValue: "/about", friendlyName: "CTA Button URL" },
 	],
 });
 
@@ -78,7 +78,7 @@ Builder.registerComponent(TownCommunitySpotlight, {
 		{ name: "badge", type: "string", defaultValue: "Community Spotlight" },
 		{ name: "title", type: "string", defaultValue: "Harmony Heritage Trail" },
 		{ name: "description", type: "longText" },
-		{ name: "linkHref", type: "string", defaultValue: "/history" },
+		{ name: "linkHref", type: "string", defaultValue: "/history", friendlyName: "Link URL" },
 		{ name: "image", type: "file", allowedFileTypes: ["jpeg", "png", "webp"] },
 	],
 });
@@ -88,9 +88,9 @@ Builder.registerComponent(TownCommunitySpotlight, {
 Builder.registerComponent(TownNewsGrid, {
 	name: "TownNewsGrid",
 	inputs: [
-		{ name: "itemsPerPage", type: "number", defaultValue: 9 },
-		{ name: "showFilters", type: "boolean", defaultValue: true },
-		{ name: "showSearch", type: "boolean", defaultValue: true },
+		{ name: "itemsPerPage", type: "number", defaultValue: 9, friendlyName: "Items Per Page" },
+		{ name: "showFilters", type: "boolean", defaultValue: true, friendlyName: "Show Filter Bar" },
+		{ name: "showSearch", type: "boolean", defaultValue: true, friendlyName: "Show Search" },
 		{
 			name: "searchPlaceholder",
 			type: "string",
@@ -104,31 +104,31 @@ Builder.registerComponent(TownNewsGrid, {
 Builder.registerComponent(TownEventsList, {
 	name: "TownEventsList",
 	inputs: [
-		{ name: "itemsPerPage", type: "number", defaultValue: 10 },
-		{ name: "showFilters", type: "boolean", defaultValue: true },
+		{ name: "itemsPerPage", type: "number", defaultValue: 10, friendlyName: "Items Per Page" },
+		{ name: "showFilters", type: "boolean", defaultValue: true, friendlyName: "Show Filter Bar" },
 	],
 });
 
 Builder.registerComponent(TownMeetingsList, {
 	name: "TownMeetingsList",
 	inputs: [
-		{ name: "itemsPerPage", type: "number", defaultValue: 10 },
-		{ name: "showCalendar", type: "boolean", defaultValue: false },
+		{ name: "itemsPerPage", type: "number", defaultValue: 10, friendlyName: "Items Per Page" },
+		{ name: "showCalendar", type: "boolean", defaultValue: false, friendlyName: "Show Calendar View" },
 	],
 });
 
 Builder.registerComponent(TownBusinessDirectory, {
 	name: "TownBusinessDirectory",
 	inputs: [
-		{ name: "itemsPerPage", type: "number", defaultValue: 12 },
-		{ name: "showSearch", type: "boolean", defaultValue: true },
+		{ name: "itemsPerPage", type: "number", defaultValue: 12, friendlyName: "Items Per Page" },
+		{ name: "showSearch", type: "boolean", defaultValue: true, friendlyName: "Show Search" },
 	],
 });
 
 Builder.registerComponent(TownElectionsList, {
 	name: "TownElectionsList",
 	inputs: [
-		{ name: "itemsPerPage", type: "number", defaultValue: 6 },
+		{ name: "itemsPerPage", type: "number", defaultValue: 6, friendlyName: "Items Per Page" },
 	],
 });
 
@@ -138,6 +138,7 @@ Builder.registerComponent(TownTeamMembers, {
 		{
 			name: "categoryFilter",
 			type: "string",
+			friendlyName: "Filter by Category",
 			helperText: "Show only one category (Executive / Town Council / Staff). Empty = all.",
 		},
 		{
@@ -150,7 +151,9 @@ Builder.registerComponent(TownTeamMembers, {
 		{
 			name: "limit",
 			type: "number",
+			friendlyName: "Maximum Members",
 			helperText: "Max members to show. Empty = all active members.",
+			advanced: true,
 		},
 	],
 });
@@ -158,7 +161,7 @@ Builder.registerComponent(TownTeamMembers, {
 Builder.registerComponent(TownPointsOfInterest, {
 	name: "TownPointsOfInterest",
 	inputs: [
-		{ name: "showCategoryFilter", type: "boolean", defaultValue: true },
+		{ name: "showCategoryFilter", type: "boolean", defaultValue: true, friendlyName: "Show Category Filter" },
 	],
 });
 
@@ -242,6 +245,8 @@ Builder.registerComponent(TownPageHeader, {
 			name: "variant",
 			type: "string",
 			defaultValue: "sage",
+			friendlyName: "Color Theme",
+			advanced: true,
 			enum: [
 				{ label: "Sage (Green)", value: "sage" },
 				{ label: "Wheat (Gold)", value: "wheat" },
@@ -290,12 +295,16 @@ Builder.registerComponent(TownInteractiveMap, {
 			name: "height",
 			type: "string",
 			defaultValue: "calc(100vh - 200px)",
+			friendlyName: "Map Height",
 			helperText: "CSS height (e.g. '500px', '70vh').",
+			advanced: true,
 		},
 		{
 			name: "minHeight",
 			type: "string",
 			defaultValue: "500px",
+			friendlyName: "Map Minimum Height",
+			advanced: true,
 		},
 	],
 });
