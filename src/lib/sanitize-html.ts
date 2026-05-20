@@ -38,18 +38,34 @@ const ALLOWED_TAGS = [
 
 const ALLOWED_ATTRS = ["href", "target", "rel", "src", "alt", "width", "height", "class", "id"];
 
-export const sanitizeHtml = (html: string | null | undefined): string => {
+interface SanitizeOptions {
+  stripLinks?: boolean;
+}
+
+export const sanitizeHtml = (
+  html: string | null | undefined,
+  options: SanitizeOptions = {},
+): string => {
   if (!html) return "";
 
+  const allowedTags = options.stripLinks
+    ? ALLOWED_TAGS.filter((tag) => tag !== "a")
+    : ALLOWED_TAGS;
+
   if (typeof window === "undefined") {
-    return html
+    // SSR: strip obvious XSS vectors; DOMPurify runs on client for full sanitization
+    let safe = html
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
       .replace(/on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
       .replace(/(?:javascript|data|vbscript):/gi, "");
+    if (options.stripLinks) {
+      safe = safe.replace(/<\/?a\b[^>]*>/gi, "");
+    }
+    return safe;
   }
 
   return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS,
+    ALLOWED_TAGS: allowedTags,
     ALLOWED_ATTR: ALLOWED_ATTRS,
     ALLOW_DATA_ATTR: false,
   });
