@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { news as staticNews } from "@/data/town/news";
 import type { TownNews } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 const NEWS_CATEGORIES = [
   "announcements",
@@ -209,7 +210,12 @@ export const TownNewsGrid = ({
                   <h2 className="text-lg font-semibold text-[#2D2A24] mb-2 group-hover:text-sage-dark transition-colors line-clamp-2">
                     {article.title}
                   </h2>
-                  <p className="text-base text-[#4A4640] mb-3 line-clamp-3">{article.excerpt}</p>
+                  <div
+                    className="text-base text-[#4A4640] mb-3 line-clamp-3 prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(article.excerpt || "", { stripLinks: true }),
+                    }}
+                  />
                   <time className="text-sm text-[#635E56]">
                     {new Date(article.publishedAt).toLocaleDateString("en-US", {
                       month: "long",

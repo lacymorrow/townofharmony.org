@@ -6,6 +6,7 @@ import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownMeetingDetailProps {
   slug?: string;
@@ -159,11 +160,10 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
         {meeting.agenda && (
           <div className="mb-8">
             <h2 className="text-lg font-serif font-bold text-sage-dark mb-3">Agenda</h2>
-            <div className="bg-cream border border-stone rounded-xl p-6">
-              <pre className="whitespace-pre-wrap text-base text-sage-dark/85 leading-relaxed font-sans">
-                {meeting.agenda}
-              </pre>
-            </div>
+            <div
+              className="prose prose-lg max-w-none bg-cream border border-stone rounded-xl p-6 text-sage-dark/85"
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.agenda) }}
+            />
           </div>
         )}
 
@@ -172,11 +172,10 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
           <div className="mb-8">
             <h2 className="text-lg font-serif font-bold text-sage-dark mb-3">Meeting Minutes</h2>
             {meeting.minutes && (
-              <div className="bg-cream border border-stone rounded-xl p-6 mb-3">
-                <pre className="whitespace-pre-wrap text-base text-sage-dark/85 leading-relaxed font-sans">
-                  {meeting.minutes}
-                </pre>
-              </div>
+              <div
+                className="prose prose-lg max-w-none bg-cream border border-stone rounded-xl p-6 mb-3 text-sage-dark/85"
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.minutes) }}
+              />
             )}
             {meeting.minutesUrl && (
               <a

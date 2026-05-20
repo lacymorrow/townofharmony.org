@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownAnnouncementBarProps {
 	message?: string;
@@ -39,7 +41,12 @@ export const TownAnnouncementBar = ({
 	startsAt,
 	endsAt,
 }: TownAnnouncementBarProps) => {
-	if (!isActive || !message) return null;
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	if (!isActive || !message || !mounted) return null;
 
 	const now = Date.now();
 	if (startsAt && new Date(startsAt).getTime() > now) return null;
@@ -54,7 +61,10 @@ export const TownAnnouncementBar = ({
 					<span className={`${style.badge} px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wide flex-shrink-0`}>
 						{style.badgeLabel}
 					</span>
-					<span className="text-[#2D2A24] flex-1">{message}</span>
+					<div
+						className="text-[#2D2A24] flex-1 prose prose-sm max-w-none"
+						dangerouslySetInnerHTML={{ __html: sanitizeHtml(message, { stripLinks: true }) }}
+					/>
 					{ctaText && ctaHref && (
 						<Link
 							href={ctaHref}

@@ -219,9 +219,10 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
 
         {/* Description */}
         {event.description && (
-          <p className="text-lg text-sage-dark/80 leading-relaxed mb-6 italic">
-            {event.description}
-          </p>
+          <div
+            className="prose prose-lg max-w-none text-sage-dark/80 leading-relaxed mb-6"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.description) }}
+          />
         )}
 
         {/* Content */}

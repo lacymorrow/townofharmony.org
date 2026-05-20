@@ -3,6 +3,7 @@
 import { useBuilderData } from "@/lib/builder-data";
 import { historyArticles as staticHistory } from "@/data/town/history";
 import type { TownHistoryArticle } from "@/data/town/types";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownHistoryTimelineProps {
 	type?: "period" | "landmark" | "all";
@@ -117,9 +118,10 @@ export const TownHistoryTimeline = ({
 													{article.title}
 												</h2>
 
-												<p className="text-base text-[#4A4640] mb-3">
-													{article.description}
-												</p>
+												<div
+													className="text-base text-[#4A4640] mb-3 prose prose-sm max-w-none"
+													dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.description || "") }}
+												/>
 
 												{/* Highlights */}
 												{article.highlights &&

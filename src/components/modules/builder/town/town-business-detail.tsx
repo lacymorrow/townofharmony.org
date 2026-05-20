@@ -6,6 +6,7 @@ import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import { businesses as staticBusinesses } from "@/data/town/businesses";
 import type { TownBusiness } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownBusinessDetailProps {
   slug?: string;
@@ -113,7 +114,10 @@ const TownBusinessDetailInner = ({ slug: slugProp }: TownBusinessDetailProps) =>
         </div>
 
         {/* Description */}
-        <p className="text-lg text-sage-dark/80 leading-relaxed mb-8">{business.description}</p>
+        <div
+          className="prose prose-lg max-w-none text-sage-dark/80 leading-relaxed mb-8"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(business.description || "") }}
+        />
 
         {/* Contact info card */}
         <div className="bg-cream border border-stone rounded-xl p-6 mb-8">
@@ -189,9 +193,10 @@ const TownBusinessDetailInner = ({ slug: slugProp }: TownBusinessDetailProps) =>
         {business.hours && (
           <div className="mb-8">
             <h2 className="text-lg font-serif font-bold text-sage-dark mb-3">Business Hours</h2>
-            <div className="bg-cream border border-stone rounded-xl p-5">
-              <p className="text-base text-sage-dark/80 whitespace-pre-line">{business.hours}</p>
-            </div>
+            <div
+              className="prose prose-lg max-w-none bg-cream border border-stone rounded-xl p-5 text-sage-dark/80"
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(business.hours) }}
+            />
           </div>
         )}
 

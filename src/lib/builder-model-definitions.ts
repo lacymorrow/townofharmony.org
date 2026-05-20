@@ -31,6 +31,11 @@ const longText = (name: string): BuilderField => ({
 	type: "longText",
 });
 
+const richText = (name: string): BuilderField => ({
+	name,
+	type: "richText",
+});
+
 const num = (name: string): BuilderField => ({
 	name,
 	type: "number",
@@ -116,8 +121,8 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("era"),
 			text("year"),
 			text("address"),
-			longText("description"),
-			longText("content"),
+			richText("description"),
+			richText("content"),
 			url("image"),
 			tags("highlights"),
 			num("sortOrder"),
@@ -130,7 +135,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("name", true),
 			text("slug", true),
 			text("category"),
-			longText("description"),
+			richText("description"),
 			url("image"),
 			text("address"),
 			text("hours"),
@@ -146,7 +151,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			enumText("type", ["document", "service", "link"]),
 			text("category"),
 			text("icon"),
-			longText("description"),
+			richText("description"),
 			text("contactPhone"),
 			text("contactEmail"),
 			url("externalUrl"),
@@ -158,8 +163,8 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		kind: "data",
 		fields: [
 			text("title", true),
-			longText("content"),
-			longText("message"),
+			richText("content"),
+			richText("message"),
 			enumText("level", ["info", "warning", "critical"]),
 			bool("isActive", true),
 			date("startsAt"),
@@ -228,8 +233,8 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("title", true),
 			text("slug", true),
-			longText("excerpt"),
-			longText("content"),
+			richText("excerpt"),
+			richText("content"),
 			url("featuredImage"),
 			enumText("status", ["published", "draft"]),
 			date("publishedAt"),
@@ -245,8 +250,8 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("title", true),
 			text("slug", true),
-			longText("description"),
-			longText("content"),
+			richText("description"),
+			richText("content"),
 			url("featuredImage"),
 			date("eventDate"),
 			text("eventTime"),
@@ -272,10 +277,10 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			date("meetingDate"),
 			text("meetingTime"),
 			text("location"),
-			longText("agenda"),
+			richText("agenda"),
 			tags("attendees"),
 			bool("isPublic", true),
-			longText("minutes"),
+			richText("minutes"),
 			url("minutesUrl"),
 			url("videoUrl"),
 			url("audioUrl"),
@@ -287,7 +292,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("name", true),
 			text("slug", true),
-			longText("description"),
+			richText("description"),
 			url("logo"),
 			text("category"),
 			text("contactName"),
@@ -298,7 +303,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("city"),
 			text("stateCode"),
 			text("zipCode"),
-			longText("hours"),
+			richText("hours"),
 			list("images", [
 				url("image"),
 			]),
@@ -312,7 +317,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("title", true),
 			text("slug", true),
-			longText("description"),
+			richText("description"),
 			date("electionDate"),
 			date("registrationDeadline"),
 			date("earlyVotingStart"),
