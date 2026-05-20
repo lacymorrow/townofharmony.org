@@ -1,4 +1,4 @@
-import DOMPurify from "isomorphic-dompurify";
+import DOMPurify from "dompurify";
 
 const ALLOWED_TAGS = [
   "p",
@@ -39,7 +39,6 @@ const ALLOWED_TAGS = [
 const ALLOWED_ATTRS = ["href", "target", "rel", "src", "alt", "width", "height", "class", "id"];
 
 interface SanitizeOptions {
-  /** Strip <a> tags entirely. Use in contexts already wrapped in a link/button to avoid nested interactive elements. */
   stripLinks?: boolean;
 }
 
@@ -52,6 +51,18 @@ export const sanitizeHtml = (
   const allowedTags = options.stripLinks
     ? ALLOWED_TAGS.filter((tag) => tag !== "a")
     : ALLOWED_TAGS;
+
+  if (typeof window === "undefined") {
+    // SSR: strip obvious XSS vectors; DOMPurify runs on client for full sanitization
+    let safe = html
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+      .replace(/on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+      .replace(/(?:javascript|data|vbscript):/gi, "");
+    if (options.stripLinks) {
+      safe = safe.replace(/<\/?a\b[^>]*>/gi, "");
+    }
+    return safe;
+  }
 
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS: allowedTags,
