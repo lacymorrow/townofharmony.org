@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import { news as staticNews } from "@/data/town/news";
 import type { TownNews } from "@/data/town/types";
+import { resolveBuilderRef } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 
@@ -108,12 +109,15 @@ const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
         {/* Meta */}
         <div className="flex flex-wrap items-center gap-4 text-base text-sage-dark/60 mb-8 border-b border-stone pb-6">
           <time dateTime={article.publishedAt}>{publishedDate}</time>
-          {article.author && (
-            <>
-              <span className="text-stone">&middot;</span>
-              <span>By {article.author}</span>
-            </>
-          )}
+          {(() => {
+            const authorName = resolveBuilderRef(article.author);
+            return authorName ? (
+              <>
+                <span className="text-stone">&middot;</span>
+                <span>By {authorName}</span>
+              </>
+            ) : null;
+          })()}
         </div>
 
         {/* Featured image */}
