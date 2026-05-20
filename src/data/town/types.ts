@@ -94,7 +94,6 @@ export interface TownPointOfInterest {
 	image: string | null;
 	address: string;
 	hours: string;
-	phone?: string;
 	amenities: string[];
 }
 
