@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SewerPaymentForm } from "@/components/town/sewer-payment-form";
+import { siteConfig } from "@/config/site-config";
 import { sewerContactInfo, sewerRateTiers, type SewerRateDisplay } from "@/data/town/sewer-rates";
 import { isFeatureEnabled } from "@/lib/preview-flags";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
@@ -10,13 +11,13 @@ export const metadata: Metadata = {
 	description:
 		"Pay your Town of Harmony sewer bill online with a credit or debit card. Convenient online payment for Harmony, NC sewer customers.",
 	alternates: {
-		canonical: "https://www.townofharmony.org/pay/sewer",
+		canonical: `${siteConfig.url}/pay/sewer`,
 	},
 	openGraph: {
 		title: "Pay Sewer Bill — Town of Harmony, NC",
 		description:
 			"Pay your Town of Harmony sewer bill online with a credit or debit card. Convenient online payment for Harmony, NC sewer customers.",
-		url: "https://www.townofharmony.org/pay/sewer",
+		url: `${siteConfig.url}/pay/sewer`,
 	},
 };
 
