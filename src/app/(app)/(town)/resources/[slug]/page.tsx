@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DocumentViewer } from "@/components/town/document-viewer";
 import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site-config";
 import { resources } from "@/data/town/resources";
 
 interface PageProps {
@@ -28,7 +29,7 @@ export async function generateMetadata({
 		title: resource.title,
 		description: resource.description,
 		alternates: {
-			canonical: `https://www.townofharmony.org/resources/${slug}`,
+			canonical: `${siteConfig.url}/resources/${slug}`,
 		},
 	};
 }

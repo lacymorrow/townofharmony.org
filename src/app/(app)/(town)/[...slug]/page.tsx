@@ -6,8 +6,8 @@
  * map, pay/sewer/*, accessibility, privacy, resource reservation pages) —
  * these are excluded from generateStaticParams via EXPLICIT_ROUTES so Builder
  * doesn't accidentally shadow them. Everything else under (town) is served by
- * Builder.io content via this catch-all; unknown paths call notFound() which
- * returns a proper HTTP 404 via the synchronous (app) layout.
+ * Builder.io content via this catch-all; unknown paths get noindex metadata
+ * from generateMetadata and then notFound() in the page component.
  */
 
 import { siteConfig } from "@/config/site-config";
@@ -124,8 +124,15 @@ export async function generateMetadata({
 	const isPreview = "builder.preview" in searchParams;
 	const content = await getBuilderContent(params.slug);
 
+	// Return noindex with no canonical so Google drops these from the index.
+	// Calling notFound() here causes Next.js to fall back to the root layout
+	// metadata (homepage canonical + index:follow), which creates duplicate-
+	// canonical and soft-404 GSC issues.
 	if (!content && !isPreview) {
-		return notFound();
+		return {
+			title: "Page Not Found — Town of Harmony, NC",
+			robots: { index: false, follow: false },
+		};
 	}
 
 	const slugPath = `/${params.slug.join("/")}`;
