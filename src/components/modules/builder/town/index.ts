@@ -19,7 +19,7 @@ export { TownBusinessDetail } from "./town-business-detail";
 export { TownElectionDetail } from "./town-election-detail";
 export { TownPageHeader } from "./town-page-header";
 export { TownEmergencyServices } from "./town-emergency-services";
-export { TownEmergencyAlertsList } from "./town-emergency-alerts-list";
+
 export { TownContactForm } from "./town-contact-form";
 export { TownAgendaMinutes } from "./town-agenda-minutes";
 export { TownInteractiveMap } from "./town-interactive-map";

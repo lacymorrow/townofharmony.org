@@ -8,7 +8,7 @@ import { TownCommunitySpotlight } from "./components/modules/builder/town/town-c
 import { TownContactForm } from "./components/modules/builder/town/town-contact-form";
 import { TownElectionDetail } from "./components/modules/builder/town/town-election-detail";
 import { TownElectionsList } from "./components/modules/builder/town/town-elections-list";
-import { TownEmergencyAlertsList } from "./components/modules/builder/town/town-emergency-alerts-list";
+
 import { TownEmergencyServices } from "./components/modules/builder/town/town-emergency-services";
 import { TownEventDetail } from "./components/modules/builder/town/town-event-detail";
 import { TownEventsList } from "./components/modules/builder/town/town-events-list";
@@ -255,20 +255,8 @@ Builder.registerComponent(TownEmergencyServices, {
 	inputs: [],
 });
 
-Builder.registerComponent(TownEmergencyAlertsList, {
-	name: "TownEmergencyAlertsList",
-	inputs: [
-		{ name: "showAll", type: "boolean", defaultValue: false, helperText: "Show all alerts, not just active ones" },
-		{
-			name: "showExpired",
-			type: "boolean",
-			defaultValue: false,
-			friendlyName: "Include Expired Alerts",
-			showIf: (options) => options.get("showAll") === true,
-		},
-		{ name: "limit", type: "number", defaultValue: 10 },
-	],
-});
+// TownEmergencyAlertsList removed — EmergencyBanner in the layout already
+// shows active alerts on every page, making the Builder.io block redundant.
 
 // Form labels, validation, and submit handler are owned by the component
 // for security/consistency — no instance config exposed.
