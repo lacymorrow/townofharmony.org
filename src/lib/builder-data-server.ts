@@ -100,10 +100,9 @@ async function getBuilderPageContent(
 		url.searchParams.set("apiKey", BUILDER_API_KEY);
 		url.searchParams.set("userAttributes.urlPath", urlPath);
 		url.searchParams.set("limit", "1");
-		url.searchParams.set("noCache", "true");
 
 		const res = await fetch(url.toString(), {
-			next: { revalidate: 0 },
+			next: { revalidate: 3600 },
 		});
 
 		if (!res.ok) {
