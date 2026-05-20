@@ -88,6 +88,13 @@ Builder.registerComponent(TownNewsGrid, {
 		{ name: "itemsPerPage", type: "number", defaultValue: 9 },
 		{ name: "showFilters", type: "boolean", defaultValue: true },
 		{ name: "showSearch", type: "boolean", defaultValue: true },
+		{
+			name: "searchPlaceholder",
+			type: "string",
+			defaultValue: "Search news...",
+			friendlyName: "Search Placeholder",
+			showIf: (options) => options.get("showSearch") === true,
+		},
 	],
 });
 
@@ -129,6 +136,13 @@ Builder.registerComponent(TownTeamMembers, {
 			name: "categoryFilter",
 			type: "string",
 			helperText: "Show only one category (Executive / Town Council / Staff). Empty = all.",
+		},
+		{
+			name: "showDepartment",
+			type: "boolean",
+			defaultValue: false,
+			friendlyName: "Show Department Label",
+			showIf: (options) => options.get("categoryFilter") === "Staff",
 		},
 		{
 			name: "limit",
@@ -245,6 +259,13 @@ Builder.registerComponent(TownEmergencyAlertsList, {
 	name: "TownEmergencyAlertsList",
 	inputs: [
 		{ name: "showAll", type: "boolean", defaultValue: false, helperText: "Show all alerts, not just active ones" },
+		{
+			name: "showExpired",
+			type: "boolean",
+			defaultValue: false,
+			friendlyName: "Include Expired Alerts",
+			showIf: (options) => options.get("showAll") === true,
+		},
 		{ name: "limit", type: "number", defaultValue: 10 },
 	],
 });

@@ -32,12 +32,14 @@ export async function EmergencyBanner() {
 									Learn more
 								</a>
 							)}
-							<Link
-								href={alert.link ?? `/emergency/alerts/${alert.id}`}
-								className="ml-2 text-sage font-semibold hover:text-sage-dark underline"
-							>
-								View details
-							</Link>
+							{alert.link && (
+								<Link
+									href={alert.link}
+									className="ml-2 text-sage font-semibold hover:text-sage-dark underline"
+								>
+									View details
+								</Link>
+							)}
 						</span>
 					</div>
 				</div>

@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site-config";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -12,10 +13,14 @@ export const metadata: Metadata = {
 	title: "Community Events & Activities | Town of Harmony, NC",
 	description:
 		"Discover upcoming community events, festivals, and activities in Harmony, NC. Find things to do in the Town of Harmony, North Carolina.",
+	alternates: {
+		canonical: `${siteConfig.url}/events`,
+	},
 	openGraph: {
 		title: "Community Events — Town of Harmony, NC",
 		description:
 			"Discover upcoming community events, festivals, and activities in Harmony, NC. Find things to do in the Town of Harmony, North Carolina.",
+		url: `${siteConfig.url}/events`,
 	},
 };
 

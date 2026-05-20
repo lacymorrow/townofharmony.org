@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site-config";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getBuilderPageContent } from "@/lib/builder-data-server";
@@ -19,9 +20,17 @@ export async function generateMetadata({
 	const { slug } = await params;
 	const event = await getEventBySlug(slug);
 	if (!event) return { title: "Event Not Found" };
+	const description = event.description ?? `${event.title} — Community event in Harmony, NC.`;
 	return {
-		title: `${event.title} | Town of Harmony`,
-		description: event.description,
+		title: `${event.title} | Town of Harmony, NC`,
+		description,
+		alternates: { canonical: `${siteConfig.url}/events/${slug}` },
+		openGraph: {
+			title: `${event.title} — Town of Harmony, NC`,
+			description,
+			url: `${siteConfig.url}/events/${slug}`,
+			...(event.featuredImage && { images: [{ url: event.featuredImage }] }),
+		},
 	};
 }
 
