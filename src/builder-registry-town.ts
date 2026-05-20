@@ -1,5 +1,8 @@
 "use client";
 import { Builder } from "@builder.io/react";
+import { TownAnnouncementBar } from "./components/modules/builder/town/town-announcement-bar";
+import { TownHeroBanner } from "./components/modules/builder/town/town-hero-banner";
+import { TownPageCta } from "./components/modules/builder/town/town-page-cta";
 import { TownAgendaMinutes } from "./components/modules/builder/town/town-agenda-minutes";
 import { TownInteractiveMap } from "./components/modules/builder/town/town-interactive-map";
 import { TownBusinessDetail } from "./components/modules/builder/town/town-business-detail";
@@ -293,6 +296,68 @@ Builder.registerComponent(TownInteractiveMap, {
 			name: "minHeight",
 			type: "string",
 			defaultValue: "500px",
+		},
+	],
+});
+
+// --- Section Components (scoped to Builder.io Section models) ---
+
+Builder.registerComponent(TownAnnouncementBar, {
+	name: "TownAnnouncementBar",
+	models: ["announcement-bar"],
+	inputs: [
+		{
+			name: "message",
+			type: "string",
+			required: true,
+			helperText: "The announcement text shown in the banner",
+		},
+		{
+			name: "level",
+			type: "string",
+			defaultValue: "info",
+			enum: [
+				{ label: "Info (green)", value: "info" },
+				{ label: "Warning (yellow)", value: "warning" },
+				{ label: "Critical (red)", value: "critical" },
+			],
+		},
+		{ name: "ctaText", type: "string", helperText: "Call-to-action link label (optional)" },
+		{ name: "ctaHref", type: "url", helperText: "Call-to-action link URL (optional)" },
+		{ name: "isActive", type: "boolean", defaultValue: true },
+		{ name: "startsAt", type: "date", helperText: "Show banner from this date (optional)" },
+		{ name: "endsAt", type: "date", helperText: "Hide banner after this date (optional)" },
+	],
+});
+
+Builder.registerComponent(TownHeroBanner, {
+	name: "TownHeroBanner",
+	models: ["homepage-hero"],
+	inputs: [
+		{ name: "title", type: "string", defaultValue: "Welcome to the Town of Harmony" },
+		{ name: "subtitle", type: "string", defaultValue: "Where Harmony LIVES and SINGS!" },
+		{ name: "image", type: "file", allowedFileTypes: ["jpeg", "png", "webp"] },
+		{ name: "ctaText", type: "string", defaultValue: "Discover Harmony" },
+		{ name: "ctaHref", type: "url", defaultValue: "/history" },
+	],
+});
+
+Builder.registerComponent(TownPageCta, {
+	name: "TownPageCta",
+	models: ["page-cta"],
+	inputs: [
+		{ name: "heading", type: "string", defaultValue: "Get Involved", required: true },
+		{ name: "body", type: "longText", helperText: "Supporting text below the heading (optional)" },
+		{ name: "ctaText", type: "string", defaultValue: "Learn More" },
+		{ name: "ctaHref", type: "url", defaultValue: "/about" },
+		{
+			name: "variant",
+			type: "string",
+			defaultValue: "primary",
+			enum: [
+				{ label: "Primary (sage dark bg)", value: "primary" },
+				{ label: "Secondary (light bg)", value: "secondary" },
+			],
 		},
 	],
 });
