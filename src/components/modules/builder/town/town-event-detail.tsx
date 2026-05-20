@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import { events as staticEvents } from "@/data/town/events";
 import type { TownEvent } from "@/data/town/types";
+import { resolveBuilderRef } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 
@@ -172,14 +173,17 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
                 <dd className="text-sage-dark font-medium">{event.locationAddress}</dd>
               </div>
             )}
-            {event.organizer && (
-              <div>
-                <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
-                  Organizer
-                </dt>
-                <dd className="text-sage-dark font-medium">{event.organizer}</dd>
-              </div>
-            )}
+            {(() => {
+              const organizerName = resolveBuilderRef(event.organizer);
+              return organizerName ? (
+                <div>
+                  <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+                    Organizer
+                  </dt>
+                  <dd className="text-sage-dark font-medium">{organizerName}</dd>
+                </div>
+              ) : null;
+            })()}
             {event.contactEmail && (
               <div>
                 <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">

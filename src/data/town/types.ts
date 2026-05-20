@@ -3,6 +3,23 @@
  * These replace Payload CMS generated types.
  */
 
+export interface BuilderReference {
+	id?: string;
+	value?: {
+		id?: string;
+		name?: string;
+		data?: Record<string, unknown>;
+	};
+}
+
+export const resolveBuilderRef = (
+	field: string | BuilderReference | null | undefined,
+): string | null => {
+	if (!field) return null;
+	if (typeof field === "string") return field;
+	return (field.value?.data?.name as string) ?? null;
+};
+
 export interface TownNews {
 	id: number;
 	title: string;
@@ -15,7 +32,7 @@ export interface TownNews {
 	categories: string[];
 	tags: string[];
 	viewCount?: number;
-	author?: string | null;
+	author?: string | BuilderReference | null;
 }
 
 export interface TownEvent {
@@ -30,7 +47,7 @@ export interface TownEvent {
 	endTime: string;
 	location: string;
 	locationAddress: string;
-	organizer: string;
+	organizer: string | BuilderReference | null;
 	contactEmail: string;
 	contactPhone: string;
 	status: "upcoming" | "past" | "cancelled";

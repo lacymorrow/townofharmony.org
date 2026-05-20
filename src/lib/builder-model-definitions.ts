@@ -11,6 +11,7 @@ interface BuilderField {
 	defaultValue?: unknown;
 	enum?: string[];
 	subFields?: BuilderField[];
+	model?: string;
 }
 
 interface BuilderModelDefinition {
@@ -60,6 +61,12 @@ const enumText = (name: string, values: string[]): BuilderField => ({
 	name,
 	type: "text",
 	enum: values,
+});
+
+const reference = (name: string, model: string): BuilderField => ({
+	name,
+	type: "reference",
+	model,
 });
 
 const list = (name: string, subFields: BuilderField[]): BuilderField => ({
@@ -229,7 +236,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			tags("categories"),
 			tags("tags"),
 			num("viewCount"),
-			text("author"),
+			reference("author", "town-team-member"),
 		],
 	},
 	{
@@ -246,7 +253,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("endTime"),
 			text("location"),
 			text("locationAddress"),
-			text("organizer"),
+			reference("organizer", "town-team-member"),
 			text("contactEmail"),
 			text("contactPhone"),
 			enumText("status", ["upcoming", "past", "cancelled"]),
