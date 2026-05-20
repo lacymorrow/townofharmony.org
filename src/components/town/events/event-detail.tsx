@@ -17,7 +17,7 @@ import { getMediaUrl } from "@/lib/utils/get-media-url";
 
 interface EventDetailProps {
 	event: {
-		id: number;
+		id: number | string;
 		title: string;
 		slug: string;
 		description: string | null;

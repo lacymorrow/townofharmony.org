@@ -33,17 +33,6 @@ export default function PointsOfInterestPage() {
 							<p className="text-sm text-[#635E56] mt-3">
 								<strong>Hours:</strong> {p.hours}
 							</p>
-							{p.phone && (
-								<p className="text-sm text-[#635E56] mt-1">
-									<strong>Phone:</strong>{" "}
-									<a
-										href={`tel:${p.phone.replace(/[^0-9+]/g, "")}`}
-										className="hover:underline"
-									>
-										{p.phone}
-									</a>
-								</p>
-							)}
 							{p.amenities.length > 0 && (
 								<p className="text-sm text-[#635E56] mt-2">
 									<strong>Amenities:</strong> {p.amenities.join(", ")}

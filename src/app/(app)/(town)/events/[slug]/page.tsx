@@ -1,32 +1,24 @@
 import { siteConfig } from "@/config/site-config";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { events } from "@/data/town/events";
-import type { TownEvent } from "@/data/town/types";
-import { fetchBuilderEntry, getBuilderPageContent } from "@/lib/builder-data-server";
+import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
+import { resolveEvents, getEventBySlug } from "@/lib/town-data";
 
 interface PageProps {
 	params: Promise<{ slug: string }>;
 }
 
-async function getEvent(slug: string): Promise<TownEvent | null> {
-	const builderEvent = await fetchBuilderEntry<TownEvent>("town-event", {
-		"data.slug": slug,
-	});
-	if (builderEvent) return builderEvent;
-	return events.find((e) => e.slug === slug) ?? null;
-}
-
 export async function generateStaticParams() {
-	return events.map((e) => ({ slug: e.slug }));
+	const allEvents = await resolveEvents();
+	return allEvents.map((e) => ({ slug: e.slug }));
 }
 
 export async function generateMetadata({
 	params,
 }: PageProps): Promise<Metadata> {
 	const { slug } = await params;
-	const event = await getEvent(slug);
+	const event = await getEventBySlug(slug);
 	if (!event) return { title: "Event Not Found" };
 	const description = event.description ?? `${event.title} — Community event in Harmony, NC.`;
 	return {
@@ -50,7 +42,7 @@ export default async function EventDetailPage({ params }: PageProps) {
 		return <RenderBuilderContent content={builderContent} model="page" />;
 	}
 
-	const event = await getEvent(slug);
+	const event = await getEventBySlug(slug);
 	if (!event) notFound();
 
 	const date = new Date(event.eventDate);
