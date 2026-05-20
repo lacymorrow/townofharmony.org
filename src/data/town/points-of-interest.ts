@@ -12,7 +12,7 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		image: mediaUrls["poi-park"],
 		address: "Harmony, NC 28634",
 		hours: "Dawn to Dusk",
-		phone: "(704) 546-2339",
+
 		amenities: ["Playground", "Picnic Shelters", "Restrooms"],
 	},
 	{
@@ -25,7 +25,7 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		image: mediaUrls["poi-town-hall"],
 		address: "3389 Harmony Hwy, Harmony, NC 28634",
 		hours: "Monday - Friday: 8:00 AM - 5:00 PM",
-		phone: "(704) 546-2339",
+
 		amenities: ["Accessible Entrance", "Public Meeting Room", "Parking"],
 	},
 	{
@@ -38,7 +38,7 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		image: mediaUrls["poi-camp-grounds"],
 		address: "Harmony Highway, Harmony, NC 28634",
 		hours: "Open during events",
-		phone: "(704) 546-2339",
+
 		amenities: ["Historic Markers", "Open Grounds", "Parking"],
 	},
 	{
@@ -63,7 +63,7 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		image: mediaUrls["poi-community-center"],
 		address: "187 Highland Point Ave, Harmony, NC 28634",
 		hours: "10:00 AM - 10:00 PM (rentals)",
-		phone: "(704) 546-2339",
+
 		amenities: ["Meeting Rooms", "Kitchen", "Stage", "Parking", "Accessible"],
 	},
 	{

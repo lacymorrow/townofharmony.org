@@ -62,7 +62,6 @@ export interface TownTeamMember {
 	title: string;
 	category: "Executive" | "Town Council" | "Staff";
 	email: string;
-	phone: string;
 	image?: string;
 	termExpires?: string;
 	mayorSince?: string;
@@ -95,7 +94,6 @@ export interface TownPointOfInterest {
 	image: string | null;
 	address: string;
 	hours: string;
-	phone?: string;
 	amenities: string[];
 }
 
