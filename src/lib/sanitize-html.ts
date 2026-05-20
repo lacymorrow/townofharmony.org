@@ -1,4 +1,4 @@
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 
 const ALLOWED_TAGS = [
   "p",
@@ -38,18 +38,23 @@ const ALLOWED_TAGS = [
 
 const ALLOWED_ATTRS = ["href", "target", "rel", "src", "alt", "width", "height", "class", "id"];
 
-export const sanitizeHtml = (html: string | null | undefined): string => {
+interface SanitizeOptions {
+  /** Strip <a> tags entirely. Use in contexts already wrapped in a link/button to avoid nested interactive elements. */
+  stripLinks?: boolean;
+}
+
+export const sanitizeHtml = (
+  html: string | null | undefined,
+  options: SanitizeOptions = {},
+): string => {
   if (!html) return "";
 
-  if (typeof window === "undefined") {
-    return html
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-      .replace(/on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-      .replace(/(?:javascript|data|vbscript):/gi, "");
-  }
+  const allowedTags = options.stripLinks
+    ? ALLOWED_TAGS.filter((tag) => tag !== "a")
+    : ALLOWED_TAGS;
 
   return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS,
+    ALLOWED_TAGS: allowedTags,
     ALLOWED_ATTR: ALLOWED_ATTRS,
     ALLOW_DATA_ATTR: false,
   });

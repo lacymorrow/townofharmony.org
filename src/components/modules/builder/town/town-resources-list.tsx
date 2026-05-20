@@ -259,8 +259,10 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 															</h3>
 
 															<div
-																className="text-base text-[#4A4640] mt-1 line-clamp-2"
-																dangerouslySetInnerHTML={{ __html: sanitizeHtml(resource.description || "") }}
+																className="text-base text-[#4A4640] mt-1 line-clamp-2 prose prose-sm max-w-none"
+																dangerouslySetInnerHTML={{
+																	__html: sanitizeHtml(resource.description || "", { stripLinks: true }),
+																}}
 															/>
 
 															{/* Contact Info */}

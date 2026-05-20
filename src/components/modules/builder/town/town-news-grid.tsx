@@ -211,8 +211,10 @@ export const TownNewsGrid = ({
                     {article.title}
                   </h2>
                   <div
-                    className="text-base text-[#4A4640] mb-3 line-clamp-3"
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.excerpt || "") }}
+                    className="text-base text-[#4A4640] mb-3 line-clamp-3 prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(article.excerpt || "", { stripLinks: true }),
+                    }}
                   />
                   <time className="text-sm text-[#635E56]">
                     {new Date(article.publishedAt).toLocaleDateString("en-US", {
