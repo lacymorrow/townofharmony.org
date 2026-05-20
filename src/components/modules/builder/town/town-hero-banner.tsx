@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 interface TownHeroBannerProps {
@@ -43,12 +44,13 @@ export const TownHeroBanner = ({
 
 					<div className="hidden lg:flex items-center justify-center relative overflow-hidden">
 						{image ? (
-							<img
+							<Image
 								src={image}
 								alt={title}
-								className="absolute inset-0 w-full h-full object-cover"
-								width={800}
-								height={600}
+								fill
+								priority
+								sizes="(max-width: 1024px) 0px, 50vw"
+								className="object-cover"
 							/>
 						) : (
 							<>
