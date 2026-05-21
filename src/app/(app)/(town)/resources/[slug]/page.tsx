@@ -66,7 +66,7 @@ export default async function ResourceDocumentPage({ params }: PageProps) {
 
 				<p className="text-base text-[#4A4640] mb-6">{resource.description}</p>
 
-				<div className="border border-stone rounded-lg overflow-hidden bg-white h-[85vh]">
+				<div className="border border-stone rounded-lg overflow-hidden bg-white h-[85svh] min-h-[480px]">
 					<DocumentViewer
 						url={resource.externalUrl}
 						title={resource.title}
