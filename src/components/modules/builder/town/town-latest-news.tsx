@@ -46,6 +46,9 @@ export const TownLatestNews = ({ limit = 3 }: TownLatestNewsProps) => {
 							</div>
 						))}
 					</div>
+					<div className="pt-8 text-center">
+						<div className="h-5 w-32 mx-auto bg-stone/20 rounded animate-pulse" />
+					</div>
 				</div>
 			</section>
 		);
