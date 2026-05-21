@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
 import { useBuilderEntry } from "@/lib/builder-data";
 import { TownContactForm as ContactFormImpl } from "@/components/modules/town/town-contact-form";
 import { settings as staticSettings, toTownSettings, type BuilderSettingsFlat } from "@/data/town/settings";
@@ -19,12 +19,6 @@ export const TownContactForm = () => {
 			label: "Phone",
 			value: settings.contactInfo.phone,
 			href: `tel:${settings.contactInfo.phone.replace(/[^0-9+]/g, "")}`,
-		},
-		{
-			icon: Mail,
-			label: "Email",
-			value: settings.contactInfo.email,
-			href: `mailto:${settings.contactInfo.email}`,
 		},
 		{
 			icon: MapPin,
