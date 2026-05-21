@@ -18,16 +18,7 @@ import { cn } from "@/lib/utils";
 
 import { navigation as defaultNavData } from "@/data/town/navigation";
 import type { TownNavigation, TownSettings } from "@/data/town/types";
-
-// Build-time fallback used when rendering the Suspense skeleton before TownHeaderServer resolves
-const BUILD_TIME_HIDDEN_HREFS = new Set<string>([
-	...(process.env.NEXT_PUBLIC_FEATURE_SEWER_ENABLED !== "true" ? ["/sewer", "/pay/sewer"] : []),
-	...(process.env.NEXT_PUBLIC_FEATURE_MAP_ENABLED !== "true" ? ["/map"] : []),
-	...(process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED !== "true" ? ["/events"] : []),
-	...(process.env.NEXT_PUBLIC_FEATURE_NEWS_ENABLED !== "true" ? ["/news"] : []),
-	...(process.env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED !== "true" ? ["/emergency"] : []),
-	...(process.env.NEXT_PUBLIC_FEATURE_BUSINESS_ENABLED !== "true" ? ["/business"] : []),
-]);
+import { BUILD_TIME_HIDDEN_HREFS } from "@/lib/hidden-hrefs";
 
 interface TownHeaderProps {
 	settings: TownSettings;

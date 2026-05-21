@@ -31,8 +31,8 @@ function hasAnyEnv(...names: string[]): boolean {
  */
 export function envIsTrue(name: string): boolean {
   const value = process.env[name]
-    ?.replace(/\\[nrt]/g, "")
-    .toLowerCase()
+    ?.toLowerCase()
+    .replace(/\\[nrt]/g, "")
     .trim();
   return ["true", "1", "yes", "on", "enable", "enabled"].includes(value ?? "");
 }
