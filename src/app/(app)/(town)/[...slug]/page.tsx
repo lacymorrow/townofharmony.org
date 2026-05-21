@@ -35,7 +35,6 @@ const EXPLICIT_ROUTES = new Set([
 	"/privacy",
 	"/resources/community-center-reservation",
 	"/resources/park-reservation",
-	"/contact",
 	"/sewer",
 ]);
 
