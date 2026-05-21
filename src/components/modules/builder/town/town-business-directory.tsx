@@ -102,7 +102,8 @@ export const TownBusinessDirectory = ({
 	});
 
 	const availableCategories = useMemo(() => {
-		const catSet = new Set(allBusinesses.map((b) => b.category));
+		const catSet = new Set<string>();
+		for (const b of allBusinesses) catSet.add(b.category);
 		return BUSINESS_CATEGORIES.filter((cat) => catSet.has(cat));
 	}, [allBusinesses]);
 
