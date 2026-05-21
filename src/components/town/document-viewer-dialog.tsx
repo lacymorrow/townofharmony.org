@@ -29,7 +29,7 @@ export const DocumentViewerDialog = ({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="max-w-4xl w-[95vw] h-[85vh] flex flex-col p-0">
+			<DialogContent className="max-w-4xl w-[95vw] h-[85svh] flex flex-col p-0">
 				<DialogHeader className="px-6 pt-6 pb-2 flex-shrink-0">
 					<div className="flex items-center justify-between pr-8">
 						<div>

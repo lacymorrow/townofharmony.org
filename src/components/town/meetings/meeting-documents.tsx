@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DocumentViewer } from "@/components/town/document-viewer";
 
+const VIEWER_WRAPPER_CLASS =
+	"border rounded-lg overflow-hidden bg-white h-[60svh] min-h-[420px]";
+
 interface MeetingDocumentsProps {
 	meeting: {
 		id: number;
@@ -65,7 +68,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="border rounded-lg overflow-hidden bg-white h-[80vh]">
+						<div className={VIEWER_WRAPPER_CLASS}>
 							<DocumentViewer url={meeting.agendaUrl} title={`Agenda - ${meeting.title}`} />
 						</div>
 					</CardContent>
@@ -92,7 +95,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="border rounded-lg overflow-hidden bg-white h-[80vh]">
+						<div className={VIEWER_WRAPPER_CLASS}>
 							<DocumentViewer url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`} />
 						</div>
 					</CardContent>
@@ -170,7 +173,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 							</div>
 						</CardHeader>
 						<CardContent>
-							<div className="border rounded-lg overflow-hidden bg-white h-[80vh]">
+							<div className={VIEWER_WRAPPER_CLASS}>
 								<DocumentViewer url={doc} title={`Document ${index + 1} - ${meeting.title}`} />
 							</div>
 						</CardContent>
