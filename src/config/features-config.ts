@@ -30,7 +30,10 @@ function hasAnyEnv(...names: string[]): boolean {
  * Check if environment variable is enabled (true/1/yes/on)
  */
 export function envIsTrue(name: string): boolean {
-  const value = process.env[name]?.toLowerCase().trim();
+  const value = process.env[name]
+    ?.replace(/\\[nrt]/g, "")
+    .toLowerCase()
+    .trim();
   return ["true", "1", "yes", "on", "enable", "enabled"].includes(value ?? "");
 }
 
