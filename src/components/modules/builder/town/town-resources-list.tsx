@@ -156,15 +156,18 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 		{ sort: { "data.sortOrder": 1 }, limit: 50, fallback: staticResources },
 	);
 
-	const typeFilteredResources = (() => {
-		let filtered = [...rawResources];
-		if (type) filtered = filtered.filter((r) => r.type === type);
+	const typeFilteredResources = React.useMemo(() => {
+		const filtered = type ? rawResources.filter((r) => r.type === type) : [...rawResources];
 		return filtered.sort((a, b) => a.sortOrder - b.sortOrder);
-	})();
+	}, [rawResources, type]);
 
-	const allResources = categoryParam
-		? typeFilteredResources.filter((r) => r.category === categoryParam)
-		: typeFilteredResources;
+	const allResources = React.useMemo(
+		() =>
+			categoryParam
+				? typeFilteredResources.filter((r) => r.category === categoryParam)
+				: typeFilteredResources,
+		[typeFilteredResources, categoryParam],
+	);
 
 	// Group resources by category
 	const categories = new Map<string, typeof allResources>();
@@ -177,8 +180,9 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 	}
 
 	// Derive pills from the type-filtered set so the selector stays visible after a category is chosen.
-	const uniqueCategories = Array.from(
-		new Set(typeFilteredResources.map((r) => r.category)),
+	const uniqueCategories = React.useMemo(
+		() => Array.from(new Set(typeFilteredResources.map((r) => r.category))),
+		[typeFilteredResources],
 	);
 
 	const updateParams = (updates: Record<string, string | undefined>) => {
