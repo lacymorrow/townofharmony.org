@@ -419,8 +419,12 @@ ExpandableCard.displayName = "ExpandableCard";
 
 // I'm telling you we just have to expand 🤌💵
 const ExpandableTrigger = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ children, onKeyDown, ...props }, ref) => {
+  ({ children, onClick, onKeyDown, className, ...props }, ref) => {
     const { toggleExpand, isExpanded } = useExpandable();
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+      toggleExpand();
+      onClick?.(event);
+    };
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
       onKeyDown?.(event);
       if (event.defaultPrevented) return;
@@ -435,9 +439,9 @@ const ExpandableTrigger = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
         role="button"
         tabIndex={0}
         aria-expanded={isExpanded}
-        onClick={toggleExpand}
+        onClick={handleClick}
         onKeyDown={handleKeyDown}
-        className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className={cn("cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", className)}
         {...props}
       >
         {children}
