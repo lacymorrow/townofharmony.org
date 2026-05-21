@@ -33,7 +33,8 @@ export const TownPointsOfInterest = ({
 	);
 
 	const availableCategories = useMemo(() => {
-		const catSet = new Set(allPOIs.map((p) => p.category));
+		const catSet = new Set<string>();
+		for (const p of allPOIs) catSet.add(p.category);
 		return POI_CATEGORIES.filter((cat) => catSet.has(cat));
 	}, [allPOIs]);
 
