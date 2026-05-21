@@ -45,13 +45,7 @@ export const TownHistoryTimeline = ({
 	}
 
 	if (articles.length === 0) {
-		return (
-			<section className="py-12 bg-cream">
-				<div className="container mx-auto px-4 text-center">
-					<p className="text-[#635E56] text-lg">No history articles found.</p>
-				</div>
-			</section>
-		);
+		return null;
 	}
 
 	return (
