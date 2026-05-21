@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useConsentManager } from "@c15t/nextjs";
 import Script from "next/script";
 import { env } from "@/env";
@@ -12,7 +13,19 @@ const GTMScript = ({ gtmId }: { gtmId: string }) => (
 
 const ConsentGatedGTM = ({ gtmId }: { gtmId: string }) => {
   const { hasConsentFor } = useConsentManager();
-  if (!hasConsentFor("measurement")) return null;
+  const measurementConsent = hasConsentFor("measurement");
+
+  useEffect(() => {
+    const dl = (window as Record<string, unknown>).dataLayer;
+    if (Array.isArray(dl)) {
+      dl.push({
+        event: "consent_update",
+        analytics_storage: measurementConsent ? "granted" : "denied",
+      });
+    }
+  }, [measurementConsent]);
+
+  if (!measurementConsent) return null;
   return <GTMScript gtmId={gtmId} />;
 };
 

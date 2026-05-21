@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useConsentManager } from "@c15t/nextjs";
 import Script from "next/script";
 import { env } from "@/env";
@@ -18,7 +19,14 @@ const GAScripts = ({ gaId }: { gaId: string }) => (
 
 const ConsentGatedGA = ({ gaId }: { gaId: string }) => {
   const { hasConsentFor } = useConsentManager();
-  if (!hasConsentFor("measurement")) return null;
+  const measurementConsent = hasConsentFor("measurement");
+
+  useEffect(() => {
+    (window as Record<string, unknown>)[`ga-disable-${gaId}`] =
+      !measurementConsent;
+  }, [gaId, measurementConsent]);
+
+  if (!measurementConsent) return null;
   return <GAScripts gaId={gaId} />;
 };
 
