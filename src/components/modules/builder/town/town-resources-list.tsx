@@ -155,12 +155,15 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 		{ sort: { "data.sortOrder": 1 }, limit: 50, fallback: staticResources },
 	);
 
-	const allResources = (() => {
+	const typeFilteredResources = (() => {
 		let filtered = [...rawResources];
 		if (type) filtered = filtered.filter((r) => r.type === type);
-		if (categoryParam) filtered = filtered.filter((r) => r.category === categoryParam);
 		return filtered.sort((a, b) => a.sortOrder - b.sortOrder);
 	})();
+
+	const allResources = categoryParam
+		? typeFilteredResources.filter((r) => r.category === categoryParam)
+		: typeFilteredResources;
 
 	// Group resources by category
 	const categories = new Map<string, typeof allResources>();
@@ -172,9 +175,9 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 		categories.get(cat)!.push(resource);
 	}
 
-	// Get unique category names for filter
+	// Derive pills from the type-filtered set so the selector stays visible after a category is chosen.
 	const uniqueCategories = Array.from(
-		new Set(allResources.map((r) => r.category)),
+		new Set(typeFilteredResources.map((r) => r.category)),
 	);
 
 	const updateParams = (updates: Record<string, string | undefined>) => {
