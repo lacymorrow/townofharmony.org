@@ -14,6 +14,15 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { getNavigationSync } from "@/lib/town-data-client";
 
+const HIDDEN_HREFS = new Set<string>([
+	...(process.env.NEXT_PUBLIC_FEATURE_BUSINESS_ENABLED !== "true" ? ["/business"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_MAP_ENABLED !== "true" ? ["/map"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED !== "true" ? ["/events"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_NEWS_ENABLED !== "true" ? ["/news"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED !== "true" ? ["/emergency"] : []),
+	...(process.env.NEXT_PUBLIC_FEATURE_SEWER_ENABLED !== "true" ? ["/sewer", "/pay/sewer"] : []),
+]);
+
 const iconMap: Record<string, LucideIcon> = {
 	FileText,
 	Calendar,
@@ -37,7 +46,7 @@ interface TownQuickLinksProps {
 }
 
 export const TownQuickLinks = ({ links }: TownQuickLinksProps) => {
-	const resolvedLinks: QuickLinkItem[] =
+	const allLinks: QuickLinkItem[] =
 		links && links.length > 0
 			? links
 			: getNavigationSync().quickLinks.map((ql) => ({
@@ -46,6 +55,8 @@ export const TownQuickLinks = ({ links }: TownQuickLinksProps) => {
 					description: ql.description,
 					href: ql.href,
 				}));
+
+	const resolvedLinks = allLinks.filter((link) => !HIDDEN_HREFS.has(link.href));
 
 	return (
 		<section className="py-16 bg-cream">
