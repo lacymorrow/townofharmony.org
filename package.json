@@ -4,7 +4,7 @@
   "homepage": "https://townofharmony.org",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lacymorrow/townofharmony.org"
+    "url": "git+https://github.com/lacymorrow/townofharmony.org.git"
   },
   "shipkit": {
     "bones": "0.2.0"
