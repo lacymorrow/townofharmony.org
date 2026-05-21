@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
 import { useBuilderData } from "@/lib/builder-data";
@@ -300,15 +301,23 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 											}
 
 											if (resource.externalUrl) {
+												const isExternal = resource.externalUrl.startsWith("http");
+												if (isExternal) {
+													return (
+														<a
+															key={resource.slug}
+															href={resource.externalUrl}
+															target="_blank"
+															rel="noopener noreferrer"
+														>
+															{content}
+														</a>
+													);
+												}
 												return (
-													<a
-														key={resource.slug}
-														href={resource.externalUrl}
-														target="_blank"
-														rel="noopener noreferrer"
-													>
+													<Link key={resource.slug} href={resource.externalUrl}>
 														{content}
-													</a>
+													</Link>
 												);
 											}
 
