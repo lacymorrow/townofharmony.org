@@ -65,13 +65,13 @@ export function TownHeader({
 			{/* Top bar - sage deep */}
 			<div className="bg-sage-deep text-white/90">
 				<div className="container mx-auto px-4">
-					<div className="flex items-center justify-between py-2 text-[13px]">
+					<div className="flex items-center justify-between py-2 text-sm">
 						<div className="flex items-center gap-6">
 							<a
 								href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
 								className="flex items-center gap-1 hover:text-white transition-colors"
 							>
-								<Phone className="h-3 w-3" />
+								<Phone className="h-3 w-3" aria-hidden="true" />
 								{settings.contactInfo.phone}
 							</a>
 							<span className="hidden md:inline">{settings.contactInfo.address}</span>
@@ -82,7 +82,7 @@ export function TownHeader({
 									href="/events"
 									className="flex items-center gap-1 hover:text-white transition-colors"
 								>
-									<Calendar className="h-3 w-3" />
+									<Calendar className="h-3 w-3" aria-hidden="true" />
 									Events
 								</Link>
 							)}
@@ -120,7 +120,7 @@ export function TownHeader({
 						</Link>
 
 						{/* Desktop Navigation */}
-						<nav className="hidden lg:flex items-center gap-1">
+						<nav aria-label="Main navigation" className="hidden lg:flex items-center gap-1">
 							<NavigationMenu>
 								<NavigationMenuList>
 									{navigation.map((item) => {
@@ -175,12 +175,13 @@ export function TownHeader({
 							{/* Desktop: clickable search input */}
 							<button
 								type="button"
+								aria-label="Open search"
 								className="hidden md:flex items-center gap-2 rounded-md border border-[#DDD7CC] bg-stone/50 px-3 py-1.5 text-sm text-[#635E56] hover:bg-stone hover:text-sage-dark transition-colors w-48 lg:w-64"
 								onClick={() => setSearchOpen(true)}
 							>
-								<Search className="h-4 w-4 shrink-0" />
+								<Search className="h-4 w-4 shrink-0" aria-hidden="true" />
 								<span className="truncate">Search...</span>
-								<kbd className="ml-auto hidden lg:inline-block rounded border border-[#DDD7CC] bg-warm-white px-1.5 py-0.5 font-mono text-[10px] text-[#635E56]">
+								<kbd className="ml-auto hidden lg:inline-block rounded border border-[#DDD7CC] bg-warm-white px-1.5 py-0.5 font-mono text-xs text-[#635E56]">
 									⌘K
 								</kbd>
 							</button>
@@ -193,7 +194,7 @@ export function TownHeader({
 								onClick={() => setSearchOpen(true)}
 								aria-label="Search"
 							>
-								<Search className="h-5 w-5" />
+								<Search className="h-5 w-5" aria-hidden="true" />
 							</Button>
 
 							<Button
@@ -204,7 +205,11 @@ export function TownHeader({
 								aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
 								aria-expanded={mobileMenuOpen}
 							>
-								{mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+								{mobileMenuOpen ? (
+									<X className="h-5 w-5" aria-hidden="true" />
+								) : (
+									<Menu className="h-5 w-5" aria-hidden="true" />
+								)}
 							</Button>
 						</div>
 					</div>
@@ -213,17 +218,18 @@ export function TownHeader({
 
 			{/* Mobile Navigation */}
 			{mobileMenuOpen && (
-				<div className="lg:hidden border-t border-[#DDD7CC] bg-warm-white">
+				<nav aria-label="Mobile navigation" className="lg:hidden border-t border-[#DDD7CC] bg-warm-white">
 					<div className="container mx-auto px-4 py-2">
 						<button
 							type="button"
+							aria-label="Open search"
 							className="flex w-full items-center gap-2 rounded-md border border-[#DDD7CC] bg-stone/50 px-3 py-2 text-sm text-[#635E56] mb-2"
 							onClick={() => {
 								setMobileMenuOpen(false);
 								setSearchOpen(true);
 							}}
 						>
-							<Search className="h-4 w-4" />
+							<Search className="h-4 w-4" aria-hidden="true" />
 							Search...
 						</button>
 						{navigation.map((item) => (
@@ -252,7 +258,7 @@ export function TownHeader({
 							</div>
 						))}
 					</div>
-				</div>
+				</nav>
 			)}
 
 			<TownSearch open={searchOpen} onOpenChange={setSearchOpen} />

@@ -25,7 +25,7 @@ export const EmergencyServices = async () => {
 			<Card className="border-stone bg-warm-white">
 				<CardContent className="py-12 text-center">
 					<div className="flex flex-col items-center gap-4">
-						<Info className="h-12 w-12 text-sage-light" />
+						<Info className="h-12 w-12 text-sage-light" aria-hidden="true" />
 						<div>
 							<h3 className="text-lg font-semibold text-sage-dark mb-2">No Emergency Services</h3>
 							<p className="text-[#4A4640]">Emergency services information is not available.</p>
@@ -74,7 +74,7 @@ export const EmergencyServices = async () => {
 								>
 									<CardHeader className="pb-3">
 										<div className="flex items-center gap-3">
-											<Icon className="h-6 w-6 text-[#2D2A24]" />
+											<Icon className="h-6 w-6 text-[#2D2A24]" aria-hidden="true" />
 											<CardTitle className="text-lg text-[#2D2A24]">{service.title}</CardTitle>
 										</div>
 									</CardHeader>

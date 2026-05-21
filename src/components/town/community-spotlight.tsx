@@ -15,9 +15,9 @@ export function CommunitySpotlight() {
 						<div className="bg-sage/10 text-sage-dark px-3 py-1 rounded text-xs font-bold uppercase tracking-wider w-fit mb-4">
 							Community Spotlight
 						</div>
-						<h3 className="text-2xl font-serif font-bold text-sage-dark mb-3">
+						<h2 className="text-2xl font-serif font-bold text-sage-dark mb-3">
 							Harmony Hill Camp Meeting
-						</h3>
+						</h2>
 						<p className="text-base text-[#4A4640] leading-relaxed mb-5">
 							A two-week revival tradition first held in 1846, the Harmony Hill Camp Meeting still gathers each year on the second weekend of October on the grounds of present-day Harmony Elementary School. The town takes its name from these meetings.
 						</p>

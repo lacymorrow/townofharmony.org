@@ -54,8 +54,18 @@ export function BusinessCard({ business }: BusinessCardProps) {
 							>
 								{business.category}
 							</Badge>
-							{business.isVerified && <CheckCircle className="h-4 w-4 text-sage" />}
-							{business.isFeatured && <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />}
+							{business.isVerified && (
+								<>
+									<CheckCircle className="h-4 w-4 text-sage" aria-hidden="true" />
+									<span className="sr-only">Verified business</span>
+								</>
+							)}
+							{business.isFeatured && (
+								<>
+									<Star className="h-4 w-4 text-yellow-500 fill-yellow-500" aria-hidden="true" />
+									<span className="sr-only">Featured business</span>
+								</>
+							)}
 						</div>
 					</div>
 					{business.logo && (
@@ -76,14 +86,14 @@ export function BusinessCard({ business }: BusinessCardProps) {
 				<div className="space-y-2 text-sm">
 					{business.address && (
 						<div className="flex items-start gap-2">
-							<MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+							<MapPin className="h-4 w-4 text-muted-foreground mt-0.5" aria-hidden="true" />
 							<span className="line-clamp-2">{business.address}</span>
 						</div>
 					)}
 
 					{business.phone && (
 						<div className="flex items-center gap-2">
-							<Phone className="h-4 w-4 text-muted-foreground" />
+							<Phone className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
 							<a href={`tel:${business.phone}`} className="hover:text-sage-dark transition-colors">
 								{business.phone}
 							</a>
@@ -92,14 +102,14 @@ export function BusinessCard({ business }: BusinessCardProps) {
 
 					{todayHours && (
 						<div className="flex items-center gap-2">
-							<Clock className="h-4 w-4 text-muted-foreground" />
+							<Clock className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
 							<span>Today: {todayHours === "Closed" ? "Closed" : todayHours}</span>
 						</div>
 					)}
 
 					{business.website && (
 						<div className="flex items-center gap-2">
-							<Globe className="h-4 w-4 text-muted-foreground" />
+							<Globe className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
 							<a
 								href={business.website}
 								target="_blank"

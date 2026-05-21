@@ -52,11 +52,11 @@ export async function QuickLinks() {
 								className="group flex items-start gap-4 bg-warm-white p-6 rounded-xl border border-[#DDD7CC] hover:border-sage-light hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer"
 							>
 								<div className="w-11 h-11 bg-stone rounded-[10px] flex items-center justify-center text-sage-dark flex-shrink-0 group-hover:bg-sage-dark group-hover:text-wheat transition-colors">
-									<Icon className="h-5 w-5" />
+									<Icon className="h-5 w-5" aria-hidden="true" />
 								</div>
 								<div>
 									<p className="font-semibold text-base text-[#2D2A24] mb-1">{link.title}</p>
-									<p className="text-[13px] text-[#4A4640]">{link.description}</p>
+									<p className="text-sm text-[#4A4640]">{link.description}</p>
 								</div>
 							</Link>
 						);

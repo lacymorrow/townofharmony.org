@@ -73,7 +73,7 @@ export const EmergencyAlert = ({
 		<Card className={`${colors.bg} ${colors.border} border-2`}>
 			<CardContent className={`${compact ? "p-3" : "p-4"}`}>
 				<div className="flex items-start gap-3">
-					<Icon className={`h-5 w-5 ${colors.icon} flex-shrink-0 mt-0.5`} />
+					<Icon className={`h-5 w-5 ${colors.icon} flex-shrink-0 mt-0.5`} aria-hidden="true" />
 
 					<div className="flex-1 min-w-0">
 						<h3 className={`font-semibold ${colors.text} ${compact ? "text-sm" : "text-base"}`}>
@@ -139,9 +139,10 @@ export const EmergencyAlert = ({
 							variant="ghost"
 							size="sm"
 							onClick={onDismiss}
+							aria-label="Dismiss alert"
 							className={`h-6 w-6 p-0 ${colors.text} hover:bg-white/20`}
 						>
-							<X className="h-4 w-4" />
+							<X className="h-4 w-4" aria-hidden="true" />
 						</Button>
 					)}
 				</div>

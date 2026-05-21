@@ -40,8 +40,9 @@ export const DocumentViewerDialog = ({
 						</div>
 						<Button asChild variant="outline" size="sm">
 							<a href={url} download className="flex items-center gap-2">
-								<Download className="h-4 w-4" />
-								Download
+								<Download className="h-4 w-4" aria-hidden="true" />
+								<span>Download</span>
+								<span className="sr-only">{title}</span>
 							</a>
 						</Button>
 					</div>

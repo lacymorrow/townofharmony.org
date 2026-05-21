@@ -171,14 +171,16 @@ export const TownContactForm = () => {
 		>
 			<h2 className="mb-2 text-xl font-semibold text-sage-dark">Send a Message</h2>
 
-			{serverError && (
-				<p
-					className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-600"
-					role="alert"
-				>
-					{serverError}
-				</p>
-			)}
+			<div aria-live="polite" aria-atomic="true">
+				{serverError && (
+					<p
+						className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-600"
+						role="alert"
+					>
+						{serverError}
+					</p>
+				)}
+			</div>
 
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<FieldWrapper label="First Name" id="firstName" error={errors.firstName} required>
