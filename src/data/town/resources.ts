@@ -23,6 +23,7 @@ export const resources: TownResource[] = [
 		icon: "Shield",
 		description: "Access emergency services including police, fire, and medical assistance.",
 		contactPhone: "911",
+		externalUrl: "/emergency",
 		sortOrder: 1,
 	},
 	{
