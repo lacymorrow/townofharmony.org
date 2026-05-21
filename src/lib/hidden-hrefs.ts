@@ -13,7 +13,11 @@ export const BUILD_TIME_HIDDEN_HREFS = new Set<string>([
 	...(process.env.NEXT_PUBLIC_FEATURE_BUSINESS_ENABLED !== "true" ? ["/business"] : []),
 ]);
 
+export function normalizeHref(href: string): string {
+	if (href.startsWith("//")) return href;
+	return href.split(/[?#]/)[0]?.replace(/\/$/, "") || "/";
+}
+
 export function isHrefHidden(href: string): boolean {
-	const normalized = href.split("?")[0]?.replace(/\/$/, "") || "/";
-	return BUILD_TIME_HIDDEN_HREFS.has(normalized);
+	return BUILD_TIME_HIDDEN_HREFS.has(normalizeHref(href));
 }

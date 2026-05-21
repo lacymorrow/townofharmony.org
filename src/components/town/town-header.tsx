@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 
 import { navigation as defaultNavData } from "@/data/town/navigation";
 import type { TownNavigation, TownSettings } from "@/data/town/types";
-import { BUILD_TIME_HIDDEN_HREFS } from "@/lib/hidden-hrefs";
+import { BUILD_TIME_HIDDEN_HREFS, normalizeHref } from "@/lib/hidden-hrefs";
 
 interface TownHeaderProps {
 	settings: TownSettings;
@@ -37,10 +37,10 @@ export function TownHeader({
 	const [searchOpen, setSearchOpen] = useState(false);
 
 	const navigation = navData.mainNav
-		.filter((item) => !hiddenHrefs.has(item.href))
+		.filter((item) => !hiddenHrefs.has(normalizeHref(item.href)))
 		.map((item) =>
 			item.children
-				? { ...item, children: item.children.filter((c) => !hiddenHrefs.has(c.href)) }
+				? { ...item, children: item.children.filter((c) => !hiddenHrefs.has(normalizeHref(c.href))) }
 				: item,
 		);
 
