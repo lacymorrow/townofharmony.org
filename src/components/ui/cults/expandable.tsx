@@ -422,8 +422,9 @@ const ExpandableTrigger = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
   ({ children, onClick, onKeyDown, className, ...props }, ref) => {
     const { toggleExpand, isExpanded } = useExpandable();
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-      toggleExpand();
       onClick?.(event);
+      if (event.defaultPrevented) return;
+      toggleExpand();
     };
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
       onKeyDown?.(event);

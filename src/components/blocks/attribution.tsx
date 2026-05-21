@@ -99,10 +99,10 @@ export function Attribution({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label="Close"
             className="absolute top-2 right-2 h-6 w-6"
           >
             <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
           </Button>
         </div>
       </div>
@@ -117,10 +117,10 @@ export function Attribution({
           type="button"
           variant="ghost"
           size="icon"
-          aria-label="Close"
           className="absolute top-2 right-2 h-6 w-6"
         >
           <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
         </Button>
 
         <CardHeader>
