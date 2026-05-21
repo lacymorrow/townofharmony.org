@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { env } from "@/env";
 
 export default function ConsentProvider({ children }: { children: ReactNode }) {
-  if (!env?.NEXT_PUBLIC_FEATURE_C15T_ENABLED) {
+  if (!env?.NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED) {
     return children;
   }
 
