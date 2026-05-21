@@ -301,23 +301,26 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 											}
 
 											if (resource.externalUrl) {
-												const isExternal = resource.externalUrl.startsWith("http");
-												if (isExternal) {
+												// Internal routes start with a single "/"; protocol-relative ("//") and other protocols are external.
+												const isInternal =
+													resource.externalUrl.startsWith("/") &&
+													!resource.externalUrl.startsWith("//");
+												if (isInternal) {
 													return (
-														<a
-															key={resource.slug}
-															href={resource.externalUrl}
-															target="_blank"
-															rel="noopener noreferrer"
-														>
+														<Link key={resource.slug} href={resource.externalUrl}>
 															{content}
-														</a>
+														</Link>
 													);
 												}
 												return (
-													<Link key={resource.slug} href={resource.externalUrl}>
+													<a
+														key={resource.slug}
+														href={resource.externalUrl}
+														target="_blank"
+														rel="noopener noreferrer"
+													>
 														{content}
-													</Link>
+													</a>
 												);
 											}
 
