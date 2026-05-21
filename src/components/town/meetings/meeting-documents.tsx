@@ -65,7 +65,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="border rounded-lg overflow-hidden bg-white min-h-[50vh]">
+						<div className="border rounded-lg overflow-hidden bg-white h-[80vh]">
 							<DocumentViewer url={meeting.agendaUrl} title={`Agenda - ${meeting.title}`} />
 						</div>
 					</CardContent>
@@ -92,7 +92,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 						</div>
 					</CardHeader>
 					<CardContent>
-						<div className="border rounded-lg overflow-hidden bg-white min-h-[50vh]">
+						<div className="border rounded-lg overflow-hidden bg-white h-[80vh]">
 							<DocumentViewer url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`} />
 						</div>
 					</CardContent>
@@ -170,7 +170,7 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 							</div>
 						</CardHeader>
 						<CardContent>
-							<div className="border rounded-lg overflow-hidden bg-white min-h-[50vh]">
+							<div className="border rounded-lg overflow-hidden bg-white h-[80vh]">
 								<DocumentViewer url={doc} title={`Document ${index + 1} - ${meeting.title}`} />
 							</div>
 						</CardContent>
