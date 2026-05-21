@@ -146,6 +146,7 @@ function useBuilderData<T>(
 
 interface PaginationResult<T> {
 	docs: T[];
+	allData: T[];
 	totalDocs: number;
 	totalPages: number;
 	page: number;
@@ -223,7 +224,7 @@ function useBuilderPaginatedData<T>(
 	const start = (page - 1) * limit;
 	const docs = filtered.slice(start, start + limit);
 
-	return { docs, totalDocs, totalPages, page, loading, error };
+	return { docs, allData, totalDocs, totalPages, page, loading, error };
 }
 
 interface UseBuilderEntryResult<T> {

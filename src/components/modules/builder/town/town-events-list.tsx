@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
@@ -102,7 +103,7 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
   const month = rawMonth && /^\d{1,2}$/.test(rawMonth) ? rawMonth : undefined;
   const year = rawYear && /^\d{4}$/.test(rawYear) ? rawYear : undefined;
 
-  const { docs, totalPages } = useBuilderPaginatedData<TownEvent>("town-event", {
+  const { docs, allData: allEvents, totalPages } = useBuilderPaginatedData<TownEvent>("town-event", {
     page,
     limit: itemsPerPage,
     fallbackData: staticEvents,
@@ -125,6 +126,16 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
       return da.getTime() - db.getTime();
     },
   });
+
+  const availableCategories = useMemo(() => {
+    const catSet = new Set<string>();
+    for (const event of allEvents) {
+      for (const cat of safeCategories(event)) {
+        catSet.add(cat);
+      }
+    }
+    return EVENT_CATEGORIES.filter((cat) => catSet.has(cat));
+  }, [allEvents]);
 
   const updateParams = (updates: Record<string, string | undefined>) => {
     const params = new URLSearchParams(searchParams?.toString() ?? "");
@@ -156,7 +167,7 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
               className="px-3 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
             >
               <option value="">All Categories</option>
-              {EVENT_CATEGORIES.map((cat) => (
+              {availableCategories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat.charAt(0).toUpperCase() + cat.slice(1)}
                 </option>

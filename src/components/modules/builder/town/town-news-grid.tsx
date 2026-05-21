@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { news as staticNews } from "@/data/town/news";
@@ -86,7 +87,7 @@ export const TownNewsGrid = ({
   const category = searchParams?.get("category") || undefined;
   const search = searchParams?.get("search") || undefined;
 
-  const { docs, totalPages } = useBuilderPaginatedData<TownNews>("town-news", {
+  const { docs, allData: allNews, totalPages } = useBuilderPaginatedData<TownNews>("town-news", {
     page,
     limit: itemsPerPage,
     fallbackData: staticNews,
@@ -101,6 +102,18 @@ export const TownNewsGrid = ({
       return (Number.isNaN(db) ? 0 : db) - (Number.isNaN(da) ? 0 : da);
     },
   });
+
+  const availableCategories = useMemo(() => {
+    const catSet = new Set<string>();
+    for (const article of allNews) {
+      if (Array.isArray(article.categories)) {
+        for (const cat of article.categories) {
+          catSet.add(cat);
+        }
+      }
+    }
+    return NEWS_CATEGORIES.filter((cat) => catSet.has(cat));
+  }, [allNews]);
 
   const updateParams = (updates: Record<string, string | undefined>) => {
     const params = new URLSearchParams(searchParams?.toString() ?? "");
@@ -155,7 +168,7 @@ export const TownNewsGrid = ({
                 >
                   All
                 </button>
-                {NEWS_CATEGORIES.map((cat) => (
+                {availableCategories.map((cat) => (
                   <button
                     key={cat}
                     type="button"

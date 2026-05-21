@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useBuilderData } from "@/lib/builder-data";
 import { pointsOfInterest as staticPOIs } from "@/data/town/points-of-interest";
@@ -30,6 +31,11 @@ export const TownPointsOfInterest = ({
 		"town-point-of-interest",
 		{ limit: 50, fallback: staticPOIs },
 	);
+
+	const availableCategories = useMemo(() => {
+		const catSet = new Set(allPOIs.map((p) => p.category));
+		return POI_CATEGORIES.filter((cat) => catSet.has(cat));
+	}, [allPOIs]);
 
 	const pois = (() => {
 		let filtered = [...allPOIs];
@@ -66,7 +72,7 @@ export const TownPointsOfInterest = ({
 						>
 							All
 						</button>
-						{POI_CATEGORIES.map((cat) => (
+						{availableCategories.map((cat) => (
 							<button
 								key={cat}
 								type="button"
