@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
@@ -86,7 +87,7 @@ export const TownBusinessDirectory = ({
 	const search = searchParams?.get("search") || undefined;
 	const featured = searchParams?.get("featured") === "true" || undefined;
 
-	const { docs, totalPages } = useBuilderPaginatedData<TownBusiness>("town-business", {
+	const { docs, allData: allBusinesses, totalPages } = useBuilderPaginatedData<TownBusiness>("town-business", {
 		page,
 		limit: itemsPerPage,
 		fallbackData: staticBusinesses,
@@ -99,6 +100,12 @@ export const TownBusinessDirectory = ({
 		},
 		clientSort: (a, b) => a.name.localeCompare(b.name),
 	});
+
+	const availableCategories = useMemo(() => {
+		const catSet = new Set<string>();
+		for (const b of allBusinesses) catSet.add(b.category);
+		return BUSINESS_CATEGORIES.filter((cat) => catSet.has(cat));
+	}, [allBusinesses]);
 
 	const updateParams = (updates: Record<string, string | undefined>) => {
 		const params = new URLSearchParams(searchParams?.toString() ?? "");
@@ -168,7 +175,7 @@ export const TownBusinessDirectory = ({
 						>
 							All
 						</button>
-						{BUSINESS_CATEGORIES.map((cat) => (
+						{availableCategories.map((cat) => (
 							<button
 								key={cat}
 								type="button"

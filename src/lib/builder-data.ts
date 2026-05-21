@@ -146,6 +146,7 @@ function useBuilderData<T>(
 
 interface PaginationResult<T> {
 	docs: T[];
+	allData: T[];
 	totalDocs: number;
 	totalPages: number;
 	page: number;
@@ -156,6 +157,7 @@ interface PaginationResult<T> {
 interface UsePaginatedOptions<T> {
 	page?: number;
 	limit?: number;
+	fetchLimit?: number;
 	query?: Record<string, unknown>;
 	sort?: Record<string, number>;
 	fallbackData?: T[];
@@ -179,6 +181,7 @@ function useBuilderPaginatedData<T>(
 	const {
 		page = 1,
 		limit = 10,
+		fetchLimit = 100,
 		query,
 		sort,
 		fallbackData = [],
@@ -191,7 +194,7 @@ function useBuilderPaginatedData<T>(
 	const { data: allData, loading, error } = useBuilderData<T>(modelName, {
 		query,
 		sort,
-		limit: 100,
+		limit: fetchLimit,
 		fallback: fallbackData,
 	});
 
@@ -223,7 +226,7 @@ function useBuilderPaginatedData<T>(
 	const start = (page - 1) * limit;
 	const docs = filtered.slice(start, start + limit);
 
-	return { docs, totalDocs, totalPages, page, loading, error };
+	return { docs, allData, totalDocs, totalPages, page, loading, error };
 }
 
 interface UseBuilderEntryResult<T> {
