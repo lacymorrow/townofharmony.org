@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
 
     return (
       <header className={cn(headerVariants({ variant: "minimal" }), className)}>
-        <nav className="container flex items-center justify-between gap-md">
+        <nav aria-label="Main navigation" className="container flex items-center justify-between gap-md">
           <div className="flex items-center gap-2 md:gap-4 shrink-0">
             <Link
               href={logoHref}
@@ -148,6 +148,7 @@ export const Header: React.FC<HeaderProps> = ({
     >
       {variant === "floating" && <div className="h-[12px] w-full" />}
       <nav
+        aria-label="Main navigation"
         className={cn(
           "container",
           isLogoOnly
@@ -170,7 +171,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </Button>
               </SheetTrigger>
               <SheetContent side="left">
-                <nav className="grid gap-6 font-medium">
+                <nav aria-label="Mobile navigation" className="grid gap-6 font-medium">
                   <Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
                     {logoIcon}
                     <span className="sr-only">{logoText}</span>

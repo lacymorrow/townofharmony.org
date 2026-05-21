@@ -33,7 +33,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <Suspense fallback={<SuspenseFallback />}>
         <Header navLinks={navLinks} variant="sticky" />
       </Suspense>
-      <div className="container mx-auto flex-1 py-6 md:py-10">{children}</div>
+      <main id="main-content" className="container mx-auto flex-1 py-6 md:py-10">{children}</main>
     </div>
   );
 }

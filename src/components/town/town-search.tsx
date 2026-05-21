@@ -399,7 +399,7 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 								onSelect={() => handleSelect(result)}
 								className="gap-3"
 							>
-								<span className="text-sage-dark/60">{result.icon}</span>
+								<span className="text-sage-dark/60" aria-hidden="true">{result.icon}</span>
 								<div className="flex flex-col gap-0.5 overflow-hidden">
 									<span className="truncate font-medium">{result.title}</span>
 									<span className="truncate text-xs text-muted-foreground">
@@ -423,7 +423,7 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 										onSelect={() => handleSelect(item)}
 										className="gap-3"
 									>
-										<Search className="h-4 w-4 text-sage-dark/40" />
+										<Search className="h-4 w-4 text-sage-dark/40" aria-hidden="true" />
 										<span>{item.title}</span>
 									</CommandItem>
 								))}
@@ -438,7 +438,7 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 									onSelect={() => handleSelect(link)}
 									className="gap-3"
 								>
-									<span className="text-sage-dark/60">{link.icon}</span>
+									<span className="text-sage-dark/60" aria-hidden="true">{link.icon}</span>
 									<span>{link.title}</span>
 								</CommandItem>
 							))}
@@ -448,15 +448,15 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 			</CommandList>
 			<div className="border-t border-[#DDD7CC] px-3 py-2 text-xs text-muted-foreground flex items-center gap-4">
 				<span>
-					<kbd className="rounded border border-[#DDD7CC] bg-stone px-1.5 py-0.5 font-mono text-[10px]">↑↓</kbd>{" "}
+					<kbd className="rounded border border-[#DDD7CC] bg-stone px-1.5 py-0.5 font-mono text-xs">↑↓</kbd>{" "}
 					navigate
 				</span>
 				<span>
-					<kbd className="rounded border border-[#DDD7CC] bg-stone px-1.5 py-0.5 font-mono text-[10px]">↵</kbd>{" "}
+					<kbd className="rounded border border-[#DDD7CC] bg-stone px-1.5 py-0.5 font-mono text-xs">↵</kbd>{" "}
 					select
 				</span>
 				<span>
-					<kbd className="rounded border border-[#DDD7CC] bg-stone px-1.5 py-0.5 font-mono text-[10px]">esc</kbd>{" "}
+					<kbd className="rounded border border-[#DDD7CC] bg-stone px-1.5 py-0.5 font-mono text-xs">esc</kbd>{" "}
 					close
 				</span>
 			</div>

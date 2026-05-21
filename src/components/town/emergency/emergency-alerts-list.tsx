@@ -97,7 +97,7 @@ export async function EmergencyAlertsList({
 						<CardHeader className="pb-3">
 							<div className="flex items-start justify-between gap-3">
 								<div className="flex items-start gap-3 flex-1">
-									<Icon className={`h-5 w-5 mt-0.5 ${isActive ? colors.icon : "text-[#635E56]"}`} />
+									<Icon className={`h-5 w-5 mt-0.5 ${isActive ? colors.icon : "text-[#635E56]"}`} aria-hidden="true" />
 									<div className="flex-1">
 										<div className="flex items-center gap-2 mb-2">
 											<CardTitle className={`text-lg ${isActive ? colors.text : "text-[#4A4640]"}`}>
@@ -128,7 +128,7 @@ export async function EmergencyAlertsList({
 
 							{affectedAreas.length > 0 && (
 								<div className="flex items-center gap-2 text-sm text-[#4A4640]">
-									<MapPin className="h-4 w-4" />
+									<MapPin className="h-4 w-4" aria-hidden="true" />
 									<span>Affected areas: {affectedAreas.join(", ")}</span>
 								</div>
 							)}
@@ -136,7 +136,7 @@ export async function EmergencyAlertsList({
 							<div className="flex items-center justify-between pt-2 border-t border-[#DDD7CC]">
 								<div className="flex items-center gap-4 text-sm text-[#635E56]">
 									<div className="flex items-center gap-1">
-										<Calendar className="h-3 w-3" />
+										<Calendar className="h-3 w-3" aria-hidden="true" />
 										<span>Issued {new Date(alert.createdAt).toLocaleString()}</span>
 									</div>
 
@@ -168,7 +168,7 @@ export async function EmergencyAlertsList({
 						className="inline-flex items-center gap-2 text-sage font-semibold hover:text-sage-dark transition-colors"
 					>
 						View All Emergency Alerts
-						<Calendar className="h-4 w-4" />
+						<Calendar className="h-4 w-4" aria-hidden="true" />
 					</Link>
 				</div>
 			)}

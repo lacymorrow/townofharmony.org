@@ -104,13 +104,18 @@ export function NavActions() {
   return (
     <div className="flex items-center gap-2 text-sm">
       <div className="hidden font-medium text-muted-foreground md:inline-block">Edit Oct 08</div>
-      <Button variant="ghost" size="icon" className="h-7 w-7">
-        <Star />
+      <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Favorite">
+        <Star aria-hidden="true" />
       </Button>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-7 w-7 data-[state=open]:bg-accent">
-            <MoreHorizontal />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 data-[state=open]:bg-accent"
+            aria-label="More actions"
+          >
+            <MoreHorizontal aria-hidden="true" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-56 overflow-hidden rounded-lg p-0" align="end">
@@ -123,7 +128,7 @@ export function NavActions() {
                       {group.map((item, index) => (
                         <SidebarMenuItem key={index}>
                           <SidebarMenuButton>
-                            <item.icon /> <span>{item.label}</span>
+                            <item.icon aria-hidden="true" /> <span>{item.label}</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       ))}
