@@ -301,8 +301,10 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 											}
 
 											if (resource.externalUrl) {
-												// Internal routes start with "/"; everything else (http, mailto:, tel:, //) is external.
-												const isInternal = resource.externalUrl.startsWith("/");
+												// Internal routes start with a single "/"; protocol-relative ("//") and other protocols are external.
+												const isInternal =
+													resource.externalUrl.startsWith("/") &&
+													!resource.externalUrl.startsWith("//");
 												if (isInternal) {
 													return (
 														<Link key={resource.slug} href={resource.externalUrl}>
