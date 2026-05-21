@@ -34,3 +34,32 @@ a[href^="sms:"]:not([class*="block"]) {
 	height: 24px !important;
 	line-height: 24px !important;
 }
+
+/*
+ * Accessibility: elements with aria-hidden="true" must not be focusable.
+ * Some upstream component libraries leave focusable children inside aria-hidden
+ * regions; this defensively removes them from the keyboard tab order.
+ * (WCAG 4.1.2 — fixes axe-core aria-hidden-focus.)
+ */
+[aria-hidden="true"] {
+	pointer-events: none;
+}
+
+[aria-hidden="true"],
+[aria-hidden="true"] a,
+[aria-hidden="true"] button,
+[aria-hidden="true"] input,
+[aria-hidden="true"] select,
+[aria-hidden="true"] textarea,
+[aria-hidden="true"] [tabindex] {
+	visibility: inherit;
+}
+
+[aria-hidden="true"] a,
+[aria-hidden="true"] button,
+[aria-hidden="true"] input,
+[aria-hidden="true"] select,
+[aria-hidden="true"] textarea,
+[aria-hidden="true"] [tabindex]:not([tabindex="-1"]) {
+	tabindex: -1;
+}
