@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { navigation as defaultNavData } from "@/data/town/navigation";
 import type { TownNavigation, TownSettings } from "@/data/town/types";
-import { BUILD_TIME_HIDDEN_HREFS } from "@/lib/hidden-hrefs";
+import { BUILD_TIME_HIDDEN_HREFS, normalizeHref } from "@/lib/hidden-hrefs";
 
 interface TownFooterProps {
 	settings: TownSettings;
@@ -21,7 +21,7 @@ export function TownFooter({
 	const footerLinks = Object.fromEntries(
 		navData.footerLinks.map((section) => [
 			section.category,
-			section.links.filter((link) => !hiddenHrefs.has(link.href)),
+			section.links.filter((link) => !hiddenHrefs.has(normalizeHref(link.href))),
 		]),
 	);
 	return (
