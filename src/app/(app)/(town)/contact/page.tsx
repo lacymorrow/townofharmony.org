@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
 import { TownContactForm } from "@/components/modules/town/town-contact-form";
 import { settings } from "@/data/town/settings";
 
 export const metadata: Metadata = {
-  title: "Contact Us — Phone, Email & Office Hours",
+  title: "Contact Us — Phone & Office Hours",
   description:
-    "Contact the Town of Harmony, NC. Find office hours, phone numbers, email, and directions to Town Hall in Harmony, North Carolina.",
+    "Contact the Town of Harmony, NC. Find office hours, phone numbers, and directions to Town Hall in Harmony, North Carolina.",
 };
 
 const contactCards = [
@@ -15,12 +15,6 @@ const contactCards = [
     label: "Phone",
     value: settings.contactInfo.phone,
     href: `tel:${settings.contactInfo.phone.replace(/[^0-9+]/g, "")}`,
-  },
-  {
-    icon: Mail,
-    label: "Email",
-    value: settings.contactInfo.email,
-    href: `mailto:${settings.contactInfo.email}`,
   },
   {
     icon: MapPin,
