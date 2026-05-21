@@ -157,6 +157,7 @@ interface PaginationResult<T> {
 interface UsePaginatedOptions<T> {
 	page?: number;
 	limit?: number;
+	fetchLimit?: number;
 	query?: Record<string, unknown>;
 	sort?: Record<string, number>;
 	fallbackData?: T[];
@@ -180,6 +181,7 @@ function useBuilderPaginatedData<T>(
 	const {
 		page = 1,
 		limit = 10,
+		fetchLimit = 100,
 		query,
 		sort,
 		fallbackData = [],
@@ -192,7 +194,7 @@ function useBuilderPaginatedData<T>(
 	const { data: allData, loading, error } = useBuilderData<T>(modelName, {
 		query,
 		sort,
-		limit: 100,
+		limit: fetchLimit,
 		fallback: fallbackData,
 	});
 
