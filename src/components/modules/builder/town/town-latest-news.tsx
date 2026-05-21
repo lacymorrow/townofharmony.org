@@ -11,7 +11,7 @@ interface TownLatestNewsProps {
 }
 
 export const TownLatestNews = ({ limit = 3 }: TownLatestNewsProps) => {
-	const { data: allNews } = useBuilderData<TownNews>("town-news", {
+	const { data: allNews, loading } = useBuilderData<TownNews>("town-news", {
 		limit: 50,
 		fallback: staticNews,
 	});
@@ -20,6 +20,39 @@ export const TownLatestNews = ({ limit = 3 }: TownLatestNewsProps) => {
 		.filter((a) => a.status === "published")
 		.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
 		.slice(0, limit);
+
+	// While Builder.io data is loading, reserve the section's vertical space with
+	// a skeleton so the page doesn't shift when articles arrive (or stay hidden).
+	if (loading) {
+		return (
+			<section className="py-16 bg-warm-white">
+				<div className="container mx-auto px-4">
+					<div className="text-center mb-10">
+						<div className="h-8 w-48 mx-auto bg-stone/40 rounded mb-2 animate-pulse" />
+						<div className="h-4 w-64 mx-auto bg-stone/20 rounded animate-pulse" />
+					</div>
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						{Array.from({ length: limit }).map((_, i) => (
+							<div
+								key={i}
+								className="bg-warm-white rounded-xl border border-[#DDD7CC] overflow-hidden"
+							>
+								<div className="bg-sage-dark/30 h-14 animate-pulse" />
+								<div className="p-5 space-y-2">
+									<div className="h-5 w-3/4 bg-stone/40 rounded animate-pulse" />
+									<div className="h-4 w-full bg-stone/20 rounded animate-pulse" />
+									<div className="h-4 w-5/6 bg-stone/20 rounded animate-pulse" />
+								</div>
+							</div>
+						))}
+					</div>
+					<div className="pt-8 text-center">
+						<div className="h-5 w-32 mx-auto bg-stone/20 rounded animate-pulse" />
+					</div>
+				</div>
+			</section>
+		);
+	}
 
 	if (articles.length === 0) {
 		return null;
