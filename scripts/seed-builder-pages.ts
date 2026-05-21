@@ -303,7 +303,7 @@ const pages: PageDef[] = [
 		url: "/contact",
 		title: "Contact Us - Town of Harmony",
 		description:
-			"Get in touch with the Town of Harmony. Find phone numbers, email, office hours, and a contact form.",
+			"Get in touch with the Town of Harmony. Find phone numbers, office hours, and a contact form.",
 		blocks: [
 			block("TownPageHeader", {
 				title: "Contact Us",
