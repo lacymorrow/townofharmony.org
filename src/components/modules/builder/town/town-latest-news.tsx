@@ -22,15 +22,7 @@ export const TownLatestNews = ({ limit = 3 }: TownLatestNewsProps) => {
 		.slice(0, limit);
 
 	if (articles.length === 0) {
-		return (
-			<section className="py-16 bg-warm-white">
-				<div className="container mx-auto px-4">
-					<div className="bg-cream rounded-xl p-8 text-center text-[#4A4640]">
-						No news articles available at this time.
-					</div>
-				</div>
-			</section>
-		);
+		return null;
 	}
 
 	return (
