@@ -144,13 +144,6 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 
 	const categoryParam = searchParams?.get("category") || undefined;
 
-	const fallback = (() => {
-		let filtered = [...staticResources];
-		if (type) filtered = filtered.filter((r) => r.type === type);
-		if (categoryParam) filtered = filtered.filter((r) => r.category === categoryParam);
-		return filtered.sort((a, b) => a.sortOrder - b.sortOrder);
-	})();
-
 	const { data: rawResources } = useBuilderData<TownResource>(
 		"town-resource",
 		{ sort: { "data.sortOrder": 1 }, limit: 50, fallback: staticResources },
@@ -170,14 +163,17 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 	);
 
 	// Group resources by category
-	const categories = new Map<string, typeof allResources>();
-	for (const resource of allResources) {
-		const cat = resource.category;
-		if (!categories.has(cat)) {
-			categories.set(cat, []);
+	const categories = React.useMemo(() => {
+		const grouped = new Map<string, typeof allResources>();
+		for (const resource of allResources) {
+			const cat = resource.category;
+			if (!grouped.has(cat)) {
+				grouped.set(cat, []);
+			}
+			grouped.get(cat)!.push(resource);
 		}
-		categories.get(cat)!.push(resource);
-	}
+		return grouped;
+	}, [allResources]);
 
 	// Derive pills from the type-filtered set so the selector stays visible after a category is chosen.
 	const uniqueCategories = React.useMemo(
