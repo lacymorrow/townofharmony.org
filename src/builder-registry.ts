@@ -144,7 +144,7 @@ Builder.registerComponent(Hero, {
     {
       name: "backgroundImage",
       type: "file",
-      allowedFileTypes: ["jpeg", "png", "webp"],
+      allowedFileTypes: ["jpeg", "png", "webp", "svg", "gif"],
       defaultValue: "",
     },
   ],
