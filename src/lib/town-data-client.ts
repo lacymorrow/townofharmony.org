@@ -8,6 +8,7 @@ import { announcements } from "@/data/town/announcements";
 import { businesses } from "@/data/town/businesses";
 import { elections } from "@/data/town/elections";
 import { emergencyServices } from "@/data/town/emergency-services";
+import type { TownEvent } from "@/data/town/types";
 import { historyArticles } from "@/data/town/history";
 import { homepage } from "@/data/town/homepage";
 import { mapBusinesses } from "@/data/town/map-businesses";
@@ -81,7 +82,7 @@ export const getEventsSync = (options?: {
 	year?: string;
 }) => {
 	const { limit = 10, page = 1 } = options ?? {};
-	return paginate([] as never[], limit, page);
+	return paginate([] as TownEvent[], limit, page);
 };
 
 export const getEventBySlugSync = (_slug: string) => {
