@@ -16,6 +16,7 @@ interface BuilderField {
 	helperText?: string;
 	friendlyName?: string;
 	advanced?: boolean;
+	allowedFileTypes?: string[];
 }
 
 interface BuilderModelDefinition {
@@ -59,6 +60,15 @@ const date = (name: string): BuilderField => ({
 const url = (name: string): BuilderField => ({
 	name,
 	type: "url",
+});
+
+const file = (
+	name: string,
+	allowedFileTypes = ["jpeg", "png", "webp", "svg", "gif"],
+): BuilderField => ({
+	name,
+	type: "file",
+	allowedFileTypes,
 });
 
 const tags = (name: string): BuilderField => ({
@@ -108,7 +118,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("title", true),
 			enumText("category", ["Executive", "Town Council", "Staff"]),
 			emailField("email"),
-			url("image"),
+			file("image"),
 			text("mayorSince"),
 			text("termExpires"),
 			text("department"),
@@ -141,7 +151,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("address"),
 			richText("description"),
 			richText("content"),
-			url("image"),
+			file("image"),
 			tags("highlights"),
 			num("sortOrder"),
 		],
@@ -154,7 +164,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("slug", true),
 			text("category"),
 			richText("description"),
-			url("image"),
+			file("image"),
 			text("address"),
 			text("hours"),
 			tags("amenities"),
@@ -253,7 +263,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("slug", true),
 			richText("excerpt"),
 			richText("content"),
-			url("featuredImage"),
+			file("featuredImage"),
 			enumText("status", ["published", "draft"]),
 			date("publishedAt"),
 			tags("categories"),
@@ -270,7 +280,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("slug", true),
 			richText("description"),
 			richText("content"),
-			url("featuredImage"),
+			file("featuredImage"),
 			date("eventDate"),
 			text("eventTime"),
 			text("endTime"),
@@ -311,7 +321,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("name", true),
 			text("slug", true),
 			richText("description"),
-			url("logo"),
+			file("logo"),
 			text("category"),
 			text("contactName"),
 			emailField("email"),
@@ -323,7 +333,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("zipCode"),
 			richText("hours"),
 			list("images", [
-				url("image"),
+				file("image"),
 			]),
 			bool("isVerified"),
 			bool("isFeatured"),
@@ -354,7 +364,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 				num("sortOrder"),
 			]),
 			url("resultsUrl"),
-			url("sampleBallot"),
+			file("sampleBallot", ["pdf", "jpeg", "png"]),
 		],
 	},
 
@@ -366,7 +376,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("title", true),
 			text("subtitle"),
 			longText("description"),
-			url("image"),
+			file("image"),
 			text("ctaText"),
 			text("ctaHref"),
 			num("sortOrder"),

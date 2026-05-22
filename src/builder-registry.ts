@@ -14,7 +14,8 @@ Builder.registerComponent(CTA, {
   inputs: [
     {
       name: "backgroundImage",
-      type: "string",
+      type: "file",
+      allowedFileTypes: ["jpeg", "png", "webp"],
     },
     {
       name: "description",
@@ -142,7 +143,8 @@ Builder.registerComponent(Hero, {
     },
     {
       name: "backgroundImage",
-      type: "string",
+      type: "file",
+      allowedFileTypes: ["jpeg", "png", "webp"],
       defaultValue: "",
     },
   ],
