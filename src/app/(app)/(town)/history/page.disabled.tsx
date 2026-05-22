@@ -8,12 +8,8 @@ export const metadata: Metadata = {
 };
 
 export default function HistoryPage() {
-	const periods = historyArticles
-		.filter((a) => a.type === "period")
-		.sort((a, b) => a.sortOrder - b.sortOrder);
-	const landmarks = historyArticles
-		.filter((a) => a.type === "landmark")
-		.sort((a, b) => a.sortOrder - b.sortOrder);
+	const periods = historyArticles.filter((a) => a.type === "period");
+	const landmarks = historyArticles.filter((a) => a.type === "landmark");
 
 	return (
 		<section className="py-12 bg-cream">

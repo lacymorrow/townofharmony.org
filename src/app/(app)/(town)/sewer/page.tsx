@@ -19,7 +19,6 @@ interface BuilderSewerRate {
 	// "commercial" is the legacy value — normalize on read so old CMS records don't break
 	type: "residential" | "nonresidential" | "commercial";
 	monthlyRate: number;
-	sortOrder: number;
 }
 
 export const metadata: Metadata = {
@@ -45,7 +44,7 @@ export default async function SewerPage() {
 	let displayRates: SewerRateTier[] = sewerRateTiers;
 	try {
 		const { results } = await fetchBuilderContent<BuilderSewerRate>("town-sewer-rate", {
-			sort: { "data.sortOrder": 1 },
+			sort: { priority: -1 },
 			limit: 20,
 		});
 		if (results.length > 0) {

@@ -31,10 +31,9 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 export const TownEmergencyServices = () => {
-	const fallback = [...emergencyServices].sort((a, b) => a.sortOrder - b.sortOrder);
 	const { data: services, loading } = useBuilderData<TownEmergencyService>(
 		"town-emergency-service",
-		{ sort: { "data.sortOrder": 1 }, limit: 50, fallback },
+		{ sort: { priority: -1 }, limit: 50, fallback: emergencyServices },
 	);
 
 	if (loading) {

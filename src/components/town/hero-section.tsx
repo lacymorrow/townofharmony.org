@@ -10,7 +10,6 @@ interface BuilderHomepageSlide {
 	image?: string;
 	ctaText?: string;
 	ctaHref?: string;
-	sortOrder: number;
 }
 
 export async function HeroSection() {
@@ -20,7 +19,7 @@ export async function HeroSection() {
 	let firstSlide = staticSlide;
 	try {
 		const { results } = await fetchBuilderContent<BuilderHomepageSlide>("town-homepage-slide", {
-			sort: { "data.sortOrder": 1 },
+			sort: { priority: -1 },
 			limit: 1,
 		});
 		if (results.length > 0) {

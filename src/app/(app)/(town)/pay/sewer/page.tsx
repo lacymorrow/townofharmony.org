@@ -26,7 +26,6 @@ interface BuilderSewerRate {
 	name: string;
 	description: string;
 	monthlyRate: number;
-	sortOrder: number;
 }
 
 export default async function SewerPaymentPage() {
@@ -40,7 +39,7 @@ export default async function SewerPaymentPage() {
 
 	try {
 		const { results } = await fetchBuilderContent<BuilderSewerRate>("town-sewer-rate", {
-			sort: { "data.sortOrder": 1 },
+			sort: { priority: -1 },
 			limit: 20,
 		});
 		// Builder.io rates are display-only. The actual Stripe charge is determined

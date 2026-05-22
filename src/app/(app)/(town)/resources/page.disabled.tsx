@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default function ResourcesPage() {
-	const sorted = [...resources].sort((a, b) => a.sortOrder - b.sortOrder);
+	const sorted = [...resources];
 
 	return (
 		<section className="py-12 bg-cream">

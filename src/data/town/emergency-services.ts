@@ -15,7 +15,6 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Follow dispatcher instructions",
 			"Do not hang up until told to do so",
 		],
-		sortOrder: 0,
 	},
 	{
 		id: 2,
@@ -30,7 +29,6 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Keep fire extinguishers accessible",
 			"Never leave cooking unattended",
 		],
-		sortOrder: 1,
 	},
 	{
 		id: 3,
@@ -44,7 +42,6 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Report suspicious activity",
 			"Keep emergency numbers handy",
 		],
-		sortOrder: 2,
 	},
 	{
 		id: 4,
@@ -58,7 +55,6 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Have a battery-powered radio",
 			"Unplug sensitive electronics during storms",
 		],
-		sortOrder: 3,
 	},
 	{
 		id: 5,
@@ -72,7 +68,6 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Keep bottled water for emergencies",
 			"Report leaks promptly",
 		],
-		sortOrder: 4,
 	},
 	{
 		id: 6,
@@ -86,7 +81,6 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Leave immediately if you smell gas",
 			"Do not use electrical switches or phones near a gas leak",
 		],
-		sortOrder: 5,
 	},
 	{
 		id: 7,
@@ -100,7 +94,6 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Do not approach unfamiliar animals",
 			"Secure garbage cans to avoid attracting wildlife",
 		],
-		sortOrder: 6,
 	},
 	{
 		id: 8,
@@ -114,7 +107,6 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Report hazards promptly",
 			"Keep an emergency kit in your vehicle",
 		],
-		sortOrder: 7,
 	},
 	{
 		id: 9,
@@ -128,7 +120,6 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Keep a list of medications and allergies",
 			"Have health insurance information accessible",
 		],
-		sortOrder: 8,
 	},
 	{
 		id: 10,
@@ -142,6 +133,5 @@ export const emergencyServices: TownEmergencyService[] = [
 			"Store household chemicals safely",
 			"Keep medications out of reach of children",
 		],
-		sortOrder: 9,
 	},
 ];

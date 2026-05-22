@@ -164,19 +164,16 @@ export const getMeetingBySlugSync = (slug: string) => {
 // --- Team Members ---
 
 export const getTeamMembersSync = () => {
-	return teamMembers
-		.filter((m) => m.isActive)
-		.sort((a, b) => a.sortOrder - b.sortOrder);
+	return teamMembers.filter((m) => m.isActive);
 };
 
 // --- History ---
 
 export const getHistoryArticlesSync = (type?: "period" | "landmark") => {
-	let filtered = [...historyArticles];
 	if (type) {
-		filtered = filtered.filter((a) => a.type === type);
+		return historyArticles.filter((a) => a.type === type);
 	}
-	return filtered.sort((a, b) => a.sortOrder - b.sortOrder);
+	return [...historyArticles];
 };
 
 // --- Points of Interest ---
@@ -202,13 +199,13 @@ export const getResourcesSync = (options?: {
 	if (options?.category) {
 		filtered = filtered.filter((r) => r.category === options.category);
 	}
-	return filtered.sort((a, b) => a.sortOrder - b.sortOrder);
+	return filtered;
 };
 
 // --- Emergency Services ---
 
 export const getEmergencyServicesSync = () => {
-	return [...emergencyServices].sort((a, b) => a.sortOrder - b.sortOrder);
+	return [...emergencyServices];
 };
 
 // --- Announcements ---

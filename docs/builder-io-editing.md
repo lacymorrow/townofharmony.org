@@ -167,7 +167,7 @@ If you need a page change to appear immediately, a developer can trigger a redep
 1. Go to **Models > town-team-member > + New**.
 2. Fill in: name, title, category (Executive / Board of Aldermen / Staff), email, phone, image.
 3. Set `isActive` to true.
-4. Set `sortOrder` to control display position.
+4. Set `priority` (built-in Builder.io field) to control display position.
 5. Click **Publish**.
 
 ### Post an Emergency Alert

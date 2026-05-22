@@ -11,9 +11,7 @@ export const metadata: Metadata = {
 const CATEGORIES = ["Executive", "Town Council", "Staff"] as const;
 
 export default function OurTeamPage() {
-	const active = teamMembers
-		.filter((m) => m.isActive)
-		.sort((a, b) => a.sortOrder - b.sortOrder);
+	const active = teamMembers.filter((m) => m.isActive);
 
 	const getInitials = (name: string) =>
 		name

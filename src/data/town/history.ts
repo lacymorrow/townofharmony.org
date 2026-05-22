@@ -18,7 +18,6 @@ export const historyArticles: TownHistoryArticle[] = [
 			"Two-week revival tradition continues today",
 			"Community forms at crossroads of Highway 21 N and Highway 901",
 		],
-		sortOrder: 0,
 	},
 	{
 		id: 2,
@@ -35,7 +34,6 @@ export const historyArticles: TownHistoryArticle[] = [
 			"1916: Became Harmony Farm Life School (vocational agricultural high school)",
 			"Smith-Hughes Act brought vocational training",
 		],
-		sortOrder: 1,
 	},
 	{
 		id: 3,
@@ -52,7 +50,6 @@ export const historyArticles: TownHistoryArticle[] = [
 			"1928: Became Harmony High School",
 			"Community grows around school and camp meeting tradition",
 		],
-		sortOrder: 2,
 	},
 	{
 		id: 4,
@@ -69,7 +66,6 @@ export const historyArticles: TownHistoryArticle[] = [
 			"Population 543 (2020 census)",
 			"Town amenities: library, family park, community center, post office, volunteer fire department",
 		],
-		sortOrder: 3,
 	},
 	// Landmarks
 	{
@@ -84,7 +80,6 @@ export const historyArticles: TownHistoryArticle[] = [
 		content:
 			"Town Hall has served as the center of government and civic life in Harmony since the town's incorporation in 1927. It continues to house town offices and serve as the meeting place for the Town Council.",
 		image: mediaUrls["landmark-town-hall"],
-		sortOrder: 0,
 	},
 	{
 		id: 6,
@@ -97,7 +92,6 @@ export const historyArticles: TownHistoryArticle[] = [
 		content:
 			"The Community Center provides a dedicated space for community gatherings, events, and civic activities. It serves as a vital hub for the people of Harmony.",
 		image: mediaUrls["landmark-community-center"],
-		sortOrder: 1,
 	},
 	{
 		id: 7,
@@ -111,6 +105,5 @@ export const historyArticles: TownHistoryArticle[] = [
 		content:
 			"The Harmony Hill Camp Meeting Grounds are the birthplace of the Harmony community. The two-week revival was first held in 1846 and continues to be held the second weekend every October. The grounds are located on the present-day Harmony Elementary School campus.",
 		image: mediaUrls["landmark-camp-grounds"],
-		sortOrder: 2,
 	},
 ];

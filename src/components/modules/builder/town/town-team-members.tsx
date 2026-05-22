@@ -30,10 +30,10 @@ export const TownTeamMembers = ({
 }: TownTeamMembersProps = {}) => {
 	const { data: allMembers, loading } = useBuilderData<TownTeamMember>(
 		"town-team-member",
-		{ sort: { "data.sortOrder": 1 }, limit: 50, fallback: staticTeamMembers },
+		{ sort: { priority: -1 }, limit: 50, fallback: staticTeamMembers },
 	);
 
-	let members = allMembers.filter((m) => m.isActive).sort((a, b) => a.sortOrder - b.sortOrder);
+	let members = allMembers.filter((m) => m.isActive);
 	if (categoryFilter) {
 		members = members.filter((m) => m.category === categoryFilter);
 	}
