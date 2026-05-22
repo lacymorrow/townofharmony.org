@@ -36,13 +36,25 @@ export function TownHeader({
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [searchOpen, setSearchOpen] = useState(false);
 
-	const navigation = navData.mainNav
-		.filter((item) => !hiddenHrefs.has(normalizeHref(item.href)))
-		.map((item) =>
-			item.children
-				? { ...item, children: item.children.filter((c) => !hiddenHrefs.has(normalizeHref(c.href))) }
-				: item,
-		);
+	const navigation = navData.mainNav.reduce<typeof navData.mainNav>((acc, item) => {
+		const normalizedHref = normalizeHref(item.href);
+		const isParentHidden = hiddenHrefs.has(normalizedHref);
+
+		if (item.children) {
+			const visibleChildren = item.children.filter((c) => !hiddenHrefs.has(normalizeHref(c.href)));
+			const [first] = visibleChildren;
+			if (first) {
+				acc.push({
+					...item,
+					href: isParentHidden ? first.href : item.href,
+					children: visibleChildren,
+				});
+			}
+		} else if (!isParentHidden) {
+			acc.push(item);
+		}
+		return acc;
+	}, []);
 
 	return (
 		<header>
