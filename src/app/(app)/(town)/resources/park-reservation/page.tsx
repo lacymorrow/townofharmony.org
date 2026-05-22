@@ -41,7 +41,7 @@ export default function ParkReservationPage() {
 					</p>
 					<p className="text-sm text-[#4A4640] mt-2">
 						3389 Harmony Hwy, Harmony, NC 28634<br />
-						Monday – Friday, 8:00 AM – 5:00 PM
+						Monday – Friday, 9:00 AM – 5:00 PM
 					</p>
 				</div>
 
