@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
-import { events as staticEvents } from "@/data/town/events";
 import type { TownEvent } from "@/data/town/types";
 import { resolveBuilderRef } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
@@ -41,11 +40,9 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
     }
   })();
 
-  const staticFallback = staticEvents.find((e) => e.slug === slug) ?? null;
   const { data: event, loading } = useBuilderEntry<TownEvent>(
     "town-event",
     { "data.slug": slug },
-    { fallback: staticFallback }
   );
 
   if (loading) {

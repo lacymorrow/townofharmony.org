@@ -27,7 +27,6 @@ import {
 } from "@/components/ui/command";
 import { DialogTitle } from "@/components/ui/dialog";
 import { businesses } from "@/data/town/businesses";
-import { events } from "@/data/town/events";
 import { historyArticles } from "@/data/town/history";
 import { navigation } from "@/data/town/navigation";
 import { pointsOfInterest } from "@/data/town/points-of-interest";
@@ -108,18 +107,6 @@ const buildSearchIndex = (): SearchResult[] => {
 		});
 	}
 
-	// Events
-	for (const event of events) {
-		results.push({
-			id: `event-${event.id}`,
-			title: event.title,
-			subtitle: event.description.slice(0, 80),
-			href: `/events/${event.slug}`,
-			category: "Events",
-			icon: <Calendar className="h-4 w-4" />,
-		});
-	}
-
 	// History articles
 	for (const article of historyArticles) {
 		results.push({
@@ -173,9 +160,36 @@ const buildSearchIndex = (): SearchResult[] => {
 	return results;
 };
 
-// Builder.io CMS page fetching
-const BUILDER_PAGES_CACHE_KEY = "toh-builder-pages";
-const BUILDER_PAGES_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+// Builder.io CMS content fetching
+const BUILDER_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+interface CachedData {
+	data: unknown;
+	fetchedAt: number;
+}
+
+function getCached<T>(key: string): T | null {
+	try {
+		const cached = localStorage.getItem(key);
+		if (cached) {
+			const parsed: CachedData = JSON.parse(cached);
+			if (Date.now() - parsed.fetchedAt < BUILDER_CACHE_TTL) {
+				return parsed.data as T;
+			}
+		}
+	} catch {
+		// ignore cache errors
+	}
+	return null;
+}
+
+function setCache(key: string, data: unknown) {
+	try {
+		localStorage.setItem(key, JSON.stringify({ data, fetchedAt: Date.now() } satisfies CachedData));
+	} catch {
+		// ignore storage errors
+	}
+}
 
 interface BuilderPageEntry {
 	title: string;
@@ -183,24 +197,9 @@ interface BuilderPageEntry {
 	urlPath: string;
 }
 
-interface CachedBuilderPages {
-	pages: BuilderPageEntry[];
-	fetchedAt: number;
-}
-
 const fetchBuilderPages = async (apiKey: string): Promise<BuilderPageEntry[]> => {
-	// Check cache first
-	try {
-		const cached = localStorage.getItem(BUILDER_PAGES_CACHE_KEY);
-		if (cached) {
-			const parsed: CachedBuilderPages = JSON.parse(cached);
-			if (Date.now() - parsed.fetchedAt < BUILDER_PAGES_CACHE_TTL) {
-				return parsed.pages;
-			}
-		}
-	} catch {
-		// ignore cache errors
-	}
+	const cached = getCached<BuilderPageEntry[]>("toh-builder-pages");
+	if (cached) return cached;
 
 	try {
 		const url = new URL("https://cdn.builder.io/api/v3/content/page");
@@ -221,17 +220,45 @@ const fetchBuilderPages = async (apiKey: string): Promise<BuilderPageEntry[]> =>
 				urlPath: r.data.url || "/",
 			}));
 
-		// Cache results
-		try {
-			localStorage.setItem(
-				BUILDER_PAGES_CACHE_KEY,
-				JSON.stringify({ pages, fetchedAt: Date.now() } satisfies CachedBuilderPages),
-			);
-		} catch {
-			// ignore storage errors
-		}
-
+		setCache("toh-builder-pages", pages);
 		return pages;
+	} catch {
+		return [];
+	}
+};
+
+interface BuilderEventEntry {
+	title: string;
+	slug: string;
+	description: string;
+}
+
+const fetchBuilderEvents = async (apiKey: string): Promise<BuilderEventEntry[]> => {
+	const cached = getCached<BuilderEventEntry[]>("toh-builder-events");
+	if (cached) return cached;
+
+	try {
+		const url = new URL("https://cdn.builder.io/api/v3/content/town-event");
+		url.searchParams.set("apiKey", apiKey);
+		url.searchParams.set("limit", "100");
+		url.searchParams.set("fields", "data.title,data.slug,data.description");
+		url.searchParams.set("noCache", "false");
+
+		const res = await fetch(url.toString());
+		if (!res.ok) return [];
+
+		const data = await res.json();
+		const entries: BuilderEventEntry[] = (data?.results ?? [])
+			.filter((r: Record<string, unknown>) => r?.data)
+			.map((r: { data: { title?: string; slug?: string; description?: string } }) => ({
+				title: r.data.title || "Untitled Event",
+				slug: r.data.slug || "",
+				description: r.data.description || "",
+			}))
+			.filter((e: BuilderEventEntry) => e.slug);
+
+		setCache("toh-builder-events", entries);
+		return entries;
 	} catch {
 		return [];
 	}
@@ -298,7 +325,7 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 		}
 	}, [open]);
 
-	// Fetch Builder.io CMS pages on first open
+	// Fetch Builder.io CMS pages + events on first open
 	useEffect(() => {
 		if (!open || builderFetched.current) return;
 		builderFetched.current = true;
@@ -306,24 +333,41 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 		const apiKey = process.env.NEXT_PUBLIC_BUILDER_API_KEY;
 		if (!apiKey) return;
 
-		// Collect existing static hrefs to deduplicate
 		const staticHrefs = new Set(staticIndex.map((r) => r.href));
 
-		fetchBuilderPages(apiKey).then((pages) => {
-			const results: SearchResult[] = pages
-				.filter((p) => !staticHrefs.has(p.urlPath))
-				.map((p, i) => ({
-					id: `builder-${i}`,
-					title: p.title,
-					subtitle: p.description || "CMS Page",
-					href: p.urlPath,
-					category: "Pages",
-					icon: <Globe className="h-4 w-4" />,
-				}));
-			if (results.length > 0) {
-				setBuilderPages(results);
-			}
-		});
+		Promise.all([fetchBuilderPages(apiKey), fetchBuilderEvents(apiKey)]).then(
+			([pages, events]) => {
+				const results: SearchResult[] = [];
+				for (const [i, p] of pages.entries()) {
+					if (!staticHrefs.has(p.urlPath)) {
+						results.push({
+							id: `builder-${i}`,
+							title: p.title,
+							subtitle: p.description || "CMS Page",
+							href: p.urlPath,
+							category: "Pages",
+							icon: <Globe className="h-4 w-4" />,
+						});
+					}
+				}
+				for (const event of events) {
+					const href = `/events/${event.slug}`;
+					if (!staticHrefs.has(href)) {
+						results.push({
+							id: `event-${event.slug}`,
+							title: event.title,
+							subtitle: event.description.slice(0, 80),
+							href,
+							category: "Events",
+							icon: <Calendar className="h-4 w-4" />,
+						});
+					}
+				}
+				if (results.length > 0) {
+					setBuilderPages(results);
+				}
+			},
+		);
 	}, [open, staticIndex]);
 
 	// Cmd+K / Ctrl+K

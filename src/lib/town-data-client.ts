@@ -8,7 +8,6 @@ import { announcements } from "@/data/town/announcements";
 import { businesses } from "@/data/town/businesses";
 import { elections } from "@/data/town/elections";
 import { emergencyServices } from "@/data/town/emergency-services";
-import { events } from "@/data/town/events";
 import { historyArticles } from "@/data/town/history";
 import { homepage } from "@/data/town/homepage";
 import { mapBusinesses } from "@/data/town/map-businesses";
@@ -69,6 +68,9 @@ export const getNewsBySlugSync = (slug: string) => {
 };
 
 // --- Events ---
+// Events are fetched exclusively from Builder.io at runtime.
+// These stubs remain for interface compatibility; callers should
+// migrate to useBuilderData("town-event") or resolveEvents().
 
 export const getEventsSync = (options?: {
 	limit?: number;
@@ -78,40 +80,12 @@ export const getEventsSync = (options?: {
 	month?: string;
 	year?: string;
 }) => {
-	const { limit = 10, page = 1, category, status, month, year } =
-		options ?? {};
-
-	let filtered = [...events];
-
-	if (status) {
-		filtered = filtered.filter((e) => e.status === status);
-	} else {
-		filtered = filtered.filter((e) => e.status === "upcoming");
-	}
-
-	if (category) {
-		filtered = filtered.filter((e) => e.categories.includes(category));
-	}
-
-	if (month && year) {
-		const monthNum = parseInt(month);
-		const yearNum = parseInt(year);
-		filtered = filtered.filter((e) => {
-			const d = new Date(e.eventDate);
-			return d.getMonth() + 1 === monthNum && d.getFullYear() === yearNum;
-		});
-	}
-
-	filtered.sort(
-		(a, b) =>
-			new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime(),
-	);
-
-	return paginate(filtered, limit, page);
+	const { limit = 10, page = 1 } = options ?? {};
+	return paginate([] as never[], limit, page);
 };
 
-export const getEventBySlugSync = (slug: string) => {
-	return events.find((e) => e.slug === slug) ?? null;
+export const getEventBySlugSync = (_slug: string) => {
+	return null;
 };
 
 // --- Meetings ---
