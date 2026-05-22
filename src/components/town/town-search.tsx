@@ -33,6 +33,7 @@ import { pointsOfInterest } from "@/data/town/points-of-interest";
 import { resources } from "@/data/town/resources";
 import { isSewerVisible } from "@/data/town/sewer-rates";
 import { teamMembers } from "@/data/town/team-members";
+import { isExternalUrl } from "@/lib/utils";
 
 const SEWER_HREFS = new Set(["/sewer", "/pay/sewer"]);
 
@@ -127,7 +128,7 @@ const buildSearchIndex = (): SearchResult[] => {
 			title: resource.title,
 			subtitle: resource.description.slice(0, 80),
 			href: isDoc ? `/resources/${resource.slug}` : (resource.externalUrl ?? `/resources#${resource.slug}`),
-			openExternal: !isDoc && !!resource.externalUrl?.startsWith("http"),
+			openExternal: !isDoc && !!resource.externalUrl && isExternalUrl(resource.externalUrl),
 			category: "Resources",
 			icon: <FileText className="h-4 w-4" />,
 		});
@@ -140,7 +141,7 @@ const buildSearchIndex = (): SearchResult[] => {
 			title: poi.name,
 			subtitle: `${poi.category} — ${poi.address}`,
 			href: poi.link || `/points-of-interest#${poi.slug}`,
-			openExternal: !!poi.link?.startsWith("http"),
+			openExternal: !!poi.link && isExternalUrl(poi.link),
 			category: "Places",
 			icon: <MapPin className="h-4 w-4" />,
 		});

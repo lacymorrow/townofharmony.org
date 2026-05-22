@@ -44,3 +44,7 @@ export function isUpcomingMeeting(meetingDate: string): boolean {
 	today.setHours(0, 0, 0, 0);
 	return meeting >= today;
 }
+
+export function isExternalUrl(url: string): boolean {
+	return url.startsWith("http") || url.startsWith("//");
+}

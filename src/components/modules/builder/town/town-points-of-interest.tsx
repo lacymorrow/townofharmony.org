@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useBuilderData } from "@/lib/builder-data";
+import { isExternalUrl } from "@/lib/utils";
 import { pointsOfInterest as staticPOIs } from "@/data/town/points-of-interest";
 import type { TownPointOfInterest } from "@/data/town/types";
 
@@ -142,8 +143,8 @@ export const TownPointsOfInterest = ({
 										{poi.link ? (
 											<a
 												href={poi.link}
-												target={poi.link.startsWith("http") ? "_blank" : undefined}
-												rel={poi.link.startsWith("http") ? "noopener noreferrer" : undefined}
+												target={isExternalUrl(poi.link) ? "_blank" : undefined}
+												rel={isExternalUrl(poi.link) ? "noopener noreferrer" : undefined}
 												className="hover:text-sage-dark transition-colors"
 											>
 												{poi.name}
@@ -219,8 +220,8 @@ export const TownPointsOfInterest = ({
 									{poi.link && (
 										<a
 											href={poi.link}
-											target={poi.link.startsWith("http") ? "_blank" : undefined}
-											rel={poi.link.startsWith("http") ? "noopener noreferrer" : undefined}
+											target={isExternalUrl(poi.link) ? "_blank" : undefined}
+											rel={isExternalUrl(poi.link) ? "noopener noreferrer" : undefined}
 											className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-sage-dark hover:text-[#2D2A24] transition-colors"
 										>
 											Visit
