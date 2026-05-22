@@ -109,6 +109,7 @@ export interface TownPointOfInterest {
 	address: string;
 	hours: string;
 	amenities: string[];
+	link?: string;
 }
 
 export interface TownResource {

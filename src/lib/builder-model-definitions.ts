@@ -165,6 +165,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("address"),
 			text("hours"),
 			tags("amenities"),
+			url("link"),
 		],
 	},
 	{

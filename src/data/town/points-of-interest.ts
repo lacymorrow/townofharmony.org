@@ -15,6 +15,7 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		hours: "Dawn to Dusk",
 
 		amenities: ["Playground", "Picnic Shelters", "Restrooms"],
+		link: "https://www.iredellcountync.gov/297/Parks-Recreation",
 	},
 	{
 		id: 2,
@@ -78,6 +79,7 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		address: "Harmony, NC 28634",
 		hours: "School hours: 7:30 AM - 2:30 PM",
 		amenities: ["Playground", "Athletic Fields", "Library", "Parking"],
+		link: "https://www.issnc.org/harmonyelementary",
 	},
 	{
 		id: 7,
@@ -90,5 +92,6 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		address: "Harmony, NC 28634",
 		hours: "Dawn to Dusk",
 		amenities: ["Walking Trail", "Nature Views", "Trail Markers"],
+		link: "https://www.carolinathreadtrail.org",
 	},
 ];

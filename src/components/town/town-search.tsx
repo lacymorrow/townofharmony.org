@@ -139,7 +139,8 @@ const buildSearchIndex = (): SearchResult[] => {
 			id: `poi-${poi.id}`,
 			title: poi.name,
 			subtitle: `${poi.category} — ${poi.address}`,
-			href: `/points-of-interest#${poi.slug}`,
+			href: poi.link || `/points-of-interest#${poi.slug}`,
+			openExternal: !!poi.link?.startsWith("http"),
 			category: "Places",
 			icon: <MapPin className="h-4 w-4" />,
 		});
