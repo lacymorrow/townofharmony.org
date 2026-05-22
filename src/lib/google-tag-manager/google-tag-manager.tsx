@@ -16,7 +16,7 @@ const ConsentGatedGTM = ({ gtmId }: { gtmId: string }) => {
   const measurementConsent = hasConsentFor("measurement");
 
   useEffect(() => {
-    const dl = (window as Record<string, unknown>).dataLayer;
+    const dl = (window as unknown as Record<string, unknown>).dataLayer;
     if (Array.isArray(dl)) {
       dl.push({
         event: "consent_update",
