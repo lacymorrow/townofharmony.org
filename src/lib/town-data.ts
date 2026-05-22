@@ -205,23 +205,20 @@ export const getMeetingBySlug = async (slug: string) => {
 };
 
 /**
- * Get team members, sorted by category and sortOrder
+ * Get team members, sorted by category
  */
 export const getTeamMembers = async () => {
-	return teamMembers
-		.filter((m) => m.isActive)
-		.sort((a, b) => a.sortOrder - b.sortOrder);
+	return teamMembers.filter((m) => m.isActive);
 };
 
 /**
  * Get history articles
  */
 export const getHistoryArticles = async (type?: "period" | "landmark") => {
-	let filtered = [...historyArticles];
 	if (type) {
-		filtered = filtered.filter((a) => a.type === type);
+		return historyArticles.filter((a) => a.type === type);
 	}
-	return filtered.sort((a, b) => a.sortOrder - b.sortOrder);
+	return [...historyArticles];
 };
 
 /**
@@ -246,14 +243,14 @@ export const getResources = async (options?: { type?: string; category?: string 
 	if (options?.category) {
 		filtered = filtered.filter((r) => r.category === options.category);
 	}
-	return filtered.sort((a, b) => a.sortOrder - b.sortOrder);
+	return filtered;
 };
 
 /**
  * Get emergency services
  */
 export const getEmergencyServices = async () => {
-	return [...emergencyServices].sort((a, b) => a.sortOrder - b.sortOrder);
+	return [...emergencyServices];
 };
 
 /**

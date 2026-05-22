@@ -112,7 +112,6 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("mayorSince"),
 			text("termExpires"),
 			text("department"),
-			num("sortOrder"),
 			bool("isActive", true),
 		],
 	},
@@ -126,7 +125,6 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			enumText("category", ["immediate", "public-safety", "utility", "health"]),
 			text("icon"),
 			tags("preparedness"),
-			num("sortOrder"),
 		],
 	},
 	{
@@ -143,7 +141,6 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			richText("content"),
 			url("image"),
 			tags("highlights"),
-			num("sortOrder"),
 		],
 	},
 	{
@@ -173,7 +170,6 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("contactPhone"),
 			text("contactEmail"),
 			url("externalUrl"),
-			num("sortOrder"),
 		],
 	},
 	{
@@ -369,7 +365,6 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			url("image"),
 			text("ctaText"),
 			text("ctaHref"),
-			num("sortOrder"),
 		],
 	},
 
@@ -384,7 +379,6 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			enumText("location", ["in-town", "out-of-town"]),
 			enumText("type", ["residential", "nonresidential"]),
 			num("monthlyRate"),
-			num("sortOrder"),
 		],
 	},
 

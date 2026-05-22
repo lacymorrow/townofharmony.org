@@ -146,12 +146,11 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 
 	const { data: rawResources } = useBuilderData<TownResource>(
 		"town-resource",
-		{ sort: { "data.sortOrder": 1 }, limit: 50, fallback: staticResources },
+		{ sort: { priority: -1 }, limit: 50, fallback: staticResources },
 	);
 
 	const typeFilteredResources = React.useMemo(() => {
-		const filtered = type ? rawResources.filter((r) => r.type === type) : [...rawResources];
-		return filtered.sort((a, b) => a.sortOrder - b.sortOrder);
+		return type ? rawResources.filter((r) => r.type === type) : [...rawResources];
 	}, [rawResources, type]);
 
 	const allResources = React.useMemo(

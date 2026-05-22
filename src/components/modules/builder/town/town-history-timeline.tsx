@@ -15,16 +15,14 @@ export const TownHistoryTimeline = ({
 	const fallback = (() => {
 		let filtered = [...staticHistory];
 		if (type !== "all") filtered = filtered.filter((a) => a.type === type);
-		return filtered.sort((a, b) => a.sortOrder - b.sortOrder);
+		return filtered;
 	})();
 
 	const query = type !== "all" ? { "data.type": type } : undefined;
-	const { data: rawArticles, loading } = useBuilderData<TownHistoryArticle>(
+	const { data: articles, loading } = useBuilderData<TownHistoryArticle>(
 		"town-history-article",
-		{ sort: { "data.sortOrder": 1 }, limit: 50, query, fallback },
+		{ sort: { priority: -1 }, limit: 50, query, fallback },
 	);
-
-	const articles = rawArticles.sort((a, b) => a.sortOrder - b.sortOrder);
 
 	if (loading) {
 		return (

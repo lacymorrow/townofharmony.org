@@ -11,8 +11,7 @@ export const resources: TownResource[] = [
 		icon: "FileText",
 		description: "A compilation of all current town ordinances and local laws governing the Town of Harmony.",
 		externalUrl: "/town-ordinance.pdf",
-		sortOrder: 0,
-	},
+		},
 	// Services
 	{
 		id: 2,
@@ -24,8 +23,7 @@ export const resources: TownResource[] = [
 		description: "Access emergency services including police, fire, and medical assistance.",
 		contactPhone: "911",
 		externalUrl: "/emergency",
-		sortOrder: 1,
-	},
+		},
 	{
 		id: 3,
 		title: "Town Hall",
@@ -35,8 +33,7 @@ export const resources: TownResource[] = [
 		icon: "Home",
 		description: "Town Hall administrative offices providing general town services, permits, and information.",
 		contactPhone: "(704) 546-2339",
-		sortOrder: 2,
-	},
+		},
 	// Applications
 	{
 		id: 10,
@@ -47,8 +44,7 @@ export const resources: TownResource[] = [
 		icon: "Calendar",
 		description: "Apply online to reserve the Harmony Community Center for activities and events.",
 		externalUrl: "/resources/community-center-reservation",
-		sortOrder: 3,
-	},
+		},
 	{
 		id: 11,
 		title: "Tomlinson-Moore Park Reservation",
@@ -58,8 +54,7 @@ export const resources: TownResource[] = [
 		icon: "Trees",
 		description: "Information for reserving the Tomlinson-Moore Family Park picnic shelter.",
 		externalUrl: "/resources/park-reservation",
-		sortOrder: 4,
-	},
+		},
 	// Links
 	{
 		id: 4,
@@ -70,8 +65,7 @@ export const resources: TownResource[] = [
 		icon: "Globe",
 		description: "Official website of Iredell County Government, providing county services and information.",
 		externalUrl: "https://www.iredellcountync.gov/",
-		sortOrder: 3,
-	},
+		},
 	{
 		id: 5,
 		title: "North Carolina State Government",
@@ -81,8 +75,7 @@ export const resources: TownResource[] = [
 		icon: "Globe",
 		description: "Official website of the State of North Carolina.",
 		externalUrl: "https://www.nc.gov/",
-		sortOrder: 4,
-	},
+		},
 	{
 		id: 6,
 		title: "Iredell-Statesville Schools",
@@ -92,8 +85,7 @@ export const resources: TownResource[] = [
 		icon: "Globe",
 		description: "Iredell-Statesville Schools district serving the Harmony area.",
 		externalUrl: "https://www.issnc.org/",
-		sortOrder: 5,
-	},
+		},
 	{
 		id: 7,
 		title: "Greater Statesville Chamber",
@@ -103,8 +95,7 @@ export const resources: TownResource[] = [
 		icon: "Globe",
 		description: "Greater Statesville Chamber of Commerce supporting local businesses and economic development.",
 		externalUrl: "https://statesvillechamber.org/",
-		sortOrder: 6,
-	},
+		},
 	{
 		id: 8,
 		title: "Harmony Volunteer Fire Department",
@@ -114,8 +105,7 @@ export const resources: TownResource[] = [
 		icon: "Flame",
 		description: "Harmony Volunteer Fire Department — fire suppression, rescue, and emergency medical services. Call (704) 546-2300 for non-emergency inquiries.",
 		externalUrl: "/emergency",
-		sortOrder: 7,
-	},
+		},
 	{
 		id: 9,
 		title: "Military Veterans Services",
@@ -125,6 +115,5 @@ export const resources: TownResource[] = [
 		icon: "Shield",
 		description: "Iredell County Veterans Services Office — assistance and benefits for veterans and their families.",
 		externalUrl: "https://www.iredellcountync.gov/426/Veteran-Services",
-		sortOrder: 8,
-	},
+		},
 ];

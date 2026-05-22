@@ -155,7 +155,7 @@ const seedData: Record<string, SeedEntry[]> = {
 	"town-meeting": toSeedEntries(meetings, "title"),
 	"town-business": toSeedEntries(businesses, "name"),
 	"town-election": toSeedEntries(elections, "title"),
-	"town-homepage-slide": homepage.heroSlides.map((slide, i) => ({
+	"town-homepage-slide": homepage.heroSlides.map((slide) => ({
 		name: slide.title,
 		data: {
 			title: slide.title,
@@ -164,10 +164,9 @@ const seedData: Record<string, SeedEntry[]> = {
 			image: slide.image ?? "",
 			ctaText: slide.ctaText ?? "",
 			ctaHref: slide.ctaHref ?? "",
-			sortOrder: i,
 		},
 	})),
-	"town-sewer-rate": sewerRateTiers.map((tier, i) => ({
+	"town-sewer-rate": sewerRateTiers.map((tier) => ({
 		name: tier.name,
 		data: {
 			tierId: tier.id,
@@ -176,7 +175,6 @@ const seedData: Record<string, SeedEntry[]> = {
 			location: tier.location,
 			type: tier.type,
 			monthlyRate: tier.monthlyRate,
-			sortOrder: i,
 		},
 	})),
 	"town-map-business": mapBusinesses.map((b) => ({

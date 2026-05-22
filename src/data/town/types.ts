@@ -83,7 +83,6 @@ export interface TownTeamMember {
 	termExpires?: string;
 	mayorSince?: string;
 	department?: string;
-	sortOrder: number;
 	isActive: boolean;
 }
 
@@ -99,7 +98,6 @@ export interface TownHistoryArticle {
 	content: string;
 	image: string | null;
 	highlights?: string[];
-	sortOrder: number;
 }
 
 export interface TownPointOfInterest {
@@ -125,7 +123,6 @@ export interface TownResource {
 	contactPhone?: string;
 	contactEmail?: string;
 	externalUrl?: string;
-	sortOrder: number;
 }
 
 export interface TownEmergencyService {
@@ -136,7 +133,6 @@ export interface TownEmergencyService {
 	category: "immediate" | "public-safety" | "utility" | "health";
 	icon: string;
 	preparedness: string[];
-	sortOrder: number;
 }
 
 export interface TownBusiness {

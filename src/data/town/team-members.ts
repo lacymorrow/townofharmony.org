@@ -11,7 +11,6 @@ export const teamMembers: TownTeamMember[] = [
 		image: "/images/team/sean-turner.webp",
 		mayorSince: "12/2023",
 		termExpires: "2024-2028",
-		sortOrder: 0,
 		isActive: true,
 	},
 	{
@@ -21,7 +20,6 @@ export const teamMembers: TownTeamMember[] = [
 		category: "Executive",
 		email: "",
 		image: "/images/team/wanda-edwards.webp",
-		sortOrder: 1,
 		isActive: true,
 	},
 	// Town Council
@@ -33,7 +31,6 @@ export const teamMembers: TownTeamMember[] = [
 		email: "",
 		image: "/images/team/scotty-harris.webp",
 		termExpires: "2024-2028",
-		sortOrder: 0,
 		isActive: true,
 	},
 	{
@@ -44,7 +41,6 @@ export const teamMembers: TownTeamMember[] = [
 		email: "",
 		image: "/images/team/chris-pierce.webp",
 		termExpires: "2024-2028",
-		sortOrder: 1,
 		isActive: true,
 	},
 	{
@@ -55,7 +51,6 @@ export const teamMembers: TownTeamMember[] = [
 		email: "",
 		image: "/images/team/brandon-angell.webp",
 		termExpires: "2024-2026",
-		sortOrder: 2,
 		isActive: true,
 	},
 	{
@@ -66,7 +61,6 @@ export const teamMembers: TownTeamMember[] = [
 		email: "",
 		image: "/images/team/jared-clark.webp",
 		termExpires: "2024-2026",
-		sortOrder: 3,
 		isActive: true,
 	},
 	// Staff
@@ -76,7 +70,6 @@ export const teamMembers: TownTeamMember[] = [
 		title: "Farmers Market Manager",
 		category: "Staff",
 		email: "",
-		sortOrder: 0,
 		isActive: true,
 	},
 	{
@@ -85,7 +78,6 @@ export const teamMembers: TownTeamMember[] = [
 		title: "Maintenance",
 		category: "Staff",
 		email: "",
-		sortOrder: 1,
 		isActive: true,
 	},
 ];
