@@ -33,6 +33,7 @@ import { pointsOfInterest } from "@/data/town/points-of-interest";
 import { resources } from "@/data/town/resources";
 import { isSewerVisible } from "@/data/town/sewer-rates";
 import { teamMembers } from "@/data/town/team-members";
+import { isExternalUrl, isSafeUrl } from "@/lib/utils";
 
 const SEWER_HREFS = new Set(["/sewer", "/pay/sewer"]);
 
@@ -127,7 +128,7 @@ const buildSearchIndex = (): SearchResult[] => {
 			title: resource.title,
 			subtitle: resource.description.slice(0, 80),
 			href: isDoc ? `/resources/${resource.slug}` : (resource.externalUrl ?? `/resources#${resource.slug}`),
-			openExternal: !isDoc && !!resource.externalUrl?.startsWith("http"),
+			openExternal: !isDoc && !!resource.externalUrl && isExternalUrl(resource.externalUrl),
 			category: "Resources",
 			icon: <FileText className="h-4 w-4" />,
 		});
@@ -135,11 +136,13 @@ const buildSearchIndex = (): SearchResult[] => {
 
 	// Points of interest
 	for (const poi of pointsOfInterest) {
+		const safeLink = poi.link && isSafeUrl(poi.link) ? poi.link : undefined;
 		results.push({
 			id: `poi-${poi.id}`,
 			title: poi.name,
 			subtitle: `${poi.category} — ${poi.address}`,
-			href: `/points-of-interest#${poi.slug}`,
+			href: safeLink || `/points-of-interest#${poi.slug}`,
+			openExternal: !!safeLink && isExternalUrl(safeLink),
 			category: "Places",
 			icon: <MapPin className="h-4 w-4" />,
 		});

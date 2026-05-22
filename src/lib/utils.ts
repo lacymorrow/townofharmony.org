@@ -44,3 +44,11 @@ export function isUpcomingMeeting(meetingDate: string): boolean {
 	today.setHours(0, 0, 0, 0);
 	return meeting >= today;
 }
+
+export function isExternalUrl(url: string): boolean {
+	return /^https?:\/\//i.test(url) || url.startsWith("//");
+}
+
+export function isSafeUrl(url: string): boolean {
+	return /^https?:\/\//i.test(url) || url.startsWith("//") || (url.startsWith("/") && !url.startsWith("//"));
+}

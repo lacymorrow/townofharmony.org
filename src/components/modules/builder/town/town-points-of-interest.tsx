@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useBuilderData } from "@/lib/builder-data";
+import { isExternalUrl, isSafeUrl } from "@/lib/utils";
 import { pointsOfInterest as staticPOIs } from "@/data/town/points-of-interest";
 import type { TownPointOfInterest } from "@/data/town/types";
 
@@ -93,8 +94,10 @@ export const TownPointsOfInterest = ({
 				{/* POI Grid */}
 				{pois.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{pois.map((poi) => (
-							<div
+						{pois.map((poi) => {
+							const safeLink = poi.link && isSafeUrl(poi.link) ? poi.link : undefined;
+							const isExternal = safeLink ? isExternalUrl(safeLink) : false;
+							return (<div
 								key={poi.slug}
 								className="bg-white rounded-lg border border-stone overflow-hidden"
 							>
@@ -139,7 +142,18 @@ export const TownPointsOfInterest = ({
 										{poi.category}
 									</span>
 									<h2 className="text-lg font-semibold text-[#2D2A24] mb-2">
-										{poi.name}
+										{safeLink ? (
+											<a
+												href={safeLink}
+												target={isExternal ? "_blank" : undefined}
+												rel={isExternal ? "noopener noreferrer" : undefined}
+												className="hover:text-sage-dark transition-colors"
+											>
+												{poi.name}
+											</a>
+										) : (
+											poi.name
+										)}
 									</h2>
 									<p className="text-base text-[#4A4640] mb-3 line-clamp-2">
 										{poi.description}
@@ -204,9 +218,33 @@ export const TownPointsOfInterest = ({
 											)}
 										</div>
 									)}
+
+									{safeLink && (
+										<a
+											href={safeLink}
+											target={isExternal ? "_blank" : undefined}
+											rel={isExternal ? "noopener noreferrer" : undefined}
+											className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-sage-dark hover:text-[#2D2A24] transition-colors"
+										>
+											Visit
+											<svg
+												className="w-3.5 h-3.5"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+												/>
+											</svg>
+										</a>
+									)}
 								</div>
 							</div>
-						))}
+						)})}
 					</div>
 				) : (
 					<div className="text-center py-12">
