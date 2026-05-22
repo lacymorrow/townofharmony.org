@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site-config";
+import { settings } from "@/data/town/settings";
 
 export const esc = (s: string) =>
 	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -38,9 +39,9 @@ const layout = (body: string) => `
         <tr>
           <td style="background-color:${BRAND.footer};padding:24px 32px;">
             <p style="margin:0 0 8px;color:#aaa;font-size:12px;">${siteConfig.name} — Official Contact Information</p>
-            <p style="margin:0 0 4px;color:#ccc;font-size:12px;">3389 Harmony Hwy, Harmony, NC 28634</p>
-            <p style="margin:0 0 4px;color:#ccc;font-size:12px;">Phone: (704) 546-2339 &nbsp;|&nbsp; Email: ${siteConfig.email.support}</p>
-            <p style="margin:0;color:#888;font-size:11px;">Office Hours: Monday–Friday, 8:00 AM–5:00 PM</p>
+            <p style="margin:0 0 4px;color:#ccc;font-size:12px;">${settings.contactInfo.address}</p>
+            <p style="margin:0 0 4px;color:#ccc;font-size:12px;">Phone: ${settings.contactInfo.phone} &nbsp;|&nbsp; Email: ${siteConfig.email.support}</p>
+            <p style="margin:0;color:#888;font-size:11px;">Office Hours: ${settings.officeHours.weekday}</p>
           </td>
         </tr>
 
@@ -81,7 +82,7 @@ export function contactConfirmationEmail(opts: {
 
     <p style="margin:0 0 8px;font-size:14px;color:${BRAND.muted};">Need to reach us sooner?</p>
     <p style="margin:0;font-size:14px;color:${BRAND.text};">
-      Call us at <strong>(704) 546-2339</strong> or email <a href="mailto:${siteConfig.email.support}" style="color:${BRAND.primary};">${siteConfig.email.support}</a> during office hours.
+      Call us at <strong>${settings.contactInfo.phone}</strong> or email <a href="mailto:${siteConfig.email.support}" style="color:${BRAND.primary};">${siteConfig.email.support}</a> during office hours.
     </p>
   `;
 
@@ -119,7 +120,7 @@ export function townContactConfirmationEmail(opts: {
 
     <p style="margin:0 0 8px;font-size:14px;color:${BRAND.muted};">Need immediate assistance?</p>
     <p style="margin:0;font-size:14px;color:${BRAND.text};">
-      Call us at <strong>(704) 546-2339</strong>, email <a href="mailto:${siteConfig.email.support}" style="color:${BRAND.primary};">${siteConfig.email.support}</a>, or visit us at 3389 Harmony Hwy, Harmony, NC 28634 during office hours (Mon–Fri, 8 AM–5 PM).
+      Call us at <strong>${settings.contactInfo.phone}</strong>, email <a href="mailto:${siteConfig.email.support}" style="color:${BRAND.primary};">${siteConfig.email.support}</a>, or visit us at ${settings.contactInfo.address} during office hours (${settings.officeHours.weekday}).
     </p>
   `;
 

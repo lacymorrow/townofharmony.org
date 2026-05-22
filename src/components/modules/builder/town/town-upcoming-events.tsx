@@ -3,7 +3,6 @@
 import { Calendar } from "lucide-react";
 import Link from "next/link";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
-import { events as staticEvents } from "@/data/town/events";
 import type { TownEvent } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
 
@@ -20,7 +19,6 @@ const safeDate = (dateStr: unknown): Date | null => {
 const TownUpcomingEventsInner = ({ limit = 5 }: TownUpcomingEventsProps) => {
   const { data: allEvents } = useBuilderData<TownEvent>("town-event", {
     limit: 50,
-    fallback: staticEvents,
   });
 
   const now = new Date();

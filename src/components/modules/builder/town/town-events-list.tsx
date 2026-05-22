@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
-import { events as staticEvents } from "@/data/town/events";
 import type { TownEvent } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 
@@ -106,7 +105,6 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
   const { docs, allData: allEvents, totalPages } = useBuilderPaginatedData<TownEvent>("town-event", {
     page,
     limit: itemsPerPage,
-    fallbackData: staticEvents,
     filter: (event) => {
       if (category && !safeCategories(event).includes(category)) return false;
       if (month || year) {

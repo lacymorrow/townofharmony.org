@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { settings } from "@/data/town/settings";
 
 export const metadata: Metadata = {
 	title: "Tomlinson-Moore Family Park Reservation | Town of Harmony, NC",
@@ -40,8 +41,8 @@ export default function ParkReservationPage() {
 						</a>
 					</p>
 					<p className="text-sm text-[#4A4640] mt-2">
-						3389 Harmony Hwy, Harmony, NC 28634<br />
-						Monday – Friday, 8:00 AM – 5:00 PM
+						{settings.contactInfo.address}<br />
+						{settings.officeHours.weekday}
 					</p>
 				</div>
 
