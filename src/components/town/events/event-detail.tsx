@@ -150,14 +150,11 @@ export function EventDetail({ event }: EventDetailProps) {
 								</div>
 							)}
 
-							{event.location && (
+							{event.locationAddress && (
 								<div className="flex items-start gap-3">
 									<MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
 									<div>
-										<p className="font-medium">{event.location}</p>
-										{event.locationAddress && (
-											<p className="text-sm text-muted-foreground">{event.locationAddress}</p>
-										)}
+										<p className="font-medium">{event.locationAddress}</p>
 									</div>
 								</div>
 							)}

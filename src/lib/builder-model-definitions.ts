@@ -284,7 +284,6 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			date("eventDate"),
 			text("eventTime"),
 			text("endTime"),
-			text("location"),
 			text("locationAddress"),
 			reference("organizer", "town-team-member"),
 			emailField("contactEmail"),

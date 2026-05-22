@@ -156,16 +156,10 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
                 {event.endTime && ` - ${event.endTime}`}
               </dd>
             </div>
-            <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
-                Location
-              </dt>
-              <dd className="text-sage-dark font-medium">{event.location}</dd>
-            </div>
             {event.locationAddress && (
               <div>
                 <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
-                  Address
+                  Location
                 </dt>
                 <dd className="text-sage-dark font-medium">{event.locationAddress}</dd>
               </div>
