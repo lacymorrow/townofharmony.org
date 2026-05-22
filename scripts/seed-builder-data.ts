@@ -217,6 +217,7 @@ async function createModel(definition: (typeof modelDefinitions)[0]) {
 				required: f.required ?? false,
 				...(f.defaultValue !== undefined ? { defaultValue: f.defaultValue } : {}),
 				...(f.enum ? { enum: f.enum } : {}),
+				...(f.allowedFileTypes ? { allowedFileTypes: f.allowedFileTypes } : {}),
 				...(f.subFields
 					? {
 							subFields: f.subFields.map((sf) => ({
