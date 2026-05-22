@@ -46,5 +46,9 @@ export function isUpcomingMeeting(meetingDate: string): boolean {
 }
 
 export function isExternalUrl(url: string): boolean {
-	return url.startsWith("http") || url.startsWith("//");
+	return /^https?:\/\//i.test(url) || url.startsWith("//");
+}
+
+export function isSafeUrl(url: string): boolean {
+	return /^https?:\/\//i.test(url) || url.startsWith("//") || (url.startsWith("/") && !url.startsWith("//"));
 }

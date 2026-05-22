@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useBuilderData } from "@/lib/builder-data";
-import { isExternalUrl } from "@/lib/utils";
+import { isExternalUrl, isSafeUrl } from "@/lib/utils";
 import { pointsOfInterest as staticPOIs } from "@/data/town/points-of-interest";
 import type { TownPointOfInterest } from "@/data/town/types";
 
@@ -94,8 +94,10 @@ export const TownPointsOfInterest = ({
 				{/* POI Grid */}
 				{pois.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{pois.map((poi) => (
-							<div
+						{pois.map((poi) => {
+							const safeLink = poi.link && isSafeUrl(poi.link) ? poi.link : undefined;
+							const isExternal = safeLink ? isExternalUrl(safeLink) : false;
+							return (<div
 								key={poi.slug}
 								className="bg-white rounded-lg border border-stone overflow-hidden"
 							>
@@ -140,11 +142,11 @@ export const TownPointsOfInterest = ({
 										{poi.category}
 									</span>
 									<h2 className="text-lg font-semibold text-[#2D2A24] mb-2">
-										{poi.link ? (
+										{safeLink ? (
 											<a
-												href={poi.link}
-												target={isExternalUrl(poi.link) ? "_blank" : undefined}
-												rel={isExternalUrl(poi.link) ? "noopener noreferrer" : undefined}
+												href={safeLink}
+												target={isExternal ? "_blank" : undefined}
+												rel={isExternal ? "noopener noreferrer" : undefined}
 												className="hover:text-sage-dark transition-colors"
 											>
 												{poi.name}
@@ -217,11 +219,11 @@ export const TownPointsOfInterest = ({
 										</div>
 									)}
 
-									{poi.link && (
+									{safeLink && (
 										<a
-											href={poi.link}
-											target={isExternalUrl(poi.link) ? "_blank" : undefined}
-											rel={isExternalUrl(poi.link) ? "noopener noreferrer" : undefined}
+											href={safeLink}
+											target={isExternal ? "_blank" : undefined}
+											rel={isExternal ? "noopener noreferrer" : undefined}
 											className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-sage-dark hover:text-[#2D2A24] transition-colors"
 										>
 											Visit
@@ -242,7 +244,7 @@ export const TownPointsOfInterest = ({
 									)}
 								</div>
 							</div>
-						))}
+						)})}
 					</div>
 				) : (
 					<div className="text-center py-12">

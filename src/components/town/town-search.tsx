@@ -33,7 +33,7 @@ import { pointsOfInterest } from "@/data/town/points-of-interest";
 import { resources } from "@/data/town/resources";
 import { isSewerVisible } from "@/data/town/sewer-rates";
 import { teamMembers } from "@/data/town/team-members";
-import { isExternalUrl } from "@/lib/utils";
+import { isExternalUrl, isSafeUrl } from "@/lib/utils";
 
 const SEWER_HREFS = new Set(["/sewer", "/pay/sewer"]);
 
@@ -136,12 +136,13 @@ const buildSearchIndex = (): SearchResult[] => {
 
 	// Points of interest
 	for (const poi of pointsOfInterest) {
+		const safeLink = poi.link && isSafeUrl(poi.link) ? poi.link : undefined;
 		results.push({
 			id: `poi-${poi.id}`,
 			title: poi.name,
 			subtitle: `${poi.category} — ${poi.address}`,
-			href: poi.link || `/points-of-interest#${poi.slug}`,
-			openExternal: !!poi.link && isExternalUrl(poi.link),
+			href: safeLink || `/points-of-interest#${poi.slug}`,
+			openExternal: !!safeLink && isExternalUrl(safeLink),
 			category: "Places",
 			icon: <MapPin className="h-4 w-4" />,
 		});
