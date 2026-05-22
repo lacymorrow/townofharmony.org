@@ -7,6 +7,7 @@ import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 
 const nextConfig: NextConfig = {
+	transpilePackages: ["@c15t/nextjs"],
 	env: {
 		// Add client-side feature flags
 		...buildTimeFeatureFlags,
