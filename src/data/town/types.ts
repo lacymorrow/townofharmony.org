@@ -45,7 +45,6 @@ export interface TownEvent {
 	eventDate: string;
 	eventTime: string;
 	endTime: string;
-	location: string;
 	locationAddress: string;
 	organizer: string | BuilderReference | null;
 	contactEmail: string;

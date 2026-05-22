@@ -14,7 +14,6 @@ interface EventCardProps {
 		eventDate: string;
 		eventTime: string | null;
 		endTime: string | null;
-		location: string | null;
 		locationAddress: string | null;
 		categories: string[] | null;
 		isRecurring: boolean | null;
@@ -91,10 +90,10 @@ export function EventCard({ event }: EventCardProps) {
 							</span>
 						)}
 
-						{event.location && (
+						{event.locationAddress && (
 							<span className="align-middle">
 								<MapPin className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
-								{event.location}
+								{event.locationAddress}
 							</span>
 						)}
 

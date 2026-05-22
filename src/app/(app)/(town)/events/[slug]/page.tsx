@@ -65,10 +65,11 @@ export default async function EventDetailPage({ params }: PageProps) {
 						? ` – ${event.endTime}`
 						: ""}
 				</p>
-				<p className="text-base text-[#4A4640] mb-6">
-					{event.location}
-					{event.locationAddress ? ` · ${event.locationAddress}` : ""}
-				</p>
+				{event.locationAddress && (
+					<p className="text-base text-[#4A4640] mb-6">
+						{event.locationAddress}
+					</p>
+				)}
 				{event.featuredImage && (
 					<div className="mb-8 overflow-hidden rounded-lg">
 						<img

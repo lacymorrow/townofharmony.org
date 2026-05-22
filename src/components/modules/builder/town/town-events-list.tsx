@@ -273,7 +273,6 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
                           {event.endTime ? ` - ${event.endTime}` : ""}
                         </span>
                       )}
-                      {event.location && <span>{event.location}</span>}
                       {event.locationAddress && <span>{event.locationAddress}</span>}
                     </div>
                   </div>
