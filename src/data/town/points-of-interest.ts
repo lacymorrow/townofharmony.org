@@ -1,5 +1,6 @@
 import type { TownPointOfInterest } from "./types";
 import { mediaUrls } from "./media";
+import { settings } from "./settings";
 
 export const pointsOfInterest: TownPointOfInterest[] = [
 	{
@@ -24,7 +25,7 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 			"The seat of town government and center of civic life in Harmony. Town Hall houses administrative offices and serves as the meeting place for the Town Council. Residents can access various town services here.",
 		image: mediaUrls["poi-town-hall"],
 		address: "3389 Harmony Hwy, Harmony, NC 28634",
-		hours: "Monday - Friday: 9:00 AM - 5:00 PM",
+		hours: settings.officeHours.weekday,
 
 		amenities: ["Accessible Entrance", "Public Meeting Room", "Parking"],
 	},

@@ -1,3 +1,5 @@
+import { settings } from "./settings";
+
 export interface SewerRateTier {
 	id: string;
 	name: string;
@@ -63,7 +65,7 @@ export const sewerContactInfo = {
 	department: "Public Works Department",
 	phone: "(704) 546-2339",
 	email: "admin@townofharmony.org",
-	hours: "Monday - Friday, 9:00 AM - 5:00 PM",
+	hours: settings.officeHours.weekday,
 	address: "Town of Harmony, PO Box 428, Harmony, NC 28634",
 };
 
