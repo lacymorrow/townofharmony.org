@@ -15,7 +15,7 @@ Builder.registerComponent(CTA, {
     {
       name: "backgroundImage",
       type: "file",
-      allowedFileTypes: ["jpeg", "png", "webp"],
+      allowedFileTypes: ["jpeg", "png", "webp", "svg", "gif"],
     },
     {
       name: "description",
