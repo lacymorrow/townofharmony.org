@@ -253,7 +253,7 @@ const fetchBuilderEvents = async (apiKey: string): Promise<BuilderEventEntry[]> 
 			.map((r: { data: { title?: string; slug?: string; description?: string } }) => ({
 				title: r.data.title || "Untitled Event",
 				slug: r.data.slug || "",
-				description: r.data.description || "",
+				description: (r.data.description || "").replace(/<[^>]*>/g, ""),
 			}))
 			.filter((e: BuilderEventEntry) => e.slug);
 
