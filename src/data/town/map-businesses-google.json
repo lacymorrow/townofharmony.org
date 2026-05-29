@@ -1,5 +1,5 @@
 {
-	"syncedAt": "2026-05-17T14:19:00.846Z",
+	"syncedAt": "2026-05-24T08:22:29.920Z",
 	"source": "google-places-api",
 	"center": {
 		"latitude": 35.9545,
@@ -25,7 +25,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJwVvVrnHfU4gRo80S-mvB-s0",
@@ -39,13 +39,13 @@
 			"googleTypes": [
 				"grocery_store",
 				"food_store",
+				"store",
 				"food",
 				"point_of_interest",
-				"store",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJebzk2wbfU4gRr7yaTBgkqbA",
@@ -58,43 +58,43 @@
 			"description": "",
 			"googleTypes": [
 				"garden_center",
-				"manufacturer",
 				"supplier",
+				"manufacturer",
+				"store",
 				"food",
 				"point_of_interest",
-				"store",
 				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJKf6JAwTfU4gRivxAxSYAX5s",
 			"name": "Dollar General",
 			"address": "3345 Harmony Hwy, Harmony, NC 28634, USA",
 			"phone": "(336) 422-0610",
-			"category": "Retail & Shopping",
+			"category": "Health & Wellness",
 			"lat": 35.956680999999996,
 			"lng": -80.772556,
 			"description": "Bargain retail chain selling a range of household goods, groceries, beauty products & more.",
 			"googleTypes": [
-				"gift_shop",
-				"convenience_store",
-				"discount_store",
 				"drugstore",
-				"market",
+				"discount_store",
 				"toy_store",
+				"convenience_store",
+				"market",
+				"gift_shop",
 				"grocery_store",
 				"food_store",
+				"store",
 				"food",
 				"point_of_interest",
 				"health",
-				"store",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJb6JWZgDfU4gRNsdZ3co54HI",
@@ -113,7 +113,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJs4xmBgTfU4gRkzCdSw8sIcc",
@@ -126,15 +126,15 @@
 			"description": "",
 			"googleTypes": [
 				"post_office",
-				"association_or_organization",
-				"government_office",
 				"finance",
+				"association_or_organization",
 				"point_of_interest",
 				"service",
+				"government_office",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJMdn2mqnfU4gRnqEkPZ7c9Xc",
@@ -152,7 +152,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJZyVEfgTfU4gRtKXtC04PCDI",
@@ -166,13 +166,13 @@
 			"googleTypes": [
 				"grocery_store",
 				"food_store",
+				"store",
 				"food",
 				"point_of_interest",
-				"store",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJszi90KnfU4gRaUgpQ1F6ofw",
@@ -190,7 +190,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJnRQfiwPfU4gRodMBNot0Koo",
@@ -211,25 +211,25 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJM-xTb0bfU4gR9tkpuYXWP_U",
 			"name": "Tienda La Despensa",
 			"address": "119 Grose St, Harmony, NC 28634, USA",
 			"phone": "(980) 379-0082",
-			"category": "Restaurant & Food",
+			"category": "Retail & Shopping",
 			"lat": 35.960020799999995,
 			"lng": -80.7771411,
 			"description": "",
 			"googleTypes": [
+				"store",
 				"food",
 				"point_of_interest",
-				"store",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJ41gEYgTfU4gRzXRMZv9-g1M",
@@ -247,7 +247,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJsdBuvAbfU4gR4M_m5Fm_4es",
@@ -262,13 +262,13 @@
 				"auto_parts_store",
 				"market",
 				"car_repair",
-				"point_of_interest",
 				"store",
+				"point_of_interest",
 				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJcTN_LATfU4gRhkT8MBbxBnI",
@@ -287,7 +287,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJoUEQRxvfU4gR2SDee9lPznA",
@@ -306,7 +306,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJMdb-Dp3fU4gRuKzIEOIC7_Q",
@@ -325,7 +325,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJhSkqBATfU4gRWfjXjs9jRco",
@@ -338,13 +338,13 @@
 			"description": "",
 			"googleTypes": [
 				"fire_station",
-				"government_office",
 				"point_of_interest",
 				"service",
+				"government_office",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJ5SpMJQDfU4gRb7clx0ztMj8",
@@ -362,7 +362,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJmXrSlQbfU4gRnbuCOQCch94",
@@ -375,13 +375,13 @@
 			"description": "",
 			"googleTypes": [
 				"pharmacy",
+				"store",
 				"point_of_interest",
 				"health",
-				"store",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		},
 		{
 			"googlePlaceId": "ChIJ0xbSTADfU4gRXr3H3KgjpQg",
@@ -399,7 +399,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-05-17T14:19:00.845Z"
+			"syncedAt": "2026-05-24T08:22:29.920Z"
 		}
 	]
 }
