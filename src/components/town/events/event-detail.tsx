@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PayloadRichText, extractTextFromRichText } from "@/components/town/payload-rich-text";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { formatDate, formatTime } from "@/lib/utils";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
 
@@ -89,10 +90,11 @@ export function EventDetail({ event }: EventDetailProps) {
 				</div>
 
 				{getMediaUrl(event.featuredImage) && (
-					<img
+					<LightboxImage
 						src={getMediaUrl(event.featuredImage)!}
 						alt={event.title}
-						className="w-full h-96 object-cover rounded-lg mb-6"
+						wrapperClassName="w-full h-96 rounded-lg mb-6"
+						className="w-full h-full object-cover"
 					/>
 				)}
 			</header>

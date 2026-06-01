@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 
 interface TownCommunitySpotlightProps {
 	badge?: string;
@@ -24,10 +25,11 @@ export const TownCommunitySpotlight = ({
 					{/* Image area */}
 					<div className="bg-gradient-to-br from-sage-dark to-sage min-h-[320px] flex items-center justify-center relative overflow-hidden">
 						{image ? (
-							<img
+							<LightboxImage
 								src={image}
 								alt={title}
-								className="absolute inset-0 w-full h-full object-cover"
+								wrapperClassName="absolute inset-0 w-full h-full"
+								className="w-full h-full object-cover"
 								width={800}
 								height={600}
 							/>

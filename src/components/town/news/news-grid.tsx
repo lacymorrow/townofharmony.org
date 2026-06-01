@@ -1,6 +1,7 @@
 import { ArrowRight, Calendar, Eye, User } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { getNews } from "@/lib/town-data";
 import { extractTextFromRichText } from "@/components/town/payload-rich-text";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
@@ -54,13 +55,12 @@ export async function NewsGrid({ page, category, search }: NewsGridProps) {
 					return (
 						<Card key={article.id} className="hover:shadow-lg transition-shadow h-full flex flex-col">
 							{featuredImage && (
-								<div className="h-48 overflow-hidden rounded-t-lg">
-									<img
-										src={featuredImage}
-										alt={article.title}
-										className="w-full h-full object-cover"
-									/>
-								</div>
+								<LightboxImage
+									src={featuredImage}
+									alt={article.title}
+									wrapperClassName="h-48 rounded-t-lg"
+									className="w-full h-full object-cover"
+								/>
 							)}
 
 							<CardHeader className="flex-1">

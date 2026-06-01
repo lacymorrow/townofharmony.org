@@ -2,6 +2,7 @@ import { CheckCircle, Clock, Globe, MapPin, Phone, Star } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 
 interface BusinessCardProps {
 	business: {
@@ -69,10 +70,11 @@ export function BusinessCard({ business }: BusinessCardProps) {
 						</div>
 					</div>
 					{business.logo && (
-						<img
+						<LightboxImage
 							src={business.logo}
 							alt={`${business.name} logo`}
-							className="w-12 h-12 object-contain rounded"
+							wrapperClassName="w-12 h-12 rounded shrink-0"
+							className="w-full h-full object-contain"
 						/>
 					)}
 				</div>

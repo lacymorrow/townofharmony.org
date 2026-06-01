@@ -1,6 +1,14 @@
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import type { HeroBlock } from "@/types/blocks";
 
@@ -50,9 +58,35 @@ export const Hero = ({ block, className }: HeroProps) => {
 
       {/* Side image for split layout */}
       {image?.url && style === "split" && (
-        <div className="relative aspect-square w-full">
-          <Image src={image.url} alt={heading} fill className="object-cover" priority />
-        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              type="button"
+              className="group relative aspect-square w-full cursor-zoom-in overflow-hidden p-0 m-0 bg-transparent border-0"
+            >
+              <span className="sr-only">View {heading} full size</span>
+              <Image
+                src={image.url}
+                alt={heading}
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                priority
+              />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="border-none bg-transparent p-0 shadow-none w-fit max-w-[95vw] sm:max-w-[90vw] [&>button]:bg-background/70 [&>button]:hover:bg-background [&>button]:rounded-full [&>button]:p-1">
+            <VisuallyHidden>
+              <DialogTitle>{heading}</DialogTitle>
+              <DialogDescription>Full-size view of {heading}.</DialogDescription>
+            </VisuallyHidden>
+            <img
+              src={image.url}
+              alt={heading}
+              className="block max-h-[90vh] max-w-[90vw] w-auto h-auto rounded-lg object-contain"
+            />
+          </DialogContent>
+        </Dialog>
       )}
     </section>
   );

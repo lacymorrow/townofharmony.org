@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownEvent } from "@/data/town/types";
 import { resolveBuilderRef } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
@@ -124,15 +125,14 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
 
         {/* Featured image */}
         {event.featuredImage && (
-          <div className="mb-8 rounded-xl overflow-hidden">
-            <img
-              src={event.featuredImage}
-              alt={event.title}
-              className="w-full h-auto object-cover max-h-[400px]"
-              width={800}
-              height={600}
-            />
-          </div>
+          <LightboxImage
+            src={event.featuredImage}
+            alt={event.title}
+            wrapperClassName="mb-8 rounded-xl w-full"
+            className="w-full h-auto object-cover max-h-[400px]"
+            width={800}
+            height={600}
+          />
         )}
 
         {/* Event details card */}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { news as staticNews } from "@/data/town/news";
 import type { TownNews } from "@/data/town/types";
 import { resolveBuilderRef } from "@/data/town/types";
@@ -122,15 +123,14 @@ const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
 
         {/* Featured image */}
         {article.featuredImage && (
-          <div className="mb-8 rounded-xl overflow-hidden">
-            <img
-              src={article.featuredImage}
-              alt={article.title}
-              className="w-full h-auto object-cover max-h-[400px]"
-              width={800}
-              height={600}
-            />
-          </div>
+          <LightboxImage
+            src={article.featuredImage}
+            alt={article.title}
+            wrapperClassName="mb-8 rounded-xl w-full"
+            className="w-full h-auto object-cover max-h-[400px]"
+            width={800}
+            height={600}
+          />
         )}
 
         {/* Content */}

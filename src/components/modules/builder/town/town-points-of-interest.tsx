@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { useBuilderData } from "@/lib/builder-data";
 import { isExternalUrl, isSafeUrl } from "@/lib/utils";
 import { pointsOfInterest as staticPOIs } from "@/data/town/points-of-interest";
@@ -104,15 +105,14 @@ export const TownPointsOfInterest = ({
 							>
 								{/* Image */}
 								{poi.image ? (
-									<div className="h-48 overflow-hidden">
-										<img
-											src={poi.image}
-											alt={poi.name}
-											className="w-full h-full object-cover"
-											width={800}
-											height={600}
-										/>
-									</div>
+									<LightboxImage
+										src={poi.image}
+										alt={poi.name}
+										wrapperClassName="h-48 w-full"
+										className="w-full h-full object-cover"
+										width={800}
+										height={600}
+									/>
 								) : (
 									<div className="h-48 bg-stone flex items-center justify-center">
 										<svg
