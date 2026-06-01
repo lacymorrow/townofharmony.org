@@ -288,8 +288,18 @@ interface RecentSearch {
 const getRecentSearches = (): RecentSearch[] => {
 	try {
 		const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
-		const parsed: RecentSearch[] = stored ? JSON.parse(stored) : [];
-		return parsed.filter((r) => !QUICK_LINK_HREFS.has(r.href));
+		const parsed: unknown = stored ? JSON.parse(stored) : [];
+		if (!Array.isArray(parsed)) return [];
+		return parsed.filter(
+			(r): r is RecentSearch =>
+				!!r &&
+				typeof r === "object" &&
+				"href" in r &&
+				typeof r.href === "string" &&
+				"title" in r &&
+				typeof r.title === "string" &&
+				!QUICK_LINK_HREFS.has(r.href),
+		);
 	} catch {
 		return [];
 	}
