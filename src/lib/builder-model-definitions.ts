@@ -77,7 +77,7 @@ const url = (name: string): BuilderField => ({
 
 const file = (
 	name: string,
-	allowedFileTypes = ["jpeg", "png", "webp", "svg", "gif"],
+	allowedFileTypes = ["jpeg", "png", "webp", "svg", "gif"]
 ): BuilderField => ({
 	name,
 	type: "file",
@@ -129,9 +129,11 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("name", true),
 			text("title", true),
-			enumText("category", ["Executive", "Town Council", "Staff"]),
+			enumText("category", ["Executive", "Town Council", "Board of Aldermen", "Staff"]),
 			emailField("email"),
 			file("image"),
+			phone("phone"),
+			num("sortOrder"),
 			text("mayorSince"),
 			text("termExpires"),
 			text("department"),
@@ -164,6 +166,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			richText("content"),
 			file("image"),
 			tags("highlights"),
+			num("sortOrder"),
 		],
 	},
 	{
@@ -239,16 +242,8 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		name: "town-navigation",
 		kind: "data",
 		fields: [
-			list("mainNav", [
-				text("name", true),
-				text("href", true),
-				text("parentName"),
-			]),
-			list("topBarLinks", [
-				text("name", true),
-				text("href", true),
-				text("icon"),
-			]),
+			list("mainNav", [text("name", true), text("href", true), text("parentName")]),
+			list("topBarLinks", [text("name", true), text("href", true), text("icon")]),
 			list("quickLinks", [
 				text("title", true),
 				text("href", true),
@@ -256,11 +251,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 				text("icon"),
 				text("color"),
 			]),
-			list("footerLinks", [
-				text("category", true),
-				text("name", true),
-				text("href", true),
-			]),
+			list("footerLinks", [text("category", true), text("name", true), text("href", true)]),
 		],
 	},
 
@@ -374,9 +365,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("stateCode"),
 			text("zipCode"),
 			richText("hours"),
-			list("images", [
-				file("image"),
-			]),
+			list("images", [file("image")]),
 			bool("isVerified"),
 			bool("isFeatured"),
 		],
@@ -392,11 +381,7 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			date("registrationDeadline"),
 			date("earlyVotingStart"),
 			date("earlyVotingEnd"),
-			list("pollingLocations", [
-				text("name"),
-				text("address"),
-				text("hours"),
-			]),
+			list("pollingLocations", [text("name"), text("address"), text("hours")]),
 			bool("isActive", true),
 			list("candidates", [
 				text("name"),
@@ -422,6 +407,13 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("ctaText"),
 			text("ctaHref"),
 		],
+	},
+
+	// --- Contact Form Inquiry Types ---
+	{
+		name: "town-contact-inquiry-type",
+		kind: "data",
+		fields: [text("value", true), text("label", true), num("sortOrder"), bool("isActive", true)],
 	},
 
 	// --- Sewer Rates ---

@@ -2,6 +2,9 @@
 
 import { z } from "zod";
 import { siteConfig } from "@/config/site-config";
+import { contactInquiryTypes } from "@/data/town/contact-inquiry-types";
+import type { TownContactInquiryType } from "@/data/town/types";
+import { fetchBuilderContent } from "@/lib/builder-data-server";
 import { townContactConfirmationEmail, townContactNotificationEmail } from "@/lib/email-templates";
 import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
@@ -12,31 +15,26 @@ import {
 	validateSubmissionTiming,
 } from "@/server/utils/contact-rate-limit";
 
-const INQUIRY_VALUES = [
-	"general",
-	"sewer-residential",
-	"sewer-nonresidential-intown",
-	"sewer-nonresidential-outtown",
-	"permits",
-	"taxes",
-	"parks",
-	"roads",
-	"suggestion",
-	"other",
-] as const;
-
-const INQUIRY_LABELS: Record<(typeof INQUIRY_VALUES)[number], string> = {
-	general: "General Inquiry",
-	"sewer-residential": "Sewer Residential Service",
-	"sewer-nonresidential-intown": "Sewer In-Town Nonresidential Service",
-	"sewer-nonresidential-outtown": "Sewer Out-of-Town Nonresidential Service",
-	permits: "Permits & Zoning",
-	taxes: "Taxes & Billing",
-	parks: "Parks & Recreation",
-	roads: "Roads & Infrastructure",
-	suggestion: "Suggestion",
-	other: "Other",
-};
+/**
+ * Inquiry types live in the Builder.io `town-contact-inquiry-type` data model
+ * so town staff can manage them via the CMS. The local list in
+ * `data/town/contact-inquiry-types.ts` is the fallback when Builder is
+ * unreachable or returns no entries.
+ */
+async function loadInquiryTypes(): Promise<TownContactInquiryType[]> {
+	try {
+		const { results } = await fetchBuilderContent<TownContactInquiryType>(
+			"town-contact-inquiry-type"
+		);
+		const active = results.filter((t) => t?.value && t?.label && t.isActive !== false);
+		if (active.length > 0) return active;
+	} catch (err) {
+		logger.warn("Failed to load inquiry types from Builder, using fallback", {
+			error: err instanceof Error ? err.message : String(err),
+		});
+	}
+	return contactInquiryTypes.filter((t) => t.isActive !== false);
+}
 
 const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/jpeg", "image/png"] as const;
 const MAX_ATTACHMENT_BYTES = 3 * 1024 * 1024;
@@ -50,12 +48,13 @@ const attachmentSchema = z
 	.refine((data) => data.content.length * 0.75 <= MAX_ATTACHMENT_BYTES, {
 		message: "File must be 3 MB or smaller.",
 	});
+
 const townContactSchema = z.object({
 	firstName: z.string().min(1, "First name is required"),
 	lastName: z.string().min(1, "Last name is required"),
 	email: z.string().email("Please enter a valid email address"),
 	phone: z.string().optional(),
-	inquiryType: z.enum(INQUIRY_VALUES, { message: "Please select an inquiry type" }),
+	inquiryType: z.string().min(1, "Please select an inquiry type"),
 	message: z.string().min(10, "Message must be at least 10 characters"),
 	attachment: attachmentSchema.optional(),
 	turnstileToken: z.string().optional(),
@@ -66,7 +65,7 @@ export type TownContactFormData = z.infer<typeof townContactSchema>;
 
 // _loadedAt is an anti-bot timing field kept outside the validated schema
 export async function submitTownContactForm(
-	formData: TownContactFormData & { _loadedAt?: string },
+	formData: TownContactFormData & { _loadedAt?: string }
 ) {
 	const { _loadedAt, ...rest } = formData;
 	const parsed = townContactSchema.safeParse(rest);
@@ -74,21 +73,46 @@ export async function submitTownContactForm(
 		return { success: false, error: parsed.error.errors[0]?.message ?? "Invalid form data" };
 	}
 
-	const { firstName, lastName, email, phone, inquiryType, message, attachment, turnstileToken, website } = parsed.data;
+	const {
+		firstName,
+		lastName,
+		email,
+		phone,
+		inquiryType,
+		message,
+		attachment,
+		turnstileToken,
+		website,
+	} = parsed.data;
+
+	const inquiryTypes = await loadInquiryTypes();
+	const matched = inquiryTypes.find((t) => t.value === inquiryType);
+	if (!matched) {
+		return { success: false, error: "Please select an inquiry type" };
+	}
+	const inquiryLabel = matched.label;
 
 	const isLikelyBot = !!website;
 	if (isLikelyBot) {
-		logger.warn("Honeypot triggered", { context: "town-contact-form", action: "processing_anyway" });
+		logger.warn("Honeypot triggered", {
+			context: "town-contact-form",
+			action: "processing_anyway",
+		});
 	}
-	const inquiryLabel = INQUIRY_LABELS[inquiryType];
 
 	if (isTurnstileConfigured()) {
 		if (turnstileToken) {
 			if (!(await verifyTurnstileToken(turnstileToken))) {
-				logger.warn("Turnstile verification failed", { context: "town-contact-form", action: "allowing_submission" });
+				logger.warn("Turnstile verification failed", {
+					context: "town-contact-form",
+					action: "allowing_submission",
+				});
 			}
 		} else {
-			logger.warn("Turnstile token missing", { context: "town-contact-form", reason: "widget_load_failure" });
+			logger.warn("Turnstile token missing", {
+				context: "town-contact-form",
+				reason: "widget_load_failure",
+			});
 		}
 	}
 

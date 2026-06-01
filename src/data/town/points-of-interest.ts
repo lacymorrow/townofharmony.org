@@ -1,6 +1,6 @@
-import type { TownPointOfInterest } from "./types";
 import { mediaUrls } from "./media";
 import { settings } from "./settings";
+import type { TownPointOfInterest } from "./types";
 
 export const pointsOfInterest: TownPointOfInterest[] = [
 	{
@@ -8,8 +8,7 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		name: "Tomlinson-Moore Family Park",
 		slug: "tomlinson-moore-family-park",
 		category: "Parks",
-		description:
-			"Community park offering recreational facilities for all ages.",
+		description: "Community park offering recreational facilities for all ages.",
 		image: mediaUrls["poi-park"],
 		address: "Harmony, NC 28634",
 		hours: "Dawn to Dusk",
@@ -24,10 +23,11 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		category: "Government",
 		description:
 			"The seat of town government and center of civic life in Harmony. Town Hall houses administrative offices and serves as the meeting place for the Town Council. Residents can access various town services here.",
-		image: mediaUrls["poi-town-hall"],
+		image:
+			"https://cdn.builder.io/api/v1/image/assets%2F6906107178ed48fd8cb869c00236b0f0%2F030e8c12ca4f4277940d89533594d535",
 		address: "3389 Harmony Hwy, Harmony, NC 28634",
 		hours: settings.officeHours.weekday,
-
+		phone: "(704) 546-2339",
 		amenities: ["Accessible Entrance", "Public Meeting Room", "Parking"],
 	},
 	{
@@ -45,15 +45,15 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 	},
 	{
 		id: 4,
-		name: "Harmony Veterans Memorial",
-		slug: "veterans-memorial",
-		category: "Memorials",
-		description:
-			"A solemn memorial honoring the brave men and women from the Harmony community who served in the United States Armed Forces. The memorial features plaques, flags, and a peaceful garden setting for reflection.",
-		image: mediaUrls["poi-memorial"],
-		address: "Harmony, NC 28634",
-		hours: "Open 24 hours",
-		amenities: ["Memorial Plaques", "Flag Display", "Garden", "Benches"],
+		name: "Iredell County American Legion Post Dick Norris Post 113",
+		slug: "american-legion-post-113",
+		category: "Veteran",
+		description: "",
+		image:
+			"https://cdn.builder.io/api/v1/image/assets%2F6906107178ed48fd8cb869c00236b0f0%2F8c7614a771134679b3320ac85bbaac47",
+		address: "3085 Harmony Hwy, Harmony, NC, United States, 28634",
+		hours: "",
+		amenities: ["Flag Display"],
 	},
 	{
 		id: 5,
@@ -75,7 +75,8 @@ export const pointsOfInterest: TownPointOfInterest[] = [
 		category: "Education",
 		description:
 			"Part of the Iredell-Statesville Schools district, Harmony Elementary serves the children of the Harmony community. The school has been a cornerstone of education in the area for generations.",
-		image: mediaUrls["poi-school"],
+		image:
+			"https://cdn.builder.io/api/v1/image/assets%2F6906107178ed48fd8cb869c00236b0f0%2Feb83cbaf0783405da4e31a612bba757f",
 		address: "Harmony, NC 28634",
 		hours: "School hours: 7:30 AM - 2:30 PM",
 		amenities: ["Playground", "Athletic Fields", "Library", "Parking"],

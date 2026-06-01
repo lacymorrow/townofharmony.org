@@ -14,9 +14,28 @@
  */
 
 import { config } from "dotenv";
+
 config(); // Load .env
 
 import { createAdminApiClient } from "@builder.io/admin-sdk";
+import { announcements } from "../src/data/town/announcements";
+import { businesses } from "../src/data/town/businesses";
+import { contactInquiryTypes } from "../src/data/town/contact-inquiry-types";
+import { elections } from "../src/data/town/elections";
+import { emergencyServices } from "../src/data/town/emergency-services";
+import { events } from "../src/data/town/events";
+import { historyArticles } from "../src/data/town/history";
+import { homepage } from "../src/data/town/homepage";
+import { mapBusinesses } from "../src/data/town/map-businesses";
+import { meetings } from "../src/data/town/meetings";
+import { navigation } from "../src/data/town/navigation";
+import { news } from "../src/data/town/news";
+import { pointsOfInterest } from "../src/data/town/points-of-interest";
+import { resources } from "../src/data/town/resources";
+import { settings } from "../src/data/town/settings";
+import { sewerRateTiers } from "../src/data/town/sewer-rates";
+// Import real static data
+import { teamMembers } from "../src/data/town/team-members";
 import { modelDefinitions } from "../src/lib/builder-model-definitions";
 import {
 	emptyCounters,
@@ -28,24 +47,6 @@ import {
 	tallyResult,
 	upsert,
 } from "./lib/builder-upsert";
-
-// Import real static data
-import { teamMembers } from "../src/data/town/team-members";
-import { emergencyServices } from "../src/data/town/emergency-services";
-import { historyArticles } from "../src/data/town/history";
-import { pointsOfInterest } from "../src/data/town/points-of-interest";
-import { resources } from "../src/data/town/resources";
-import { announcements } from "../src/data/town/announcements";
-import { settings } from "../src/data/town/settings";
-import { news } from "../src/data/town/news";
-import { events } from "../src/data/town/events";
-import { meetings } from "../src/data/town/meetings";
-import { businesses } from "../src/data/town/businesses";
-import { elections } from "../src/data/town/elections";
-import { sewerRateTiers } from "../src/data/town/sewer-rates";
-import { homepage } from "../src/data/town/homepage";
-import { mapBusinesses } from "../src/data/town/map-businesses";
-import { navigation } from "../src/data/town/navigation";
 
 const BUILDER_PRIVATE_KEY = process.env.BUILDER_PRIVATE_KEY;
 const BUILDER_API_KEY = process.env.NEXT_PUBLIC_BUILDER_API_KEY;
@@ -79,10 +80,7 @@ interface SeedEntry {
 	data: Record<string, unknown>;
 }
 
-function toSeedEntries<T extends Record<string, any>>(
-	items: T[],
-	nameKey: keyof T,
-): SeedEntry[] {
+function toSeedEntries<T extends Record<string, any>>(items: T[], nameKey: keyof T): SeedEntry[] {
 	return items.map((item) => ({
 		name: String(item[nameKey]),
 		data: { ...item } as Record<string, unknown>,
@@ -166,6 +164,15 @@ const seedData: Record<string, SeedEntry[]> = {
 			ctaHref: slide.ctaHref ?? "",
 		},
 	})),
+	"town-contact-inquiry-type": contactInquiryTypes.map((t) => ({
+		name: t.label,
+		data: {
+			value: t.value,
+			label: t.label,
+			sortOrder: t.sortOrder,
+			isActive: t.isActive,
+		},
+	})),
 	"town-sewer-rate": sewerRateTiers.map((tier) => ({
 		name: tier.name,
 		data: {
@@ -200,7 +207,9 @@ const seedData: Record<string, SeedEntry[]> = {
 
 async function createModel(definition: (typeof modelDefinitions)[0]) {
 	if (dryRun) {
-		console.log(`  [DRY] Would create model "${definition.name}" with ${definition.fields.length} fields`);
+		console.log(
+			`  [DRY] Would create model "${definition.name}" with ${definition.fields.length} fields`
+		);
 		return { id: "dry-run", name: definition.name };
 	}
 
@@ -279,7 +288,7 @@ async function main() {
 				}
 			} catch (err) {
 				console.error(
-					`  [FAIL] Model "${model.name}": ${err instanceof Error ? err.message : err}`,
+					`  [FAIL] Model "${model.name}": ${err instanceof Error ? err.message : err}`
 				);
 				modelFailed++;
 			}
@@ -298,9 +307,7 @@ async function main() {
 	}
 
 	// Phase 2: Seed data
-	console.log(
-		`Upserting data entries${opts.dryRun ? " (dry run)" : ""}...\n`,
-	);
+	console.log(`Upserting data entries${opts.dryRun ? " (dry run)" : ""}...\n`);
 	const counters = emptyCounters();
 
 	for (const model of models) {
@@ -323,14 +330,12 @@ async function main() {
 					{ name: entry.name, data: entry.data },
 					entry.name,
 					byName,
-					opts,
+					opts
 				);
 				console.log(`  ${formatResult(entry.name, result)}`);
 				tallyResult(counters, result);
 			} catch (err) {
-				console.error(
-					`    [FAIL]    ${entry.name}: ${err instanceof Error ? err.message : err}`,
-				);
+				console.error(`    [FAIL]    ${entry.name}: ${err instanceof Error ? err.message : err}`);
 				counters.failed++;
 			}
 		}

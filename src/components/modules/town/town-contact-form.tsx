@@ -1,21 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Turnstile } from "@/components/turnstile";
+import { contactInquiryTypes } from "@/data/town/contact-inquiry-types";
+import type { TownContactInquiryType } from "@/data/town/types";
+import { useBuilderData } from "@/lib/builder-data";
 import { submitTownContactForm, type TownContactFormData } from "@/server/actions/town-contact";
-
-const INQUIRY_OPTIONS = [
-	{ value: "general", label: "General Inquiry" },
-	{ value: "sewer-residential", label: "Sewer Residential Service" },
-	{ value: "sewer-nonresidential-intown", label: "Sewer In-Town Nonresidential Service" },
-	{ value: "sewer-nonresidential-outtown", label: "Sewer Out-of-Town Nonresidential Service" },
-	{ value: "permits", label: "Permits & Zoning" },
-	{ value: "taxes", label: "Taxes & Billing" },
-	{ value: "parks", label: "Parks & Recreation" },
-	{ value: "roads", label: "Roads & Infrastructure" },
-	{ value: "suggestion", label: "Suggestion" },
-	{ value: "other", label: "Other" },
-];
 
 const ALLOWED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3 MB
@@ -50,6 +40,19 @@ export const TownContactForm = () => {
 	const turnstileTokenRef = useRef<string | null>(null);
 	const loadedAtRef = useRef(Date.now().toString());
 	const successRef = useRef<HTMLOutputElement | null>(null);
+
+	const { data: builderInquiryTypes } = useBuilderData<TownContactInquiryType>(
+		"town-contact-inquiry-type",
+		{ fallback: contactInquiryTypes }
+	);
+	const inquiryOptions = useMemo(
+		() =>
+			builderInquiryTypes
+				.filter((t) => t.isActive !== false && t.value && t.label)
+				.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+				.map((t) => ({ value: t.value, label: t.label })),
+		[builderInquiryTypes]
+	);
 
 	useEffect(() => {
 		if (submitted && successRef.current) {
@@ -102,13 +105,16 @@ export const TownContactForm = () => {
 		if (hasFile) {
 			try {
 				const base64 = await readFileAsBase64(file);
-				attachment = { filename: file.name, content: base64, contentType: file.type as "application/pdf" | "image/jpeg" | "image/png" };
+				attachment = {
+					filename: file.name,
+					content: base64,
+					contentType: file.type as "application/pdf" | "image/jpeg" | "image/png",
+				};
 			} catch {
 				setServerError("Failed to read the attachment. Please try again.");
 				return;
 			}
 		}
-
 
 		startTransition(async () => {
 			const result = await submitTownContactForm({
@@ -155,7 +161,9 @@ export const TownContactForm = () => {
 						<polyline points="20 6 9 17 4 12" />
 					</svg>
 				</div>
-				<h2 id="town-contact-success-title" className="mb-3 text-2xl font-semibold text-sage-dark">Message Sent</h2>
+				<h2 id="town-contact-success-title" className="mb-3 text-2xl font-semibold text-sage-dark">
+					Message Sent
+				</h2>
 				<p className="mx-auto max-w-sm text-base text-[#2D2A24]">
 					Thank you for contacting the Town of Harmony. We will respond within 2 business days.
 				</p>
@@ -252,7 +260,7 @@ export const TownContactForm = () => {
 					<option value="" disabled>
 						Select a topic…
 					</option>
-					{INQUIRY_OPTIONS.map((opt) => (
+					{inquiryOptions.map((opt) => (
 						<option key={opt.value} value={opt.value}>
 							{opt.label}
 						</option>
@@ -320,15 +328,19 @@ export const TownContactForm = () => {
 			</FieldWrapper>
 
 			{/* honeypot — hidden from real users, filled only by bots */}
-			<div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
+			<div
+				aria-hidden="true"
+				style={{
+					position: "absolute",
+					left: "-9999px",
+					top: "auto",
+					width: "1px",
+					height: "1px",
+					overflow: "hidden",
+				}}
+			>
 				<label htmlFor="website">Website</label>
-				<input
-					id="website"
-					name="website"
-					type="text"
-					autoComplete="off"
-					tabIndex={-1}
-				/>
+				<input id="website" name="website" type="text" autoComplete="off" tabIndex={-1} />
 			</div>
 
 			<Turnstile

@@ -1980,5 +1980,16 @@ export const meetings: TownMeeting[] = [
 		isPublic: true,
 		minutesUrl: "/docs/meetings/August_4_2025_Minutes.docx",
 	},
+	{
+		id: 153,
+		title: "July Town Council Meeting",
+		slug: "july-town-council-meeting",
+		type: "Council",
+		meetingDate: "2026-06-01",
+		meetingTime: "6:00 - 8:00 PM",
+		location: "Town Hall",
+		agenda: "",
+		attendees: [],
+		isPublic: true,
+	},
 ];
-
