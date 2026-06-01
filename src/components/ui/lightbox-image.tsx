@@ -10,7 +10,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 
 type ImgProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt">;
 
@@ -52,12 +52,12 @@ export function LightboxImage({
 			<DialogTrigger asChild>
 				<button
 					type="button"
-					aria-label={`View ${alt || "image"} full size`}
 					className={cn(
 						"group block cursor-zoom-in overflow-hidden p-0 m-0 bg-transparent border-0",
 						wrapperClassName,
 					)}
 				>
+					<span className="sr-only">View {alt || "image"} full size</span>
 					<img
 						src={src}
 						alt={alt}

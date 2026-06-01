@@ -56,9 +56,9 @@ export const TownHeroBanner = ({
 								<DialogTrigger asChild>
 									<button
 										type="button"
-										aria-label={`View ${title} full size`}
 										className="group absolute inset-0 cursor-zoom-in overflow-hidden p-0 m-0 bg-transparent border-0"
 									>
+										<span className="sr-only">View {title} full size</span>
 										<Image
 											src={image}
 											alt={title}

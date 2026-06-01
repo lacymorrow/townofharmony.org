@@ -62,13 +62,14 @@ export const Hero = ({ block, className }: HeroProps) => {
           <DialogTrigger asChild>
             <button
               type="button"
-              aria-label={`View ${heading} full size`}
               className="group relative aspect-square w-full cursor-zoom-in overflow-hidden p-0 m-0 bg-transparent border-0"
             >
+              <span className="sr-only">View {heading} full size</span>
               <Image
                 src={image.url}
                 alt={heading}
                 fill
+                sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 priority
               />
