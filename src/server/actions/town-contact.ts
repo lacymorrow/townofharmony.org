@@ -26,7 +26,9 @@ async function loadInquiryTypes(): Promise<TownContactInquiryType[]> {
 		const { results } = await fetchBuilderContent<TownContactInquiryType>(
 			"town-contact-inquiry-type"
 		);
-		const active = results.filter((t) => t?.value && t?.label && t.isActive !== false);
+		const active = (results ?? []).filter(
+			(t) => t?.value && t?.label && t?.isActive !== false,
+		);
 		if (active.length > 0) return active;
 	} catch (err) {
 		logger.warn("Failed to load inquiry types from Builder, using fallback", {

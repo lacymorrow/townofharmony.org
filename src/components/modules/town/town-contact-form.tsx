@@ -47,8 +47,8 @@ export const TownContactForm = () => {
 	);
 	const inquiryOptions = useMemo(
 		() =>
-			builderInquiryTypes
-				.filter((t) => t.isActive !== false && t.value && t.label)
+			(builderInquiryTypes ?? [])
+				.filter((t) => t?.isActive !== false && t?.value && t?.label)
 				.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
 				.map((t) => ({ value: t.value, label: t.label })),
 		[builderInquiryTypes]
