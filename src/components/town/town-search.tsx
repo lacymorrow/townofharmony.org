@@ -277,6 +277,8 @@ const SUGGESTED_LINKS = [
 	{ title: "Resources", href: "/resources", icon: <FileText className="h-4 w-4" /> },
 ];
 
+const QUICK_LINK_HREFS = new Set(SUGGESTED_LINKS.map((l) => l.href));
+
 interface RecentSearch {
 	title: string;
 	href: string;
@@ -286,13 +288,15 @@ interface RecentSearch {
 const getRecentSearches = (): RecentSearch[] => {
 	try {
 		const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
-		return stored ? JSON.parse(stored) : [];
+		const parsed: RecentSearch[] = stored ? JSON.parse(stored) : [];
+		return parsed.filter((r) => !QUICK_LINK_HREFS.has(r.href));
 	} catch {
 		return [];
 	}
 };
 
 const saveRecentSearch = (item: RecentSearch) => {
+	if (QUICK_LINK_HREFS.has(item.href)) return;
 	try {
 		const recent = getRecentSearches().filter((r) => r.href !== item.href);
 		recent.unshift(item);
