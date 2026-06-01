@@ -303,13 +303,13 @@ const saveRecentSearch = (item: RecentSearch) => {
 };
 
 const removeRecentSearch = (href: string): RecentSearch[] => {
+	const recent = getRecentSearches().filter((r) => r.href !== href);
 	try {
-		const recent = getRecentSearches().filter((r) => r.href !== href);
 		localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recent));
-		return recent;
 	} catch {
-		return getRecentSearches();
+		// ignore storage errors
 	}
+	return recent;
 };
 
 interface TownSearchProps {
@@ -485,7 +485,6 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 										<span className="flex-1 truncate">{item.title}</span>
 										<button
 											type="button"
-											aria-label={`Remove ${item.title} from recent searches`}
 											onMouseDown={(e) => {
 												e.preventDefault();
 												e.stopPropagation();
@@ -497,6 +496,7 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 											}}
 											className="ml-auto inline-flex h-5 w-5 shrink-0 items-center justify-center rounded text-sage-dark/40 opacity-60 hover:bg-sage-dark/10 hover:text-sage-dark hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-sage-dark/40"
 										>
+											<span className="sr-only">Remove {item.title} from recent searches</span>
 											<X className="h-3.5 w-3.5" aria-hidden="true" />
 										</button>
 									</CommandItem>
