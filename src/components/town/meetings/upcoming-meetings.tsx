@@ -109,7 +109,7 @@ export function UpcomingMeetings({ limit = 5, className }: UpcomingMeetingsProps
 												</div>
 											)}
 
-											{meeting.attendees.length > 0 && (
+											{Array.isArray(meeting.attendees) && meeting.attendees.length > 0 && (
 												<div className="flex items-center gap-2">
 													<Users className="h-3 w-3" />
 													<span>{meeting.attendees.length.toString()} attendees expected</span>

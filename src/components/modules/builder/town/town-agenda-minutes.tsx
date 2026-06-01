@@ -156,7 +156,7 @@ export const TownAgendaMinutes = ({
 											</div>
 										)}
 
-										{meeting.attendees.length > 0 && (
+										{Array.isArray(meeting.attendees) && meeting.attendees.length > 0 && (
 											<div className="mt-4 pt-3 border-t border-[#DDD7CC]">
 												<p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-1">
 													Expected Attendees
