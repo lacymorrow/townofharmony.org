@@ -1,78 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+	type BuilderContentEntry,
+	type FetchOptions,
+	fetchBuilderContent,
+} from "./builder-content-fetch";
 
 const BUILDER_API_KEY = process.env.NEXT_PUBLIC_BUILDER_API_KEY;
-const BUILDER_CDN_BASE = "https://cdn.builder.io/api/v3/content";
-
-/**
- * Shape of a Builder.io content entry from the Content API.
- * The actual data fields live under `data`.
- */
-interface BuilderContentEntry<T> {
-	id: string;
-	name: string;
-	data: T;
-	published: string;
-	createdDate: number;
-	lastUpdated: number;
-}
-
-interface BuilderContentResponse<T> {
-	results: BuilderContentEntry<T>[];
-}
-
-interface FetchOptions {
-	query?: Record<string, unknown>;
-	sort?: Record<string, number>;
-	limit?: number;
-	offset?: number;
-}
-
-/**
- * Low-level fetch from Builder.io Content API.
- * Uses direct REST fetch (not SDK) to avoid caching issues in Next.js server context.
- */
-async function fetchBuilderContent<T>(
-	modelName: string,
-	options?: FetchOptions,
-): Promise<{ results: T[]; count: number }> {
-	if (!BUILDER_API_KEY) {
-		return { results: [], count: 0 };
-	}
-
-	const url = new URL(`${BUILDER_CDN_BASE}/${modelName}`);
-	url.searchParams.set("apiKey", BUILDER_API_KEY);
-	url.searchParams.set("limit", String(options?.limit ?? 100));
-	url.searchParams.set("includeUnpublished", "false");
-
-	if (options?.offset) {
-		url.searchParams.set("offset", String(options.offset));
-	}
-
-	if (options?.query) {
-		url.searchParams.set("query", JSON.stringify(options.query));
-	}
-
-	if (options?.sort) {
-		url.searchParams.set("sort", JSON.stringify(options.sort));
-	}
-
-	const res = await fetch(url.toString(), {
-		next: { revalidate: 60 },
-	});
-
-	if (!res.ok) {
-		throw new Error(
-			`Builder.io fetch failed for ${modelName}: ${res.status}`,
-		);
-	}
-
-	const json: BuilderContentResponse<T> = await res.json();
-	const results = json.results.map((entry) => entry.data);
-
-	return { results, count: results.length };
-}
 
 interface UseBuilderDataOptions<T> extends FetchOptions {
 	fallback?: T[];
