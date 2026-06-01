@@ -83,9 +83,21 @@ async function main() {
 	console.log(`Fetched ${events.length} town-event entries\n`);
 	if (dryRun) console.log("=== DRY RUN ===\n");
 
+	// Seed the seen-set with every slug already in Builder. Two events with
+	// the same title would otherwise derive the same slug, which causes
+	// silent routing collisions at `/events/<slug>`.
+	const seenSlugs = new Set<string>();
+	for (const event of events) {
+		const slug = event.data?.slug;
+		if (typeof slug === "string" && slug.trim() !== "") {
+			seenSlugs.add(slug.trim());
+		}
+	}
+
 	let backfilled = 0;
 	let alreadyPresent = 0;
 	let skippedNoTitle = 0;
+	let skippedDuplicate = 0;
 
 	for (const event of events) {
 		const slug = event.data?.slug;
@@ -105,6 +117,14 @@ async function main() {
 			skippedNoTitle++;
 			continue;
 		}
+		if (seenSlugs.has(derived)) {
+			console.log(
+				`  [SKIP] ${event.id}: derived slug "${derived}" already in use — rename "${title}" or set slug manually`,
+			);
+			skippedDuplicate++;
+			continue;
+		}
+		seenSlugs.add(derived);
 		if (dryRun) {
 			console.log(`  [WOULD BACKFILL] "${title}" → slug "${derived}"`);
 		} else {
@@ -114,9 +134,14 @@ async function main() {
 		backfilled++;
 	}
 
-	console.log(
-		`\n${dryRun ? "[DRY RUN] " : ""}Summary: ${backfilled} backfilled, ${alreadyPresent} already had slug, ${skippedNoTitle} skipped (no title)`,
-	);
+	const parts = [
+		`${backfilled} backfilled`,
+		`${alreadyPresent} already had slug`,
+		`${skippedNoTitle} skipped (no title)`,
+	];
+	if (skippedDuplicate > 0) parts.push(`${skippedDuplicate} skipped (duplicate slug)`);
+	console.log(`\n${dryRun ? "[DRY RUN] " : ""}Summary: ${parts.join(", ")}`);
+	if (skippedDuplicate > 0) process.exitCode = 1;
 }
 
 main().catch((err) => {
