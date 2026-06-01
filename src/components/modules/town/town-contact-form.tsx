@@ -41,15 +41,16 @@ export const TownContactForm = () => {
 	const loadedAtRef = useRef(Date.now().toString());
 	const successRef = useRef<HTMLOutputElement | null>(null);
 
+	// Order comes from Builder.io's drag-and-drop priority in the CMS — fetched
+	// in the same priority order other town content uses (sort: { priority: -1 }).
 	const { data: builderInquiryTypes } = useBuilderData<TownContactInquiryType>(
 		"town-contact-inquiry-type",
-		{ fallback: contactInquiryTypes }
+		{ sort: { priority: -1 }, fallback: contactInquiryTypes }
 	);
 	const inquiryOptions = useMemo(
 		() =>
 			(builderInquiryTypes ?? [])
 				.filter((t) => t?.isActive !== false && t?.value && t?.label)
-				.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
 				.map((t) => ({ value: t.value, label: t.label })),
 		[builderInquiryTypes]
 	);

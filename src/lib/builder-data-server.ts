@@ -51,8 +51,13 @@ async function fetchBuilderContent<T>(
 		url.searchParams.set("query", JSON.stringify(options.query));
 	}
 
+	// Builder's Content API expects sort as dot-notation query params
+	// (`sort.field=N`), not a JSON-stringified `sort` param — the latter is
+	// silently treated as a query filter and returns 0 results.
 	if (options?.sort) {
-		url.searchParams.set("sort", JSON.stringify(options.sort));
+		for (const [field, direction] of Object.entries(options.sort)) {
+			url.searchParams.set(`sort.${field}`, String(direction));
+		}
 	}
 
 	const res = await fetch(url.toString(), {

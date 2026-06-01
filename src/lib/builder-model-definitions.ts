@@ -410,10 +410,13 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 	},
 
 	// --- Contact Form Inquiry Types ---
+	// Display order is managed by Builder.io's drag-and-drop priority in the
+	// CMS list view — no `sortOrder` field needed. The form fetches with
+	// `sort: { priority: -1 }` so the rendered <select> matches CMS order.
 	{
 		name: "town-contact-inquiry-type",
 		kind: "data",
-		fields: [text("value", true), text("label", true), num("sortOrder"), bool("isActive", true)],
+		fields: [text("value", true), text("label", true), bool("isActive", true)],
 	},
 
 	// --- Sewer Rates ---

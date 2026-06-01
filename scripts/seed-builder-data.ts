@@ -169,7 +169,6 @@ const seedData: Record<string, SeedEntry[]> = {
 		data: {
 			value: t.value,
 			label: t.label,
-			sortOrder: t.sortOrder,
 			isActive: t.isActive,
 		},
 	})),

@@ -194,7 +194,6 @@ export interface TownElection {
 export interface TownContactInquiryType {
 	value: string;
 	label: string;
-	sortOrder: number;
 	isActive: boolean;
 }
 
