@@ -8,7 +8,6 @@ import { useBuilderData } from "@/lib/builder-data";
 import { resources as staticResources } from "@/data/town/resources";
 import type { TownResource } from "@/data/town/types";
 import { sanitizeHtml } from "@/lib/sanitize-html";
-import { isExternalUrl } from "@/lib/utils";
 
 interface TownResourcesListProps {
 	type?: "document" | "service" | "link";
@@ -301,7 +300,9 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 											}
 
 											if (resource.externalUrl) {
-												const isInternal = !isExternalUrl(resource.externalUrl);
+												const isInternal =
+													resource.externalUrl.startsWith("/") &&
+													!resource.externalUrl.startsWith("//");
 												if (isInternal) {
 													return (
 														<Link key={resource.slug} href={resource.externalUrl}>

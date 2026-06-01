@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useBuilderData } from "@/lib/builder-data";
 import { isExternalUrl, isSafeUrl } from "@/lib/utils";
@@ -143,14 +144,23 @@ export const TownPointsOfInterest = ({
 									</span>
 									<h2 className="text-lg font-semibold text-[#2D2A24] mb-2">
 										{safeLink ? (
-											<a
-												href={safeLink}
-												target={isExternal ? "_blank" : undefined}
-												rel={isExternal ? "noopener noreferrer" : undefined}
-												className="hover:text-sage-dark transition-colors"
-											>
-												{poi.name}
-											</a>
+											isExternal ? (
+												<a
+													href={safeLink}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="hover:text-sage-dark transition-colors"
+												>
+													{poi.name}
+												</a>
+											) : (
+												<Link
+													href={safeLink}
+													className="hover:text-sage-dark transition-colors"
+												>
+													{poi.name}
+												</Link>
+											)
 										) : (
 											poi.name
 										)}
@@ -219,29 +229,42 @@ export const TownPointsOfInterest = ({
 										</div>
 									)}
 
-									{safeLink && (
-										<a
-											href={safeLink}
-											target={isExternal ? "_blank" : undefined}
-											rel={isExternal ? "noopener noreferrer" : undefined}
-											className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-sage-dark hover:text-[#2D2A24] transition-colors"
-										>
-											Visit
-											<svg
-												className="w-3.5 h-3.5"
-												fill="none"
-												stroke="currentColor"
-												viewBox="0 0 24 24"
+									{safeLink && (() => {
+										const visitClassName =
+											"inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-sage-dark hover:text-[#2D2A24] transition-colors";
+										const visitContent = (
+											<>
+												Visit
+												<svg
+													className="w-3.5 h-3.5"
+													fill="none"
+													stroke="currentColor"
+													viewBox="0 0 24 24"
+												>
+													<path
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth={2}
+														d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+													/>
+												</svg>
+											</>
+										);
+										return isExternal ? (
+											<a
+												href={safeLink}
+												target="_blank"
+												rel="noopener noreferrer"
+												className={visitClassName}
 											>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth={2}
-													d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-												/>
-											</svg>
-										</a>
-									)}
+												{visitContent}
+											</a>
+										) : (
+											<Link href={safeLink} className={visitClassName}>
+												{visitContent}
+											</Link>
+										);
+									})()}
 								</div>
 							</div>
 						)})}
