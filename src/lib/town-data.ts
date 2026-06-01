@@ -13,6 +13,7 @@ import { navigation } from "@/data/town/navigation";
 import { homepage } from "@/data/town/homepage";
 import type { TownEvent } from "@/data/town/types";
 import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-server";
+import { slugify } from "@/lib/utils/extract-headings";
 
 /**
  * Static data access layer for town content.
@@ -75,13 +76,20 @@ export const incrementNewsViewCount = async (_id: number, _currentCount: number)
 	// No-op for static data
 };
 
+/** Derive a slug from the title when an editor leaves the slug field empty in Builder.io. */
+const ensureEventSlug = (event: TownEvent): TownEvent => {
+	if (event.slug && event.slug.trim() !== "") return event;
+	const derived = event.title ? slugify(event.title) : "";
+	return { ...event, slug: derived || String(event.id ?? "") };
+};
+
 /**
  * Fetch events exclusively from Builder.io's town-event data model.
  * Static data is not a valid fallback — events must reflect real, current information.
  */
 export const resolveEvents = async (): Promise<TownEvent[]> => {
 	const { results } = await fetchBuilderContent<TownEvent>("town-event", { limit: 1000 });
-	return results;
+	return results.map(ensureEventSlug);
 };
 
 /**
@@ -130,9 +138,14 @@ export const getEvents = async (options?: {
 
 /**
  * Get a single event by slug from Builder.io only.
+ * Falls back to scanning all events with derived slugs so entries that omit the
+ * slug field (now optional) still resolve through their title-derived slug.
  */
-export const getEventBySlug = async (slug: string) => {
-	return fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
+export const getEventBySlug = async (slug: string): Promise<TownEvent | null> => {
+	const direct = await fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
+	if (direct) return ensureEventSlug(direct);
+	const all = await resolveEvents();
+	return all.find((e) => e.slug === slug) ?? null;
 };
 
 /**

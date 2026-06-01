@@ -22,23 +22,35 @@ interface BuilderField {
 interface BuilderModelDefinition {
 	name: string;
 	kind: "data";
+	/** Field name used to auto-populate the Builder entry name (so editors don't have to fill in a separate "name" field at the top). */
+	nameField?: string;
+	/** Short description shown in the Builder.io content editor for this model. */
+	helperText?: string;
 	fields: BuilderField[];
 }
 
-const text = (name: string, required = false): BuilderField => ({
+interface FieldExtras {
+	friendlyName?: string;
+	helperText?: string;
+}
+
+const text = (name: string, required = false, extras: FieldExtras = {}): BuilderField => ({
 	name,
 	type: "text",
 	required,
+	...extras,
 });
 
-const longText = (name: string): BuilderField => ({
+const longText = (name: string, extras: FieldExtras = {}): BuilderField => ({
 	name,
 	type: "longText",
+	...extras,
 });
 
-const richText = (name: string): BuilderField => ({
+const richText = (name: string, extras: FieldExtras = {}): BuilderField => ({
 	name,
 	type: "richText",
+	...extras,
 });
 
 const num = (name: string): BuilderField => ({
@@ -52,9 +64,10 @@ const bool = (name: string, defaultValue = false): BuilderField => ({
 	defaultValue,
 });
 
-const date = (name: string): BuilderField => ({
+const date = (name: string, extras: FieldExtras = {}): BuilderField => ({
 	name,
 	type: "date",
+	...extras,
 });
 
 const url = (name: string): BuilderField => ({
@@ -272,17 +285,50 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 	{
 		name: "town-event",
 		kind: "data",
+		// Use the event title as the Builder entry name so editors don't need
+		// to type a separate "Name" at the top — fixes "doesn't recognize
+		// title" save errors.
+		nameField: "title",
 		fields: [
-			text("title", true),
-			text("slug", true),
-			richText("description"),
-			richText("content"),
+			text("title", true, {
+				friendlyName: "Event title",
+				helperText: "Public title shown on the events list and detail pages.",
+			}),
+			text("slug", false, {
+				friendlyName: "URL slug",
+				helperText:
+					"URL-friendly version of the title (e.g. spring-festival-2026). Leave blank to auto-generate.",
+			}),
+			richText("description", {
+				friendlyName: "Short description",
+				helperText: "1–2 sentence summary shown on event listings.",
+			}),
+			richText("content", {
+				friendlyName: "Event details",
+				helperText: "Full event description shown on the event page.",
+			}),
 			file("featuredImage"),
-			date("eventDate"),
-			text("eventTime"),
-			text("endTime"),
-			text("locationAddress"),
-			reference("organizer", "town-team-member"),
+			date("eventDate", {
+				friendlyName: "Event date",
+				helperText:
+					"Date of the event. The time portion is ignored — use the Start time and End time fields below.",
+			}),
+			text("eventTime", undefined, {
+				friendlyName: "Start time",
+				helperText: 'Free-form start time (e.g. "4:00 PM" or "All day").',
+			}),
+			text("endTime", undefined, {
+				friendlyName: "End time",
+				helperText: 'Free-form end time (e.g. "7:00 PM" or "All day").',
+			}),
+			text("locationAddress", undefined, {
+				friendlyName: "Location / address",
+				helperText: "Venue name and/or street address.",
+			}),
+			text("organizer", undefined, {
+				friendlyName: "Organizer",
+				helperText: 'Organizer name (e.g. "Town of Harmony").',
+			}),
 			emailField("contactEmail"),
 			phone("contactPhone"),
 			enumText("status", ["upcoming", "past", "cancelled"]),
