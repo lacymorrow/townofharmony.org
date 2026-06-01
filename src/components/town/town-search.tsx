@@ -7,12 +7,13 @@ import {
 	Globe,
 	Home,
 	Landmark,
+	Mail,
 	MapPin,
-	Newspaper,
 	Search,
 	Star,
 	Store,
 	Users,
+	X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -272,7 +273,7 @@ const SUGGESTED_LINKS = [
 	{ title: "Events", href: "/events", icon: <Calendar className="h-4 w-4" /> },
 	{ title: "Our Team", href: "/our-team", icon: <Users className="h-4 w-4" /> },
 	{ title: "History", href: "/history", icon: <Clock className="h-4 w-4" /> },
-	{ title: "Contact Us", href: "/contact", icon: <Newspaper className="h-4 w-4" /> },
+	{ title: "Contact Us", href: "/contact", icon: <Mail className="h-4 w-4" /> },
 	{ title: "Resources", href: "/resources", icon: <FileText className="h-4 w-4" /> },
 ];
 
@@ -299,6 +300,16 @@ const saveRecentSearch = (item: RecentSearch) => {
 	} catch {
 		// ignore storage errors
 	}
+};
+
+const removeRecentSearch = (href: string): RecentSearch[] => {
+	const recent = getRecentSearches().filter((r) => r.href !== href);
+	try {
+		localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recent));
+	} catch {
+		// ignore storage errors
+	}
+	return recent;
 };
 
 interface TownSearchProps {
@@ -471,7 +482,23 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 										className="gap-3"
 									>
 										<Search className="h-4 w-4 text-sage-dark/40" aria-hidden="true" />
-										<span>{item.title}</span>
+										<span className="flex-1 truncate">{item.title}</span>
+										<button
+											type="button"
+											onMouseDown={(e) => {
+												e.preventDefault();
+												e.stopPropagation();
+											}}
+											onClick={(e) => {
+												e.preventDefault();
+												e.stopPropagation();
+												setRecentSearches(removeRecentSearch(item.href));
+											}}
+											className="ml-auto inline-flex h-5 w-5 shrink-0 items-center justify-center rounded text-sage-dark/40 opacity-60 hover:bg-sage-dark/10 hover:text-sage-dark hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-sage-dark/40"
+										>
+											<span className="sr-only">Remove {item.title} from recent searches</span>
+											<X className="h-3.5 w-3.5" aria-hidden="true" />
+										</button>
 									</CommandItem>
 								))}
 							</CommandGroup>
