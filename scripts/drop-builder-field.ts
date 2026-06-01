@@ -45,6 +45,12 @@ async function main() {
 	const live = await adminClient.query({
 		models: { id: true, name: true, fields: true },
 	});
+	// GraphQL errors come back in `errors`, not as thrown exceptions. Without
+	// this check, a 401 / permission failure would look like "model not found".
+	if (live.errors?.length) {
+		console.error("Builder.io query errors:", JSON.stringify(live.errors, null, 2));
+		process.exit(1);
+	}
 
 	const models = (live.data?.models ?? []) as unknown as LiveModel[];
 	const model = models.find((m) => m.name === modelName);
@@ -75,6 +81,10 @@ async function main() {
 			{ id: true, name: true },
 		],
 	});
+	if (result.errors?.length) {
+		console.error("Builder.io mutation errors:", JSON.stringify(result.errors, null, 2));
+		process.exit(1);
+	}
 	if (!result.data?.updateModel) {
 		throw new Error(`updateModel returned no data for ${modelName}`);
 	}
