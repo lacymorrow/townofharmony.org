@@ -35,6 +35,8 @@ const MONTHS = [
 	{ value: "12", label: "December" },
 ];
 
+const safeArray = (arr: unknown): string[] => (Array.isArray(arr) ? arr : []);
+
 const TYPE_BADGE_COLORS: Record<string, string> = {
 	Council: "bg-sage/15 text-sage-dark border-sage/30",
 	Planning: "bg-wheat/30 text-[#7A6520] border-wheat/50",
@@ -289,13 +291,16 @@ export const TownMeetingsList = ({
 												<span>{meeting.meetingTime}</span>
 												<span>{meeting.location}</span>
 											</div>
-											{meeting.attendees.length > 0 && (
-												<p className="text-sm text-[#635E56]">
-													Attendees: {meeting.attendees.slice(0, 3).join(", ")}
-													{meeting.attendees.length > 3 &&
-														` +${meeting.attendees.length - 3} more`}
-												</p>
-											)}
+											{(() => {
+												const attendees = safeArray(meeting.attendees);
+												if (attendees.length === 0) return null;
+												return (
+													<p className="text-sm text-[#635E56]">
+														Attendees: {attendees.slice(0, 3).join(", ")}
+														{attendees.length > 3 && ` +${attendees.length - 3} more`}
+													</p>
+												);
+											})()}
 										</div>
 									</div>
 								</Link>
