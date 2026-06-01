@@ -1,5 +1,6 @@
 "use client";
 
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { useBuilderData } from "@/lib/builder-data";
 import { historyArticles as staticHistory } from "@/data/town/history";
 import type { TownHistoryArticle } from "@/data/town/types";
@@ -77,15 +78,14 @@ export const TownHistoryTimeline = ({
 										<div className="block bg-white rounded-lg border border-stone overflow-hidden">
 											{/* Image */}
 											{article.image && (
-												<div className="h-48 overflow-hidden">
-													<img
-														src={article.image}
-														alt={article.title}
-														className="w-full h-full object-cover"
-														width={800}
-														height={600}
-													/>
-												</div>
+												<LightboxImage
+													src={article.image}
+													alt={article.title}
+													wrapperClassName="h-48"
+													className="w-full h-full object-cover"
+													width={800}
+													height={600}
+												/>
 											)}
 
 											<div className="p-5">

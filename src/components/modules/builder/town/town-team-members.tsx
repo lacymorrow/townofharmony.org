@@ -1,5 +1,6 @@
 "use client";
 
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { useBuilderData } from "@/lib/builder-data";
 import { teamMembers as staticTeamMembers } from "@/data/town/team-members";
 import type { TownTeamMember } from "@/data/town/types";
@@ -99,12 +100,13 @@ export const TownTeamMembers = ({
 										<div className="flex items-start gap-4 mb-4">
 											{/* Avatar */}
 											{member.image ? (
-												<img
+												<LightboxImage
 													src={member.image}
 													alt={member.name}
 													width={56}
 													height={56}
-													className="w-14 h-14 rounded-full object-cover flex-shrink-0"
+													wrapperClassName="w-14 h-14 rounded-full flex-shrink-0"
+													className="w-full h-full object-cover rounded-full"
 												/>
 											) : (
 												<div className="w-14 h-14 rounded-full bg-sage-dark text-white flex items-center justify-center flex-shrink-0">

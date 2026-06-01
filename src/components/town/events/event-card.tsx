@@ -2,6 +2,7 @@ import { Calendar, Clock, MapPin, Repeat, Users } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { formatDate, formatTime } from "@/lib/utils";
 
 interface EventCardProps {
@@ -31,13 +32,12 @@ export function EventCard({ event }: EventCardProps) {
 		<Card className="hover:shadow-md transition-shadow">
 			<div className="flex">
 				{event.featuredImage && (
-					<div className="hidden sm:block w-32 min-h-[64px] shrink-0 overflow-hidden rounded-l-lg">
-						<img
-							src={event.featuredImage}
-							alt={event.title}
-							className="w-full h-full object-cover"
-						/>
-					</div>
+					<LightboxImage
+						src={event.featuredImage}
+						alt={event.title}
+						wrapperClassName="hidden sm:block w-32 min-h-[64px] shrink-0 rounded-l-lg"
+						className="w-full h-full object-cover"
+					/>
 				)}
 				<div className="flex-1 p-4">
 					<div className="flex justify-between items-start gap-3">

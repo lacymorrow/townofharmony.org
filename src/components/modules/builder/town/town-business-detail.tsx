@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { businesses as staticBusinesses } from "@/data/town/businesses";
 import type { TownBusiness } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
@@ -81,15 +82,14 @@ const TownBusinessDetailInner = ({ slug: slugProp }: TownBusinessDetailProps) =>
         {/* Header with logo */}
         <div className="flex items-start gap-6 mb-6">
           {business.logo && (
-            <div className="shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-cream border border-stone">
-              <img
-                src={business.logo}
-                alt={business.name}
-                className="w-full h-full object-cover"
-                width={800}
-                height={600}
-              />
-            </div>
+            <LightboxImage
+              src={business.logo}
+              alt={business.name}
+              wrapperClassName="shrink-0 w-20 h-20 rounded-xl bg-cream border border-stone"
+              className="w-full h-full object-cover"
+              width={800}
+              height={600}
+            />
           )}
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -208,16 +208,13 @@ const TownBusinessDetailInner = ({ slug: slugProp }: TownBusinessDetailProps) =>
               {business.images.map(
                 (img, index) =>
                   img.image && (
-                    <div
+                    <LightboxImage
                       key={img.id || index}
-                      className="rounded-xl overflow-hidden bg-cream border border-stone aspect-[4/3]"
-                    >
-                      <img
-                        src={img.image}
-                        alt={`${business.name} photo ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                      src={img.image}
+                      alt={`${business.name} photo ${index + 1}`}
+                      wrapperClassName="rounded-xl bg-cream border border-stone aspect-[4/3]"
+                      className="w-full h-full object-cover"
+                    />
                   )
               )}
             </div>

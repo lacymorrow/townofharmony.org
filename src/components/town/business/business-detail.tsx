@@ -13,6 +13,7 @@ import { PayloadRichText } from "@/components/town/payload-rich-text";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownBusiness } from "@/data/town/types";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
 
@@ -70,10 +71,11 @@ export function BusinessDetail({ business }: BusinessDetailProps) {
 						</div>
 					</div>
 					{logoUrl && (
-						<img
+						<LightboxImage
 							src={logoUrl}
 							alt={`${business.name} logo`}
-							className="w-24 h-24 object-contain rounded-lg border"
+							wrapperClassName="w-24 h-24 rounded-lg border"
+							className="w-full h-full object-contain"
 						/>
 					)}
 				</div>
@@ -89,11 +91,12 @@ export function BusinessDetail({ business }: BusinessDetailProps) {
 						const imageUrl = getMediaUrl(item.image);
 						if (!imageUrl) return null;
 						return (
-							<img
+							<LightboxImage
 								key={item.id ?? index}
 								src={imageUrl}
 								alt={`${business.name} image ${index + 1}`}
-								className="w-full h-48 object-cover rounded-lg"
+								wrapperClassName="w-full h-48 rounded-lg"
+								className="w-full h-full object-cover"
 							/>
 						);
 					})}

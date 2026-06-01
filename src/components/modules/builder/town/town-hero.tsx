@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { getHomepageSync } from "@/lib/town-data-client";
 
 interface TownHeroProps {
@@ -64,10 +65,11 @@ export const TownHero = ({
 					{/* Image area */}
 					<div className="hidden lg:flex items-center justify-center relative overflow-hidden">
 						{heroImage ? (
-							<img
+							<LightboxImage
 								src={heroImage}
 								alt={heroTitle}
-								className="absolute inset-0 w-full h-full object-cover"
+								wrapperClassName="absolute inset-0 w-full h-full"
+								className="w-full h-full object-cover"
 								width={800}
 								height={600}
 							/>

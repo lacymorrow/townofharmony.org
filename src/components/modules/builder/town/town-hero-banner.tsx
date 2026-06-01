@@ -1,7 +1,15 @@
 "use client";
 
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
 import Link from "next/link";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface TownHeroBannerProps {
 	title?: string;
@@ -44,14 +52,35 @@ export const TownHeroBanner = ({
 
 					<div className="hidden lg:flex items-center justify-center relative overflow-hidden">
 						{image ? (
-							<Image
-								src={image}
-								alt={title}
-								fill
-								priority
-								sizes="(max-width: 1024px) 0px, 50vw"
-								className="object-cover"
-							/>
+							<Dialog>
+								<DialogTrigger asChild>
+									<button
+										type="button"
+										aria-label={`View ${title} full size`}
+										className="group absolute inset-0 cursor-zoom-in overflow-hidden p-0 m-0 bg-transparent border-0"
+									>
+										<Image
+											src={image}
+											alt={title}
+											fill
+											priority
+											sizes="(max-width: 1024px) 0px, 50vw"
+											className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+										/>
+									</button>
+								</DialogTrigger>
+								<DialogContent className="border-none bg-transparent p-0 shadow-none w-fit max-w-[95vw] sm:max-w-[90vw] [&>button]:bg-background/70 [&>button]:hover:bg-background [&>button]:rounded-full [&>button]:p-1">
+									<VisuallyHidden>
+										<DialogTitle>{title}</DialogTitle>
+										<DialogDescription>Full-size view of {title}.</DialogDescription>
+									</VisuallyHidden>
+									<img
+										src={image}
+										alt={title}
+										className="block max-h-[90vh] max-w-[90vw] w-auto h-auto rounded-lg object-contain"
+									/>
+								</DialogContent>
+							</Dialog>
 						) : (
 							<>
 								<div className="absolute inset-0 bg-gradient-to-br from-wheat/[0.08] to-wheat/[0.04]" />
