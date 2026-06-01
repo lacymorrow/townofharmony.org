@@ -80,7 +80,6 @@ export interface TownTeamMember {
 	email: string;
 	image?: string;
 	phone?: string;
-	sortOrder?: number;
 	termExpires?: string;
 	mayorSince?: string;
 	department?: string;
@@ -99,7 +98,6 @@ export interface TownHistoryArticle {
 	content: string;
 	image: string | null;
 	highlights?: string[];
-	sortOrder?: number;
 }
 
 export interface TownPointOfInterest {

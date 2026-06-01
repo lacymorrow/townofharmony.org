@@ -126,6 +126,9 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 	{
 		name: "town-team-member",
 		kind: "data",
+		// Display order is managed by Builder.io's drag-and-drop priority in the
+		// CMS list view — no `sortOrder` field. Consumers fetch with
+		// `sort: { priority: -1 }` so the rendered list matches CMS order.
 		fields: [
 			text("name", true),
 			text("title", true),
@@ -133,7 +136,6 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			emailField("email"),
 			file("image"),
 			phone("phone"),
-			num("sortOrder"),
 			text("mayorSince"),
 			text("termExpires"),
 			text("department"),
@@ -155,6 +157,9 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 	{
 		name: "town-history-article",
 		kind: "data",
+		// Display order is managed by Builder.io's drag-and-drop priority in the
+		// CMS list view — no `sortOrder` field. Consumers fetch with
+		// `sort: { priority: -1 }` so the rendered timeline matches CMS order.
 		fields: [
 			text("title", true),
 			text("slug", true),
@@ -166,7 +171,6 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			richText("content"),
 			file("image"),
 			tags("highlights"),
-			num("sortOrder"),
 		],
 	},
 	{

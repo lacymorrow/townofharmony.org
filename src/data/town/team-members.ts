@@ -51,7 +51,6 @@ export const teamMembers: TownTeamMember[] = [
 		email: "",
 		image: "/images/team/brandon-angell.png",
 		phone: "(704) 546-2339",
-		sortOrder: 2,
 		termExpires: "2024-2026",
 		isActive: true,
 	},
