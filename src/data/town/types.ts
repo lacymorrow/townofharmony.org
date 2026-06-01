@@ -13,7 +13,7 @@ export interface BuilderReference {
 }
 
 export const resolveBuilderRef = (
-	field: string | BuilderReference | null | undefined,
+	field: string | BuilderReference | null | undefined
 ): string | null => {
 	if (!field) return null;
 	if (typeof field === "string") return field;
@@ -76,9 +76,11 @@ export interface TownTeamMember {
 	id: number;
 	name: string;
 	title: string;
-	category: "Executive" | "Town Council" | "Staff";
+	category: "Executive" | "Town Council" | "Board of Aldermen" | "Staff";
 	email: string;
 	image?: string;
+	phone?: string;
+	sortOrder?: number;
 	termExpires?: string;
 	mayorSince?: string;
 	department?: string;
@@ -97,6 +99,7 @@ export interface TownHistoryArticle {
 	content: string;
 	image: string | null;
 	highlights?: string[];
+	sortOrder?: number;
 }
 
 export interface TownPointOfInterest {
@@ -110,6 +113,7 @@ export interface TownPointOfInterest {
 	hours: string;
 	amenities: string[];
 	link?: string;
+	phone?: string;
 }
 
 export interface TownResource {
@@ -185,6 +189,13 @@ export interface TownElection {
 	candidates: TownElectionCandidate[];
 	resultsUrl?: string;
 	sampleBallot?: string | null;
+}
+
+export interface TownContactInquiryType {
+	value: string;
+	label: string;
+	sortOrder: number;
+	isActive: boolean;
 }
 
 export interface TownAnnouncement {

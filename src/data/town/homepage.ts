@@ -1,5 +1,5 @@
-import type { TownHomepage } from "./types";
 import { mediaUrls } from "./media";
+import type { TownHomepage } from "./types";
 
 export const homepage: TownHomepage = {
 	heroSlides: [
@@ -17,7 +17,7 @@ export const homepage: TownHomepage = {
 			subtitle: "Join Us for Year-Round Celebrations",
 			description:
 				"From seasonal festivals to community gatherings, experience the vibrant spirit that makes Harmony special.",
-			image: mediaUrls["hero-events"],
+			image: "",
 			ctaText: "View Upcoming Events",
 			ctaHref: "/events",
 		},
@@ -26,7 +26,7 @@ export const homepage: TownHomepage = {
 			subtitle: "Your Voice Matters",
 			description:
 				"Stay informed with town meetings, access public records, and connect with your local government.",
-			image: mediaUrls["hero-meetings"],
+			image: "",
 			ctaText: "Meeting Agendas & Minutes",
 			ctaHref: "/meetings",
 		},

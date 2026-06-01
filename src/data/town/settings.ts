@@ -22,8 +22,8 @@ export const settings: TownSettings = {
 		youtube: "",
 	},
 	branding: {
-		tagline: "Where Harmony LIVES and SINGS!",
-		established: "1927",
+		tagline: "",
+		established: "Incorporated in 1927",
 		county: "Iredell County",
 		state: "North Carolina",
 	},
