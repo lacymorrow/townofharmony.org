@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { news } from "@/data/town/news";
 import { meetings } from "@/data/town/meetings";
 import { teamMembers } from "@/data/town/team-members";
@@ -13,6 +14,7 @@ import { navigation } from "@/data/town/navigation";
 import { homepage } from "@/data/town/homepage";
 import type { TownEvent } from "@/data/town/types";
 import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-server";
+import { logger } from "@/lib/logger";
 import { slugify } from "@/lib/utils/extract-headings";
 
 /**
@@ -86,11 +88,29 @@ const ensureEventSlug = (event: TownEvent): TownEvent => {
 /**
  * Fetch events exclusively from Builder.io's town-event data model.
  * Static data is not a valid fallback — events must reflect real, current information.
+ *
+ * Wrapped in `cache()` so multiple lookups in the same render share one fetch.
+ * (Next.js fetch already dedupes at the network layer; this avoids the
+ * `ensureEventSlug` map cost on repeat calls.)
  */
-export const resolveEvents = async (): Promise<TownEvent[]> => {
+export const resolveEvents = cache(async (): Promise<TownEvent[]> => {
 	const { results } = await fetchBuilderContent<TownEvent>("town-event", { limit: 1000 });
 	return results.map(ensureEventSlug);
-};
+});
+
+/**
+ * Slug → event map, built once per render and reused by `getEventBySlug`
+ * when an entry's stored slug doesn't match (e.g. editor left the field
+ * blank and we fall back to a title-derived slug).
+ */
+const resolveEventBySlugMap = cache(async (): Promise<Map<string, TownEvent>> => {
+	const all = await resolveEvents();
+	const map = new Map<string, TownEvent>();
+	for (const event of all) {
+		if (event.slug) map.set(event.slug, event);
+	}
+	return map;
+});
 
 /**
  * Get upcoming events
@@ -137,15 +157,28 @@ export const getEvents = async (options?: {
 };
 
 /**
- * Get a single event by slug from Builder.io only.
- * Falls back to scanning all events with derived slugs so entries that omit the
- * slug field (now optional) still resolve through their title-derived slug.
+ * Get a single event by slug from Builder.io.
+ *
+ * Direct path: query Builder by `data.slug` — O(1) on the CMS side.
+ * Fallback path: only runs when the entry was saved without a slug field
+ * (editors can leave it blank — the model marks slug optional). Uses the
+ * request-cached slug map so the cost is one Builder fetch per render,
+ * not one per missing-slug lookup, with O(1) lookup against the map.
  */
 export const getEventBySlug = async (slug: string): Promise<TownEvent | null> => {
 	const direct = await fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
 	if (direct) return ensureEventSlug(direct);
-	const all = await resolveEvents();
-	return all.find((e) => e.slug === slug) ?? null;
+	const bySlug = await resolveEventBySlugMap();
+	const match = bySlug.get(slug);
+	if (match) {
+		logger.warn("Event resolved via slug-derivation fallback — Builder entry is missing data.slug", {
+			slug,
+			eventTitle: match.title,
+			eventId: match.id,
+		});
+		return match;
+	}
+	return null;
 };
 
 /**
