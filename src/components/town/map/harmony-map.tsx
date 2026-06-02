@@ -109,10 +109,15 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 		init();
 
 		const container = mapContainerRef.current;
+		let rafId: number | null = null;
 		const resizeObserver =
 			container && typeof ResizeObserver !== "undefined"
 				? new ResizeObserver(() => {
-						mapRef.current?.invalidateSize();
+						if (rafId !== null) return;
+						rafId = requestAnimationFrame(() => {
+							rafId = null;
+							mapRef.current?.invalidateSize();
+						});
 					})
 				: null;
 		if (container && resizeObserver) {
@@ -121,6 +126,7 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 
 		return () => {
 			cancelled = true;
+			if (rafId !== null) cancelAnimationFrame(rafId);
 			resizeObserver?.disconnect();
 			if (mapRef.current) {
 				mapRef.current.remove();
