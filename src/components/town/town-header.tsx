@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Menu, Phone, Search, X } from "lucide-react";
+import { AlertTriangle, Calendar, Menu, Phone, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -98,7 +98,11 @@ export function TownHeader({
 								</Link>
 							)}
 							{process.env.NEXT_PUBLIC_FEATURE_ALERTS_ENABLED === "true" && (
-								<Link href="/emergency" className="hover:text-white transition-colors">
+								<Link
+									href="/emergency"
+									className="flex items-center gap-1 hover:text-white transition-colors"
+								>
+									<AlertTriangle className="h-3 w-3" aria-hidden="true" />
 									Emergency Info
 								</Link>
 							)}

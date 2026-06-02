@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 export default async function ParkReservationPage() {
 	const settings = await getBuilderSettings();
-	const telHref = `tel:${settings.contactInfo.phone.replace(/\D/g, "")}`;
+	const telHref = `tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`;
 	return (
 		<article className="py-12 bg-cream">
 			<div className="container mx-auto px-4 max-w-3xl">
