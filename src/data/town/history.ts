@@ -51,7 +51,6 @@ export const historyArticles: TownHistoryArticle[] = [
 			"1928: Became Harmony High School",
 			"Community grows around school and camp meeting tradition",
 		],
-		sortOrder: 2,
 	},
 	{
 		id: 4,
@@ -69,7 +68,6 @@ export const historyArticles: TownHistoryArticle[] = [
 			"Population 543 (2020 census)",
 			"Town amenities: library, family park, community center, post office, volunteer fire department",
 		],
-		sortOrder: 3,
 	},
 	// Landmarks
 	{
@@ -85,7 +83,6 @@ export const historyArticles: TownHistoryArticle[] = [
 			"Town Hall has served as the center of government and civic life in Harmony since the town's incorporation in 1927.",
 		image:
 			"https://cdn.builder.io/api/v1/image/assets%2F6906107178ed48fd8cb869c00236b0f0%2F030e8c12ca4f4277940d89533594d535",
-		sortOrder: 4,
 	},
 	{
 		id: 6,
