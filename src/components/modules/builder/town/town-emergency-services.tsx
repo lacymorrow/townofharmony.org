@@ -95,7 +95,7 @@ export const TownEmergencyServices = () => {
 										}`}
 									>
 										<a
-											href={`tel:${service.phone.replace(/[^0-9+]/g, "")}`}
+											href={`tel:${service.phone.replace(/[^\d+]/g, "")}`}
 											className="block"
 										>
 											<div className="flex items-center gap-4 mb-3">
@@ -165,7 +165,7 @@ export const TownEmergencyServices = () => {
 													</h3>
 
 													<a
-														href={`tel:${service.phone.replace(/[^0-9+]/g, "")}`}
+														href={`tel:${service.phone.replace(/[^\d+]/g, "")}`}
 														className="inline-flex items-center gap-2 text-2xl font-bold font-mono text-sage-deep hover:text-sage-dark transition-colors mb-2"
 													>
 														<Phone className="h-5 w-5" />
