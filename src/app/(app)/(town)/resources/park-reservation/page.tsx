@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
-import { settings } from "@/data/town/settings";
 import { getMapUrl } from "@/lib/map-utils";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 
 const PARK_ADDRESS = "187 Highland Point Ave, Harmony, NC 28634";
 
@@ -20,7 +20,9 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function ParkReservationPage() {
+export default async function ParkReservationPage() {
+	const settings = await getBuilderSettings();
+	const telHref = `tel:${settings.contactInfo.phone.replace(/\D/g, "")}`;
 	return (
 		<article className="py-12 bg-cream">
 			<div className="container mx-auto px-4 max-w-3xl">
@@ -44,11 +46,8 @@ export default function ParkReservationPage() {
 				<div className="bg-white border border-stone rounded p-5 mb-8">
 					<p className="font-semibold">Town Hall</p>
 					<p>
-						<a
-							href="tel:7045462339"
-							className="text-sage-dark hover:underline"
-						>
-							(704) 546-2339
+						<a href={telHref} className="text-sage-dark hover:underline">
+							{settings.contactInfo.phone}
 						</a>
 					</p>
 					<p className="text-sm text-[#4A4640] mt-2">
@@ -82,8 +81,8 @@ export default function ParkReservationPage() {
 
 				<p className="text-[#2D2A24]">
 					Report issues during your reservation to Town Hall at{" "}
-					<a href="tel:7045462339" className="text-sage-dark hover:underline">
-						(704) 546-2339
+					<a href={telHref} className="text-sage-dark hover:underline">
+						{settings.contactInfo.phone}
 					</a>
 					.
 				</p>
