@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
-import { settings } from "@/data/town/settings";
+import { getMapUrl } from "@/lib/map-utils";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
 	title: "Community Center Reservation | Town of Harmony, NC",
@@ -17,7 +18,8 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function CommunityCenterReservationPage() {
+export default async function CommunityCenterReservationPage() {
+	const settings = await getBuilderSettings();
 	return (
 		<article className="py-12 bg-cream">
 			<div className="container mx-auto px-4 max-w-3xl">
@@ -34,14 +36,22 @@ export default function CommunityCenterReservationPage() {
 					<p className="font-semibold">Town Hall</p>
 					<p>
 						<a
-							href="tel:7045462339"
+							href={`tel:${settings.contactInfo.phone.replace(/\D/g, "")}`}
 							className="text-sage-dark hover:underline"
 						>
-							(704) 546-2339
+							{settings.contactInfo.phone}
 						</a>
 					</p>
 					<p className="text-sm text-[#4A4640] mt-2">
-						{settings.contactInfo.address}<br />
+						<a
+							href={getMapUrl(settings.contactInfo.address)}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="hover:text-sage-dark hover:underline transition-colors"
+						>
+							{settings.contactInfo.address}
+						</a>
+						<br />
 						{settings.officeHours.weekday}
 					</p>
 				</div>

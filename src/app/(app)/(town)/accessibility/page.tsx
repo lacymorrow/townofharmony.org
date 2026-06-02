@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { getMapUrl } from "@/lib/map-utils";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
 	title: "Accessibility Statement | Town of Harmony, NC",
@@ -16,7 +18,8 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function AccessibilityPage() {
+export default async function AccessibilityPage() {
+	const settings = await getBuilderSettings();
 	return (
 		<main id="main-content" className="container mx-auto px-4 py-12 max-w-3xl">
 			<h1 className="text-3xl font-serif font-bold text-sage-dark mb-8">
@@ -81,14 +84,22 @@ export default function AccessibilityPage() {
 					<li>
 						Phone:{" "}
 						<a
-							href="tel:7045462339"
+							href={`tel:${settings.contactInfo.phone.replace(/\D/g, "")}`}
 							className="text-sage hover:text-sage-dark underline"
 						>
-							(704) 546-2339
+							{settings.contactInfo.phone}
 						</a>
 					</li>
 					<li>
-						Address: 3389 Harmony Hwy, Harmony, NC 28634
+						Address:{" "}
+						<a
+							href={getMapUrl(settings.contactInfo.address)}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="text-sage hover:text-sage-dark underline"
+						>
+							{settings.contactInfo.address}
+						</a>
 					</li>
 				</ul>
 				<p>

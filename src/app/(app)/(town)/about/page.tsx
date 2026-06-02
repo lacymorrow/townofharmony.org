@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
-import { settings } from "@/data/town/settings";
+import { getMapUrl } from "@/lib/map-utils";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
 	title: "About Harmony, NC | Town of Harmony",
@@ -15,7 +16,8 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+	const settings = await getBuilderSettings();
 	return (
 		<main id="main-content" className="container mx-auto px-4 py-12 max-w-3xl">
 			<h1 className="text-3xl font-serif font-bold text-sage-dark mb-8">
@@ -106,7 +108,16 @@ export default function AboutPage() {
 					>
 						{settings.contactInfo.phone}
 					</a>
-					. Town Hall is located at {settings.contactInfo.address}.
+					. Town Hall is located at{" "}
+					<a
+						href={getMapUrl(settings.contactInfo.address)}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-sage hover:text-sage-dark underline"
+					>
+						{settings.contactInfo.address}
+					</a>
+					.
 				</p>
 			</div>
 		</main>
