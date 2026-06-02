@@ -177,6 +177,8 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
                 <a
                   href={meeting.minutesUrl}
                   download
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-sm text-sage hover:text-sage-dark font-medium"
                 >
                   Download
