@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 import { settings } from "@/data/town/settings";
+import { getMapUrl } from "@/lib/map-utils";
 
 export const metadata: Metadata = {
 	title: "Community Center Reservation | Town of Harmony, NC",
@@ -41,7 +42,15 @@ export default function CommunityCenterReservationPage() {
 						</a>
 					</p>
 					<p className="text-sm text-[#4A4640] mt-2">
-						{settings.contactInfo.address}<br />
+						<a
+							href={getMapUrl(settings.contactInfo.address)}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="hover:text-sage-dark hover:underline transition-colors"
+						>
+							{settings.contactInfo.address}
+						</a>
+						<br />
 						{settings.officeHours.weekday}
 					</p>
 				</div>

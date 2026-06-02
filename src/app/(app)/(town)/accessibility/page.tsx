@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { getMapUrl } from "@/lib/map-utils";
 
 export const metadata: Metadata = {
 	title: "Accessibility Statement | Town of Harmony, NC",
@@ -88,7 +89,15 @@ export default function AccessibilityPage() {
 						</a>
 					</li>
 					<li>
-						Address: 3389 Harmony Hwy, Harmony, NC 28634
+						Address:{" "}
+						<a
+							href={getMapUrl("3389 Harmony Hwy, Harmony, NC 28634")}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="text-sage hover:text-sage-dark underline"
+						>
+							3389 Harmony Hwy, Harmony, NC 28634
+						</a>
 					</li>
 				</ul>
 				<p>

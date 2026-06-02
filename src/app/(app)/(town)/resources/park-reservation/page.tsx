@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 import { settings } from "@/data/town/settings";
+import { getMapUrl } from "@/lib/map-utils";
+
+const PARK_ADDRESS = "187 Highland Point Ave, Harmony, NC 28634";
 
 export const metadata: Metadata = {
 	title: "Tomlinson-Moore Family Park Reservation | Town of Harmony, NC",
@@ -25,8 +28,16 @@ export default function ParkReservationPage() {
 					Tomlinson-Moore Family Park Reservation
 				</h1>
 				<p className="text-[#2D2A24] mb-6">
-					The Tomlinson-Moore Family Park picnic shelter (187 Highland Point
-					Ave) may be reserved for events. Reservation of the shelter does not
+					The Tomlinson-Moore Family Park picnic shelter (
+					<a
+						href={getMapUrl(PARK_ADDRESS)}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-sage-dark hover:underline"
+					>
+						187 Highland Point Ave
+					</a>
+					) may be reserved for events. Reservation of the shelter does not
 					include exclusive use of the park or the Community Center.
 				</p>
 
@@ -41,7 +52,15 @@ export default function ParkReservationPage() {
 						</a>
 					</p>
 					<p className="text-sm text-[#4A4640] mt-2">
-						{settings.contactInfo.address}<br />
+						<a
+							href={getMapUrl(settings.contactInfo.address)}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="hover:text-sage-dark hover:underline transition-colors"
+						>
+							{settings.contactInfo.address}
+						</a>
+						<br />
 						{settings.officeHours.weekday}
 					</p>
 				</div>
