@@ -47,3 +47,7 @@ export const getCategoryColor = (category: BusinessCategory): string => {
 export const getDirectionsUrl = (address: string): string => {
 	return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
 };
+
+export const getMapUrl = (address: string): string => {
+	return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+};

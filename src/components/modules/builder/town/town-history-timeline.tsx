@@ -4,6 +4,7 @@ import { LightboxImage } from "@/components/ui/lightbox-image";
 import { useBuilderData } from "@/lib/builder-data";
 import { historyArticles as staticHistory } from "@/data/town/history";
 import type { TownHistoryArticle } from "@/data/town/types";
+import { getMapUrl } from "@/lib/map-utils";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownHistoryTimelineProps {
@@ -146,7 +147,14 @@ export const TownHistoryTimeline = ({
 												{/* Address for landmarks */}
 												{article.address && (
 													<p className="text-sm text-[#635E56] mt-3 pt-3 border-t border-stone">
-														{article.address}
+														<a
+															href={getMapUrl(article.address)}
+															target="_blank"
+															rel="noopener noreferrer"
+															className="hover:text-sage-dark transition-colors"
+														>
+															{article.address}
+														</a>
 													</p>
 												)}
 											</div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { navigation as defaultNavData } from "@/data/town/navigation";
 import type { TownNavigation, TownSettings } from "@/data/town/types";
 import { BUILD_TIME_HIDDEN_HREFS, normalizeHref } from "@/lib/hidden-hrefs";
+import { getMapUrl } from "@/lib/map-utils";
 
 interface TownFooterProps {
 	settings: TownSettings;
@@ -35,7 +36,14 @@ export function TownFooter({
 							{settings.branding.tagline} Serving our community since {settings.branding.established}.
 						</p>
 						<p className="text-sm leading-relaxed">
-							{settings.contactInfo.address}
+							<a
+								href={getMapUrl(settings.contactInfo.address)}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:text-wheat transition-colors"
+							>
+								{settings.contactInfo.address}
+							</a>
 							<br />
 							<span className="whitespace-nowrap">{settings.contactInfo.phone}</span>
 						</p>

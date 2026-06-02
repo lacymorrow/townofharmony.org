@@ -7,6 +7,7 @@ import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownEvent } from "@/data/town/types";
 import { resolveBuilderRef } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
+import { getMapUrl } from "@/lib/map-utils";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownEventDetailProps {
@@ -161,7 +162,16 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
                 <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
                   Location
                 </dt>
-                <dd className="text-sage-dark font-medium">{event.locationAddress}</dd>
+                <dd className="text-sage-dark font-medium">
+                  <a
+                    href={getMapUrl(event.locationAddress)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {event.locationAddress}
+                  </a>
+                </dd>
               </div>
             )}
             {(() => {

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
+import { getMapUrl } from "@/lib/map-utils";
 import { resolveEvents, getEventBySlug } from "@/lib/town-data";
 
 interface PageProps {
@@ -67,7 +68,14 @@ export default async function EventDetailPage({ params }: PageProps) {
 				</p>
 				{event.locationAddress && (
 					<p className="text-base text-[#4A4640] mb-6">
-						{event.locationAddress}
+						<a
+							href={getMapUrl(event.locationAddress)}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="hover:text-sage-dark hover:underline transition-colors"
+						>
+							{event.locationAddress}
+						</a>
 					</p>
 				)}
 				{event.featuredImage && (
