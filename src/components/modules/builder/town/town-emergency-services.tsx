@@ -5,6 +5,7 @@ import {
 	AlertTriangle,
 	Flame,
 	Heart,
+	MapPin,
 	Phone,
 	Shield,
 	ShieldAlert,
@@ -16,6 +17,7 @@ import type { LucideIcon } from "lucide-react";
 import { useBuilderData } from "@/lib/builder-data";
 import { emergencyServices } from "@/data/town/emergency-services";
 import type { TownEmergencyService } from "@/data/town/types";
+import { getMapUrl } from "@/lib/map-utils";
 
 const iconMap: Record<string, LucideIcon> = {
 	Phone,
@@ -84,28 +86,48 @@ export const TownEmergencyServices = () => {
 								const is911 = service.phone === "911";
 
 								return (
-									<a
+									<div
 										key={service.title}
-										href={`tel:${service.phone.replace(/[^0-9+]/g, "")}`}
 										className={`block whitespace-normal rounded-2xl p-8 transition-shadow hover:shadow-lg ${
 											is911
 												? "bg-red-600 text-white col-span-full"
 												: "bg-red-50 border-2 border-red-200 text-red-900"
 										}`}
 									>
-										<div className="flex items-center gap-4 mb-3">
-											<Icon className={`h-8 w-8 ${is911 ? "text-white/90" : "text-red-600"}`} />
-											<span className={`text-lg font-semibold ${is911 ? "text-white/90" : "text-red-800"}`}>
-												{service.title}
-											</span>
-										</div>
-										<div className={`font-bold font-mono tracking-wide ${is911 ? "text-6xl md:text-7xl" : "text-3xl sm:text-4xl md:text-5xl"}`}>
-											{service.phone}
-										</div>
-										<p className={`mt-3 text-base leading-relaxed ${is911 ? "text-white/80" : "text-red-700"}`}>
-											{service.description}
-										</p>
-									</a>
+										<a
+											href={`tel:${service.phone.replace(/[^0-9+]/g, "")}`}
+											className="block"
+										>
+											<div className="flex items-center gap-4 mb-3">
+												<Icon className={`h-8 w-8 ${is911 ? "text-white/90" : "text-red-600"}`} />
+												<span className={`text-lg font-semibold ${is911 ? "text-white/90" : "text-red-800"}`}>
+													{service.title}
+												</span>
+											</div>
+											<div className={`font-bold font-mono tracking-wide ${is911 ? "text-6xl md:text-7xl" : "text-3xl sm:text-4xl md:text-5xl"}`}>
+												{service.phone}
+											</div>
+											<p className={`mt-3 text-base leading-relaxed ${is911 ? "text-white/80" : "text-red-700"}`}>
+												{service.description}
+											</p>
+										</a>
+										{service.address && (
+											<a
+												href={getMapUrl(service.address)}
+												target="_blank"
+												rel="noopener noreferrer"
+												className={`mt-4 inline-flex items-start gap-2 text-sm hover:underline transition-colors ${
+													is911 ? "text-white/90" : "text-red-800"
+												}`}
+											>
+												<MapPin
+													className="h-4 w-4 mt-0.5 shrink-0"
+													aria-hidden="true"
+												/>
+												<span>{service.address}</span>
+											</a>
+										)}
+									</div>
 								);
 							})}
 						</div>
@@ -153,6 +175,21 @@ export const TownEmergencyServices = () => {
 													<p className="text-base text-[#4A4640] leading-relaxed">
 														{service.description}
 													</p>
+
+													{service.address && (
+														<a
+															href={getMapUrl(service.address)}
+															target="_blank"
+															rel="noopener noreferrer"
+															className="mt-2 inline-flex items-start gap-2 text-sm text-[#4A4640] hover:text-sage-dark hover:underline transition-colors"
+														>
+															<MapPin
+																className="h-4 w-4 mt-0.5 shrink-0 text-[#635E56]"
+																aria-hidden="true"
+															/>
+															<span>{service.address}</span>
+														</a>
+													)}
 
 													{service.preparedness.length > 0 && (
 														<details className="mt-4 pt-3 border-t border-[#DDD7CC]">
