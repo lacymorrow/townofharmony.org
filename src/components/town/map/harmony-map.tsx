@@ -108,8 +108,20 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 
 		init();
 
+		const container = mapContainerRef.current;
+		const resizeObserver =
+			container && typeof ResizeObserver !== "undefined"
+				? new ResizeObserver(() => {
+						mapRef.current?.invalidateSize();
+					})
+				: null;
+		if (container && resizeObserver) {
+			resizeObserver.observe(container);
+		}
+
 		return () => {
 			cancelled = true;
+			resizeObserver?.disconnect();
 			if (mapRef.current) {
 				mapRef.current.remove();
 				mapRef.current = null;
