@@ -81,7 +81,7 @@ export const TownHistoryTimeline = ({
 												<LightboxImage
 													src={article.image}
 													alt={article.title}
-													wrapperClassName="h-48"
+													wrapperClassName="w-full h-48"
 													className="w-full h-full object-cover"
 													width={800}
 													height={600}
