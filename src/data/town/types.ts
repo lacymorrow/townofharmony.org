@@ -135,6 +135,7 @@ export interface TownEmergencyService {
 	category: "immediate" | "public-safety" | "utility" | "health";
 	icon: string;
 	preparedness: string[];
+	address?: string;
 }
 
 export interface TownBusiness {

@@ -1,6 +1,7 @@
-import { Info } from "lucide-react";
+import { Info, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getEmergencyServices } from "@/lib/town-data";
+import { getMapUrl } from "@/lib/map-utils";
 import { resolveIcon } from "@/lib/utils/icon-resolver";
 
 const categoryColors: Record<string, string> = {
@@ -91,6 +92,23 @@ export const EmergencyServices = async () => {
 												{service.phone}
 											</a>
 										</div>
+
+										{service.address && (
+											<div className="flex items-start gap-2 text-sm">
+												<MapPin
+													className="h-4 w-4 text-[#635E56] mt-0.5 shrink-0"
+													aria-hidden="true"
+												/>
+												<a
+													href={getMapUrl(service.address)}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="text-[#4A4640] hover:text-sage-dark hover:underline transition-colors"
+												>
+													{service.address}
+												</a>
+											</div>
+										)}
 
 										{preparedness.length > 0 && (
 											<div className="pt-3 border-t border-[#DDD7CC]">

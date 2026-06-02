@@ -21,6 +21,7 @@ export const emergencyServices: TownEmergencyService[] = [
 		title: "Fire Department",
 		description: "Harmony Volunteer Fire Department provides fire suppression, rescue, and emergency medical services to the community.",
 		phone: "(704) 546-2300",
+		address: "3351 Harmony Hwy, Harmony, NC 28634",
 		category: "immediate",
 		icon: "Flame",
 		preparedness: [
@@ -35,6 +36,7 @@ export const emergencyServices: TownEmergencyService[] = [
 		title: "Iredell County Sheriff's Office",
 		description: "Law enforcement services for the Harmony community are provided by the Iredell County Sheriff's Office.",
 		phone: "(704) 878-3180",
+		address: "231 Constitution Lane, Statesville, NC 28677",
 		category: "public-safety",
 		icon: "Shield",
 		preparedness: [
@@ -61,6 +63,7 @@ export const emergencyServices: TownEmergencyService[] = [
 		title: "Water/Sewer Emergency",
 		description: "Report water main breaks, sewer backups, and other water or sewer emergencies.",
 		phone: "(704) 546-2339",
+		address: "3389 Harmony Hwy, Harmony, NC 28634",
 		category: "utility",
 		icon: "Wrench",
 		preparedness: [
@@ -87,6 +90,7 @@ export const emergencyServices: TownEmergencyService[] = [
 		title: "Animal Control",
 		description: "Report stray, dangerous, or injured animals. Animal control officers are available to assist with animal-related issues.",
 		phone: "(704) 878-5424",
+		address: "430 Bristol Drive, Statesville, NC 28677",
 		category: "public-safety",
 		icon: "Shield",
 		preparedness: [
@@ -113,6 +117,7 @@ export const emergencyServices: TownEmergencyService[] = [
 		title: "Hospital",
 		description: "Iredell Memorial Hospital provides emergency medical care and hospital services to the Harmony area.",
 		phone: "(704) 873-5661",
+		address: "557 Brookdale Drive, Statesville, NC 28677",
 		category: "health",
 		icon: "Stethoscope",
 		preparedness: [
