@@ -32,7 +32,7 @@ export const TownPointsOfInterest = ({
 
 	const { data: allPOIs, loading } = useBuilderData<TownPointOfInterest>(
 		"town-point-of-interest",
-		{ limit: 50, fallback: staticPOIs },
+		{ sort: { priority: -1 }, limit: 50, fallback: staticPOIs },
 	);
 
 	const availableCategories = useMemo(() => {
@@ -41,11 +41,7 @@ export const TownPointsOfInterest = ({
 		return POI_CATEGORIES.filter((cat) => catSet.has(cat));
 	}, [allPOIs]);
 
-	const pois = (() => {
-		let filtered = [...allPOIs];
-		if (category) filtered = filtered.filter((p) => p.category === category);
-		return filtered.sort((a, b) => a.name.localeCompare(b.name));
-	})();
+	const pois = category ? allPOIs.filter((p) => p.category === category) : allPOIs;
 
 	const updateParams = (updates: Record<string, string | undefined>) => {
 		const params = new URLSearchParams(searchParams?.toString() ?? "");
