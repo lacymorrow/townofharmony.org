@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import { useBuilderData } from "@/lib/builder-data";
+import { getMapUrl } from "@/lib/map-utils";
 import { isExternalUrl, isSafeUrl } from "@/lib/utils";
 import { pointsOfInterest as staticPOIs } from "@/data/town/points-of-interest";
 import type { TownPointOfInterest } from "@/data/town/types";
@@ -186,7 +187,14 @@ export const TownPointsOfInterest = ({
 													d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
 												/>
 											</svg>
-											<span>{poi.address}</span>
+											<a
+												href={getMapUrl(poi.address)}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="hover:text-sage-dark transition-colors"
+											>
+												{poi.address}
+											</a>
 										</div>
 										<div className="flex items-start gap-1.5">
 											<svg

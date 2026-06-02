@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { TownSearch } from "@/components/town/town-search";
 import { Button } from "@/components/ui/button";
+import { getMapUrl } from "@/lib/map-utils";
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -77,7 +78,14 @@ export function TownHeader({
 								<Phone className="h-3 w-3" aria-hidden="true" />
 								{settings.contactInfo.phone}
 							</a>
-							<span className="hidden md:inline">{settings.contactInfo.address}</span>
+							<a
+								href={getMapUrl(settings.contactInfo.address)}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hidden md:inline hover:text-white transition-colors"
+							>
+								{settings.contactInfo.address}
+							</a>
 						</div>
 						<div className="flex items-center gap-4">
 							{process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED === "true" && (
