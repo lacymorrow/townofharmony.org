@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
+import { DocumentViewer } from "@/components/town/document-viewer";
 import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
@@ -170,7 +171,18 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
         {/* Minutes */}
         {(meeting.minutes || meeting.minutesUrl) && (
           <div className="mb-8">
-            <h2 className="text-lg font-serif font-bold text-sage-dark mb-3">Meeting Minutes</h2>
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <h2 className="text-lg font-serif font-bold text-sage-dark">Meeting Minutes</h2>
+              {meeting.minutesUrl && (
+                <a
+                  href={meeting.minutesUrl}
+                  download
+                  className="inline-flex items-center gap-2 text-sm text-sage hover:text-sage-dark font-medium"
+                >
+                  Download
+                </a>
+              )}
+            </div>
             {meeting.minutes && (
               <div
                 className="prose prose-lg max-w-none bg-cream border border-stone rounded-xl p-6 mb-3 text-sage-dark/85"
@@ -178,14 +190,9 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
               />
             )}
             {meeting.minutesUrl && (
-              <a
-                href={meeting.minutesUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-sage text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
-              >
-                Download Minutes (PDF)
-              </a>
+              <div className="border border-stone rounded-xl overflow-hidden bg-white h-[75svh] min-h-[480px]">
+                <DocumentViewer url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`} />
+              </div>
             )}
           </div>
         )}
