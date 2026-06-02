@@ -84,7 +84,7 @@ export default async function AccessibilityPage() {
 					<li>
 						Phone:{" "}
 						<a
-							href={`tel:${settings.contactInfo.phone.replace(/\D/g, "")}`}
+							href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
 							className="text-sage hover:text-sage-dark underline"
 						>
 							{settings.contactInfo.phone}

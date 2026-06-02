@@ -36,7 +36,7 @@ export default async function CommunityCenterReservationPage() {
 					<p className="font-semibold">Town Hall</p>
 					<p>
 						<a
-							href={`tel:${settings.contactInfo.phone.replace(/\D/g, "")}`}
+							href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
 							className="text-sage-dark hover:underline"
 						>
 							{settings.contactInfo.phone}

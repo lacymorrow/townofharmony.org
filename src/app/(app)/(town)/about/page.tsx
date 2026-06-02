@@ -103,7 +103,7 @@ export default async function AboutPage() {
 					</a>{" "}
 					or call{" "}
 					<a
-						href={`tel:${settings.contactInfo.phone.replace(/\D/g, "")}`}
+						href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
 						className="text-sage hover:text-sage-dark underline"
 					>
 						{settings.contactInfo.phone}
