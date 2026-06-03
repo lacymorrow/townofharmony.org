@@ -51,6 +51,28 @@ interface SearchResult {
 	icon: React.ReactNode;
 }
 
+interface DocumentEntry {
+	id: string;
+	title: string;
+	href: string;
+	type: "minutes" | "ordinance" | "other";
+	text: string;
+}
+
+const SNIPPET_PAD_BEFORE = 60;
+const SNIPPET_PAD_AFTER = 140;
+
+const buildSnippet = (text: string, query: string): string => {
+	const lower = text.toLowerCase();
+	const idx = lower.indexOf(query.toLowerCase());
+	if (idx === -1) return text.slice(0, SNIPPET_PAD_AFTER);
+	const start = Math.max(0, idx - SNIPPET_PAD_BEFORE);
+	const end = Math.min(text.length, idx + query.length + SNIPPET_PAD_AFTER);
+	const prefix = start > 0 ? "…" : "";
+	const suffix = end < text.length ? "…" : "";
+	return `${prefix}${text.slice(start, end)}${suffix}`;
+};
+
 const buildSearchIndex = (): SearchResult[] => {
 	const results: SearchResult[] = [];
 	const hideSewer = !isSewerVisible();
@@ -195,6 +217,16 @@ function setCache(key: string, data: unknown) {
 	}
 }
 
+let documentIndexPromise: Promise<DocumentEntry[]> | null = null;
+
+const fetchDocumentIndex = (): Promise<DocumentEntry[]> => {
+	if (documentIndexPromise) return documentIndexPromise;
+	documentIndexPromise = fetch("/data/document-index.json")
+		.then((res) => (res.ok ? (res.json() as Promise<DocumentEntry[]>) : []))
+		.catch(() => []);
+	return documentIndexPromise;
+};
+
 interface BuilderPageEntry {
 	title: string;
 	description: string;
@@ -336,7 +368,9 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 	const [query, setQuery] = useState("");
 	const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
 	const [builderPages, setBuilderPages] = useState<SearchResult[]>([]);
+	const [documents, setDocuments] = useState<DocumentEntry[]>([]);
 	const builderFetched = useRef(false);
+	const documentsFetched = useRef(false);
 
 	const staticIndex = useMemo(() => buildSearchIndex(), []);
 
@@ -398,6 +432,15 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 		);
 	}, [open, staticIndex]);
 
+	// Fetch document text index on first open
+	useEffect(() => {
+		if (!open || documentsFetched.current) return;
+		documentsFetched.current = true;
+		fetchDocumentIndex().then((docs) => {
+			if (docs.length > 0) setDocuments(docs);
+		});
+	}, [open]);
+
 	// Cmd+K / Ctrl+K
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -428,19 +471,46 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 	// Group results by category
 	const groupedResults = useMemo(() => {
 		if (!hasQuery) return {};
+		const q = query.trim().toLowerCase();
 		const groups: Record<string, SearchResult[]> = {};
 		for (const result of searchIndex) {
 			const text = `${result.title} ${result.subtitle}`.toLowerCase();
-			if (text.includes(query.toLowerCase())) {
+			if (text.includes(q)) {
 				const bucket = groups[result.category] ?? [];
 				bucket.push(result);
 				groups[result.category] = bucket;
 			}
 		}
-		return groups;
-	}, [query, hasQuery, searchIndex]);
 
-	const categoryOrder = ["Pages", "People", "Events", "History", "Resources", "Places", "Businesses"];
+		// Document text matches (lazy-loaded from /data/document-index.json)
+		if (q.length >= 2 && documents.length > 0) {
+			const docResults: SearchResult[] = [];
+			for (const doc of documents) {
+				const lowered = doc.text.toLowerCase();
+				const inText = lowered.includes(q);
+				const inTitle = doc.title.toLowerCase().includes(q);
+				if (!inText && !inTitle) continue;
+				const snippet = inText
+					? buildSnippet(doc.text, q)
+					: doc.text.slice(0, SNIPPET_PAD_AFTER);
+				docResults.push({
+					id: `doc-${doc.id}`,
+					title: doc.title,
+					subtitle: snippet,
+					href: doc.href,
+					openExternal: true,
+					category: "Documents",
+					icon: <FileText className="h-4 w-4" />,
+				});
+				if (docResults.length >= 25) break;
+			}
+			if (docResults.length > 0) groups.Documents = docResults;
+		}
+
+		return groups;
+	}, [query, hasQuery, searchIndex, documents]);
+
+	const categoryOrder = ["Pages", "People", "Events", "History", "Resources", "Places", "Businesses", "Documents"];
 	const sortedCategories = Object.keys(groupedResults).sort((a, b) => {
 		const indexA = categoryOrder.indexOf(a);
 		const indexB = categoryOrder.indexOf(b);
