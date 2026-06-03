@@ -47,7 +47,7 @@ export const teamMembers: TownTeamMember[] = [
 		id: 5,
 		name: "Brandon Angell",
 		title: "Council Member",
-		category: "Board of Aldermen",
+		category: "Town Council",
 		email: "",
 		image: "/images/team/brandon-angell.png",
 		phone: "(704) 546-2339",
