@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { BASE_URL } from "../../config/base-url";
 import { SEARCH_PARAM_KEYS } from "../../config/search-param-keys";
 import { logger } from "../logger";
+import { getRequestBaseUrl } from "./request-url";
 
 interface RedirectOptions {
   code?: string;
@@ -25,7 +26,7 @@ export function redirect(pathname: string, options?: RedirectOptions) {
   return nextRedirect(url);
 }
 
-export function routeRedirect(
+export async function routeRedirect(
   destination: string,
   options?: string | { code?: string; nextUrl?: string; request?: Request }
 ) {
@@ -36,10 +37,10 @@ export function routeRedirect(
   let url: URL;
 
   if (typeof options === "string") {
-    url = new URL(destination, BASE_URL);
+    url = new URL(destination, await getRequestBaseUrl());
     url.searchParams.set(SEARCH_PARAM_KEYS.statusCode, options);
   } else {
-    const baseUrl = options.request?.url || BASE_URL;
+    const baseUrl = options.request?.url || (await getRequestBaseUrl());
     url = new URL(destination, baseUrl);
 
     if (options?.nextUrl) {
