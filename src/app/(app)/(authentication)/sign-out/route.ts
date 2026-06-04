@@ -9,7 +9,7 @@ import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { STATUS_CODES } from "@/config/status-codes";
 import { logger } from "@/lib/logger";
-import { routeRedirect } from "@/lib/utils/redirect";
+import { routeRedirect } from "@/lib/utils/route-redirect";
 import { signOut } from "@/server/auth";
 
 const querySchema = z.object({
