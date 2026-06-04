@@ -1,10 +1,9 @@
 "use server";
 
-import { headers } from "next/headers";
 import { z } from "zod";
-import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { createStripeCheckoutSession } from "@/lib/stripe";
+import { getRequestBaseUrl } from "@/lib/utils/request-url";
 import { SEWER_ACCOUNT_REGEX, sewerRateTiers } from "@/data/town/sewer-rates";
 
 const sewerCheckoutSchema = z.object({
@@ -22,14 +21,6 @@ type SewerCheckoutResult =
 
 const getSewerPriceId = (envVar: string): string | undefined =>
 	process.env[envVar];
-
-const getRequestBaseUrl = async (): Promise<string> => {
-	const h = await headers();
-	const host = h.get("x-forwarded-host") ?? h.get("host");
-	const proto = h.get("x-forwarded-proto") ?? "https";
-	if (host) return `${proto}://${host}`;
-	return env.AUTH_URL ?? "http://localhost:3000";
-};
 
 export const createSewerCheckoutSession = async (
 	formData: FormData,
