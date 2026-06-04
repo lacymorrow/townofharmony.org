@@ -1,10 +1,10 @@
 "use server";
 
 import { z } from "zod";
+import { SEWER_ACCOUNT_REGEX, sewerRateTiers } from "@/data/town/sewer-rates";
 import { logger } from "@/lib/logger";
 import { createStripeCheckoutSession } from "@/lib/stripe";
 import { getRequestBaseUrl } from "@/lib/utils/request-url";
-import { SEWER_ACCOUNT_REGEX, sewerRateTiers } from "@/data/town/sewer-rates";
 
 const sewerCheckoutSchema = z.object({
 	name: z.string().min(1, "Name is required"),

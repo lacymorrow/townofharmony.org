@@ -2,6 +2,7 @@ import "server-only";
 
 import { headers } from "next/headers";
 import { BASE_URL } from "@/config/base-url";
+import { siteConfig } from "@/config/site-config";
 
 /**
  * Build the set of hostnames that are trusted for redirect URLs derived from
@@ -35,11 +36,20 @@ const buildTrustedHostnames = (): Set<string> => {
   add(process.env.VERCEL_PROJECT_PRODUCTION_URL);
   add(process.env.VERCEL_URL);
   add(process.env.VERCEL_BRANCH_URL);
+  add(siteConfig.url);
 
   return trusted;
 };
 
 const TRUSTED_HOSTNAMES = buildTrustedHostnames();
+
+// Apex hostnames whose subdomains we also trust (e.g. preview.townofharmony.org
+// when townofharmony.org is the configured production host). Excludes
+// localhost/127.0.0.1 — those aren't apex domains, and we don't want to start
+// trusting arbitrary `.localhost`-suffixed strings.
+const TRUSTED_APEX_HOSTNAMES = Array.from(TRUSTED_HOSTNAMES).filter(
+  (h) => h !== "localhost" && h !== "127.0.0.1"
+);
 
 const isTrustedHost = (host: string): boolean => {
   const hostname = host.split(":")[0]?.toLowerCase();
@@ -48,6 +58,10 @@ const isTrustedHost = (host: string): boolean => {
   // Generic Vercel preview deployments (e.g. *.vercel.app) — Vercel-owned,
   // safe to redirect back to.
   if (hostname.endsWith(".vercel.app")) return true;
+  // Subdomains of any configured production host (e.g. preview.<prod-domain>).
+  for (const apex of TRUSTED_APEX_HOSTNAMES) {
+    if (hostname.endsWith(`.${apex}`)) return true;
+  }
   return false;
 };
 
