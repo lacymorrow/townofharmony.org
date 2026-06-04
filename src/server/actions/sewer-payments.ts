@@ -1,10 +1,10 @@
 "use server";
 
 import { z } from "zod";
-import { env } from "@/env";
+import { SEWER_ACCOUNT_REGEX, sewerRateTiers } from "@/data/town/sewer-rates";
 import { logger } from "@/lib/logger";
 import { createStripeCheckoutSession } from "@/lib/stripe";
-import { SEWER_ACCOUNT_REGEX, sewerRateTiers } from "@/data/town/sewer-rates";
+import { getRequestBaseUrl } from "@/lib/utils/request-url";
 
 const sewerCheckoutSchema = z.object({
 	name: z.string().min(1, "Name is required"),
@@ -63,7 +63,7 @@ export const createSewerCheckoutSession = async (
 		};
 	}
 
-	const baseUrl = env.AUTH_URL ?? "http://localhost:3000";
+	const baseUrl = await getRequestBaseUrl();
 
 	try {
 		const url = await createStripeCheckoutSession({
