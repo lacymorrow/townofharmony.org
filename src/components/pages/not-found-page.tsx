@@ -1,6 +1,6 @@
 // This must be a server component
 
-import { Calendar, FileText, Home, Mail, MapPin, Phone, Users } from "lucide-react";
+import { Calendar, FileText, Home, MapPin, Phone, Users } from "lucide-react";
 import Link from "next/link";
 import { settings } from "@/data/town/settings";
 
@@ -132,20 +132,6 @@ export const NotFoundPage = () => {
 								<p className="text-sm font-semibold text-[#2D2A24]">Call us</p>
 								<p className="text-sage text-sm group-hover:text-sage-dark transition-colors">
 									{settings.contactInfo.phone}
-								</p>
-							</div>
-						</a>
-						<a
-							href={`mailto:${settings.contactInfo.email}`}
-							className="flex items-center gap-3 group"
-						>
-							<div className="w-10 h-10 bg-sage-dark rounded-lg flex items-center justify-center flex-shrink-0">
-								<Mail className="h-5 w-5 text-wheat" />
-							</div>
-							<div>
-								<p className="text-sm font-semibold text-[#2D2A24]">Email us</p>
-								<p className="text-sage text-sm group-hover:text-sage-dark transition-colors">
-									{settings.contactInfo.email}
 								</p>
 							</div>
 						</a>
