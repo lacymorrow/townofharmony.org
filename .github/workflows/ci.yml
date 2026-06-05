@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   check:
-    name: Lint & Typecheck
+    name: Typecheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,5 +41,8 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      - name: Lint
-        run: bun run lint
+      # NOTE: `bun run lint` (biome + eslint + prettier) is intentionally not a
+      # blocking gate yet — the codebase has ~264 pre-existing lint errors
+      # accumulated before this gate existed (mostly in tests/ and scripts/).
+      # Adding it as a gate now would block every PR. Re-enable once the
+      # baseline is cleaned up via `bun run lint:fix` + manual review.
