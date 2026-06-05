@@ -39,25 +39,31 @@ export function register() {
  */
 export const onRequestError: Instrumentation.onRequestError = (error, request, context) => {
   const err = error as Error & { digest?: string };
-  console.error(
-    JSON.stringify({
-      level: "error",
-      msg: "next.request_error",
-      digest: err?.digest,
-      name: err?.name,
-      message: err?.message,
-      stack: err?.stack,
-      request: {
-        path: request?.path,
-        method: request?.method,
-      },
-      context: {
-        routerKind: context?.routerKind,
-        routePath: context?.routePath,
-        routeType: context?.routeType,
-        renderSource: context?.renderSource,
-        revalidateReason: context?.revalidateReason,
-      },
-    })
-  );
+  try {
+    console.error(
+      JSON.stringify({
+        level: "error",
+        msg: "next.request_error",
+        digest: err?.digest,
+        name: err?.name,
+        message: err?.message,
+        stack: err?.stack,
+        request: {
+          path: request?.path,
+          method: request?.method,
+        },
+        context: {
+          routerKind: context?.routerKind,
+          routePath: context?.routePath,
+          routeType: context?.routeType,
+          renderSource: context?.renderSource,
+          revalidateReason: context?.revalidateReason,
+        },
+      })
+    );
+  } catch {
+    // Serialization failed (circular ref, BigInt, etc.) — fall back to a
+    // plain console.error so the original error isn't silently lost.
+    console.error("next.request_error (unserializable)", err?.message, err?.stack);
+  }
 };

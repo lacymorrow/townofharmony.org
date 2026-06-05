@@ -51,7 +51,7 @@ const TRUSTED_APEX_HOSTNAMES = Array.from(TRUSTED_HOSTNAMES).filter(
   (h) => h !== "localhost" && h !== "127.0.0.1"
 );
 
-const isTrustedHost = (host: string): boolean => {
+export const isTrustedHost = (host: string): boolean => {
   const hostname = host.split(":")[0]?.toLowerCase();
   if (!hostname) return false;
   if (TRUSTED_HOSTNAMES.has(hostname)) return true;

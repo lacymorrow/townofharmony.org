@@ -135,10 +135,10 @@ const nextConfig: NextConfig = {
 						key: "X-XSS-Protection",
 						value: "1; mode=block",
 					},
-					{
-						key: "X-Frame-Options",
-						value: "SAMEORIGIN",
-					},
+					// X-Frame-Options is intentionally omitted: the CSP `frame-ancestors`
+					// directive above already enforces framing policy and correctly allows
+					// Builder.io. Adding XFO: SAMEORIGIN would conflict with that allowance
+					// on scanners/proxies that still honor the legacy header.
 					{
 						key: "Strict-Transport-Security",
 						value: "max-age=63072000; includeSubDomains; preload",
