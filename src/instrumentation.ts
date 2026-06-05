@@ -38,18 +38,26 @@ export function register() {
  * @param context - The context in which the error occurred.
  */
 export const onRequestError: Instrumentation.onRequestError = (error, request, context) => {
-  console.debug("error", error);
-  console.debug("request", request);
-  console.debug("context", context);
-  // await fetch("https://your-observability-endpoint/report-error", {
-  //   method: "POST",
-  //   body: JSON.stringify({
-  //     message: error.message,
-  //     request,
-  //     context,
-  //   }),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
+  const err = error as Error & { digest?: string };
+  console.error(
+    JSON.stringify({
+      level: "error",
+      msg: "next.request_error",
+      digest: err?.digest,
+      name: err?.name,
+      message: err?.message,
+      stack: err?.stack,
+      request: {
+        path: request?.path,
+        method: request?.method,
+      },
+      context: {
+        routerKind: context?.routerKind,
+        routePath: context?.routePath,
+        routeType: context?.routeType,
+        renderSource: context?.renderSource,
+        revalidateReason: context?.revalidateReason,
+      },
+    })
+  );
 };
