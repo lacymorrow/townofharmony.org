@@ -1,5 +1,5 @@
 {
-	"syncedAt": "2026-06-17T18:42:40.412Z",
+	"syncedAt": "2026-06-21T09:41:53.132Z",
 	"source": "google-places-api",
 	"center": {
 		"latitude": 35.9545,
@@ -25,7 +25,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJwVvVrnHfU4gRo80S-mvB-s0",
@@ -45,7 +45,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJebzk2wbfU4gRr7yaTBgkqbA",
@@ -58,16 +58,16 @@
 			"description": "",
 			"googleTypes": [
 				"garden_center",
-				"supplier",
 				"store",
-				"manufacturer",
-				"service",
 				"food",
+				"supplier",
+				"manufacturer",
 				"point_of_interest",
+				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJKf6JAwTfU4gRivxAxSYAX5s",
@@ -80,21 +80,21 @@
 			"description": "Bargain retail chain selling a range of household goods, groceries, beauty products & more.",
 			"googleTypes": [
 				"gift_shop",
-				"convenience_store",
-				"drugstore",
-				"discount_store",
-				"market",
 				"grocery_store",
+				"discount_store",
+				"drugstore",
 				"toy_store",
-				"health",
+				"market",
+				"convenience_store",
 				"food_store",
 				"store",
+				"health",
 				"food",
 				"point_of_interest",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJb6JWZgDfU4gRNsdZ3co54HI",
@@ -113,7 +113,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJs4xmBgTfU4gRkzCdSw8sIcc",
@@ -126,15 +126,15 @@
 			"description": "",
 			"googleTypes": [
 				"post_office",
-				"association_or_organization",
-				"finance",
 				"government_office",
-				"service",
+				"finance",
+				"association_or_organization",
 				"point_of_interest",
+				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJMdn2mqnfU4gRnqEkPZ7c9Xc",
@@ -152,7 +152,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJZyVEfgTfU4gRtKXtC04PCDI",
@@ -172,7 +172,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJszi90KnfU4gRaUgpQ1F6ofw",
@@ -185,12 +185,12 @@
 			"description": "",
 			"googleTypes": [
 				"gas_station",
-				"service",
 				"point_of_interest",
+				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJnRQfiwPfU4gRodMBNot0Koo",
@@ -204,14 +204,14 @@
 			"googleTypes": [
 				"bank",
 				"atm",
-				"finance",
 				"consultant",
-				"service",
+				"finance",
 				"point_of_interest",
+				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJM-xTb0bfU4gR9tkpuYXWP_U",
@@ -229,7 +229,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJ41gEYgTfU4gRzXRMZv9-g1M",
@@ -242,12 +242,12 @@
 			"description": "",
 			"googleTypes": [
 				"library",
-				"service",
 				"point_of_interest",
+				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJsdBuvAbfU4gR4M_m5Fm_4es",
@@ -260,15 +260,15 @@
 			"description": "",
 			"googleTypes": [
 				"auto_parts_store",
+				"car_repair",
 				"market",
 				"store",
-				"car_repair",
-				"service",
 				"point_of_interest",
+				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJcTN_LATfU4gRhkT8MBbxBnI",
@@ -287,7 +287,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJoUEQRxvfU4gR2SDee9lPznA",
@@ -306,7 +306,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJMdb-Dp3fU4gRuKzIEOIC7_Q",
@@ -325,7 +325,7 @@
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJhSkqBATfU4gRWfjXjs9jRco",
@@ -339,12 +339,12 @@
 			"googleTypes": [
 				"fire_station",
 				"government_office",
-				"service",
 				"point_of_interest",
+				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJ5SpMJQDfU4gRb7clx0ztMj8",
@@ -357,12 +357,12 @@
 			"description": "",
 			"googleTypes": [
 				"car_repair",
-				"service",
 				"point_of_interest",
+				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJmXrSlQbfU4gRnbuCOQCch94",
@@ -375,13 +375,13 @@
 			"description": "",
 			"googleTypes": [
 				"pharmacy",
-				"health",
 				"store",
+				"health",
 				"point_of_interest",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		},
 		{
 			"googlePlaceId": "ChIJ0xbSTADfU4gRXr3H3KgjpQg",
@@ -394,12 +394,12 @@
 			"description": "",
 			"googleTypes": [
 				"car_wash",
-				"service",
 				"point_of_interest",
+				"service",
 				"establishment"
 			],
 			"businessStatus": "OPERATIONAL",
-			"syncedAt": "2026-06-17T18:42:40.411Z"
+			"syncedAt": "2026-06-21T09:41:53.132Z"
 		}
 	]
 }
