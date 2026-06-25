@@ -27,7 +27,7 @@ export default async function AboutPage() {
 			<div className="prose prose-stone max-w-none space-y-6">
 				<p className="text-lg text-[#4A4640]">
 					Harmony is a small town located in Iredell County, North Carolina.
-					Incorporated in 1905, the town has grown into a close-knit community
+					Incorporated in 1927, the town has grown into a close-knit community
 					proud of its history, natural beauty, and welcoming spirit. With a
 					population of roughly 500 residents, Harmony maintains the small-town
 					character and neighborly atmosphere that make it a special place to
