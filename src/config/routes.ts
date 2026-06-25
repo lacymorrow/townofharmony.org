@@ -131,6 +131,9 @@ export const redirects = async (): Promise<Redirect[]> => {
 		// 301 redirects from legacy townofharmony.org (Wagtail) URLs to new Next.js routes.
 		{ source: "/government", destination: "/our-team", permanent: true },
 		{ source: "/government/", destination: "/our-team", permanent: true },
+		// LAC-2447: preserve UNC SOG .edu backlink + recover Top-10 ranking for "Explore Harmony".
+		{ source: "/explore-harmony", destination: "/points-of-interest", permanent: true },
+		{ source: "/explore-harmony/", destination: "/points-of-interest", permanent: true },
 		{ source: "/emergency-services", destination: "/emergency", permanent: true },
 		{ source: "/emergency-services/", destination: "/emergency", permanent: true },
 		...createRedirects(
