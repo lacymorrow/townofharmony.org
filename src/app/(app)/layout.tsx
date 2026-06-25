@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import React, { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { FontSelector } from "@/components/modules/devtools/font-selector";
@@ -28,18 +28,9 @@ await initializePaymentProviders();
 // which prevents proper HTTP 404 status on unknown routes (soft-404 problem).
 export default function Layout({
   children,
-  ...slots
 }: {
-  children: React.ReactNode;
-  [key: string]: React.ReactNode;
+  children: ReactNode;
 }) {
-  // In RSC, parallel route slots are synchronous ReactNodes — no await needed.
-  const resolvedSlots = Object.entries(slots).filter(
-    ([, slot]) =>
-      slot != null &&
-      !(typeof slot === "object" && Object.keys(slot as object).length === 0)
-  ) as [string, React.ReactNode][];
-
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
@@ -95,20 +86,6 @@ export default function Layout({
       >
         <AppRouterLayout>
           {children}
-
-          {/*
-           * Dynamically render all available slots.
-           *
-           * Do NOT wrap these in <Suspense>. Doing so causes Next.js to begin
-           * streaming the shell — committing HTTP 200 — before the catch-all
-           * page in `(town)/[...slug]/page.tsx` can call notFound(), producing
-           * soft 404s on every unknown URL (LAC-2434). The @modal slot's
-           * default renders null synchronously and the intercepted sign-in
-           * slots are also sync, so a blocking render is fine.
-           */}
-          {resolvedSlots.map(([key, slot]) => (
-            <React.Fragment key={`slot-${key}`}>{slot}</React.Fragment>
-          ))}
 
           {/* TODO: Uncomment this when we have this working */}
           {/* Lacy Morrow vanity plate */}
