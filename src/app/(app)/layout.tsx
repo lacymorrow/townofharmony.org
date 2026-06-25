@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import type React from "react";
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { FontSelector } from "@/components/modules/devtools/font-selector";
@@ -30,7 +29,7 @@ await initializePaymentProviders();
 export default function Layout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
