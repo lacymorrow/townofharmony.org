@@ -118,12 +118,17 @@ test("LAC-2434: known routes still return HTTP 200", async ({ request }) => {
 });
 
 // ── LAC-2434 ─────────────────────────────────────────────────────────────────
-// Legacy Wagtail `.html` URLs should 301 to the suffix-stripped path so old
-// Google index entries route to the live page instead of soft-404ing.
-test("LAC-2434: legacy .html URLs 301-redirect to clean paths", async ({ request }) => {
-	const res = await request.get("/about.html", { maxRedirects: 0 });
-	expect(res.status()).toBe(308);
-	expect(res.headers().location).toMatch(/\/about$/);
+// Legacy Wagtail `index.html` URLs should 301 to the parent path so old Google
+// index entries route to the live page. Scoped to `index.html` so site-
+// verification HTML tokens at the root (Google/Bing) are NOT intercepted.
+test("LAC-2434: legacy /index.html URLs 301-redirect to parent paths", async ({ request }) => {
+	const root = await request.get("/index.html", { maxRedirects: 0 });
+	expect(root.status()).toBe(308);
+	expect(root.headers().location).toMatch(/\/$/);
+
+	const nested = await request.get("/about/index.html", { maxRedirects: 0 });
+	expect(nested.status()).toBe(308);
+	expect(nested.headers().location).toMatch(/\/about$/);
 });
 
 // ── LAC-1704 ─────────────────────────────────────────────────────────────────
