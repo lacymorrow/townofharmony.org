@@ -98,6 +98,34 @@ test("LAC-186: site phone numbers are not 555-xxxx placeholders", async ({ page 
 	expect(contactText).not.toMatch(/\b555[-.\s]?\d{3}[-.\s]?\d{4}\b/);
 });
 
+// ── LAC-2434 ─────────────────────────────────────────────────────────────────
+// Unknown URLs returned HTTP 200 (soft 404) because Suspense boundaries in
+// (town)/layout.tsx started streaming the shell and committing the response
+// status before the catch-all page could call notFound().
+test("LAC-2434: unknown URLs return HTTP 404 status (not soft 404)", async ({ request }) => {
+	const res = await request.get("/this-page-does-not-exist-xyz-soft-404-regression", {
+		maxRedirects: 0,
+	});
+	expect(res.status()).toBe(404);
+});
+
+// ── LAC-2434 ─────────────────────────────────────────────────────────────────
+// Known Next.js routes must still return HTTP 200 — verifies the 404 fix did
+// not regress legitimate pages.
+test("LAC-2434: known routes still return HTTP 200", async ({ request }) => {
+	const res = await request.get("/about", { maxRedirects: 0 });
+	expect(res.status()).toBe(200);
+});
+
+// ── LAC-2434 ─────────────────────────────────────────────────────────────────
+// Legacy Wagtail `.html` URLs should 301 to the suffix-stripped path so old
+// Google index entries route to the live page instead of soft-404ing.
+test("LAC-2434: legacy .html URLs 301-redirect to clean paths", async ({ request }) => {
+	const res = await request.get("/about.html", { maxRedirects: 0 });
+	expect(res.status()).toBe(308);
+	expect(res.headers().location).toMatch(/\/about$/);
+});
+
 // ── LAC-1704 ─────────────────────────────────────────────────────────────────
 // Default Next.js 404 was shown instead of the custom Town of Harmony not-found page.
 test("LAC-1704: custom 404 page renders on invalid routes", async ({ page }) => {

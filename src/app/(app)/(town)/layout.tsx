@@ -1,32 +1,29 @@
-import { Suspense } from "react";
 import { BuilderPreviewInit } from "@/components/modules/builder/builder-preview-init";
 import { EmergencyBanner } from "@/components/town/emergency-banner";
-import { TownFooter } from "@/components/town/town-footer";
 import { TownFooterServer } from "@/components/town/town-footer-server";
-import { TownHeader } from "@/components/town/town-header";
 import { TownHeaderServer } from "@/components/town/town-header-server";
-import { settings } from "@/data/town/settings";
 import { AnnouncementBarSection } from "@/components/town/announcement-bar-section";
 
-// Synchronous layout — do not make this async. An async layout causes streaming,
-// which commits HTTP 200 before the page's notFound() can set the 404 status.
-// Async server wrappers fetch live Builder.io settings internally while the
-// layout itself stays synchronous, preserving correct 404 behaviour.
+// Synchronous layout — do not make this async, and do NOT wrap async server
+// components in <Suspense>. Either causes Next.js to start streaming and commit
+// HTTP 200 before the child catch-all page can call notFound(), producing soft
+// 404s on unknown URLs.
+//
+// Async server wrappers (TownHeaderServer, AnnouncementBarSection,
+// TownFooterServer) are awaited inline — React will block rendering on them,
+// the catch-all page resolves in parallel, and notFound() propagates before
+// the response is committed. The Builder.io fetches inside the wrappers are
+// cached (unstable_cache, revalidate: 3600) so the blocking cost is negligible
+// after the first request per ISR cycle.
 export default function TownLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<div className="min-h-screen flex flex-col">
 			<BuilderPreviewInit />
-			<Suspense fallback={<TownHeader settings={settings} />}>
-				<TownHeaderServer />
-			</Suspense>
-			<Suspense fallback={null}>
-				<AnnouncementBarSection />
-			</Suspense>
+			<TownHeaderServer />
+			<AnnouncementBarSection />
 			<EmergencyBanner />
 			<main id="main-content" className="flex-grow">{children}</main>
-			<Suspense fallback={<TownFooter settings={settings} />}>
-				<TownFooterServer />
-			</Suspense>
+			<TownFooterServer />
 		</div>
 	);
 }

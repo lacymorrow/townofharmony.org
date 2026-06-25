@@ -208,6 +208,12 @@ export const redirects = async (): Promise<Redirect[]> => {
 		{ source: "/elections/", destination: "/our-team", permanent: false },
 		{ source: "/privacy-policy", destination: "/privacy", permanent: true },
 		{ source: "/privacy-policy/", destination: "/privacy", permanent: true },
+
+		// Legacy Wagtail `.html` URLs still indexed by Google → strip the suffix.
+		// `/index.html` and `/foo/index.html` map to their parent directory.
+		{ source: "/index.html", destination: "/", permanent: true },
+		{ source: "/:path+/index.html", destination: "/:path+", permanent: true },
+		{ source: "/:path+.html", destination: "/:path+", permanent: true },
 	];
 };
 
