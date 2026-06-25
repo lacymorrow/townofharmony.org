@@ -1,11 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import type React from "react";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { FontSelector } from "@/components/modules/devtools/font-selector";
 import { ReactGrab } from "@/components/modules/devtools/react-grab";
-import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { fontSans, fontSerif } from "@/config/fonts";
 import { siteConfig } from "@/config/site-config";
 import { settings } from "@/data/town/settings";
@@ -98,11 +96,18 @@ export default function Layout({
         <AppRouterLayout>
           {children}
 
-          {/* Dynamically render all available slots */}
+          {/*
+           * Dynamically render all available slots.
+           *
+           * Do NOT wrap these in <Suspense>. Doing so causes Next.js to begin
+           * streaming the shell — committing HTTP 200 — before the catch-all
+           * page in `(town)/[...slug]/page.tsx` can call notFound(), producing
+           * soft 404s on every unknown URL (LAC-2434). The @modal slot's
+           * default renders null synchronously and the intercepted sign-in
+           * slots are also sync, so a blocking render is fine.
+           */}
           {resolvedSlots.map(([key, slot]) => (
-            <Suspense key={`slot-${key}`} fallback={<SuspenseFallback />}>
-              {slot}
-            </Suspense>
+            <React.Fragment key={`slot-${key}`}>{slot}</React.Fragment>
           ))}
 
           {/* TODO: Uncomment this when we have this working */}
