@@ -179,7 +179,10 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("name", true),
 			text("slug", true),
-			text("category"),
+			text("category", false, {
+				helperText:
+					"Grouping label for the filter bar (e.g. Parks, Government, Historic Sites). New categories appear in the filter automatically.",
+			}),
 			richText("description"),
 			file("image"),
 			text("address"),
