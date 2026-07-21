@@ -76,20 +76,21 @@ export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselPro
         </div>
       </div>
       {slides.length > 1 && (
-        <div className="absolute bottom-5 left-0 right-0 z-10 flex justify-center gap-2 px-4 lg:justify-start lg:pl-4">
+        <div className="absolute bottom-5 left-0 right-0 z-10 flex justify-center gap-2 pl-4 pr-4 lg:justify-start">
           {slides.map((_, i) => (
             <button
               // biome-ignore lint/suspicious/noArrayIndexKey: dots map 1:1 to slide indices
               key={i}
               type="button"
               onClick={() => emblaApi?.scrollTo(i)}
-              aria-label={`Go to slide ${i + 1}`}
               aria-current={i === selectedIndex}
               className={cn(
                 "h-2 rounded-full transition-all",
                 i === selectedIndex ? "w-6 bg-wheat" : "w-2 bg-white/40 hover:bg-white/60"
               )}
-            />
+            >
+              <span className="sr-only">Go to slide {i + 1}</span>
+            </button>
           ))}
         </div>
       )}
@@ -110,7 +111,7 @@ function HeroSlideView({ slide, isActive }: { slide: HeroSlide; isActive: boolea
       aria-hidden={!isActive}
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[460px]">
-        <div className="flex flex-col justify-center py-12 px-4 lg:py-16 lg:pr-12">
+        <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12">
           <div className="inline-flex items-center gap-2 bg-wheat/15 border border-wheat/30 text-[#E8D5A3] px-3.5 py-1.5 rounded-full text-[13px] font-semibold tracking-wide w-fit mb-5">
             Est. 1927 &middot; Iredell County
           </div>
