@@ -65,7 +65,7 @@ export async function fetchBuilderContent<T>(
 	}
 
 	const res = await fetch(url.toString(), {
-		next: { revalidate: 60 },
+		next: { revalidate: 60, tags: ["builder-content"] },
 	});
 
 	if (!res.ok) {
