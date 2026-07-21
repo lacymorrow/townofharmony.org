@@ -14,7 +14,13 @@ interface TownPointsOfInterestProps {
 	showCategoryFilter?: boolean;
 }
 
-const POI_CATEGORIES = [
+/**
+ * Well-known categories shown first in the filter bar, in this order.
+ * Categories entered in Builder.io that aren't listed here still appear,
+ * sorted alphabetically after these — editors can add new categories
+ * without a code change.
+ */
+const PREFERRED_CATEGORY_ORDER = [
 	"Parks",
 	"Government",
 	"Historic Sites",
@@ -38,11 +44,21 @@ export const TownPointsOfInterest = ({
 
 	const availableCategories = useMemo(() => {
 		const catSet = new Set<string>();
-		for (const p of allPOIs) catSet.add(p.category);
-		return POI_CATEGORIES.filter((cat) => catSet.has(cat));
+		for (const p of allPOIs) {
+			const cat = p.category?.trim();
+			if (cat) catSet.add(cat);
+		}
+		const preferred = PREFERRED_CATEGORY_ORDER.filter((cat) => catSet.has(cat));
+		const preferredSet = new Set<string>(PREFERRED_CATEGORY_ORDER);
+		const extras = [...catSet]
+			.filter((cat) => !preferredSet.has(cat))
+			.sort((a, b) => a.localeCompare(b));
+		return [...preferred, ...extras];
 	}, [allPOIs]);
 
-	const pois = category ? allPOIs.filter((p) => p.category === category) : allPOIs;
+	const pois = category
+		? allPOIs.filter((p) => p.category?.trim() === category)
+		: allPOIs;
 
 	const updateParams = (updates: Record<string, string | undefined>) => {
 		const params = new URLSearchParams(searchParams?.toString() ?? "");
