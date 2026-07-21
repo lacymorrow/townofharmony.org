@@ -34,8 +34,25 @@ const getTodayString = (): string => {
   return `${d.getFullYear()}-${month}-${day}`;
 };
 
+/**
+ * Builder entries hold eventDate in mixed formats — ISO ("2026-07-24T08:00:00")
+ * and JS toString ("Sat Jul 04 2026 06:00:00 GMT-0400 (…)"). Take the ISO date
+ * prefix verbatim when present (no UTC shift for date-only values); otherwise
+ * parse and use local date parts.
+ */
+const toDateOnly = (value: unknown): string | null => {
+  if (typeof value !== "string") return null;
+  const isoMatch = /^\d{4}-\d{2}-\d{2}/.exec(value);
+  if (isoMatch) return isoMatch[0];
+  const d = safeDate(value);
+  if (!d) return null;
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${month}-${day}`;
+};
+
 const isPastEvent = (event: TownEvent, todayStr: string): boolean => {
-  const dateStr = typeof event.eventDate === "string" ? event.eventDate.split("T")[0] : undefined;
+  const dateStr = toDateOnly(event.eventDate);
   return dateStr ? dateStr < todayStr : false;
 };
 
