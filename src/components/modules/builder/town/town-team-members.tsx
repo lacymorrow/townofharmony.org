@@ -5,11 +5,20 @@ import { useBuilderData } from "@/lib/builder-data";
 import { teamMembers as staticTeamMembers } from "@/data/town/team-members";
 import type { TownTeamMember } from "@/data/town/types";
 
-const CATEGORY_ORDER = [
+/**
+ * Well-known team categories shown first, in this order. Categories entered
+ * in Builder.io that aren't listed here still render, sorted alphabetically
+ * after these — editors can add new categories without a code change.
+ * Members with no category fall into an "Other" group so they're never
+ * dropped from the page.
+ */
+const PREFERRED_CATEGORY_ORDER = [
 	"Executive",
 	"Town Council",
 	"Staff",
 ] as const;
+
+const UNCATEGORIZED_LABEL = "Other";
 
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
 	Executive:
@@ -64,10 +73,22 @@ export const TownTeamMembers = ({
 		);
 	}
 
-	const grouped = CATEGORY_ORDER.map((category) => ({
+	const categoryOf = (m: TownTeamMember) => m.category?.trim() || UNCATEGORIZED_LABEL;
+	const presentCategories = new Set(members.map(categoryOf));
+	const preferredSet = new Set<string>(PREFERRED_CATEGORY_ORDER);
+	const preferred = PREFERRED_CATEGORY_ORDER.filter((c) => presentCategories.has(c));
+	const extras = [...presentCategories]
+		.filter((c) => !preferredSet.has(c) && c !== UNCATEGORIZED_LABEL)
+		.sort((a, b) => a.localeCompare(b));
+	const orderedCategories = [...preferred, ...extras];
+	if (presentCategories.has(UNCATEGORIZED_LABEL)) {
+		orderedCategories.push(UNCATEGORIZED_LABEL);
+	}
+
+	const grouped = orderedCategories.map((category) => ({
 		category,
 		description: CATEGORY_DESCRIPTIONS[category] || "",
-		members: members.filter((m) => m.category === category),
+		members: members.filter((m) => categoryOf(m) === category),
 	})).filter((g) => g.members.length > 0);
 
 	const getInitials = (name: string) =>
