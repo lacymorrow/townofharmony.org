@@ -5,6 +5,7 @@ import { useState } from "react";
 import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
+import { getTodayString, toDateOnly } from "@/lib/date-only";
 import { cn } from "@/lib/utils";
 
 type Tab = "agenda" | "minutes";
@@ -16,7 +17,13 @@ interface TownAgendaMinutesProps {
 export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesProps = {}) => {
   const [activeTab, setActiveTab] = useState<Tab>(defaultTab);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayString();
+  // Unparseable dates classify as upcoming (Agenda tab), matching the
+  // events page — better to over-show an agenda than bury it in Minutes.
+  const isPastMeeting = (m: TownMeeting) => {
+    const dateStr = toDateOnly(m.meetingDate);
+    return dateStr ? dateStr < today : false;
+  };
 
   const { data: allMeetings } = useBuilderData<TownMeeting>("town-meeting", {
     limit: 50,
@@ -24,11 +31,11 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
   });
 
   const upcomingMeetings = allMeetings
-    .filter((m) => m.meetingDate.split("T")[0]! >= today!)
+    .filter((m) => !isPastMeeting(m))
     .sort((a, b) => new Date(a.meetingDate).getTime() - new Date(b.meetingDate).getTime());
 
   const pastMeetings = allMeetings
-    .filter((m) => m.meetingDate.split("T")[0]! < today!)
+    .filter((m) => isPastMeeting(m))
     .sort((a, b) => new Date(b.meetingDate).getTime() - new Date(a.meetingDate).getTime());
 
   const formatDate = (dateStr: string) =>

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
+import { getTodayString, toDateOnly } from "@/lib/date-only";
 
 interface TownMeetingsListProps {
   itemsPerPage?: number;
@@ -118,10 +119,12 @@ export const TownMeetingsList = ({
         if (year && String(d.getFullYear()) !== year) return false;
       }
       if (status) {
-        const today = new Date().toISOString().split("T")[0];
-        const meetingDay = meeting.meetingDate.split("T")[0];
-        if (status === "upcoming" && meetingDay! < today!) return false;
-        if (status === "past" && meetingDay! >= today!) return false;
+        const today = getTodayString();
+        // Unparseable dates classify as upcoming, matching the agenda/minutes split.
+        const meetingDay = toDateOnly(meeting.meetingDate);
+        const isPast = meetingDay ? meetingDay < today : false;
+        if (status === "upcoming" && isPast) return false;
+        if (status === "past" && !isPast) return false;
         if (status === "has-recordings" && !meeting.videoUrl && !meeting.audioUrl) return false;
         if (status === "has-minutes" && !meeting.minutes && !meeting.minutesUrl) return false;
       }
