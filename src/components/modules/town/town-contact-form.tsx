@@ -256,7 +256,7 @@ export const TownContactForm = () => {
 					aria-invalid={!!errors.inquiryType}
 					aria-describedby={errors.inquiryType ? "inquiryType-error" : undefined}
 					defaultValue="general"
-					className={inputClass(!!errors.inquiryType)}
+					className={`town-select ${inputClass(!!errors.inquiryType, "pr-10")}`}
 				>
 					<option value="" disabled>
 						Select a topic…
@@ -364,8 +364,8 @@ export const TownContactForm = () => {
 	);
 };
 
-const inputClass = (hasError: boolean) =>
-	`w-full rounded-lg border ${hasError ? "border-red-400" : "border-[#DDD7CC]"} bg-white px-4 py-2.5 text-sm text-[#2D2A24] placeholder:text-[#635E56]/60 focus:outline-none focus:ring-1 focus:ring-sage focus:border-sage`;
+const inputClass = (hasError: boolean, paddingRight = "pr-4") =>
+	`w-full rounded-lg border ${hasError ? "border-red-400" : "border-[#DDD7CC]"} bg-white pl-4 ${paddingRight} py-2.5 text-sm text-[#2D2A24] placeholder:text-[#635E56]/60 focus:outline-none focus:ring-1 focus:ring-sage focus:border-sage`;
 
 const FieldWrapper = ({
 	label,
