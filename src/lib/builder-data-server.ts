@@ -44,6 +44,8 @@ async function getBuilderPageContent(
 		url.searchParams.set("apiKey", BUILDER_API_KEY);
 		url.searchParams.set("userAttributes.urlPath", urlPath);
 		url.searchParams.set("limit", "1");
+		// Skip Builder's CDN cache so a webhook-triggered refetch gets the fresh publish.
+		url.searchParams.set("noCache", "true");
 
 		const res = await fetch(url.toString(), {
 			next: { revalidate: 60, tags: ["builder-content"] },
