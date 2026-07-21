@@ -22,18 +22,21 @@ const safeDate = (dateStr: unknown): Date | null => {
 };
 
 /**
- * Events on or after the start of today count as upcoming — date-only
- * comparison, matching how the agenda/minutes page splits meetings.
+ * Events on or after today count as upcoming. Comparison is date-string
+ * only (like the agenda/minutes split) so a date-only eventDate parsed as
+ * UTC midnight is never shifted into yesterday by the viewer's timezone;
+ * "today" comes from local date parts for the same reason.
  */
-const startOfToday = (): number => {
+const getTodayString = (): string => {
   const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d.getTime();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${month}-${day}`;
 };
 
-const isPastEvent = (event: TownEvent, todayStart: number): boolean => {
-  const d = safeDate(event.eventDate);
-  return d ? d.getTime() < todayStart : false;
+const isPastEvent = (event: TownEvent, todayStr: string): boolean => {
+  const dateStr = typeof event.eventDate === "string" ? event.eventDate.split("T")[0] : undefined;
+  return dateStr ? dateStr < todayStr : false;
 };
 
 const SectionDivider = ({ label }: { label: string }) => (
@@ -124,7 +127,7 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
   const month = rawMonth && /^\d{1,2}$/.test(rawMonth) ? rawMonth : undefined;
   const year = rawYear && /^\d{4}$/.test(rawYear) ? rawYear : undefined;
 
-  const todayStart = startOfToday();
+  const todayStr = getTodayString();
 
   const {
     docs,
@@ -149,9 +152,10 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
     clientSort: (a, b) => {
       const da = safeDate(a.eventDate);
       const db = safeDate(b.eventDate);
-      const rank = (d: Date | null): number => (d ? (d.getTime() < todayStart ? 2 : 0) : 1);
-      const ra = rank(da);
-      const rb = rank(db);
+      const rank = (event: TownEvent, d: Date | null): number =>
+        d ? (isPastEvent(event, todayStr) ? 2 : 0) : 1;
+      const ra = rank(a, da);
+      const rb = rank(b, db);
       if (ra !== rb) return ra - rb;
       if (!da || !db) return 0;
       return ra === 2 ? db.getTime() - da.getTime() : da.getTime() - db.getTime();
@@ -245,8 +249,8 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
             {docs.map((event, index) => {
               const eventDate = safeDate(event.eventDate);
               if (!event.slug) return null;
-              const isPast = isPastEvent(event, todayStart);
-              const prevIsPast = index > 0 && isPastEvent(docs[index - 1]!, todayStart);
+              const isPast = isPastEvent(event, todayStr);
+              const prevIsPast = index > 0 && isPastEvent(docs[index - 1]!, todayStr);
               const showUpcomingHeader = index === 0 && !isPast;
               const showPastHeader = isPast && (index === 0 || !prevIsPast);
               return (
