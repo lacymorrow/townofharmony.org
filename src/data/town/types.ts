@@ -104,7 +104,8 @@ export interface TownPointOfInterest {
 	id: number;
 	name: string;
 	slug: string;
-	category: string;
+	/** Optional in the Builder.io model — entries may have no category. */
+	category?: string;
 	description: string;
 	image: string | null;
 	address: string;

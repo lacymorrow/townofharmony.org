@@ -163,7 +163,7 @@ const buildSearchIndex = (): SearchResult[] => {
 		results.push({
 			id: `poi-${poi.id}`,
 			title: poi.name,
-			subtitle: `${poi.category} — ${poi.address}`,
+			subtitle: [poi.category, poi.address].filter(Boolean).join(" — "),
 			href: safeLink || `/points-of-interest#${poi.slug}`,
 			openExternal: !!safeLink && isExternalUrl(safeLink),
 			category: "Places",

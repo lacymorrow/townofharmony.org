@@ -152,9 +152,11 @@ export const TownPointsOfInterest = ({
 
 								{/* Content */}
 								<div className="p-5">
-									<span className="inline-block bg-stone text-sage-dark px-2 py-0.5 rounded-full text-xs font-medium mb-2">
-										{poi.category}
-									</span>
+									{poi.category && (
+										<span className="inline-block bg-stone text-sage-dark px-2 py-0.5 rounded-full text-xs font-medium mb-2">
+											{poi.category}
+										</span>
+									)}
 									<h2 className="text-lg font-semibold text-[#2D2A24] mb-2">
 										{safeLink ? (
 											isExternal ? (
