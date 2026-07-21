@@ -9,19 +9,104 @@ import { emergencyServices } from "@/data/town/emergency-services";
 import { announcements } from "@/data/town/announcements";
 import { businesses } from "@/data/town/businesses";
 import { elections } from "@/data/town/elections";
+import { mapBusinesses } from "@/data/town/map-businesses";
 import { settings, toTownSettings, type BuilderSettingsFlat } from "@/data/town/settings";
 import { navigation } from "@/data/town/navigation";
 import { homepage } from "@/data/town/homepage";
-import type { TownEvent } from "@/data/town/types";
+import type {
+	TownAnnouncement,
+	TownBusiness,
+	TownElection,
+	TownEmergencyService,
+	TownEvent,
+	TownHistoryArticle,
+	TownMeeting,
+	TownNews,
+	TownPointOfInterest,
+	TownResource,
+	TownTeamMember,
+} from "@/data/town/types";
+import type { MapBusiness } from "@/lib/map-utils";
 import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-server";
+import { fetchBuilderEntries } from "@/lib/builder-content-fetch";
 import { logger } from "@/lib/logger";
 import { slugify } from "@/lib/utils/extract-headings";
 
 /**
- * Static data access layer for town content.
- * All functions stay async to keep existing await calls valid.
- * Returns the same shapes as the previous Payload CMS queries.
+ * Server-side data access layer for town content.
+ *
+ * Each getter reads from Builder.io first and falls back to the bundled static
+ * arrays in `src/data/town/*` when Builder returns nothing or errors. This
+ * lets content editors change news/meetings/businesses/etc. in Builder without
+ * a redeploy, while the static arrays keep the site working when Builder is
+ * unreachable (network failure, missing API key, empty models pre-migration).
  */
+
+/**
+ * Build a request-cached resolver for a Builder.io data model.
+ *
+ * Fetches all entries in one call (models are small, so we paginate on our
+ * side), preserves the Builder entry id when the model has no `id` field of
+ * its own (needed for React keys, URL params, and by-id lookups), and returns
+ * the static fallback when Builder is empty or fails.
+ */
+const buildBuilderListResolver = <T extends { id?: unknown }>(
+	model: string,
+	fallback: T[],
+	options?: { limit?: number; sort?: Record<string, number> },
+) =>
+	cache(async (): Promise<T[]> => {
+		try {
+			const { results } = await fetchBuilderEntries<T>(model, {
+				limit: options?.limit ?? 1000,
+				sort: options?.sort,
+			});
+			if (results.length === 0) return fallback;
+			return results.map((entry) => {
+				const data = entry.data as T;
+				if (data.id !== undefined && data.id !== null && data.id !== "") return data;
+				return { ...data, id: entry.id } as T;
+			});
+		} catch (err) {
+			logger.warn(
+				`Failed to fetch ${model} from Builder.io — falling back to static data`,
+				{ error: err instanceof Error ? err.message : String(err) },
+			);
+			return fallback;
+		}
+	});
+
+const resolveNews = buildBuilderListResolver<TownNews>("town-news", news);
+const resolveMeetings = buildBuilderListResolver<TownMeeting>("town-meeting", meetings);
+const resolveTeamMembers = buildBuilderListResolver<TownTeamMember>(
+	"town-team-member",
+	teamMembers,
+	{ sort: { priority: -1 } },
+);
+const resolveHistoryArticles = buildBuilderListResolver<TownHistoryArticle>(
+	"town-history-article",
+	historyArticles,
+	{ sort: { priority: -1 } },
+);
+const resolvePointsOfInterest = buildBuilderListResolver<TownPointOfInterest>(
+	"town-point-of-interest",
+	pointsOfInterest,
+);
+const resolveResources = buildBuilderListResolver<TownResource>("town-resource", resources);
+const resolveEmergencyServices = buildBuilderListResolver<TownEmergencyService>(
+	"town-emergency-service",
+	emergencyServices,
+);
+const resolveAnnouncements = buildBuilderListResolver<TownAnnouncement>(
+	"town-announcement",
+	announcements,
+);
+const resolveBusinesses = buildBuilderListResolver<TownBusiness>("town-business", businesses);
+const resolveElections = buildBuilderListResolver<TownElection>("town-election", elections);
+const resolveMapBusinesses = buildBuilderListResolver<MapBusiness>(
+	"town-map-business",
+	mapBusinesses,
+);
 
 const paginate = <T>(items: T[], limit: number, page: number) => {
 	const totalDocs = items.length;
@@ -47,7 +132,8 @@ export const getNews = async (options?: {
 }) => {
 	const { limit = 10, page = 1, category, search } = options ?? {};
 
-	let filtered = news.filter((n) => n.status === "published");
+	const all = await resolveNews();
+	let filtered = all.filter((n) => n.status === "published");
 
 	if (category) {
 		filtered = filtered.filter((n) => n.categories.includes(category));
@@ -68,7 +154,8 @@ export const getNews = async (options?: {
  * Get a single news article by slug
  */
 export const getNewsBySlug = async (slug: string) => {
-	return news.find((n) => n.slug === slug) ?? null;
+	const all = await resolveNews();
+	return all.find((n) => n.slug === slug) ?? null;
 };
 
 /**
@@ -195,7 +282,8 @@ export const getMeetings = async (options?: {
 }) => {
 	const { limit = 10, page = 1, type, month, year, status, hasRecordings } = options ?? {};
 
-	let filtered = meetings.filter((m) => m.isPublic);
+	const allMeetings = await resolveMeetings();
+	let filtered = allMeetings.filter((m) => m.isPublic);
 
 	if (type) {
 		filtered = filtered.filter((m) => m.type === type);
@@ -247,31 +335,35 @@ export const getMeetings = async (options?: {
  * Get a single meeting by slug
  */
 export const getMeetingBySlug = async (slug: string) => {
-	return meetings.find((m) => m.slug === slug) ?? null;
+	const allMeetings = await resolveMeetings();
+	return allMeetings.find((m) => m.slug === slug) ?? null;
 };
 
 /**
  * Get team members, sorted by category
  */
 export const getTeamMembers = async () => {
-	return teamMembers.filter((m) => m.isActive);
+	const all = await resolveTeamMembers();
+	return all.filter((m) => m.isActive);
 };
 
 /**
  * Get history articles
  */
 export const getHistoryArticles = async (type?: "period" | "landmark") => {
+	const all = await resolveHistoryArticles();
 	if (type) {
-		return historyArticles.filter((a) => a.type === type);
+		return all.filter((a) => a.type === type);
 	}
-	return [...historyArticles];
+	return [...all];
 };
 
 /**
  * Get points of interest
  */
 export const getPointsOfInterest = async (category?: string) => {
-	let filtered = [...pointsOfInterest];
+	const all = await resolvePointsOfInterest();
+	let filtered = [...all];
 	if (category) {
 		filtered = filtered.filter((p) => p.category === category);
 	}
@@ -282,7 +374,8 @@ export const getPointsOfInterest = async (category?: string) => {
  * Get resources
  */
 export const getResources = async (options?: { type?: string; category?: string }) => {
-	let filtered = [...resources];
+	const all = await resolveResources();
+	let filtered = [...all];
 	if (options?.type) {
 		filtered = filtered.filter((r) => r.type === options.type);
 	}
@@ -296,20 +389,30 @@ export const getResources = async (options?: { type?: string; category?: string 
  * Get emergency services
  */
 export const getEmergencyServices = async () => {
-	return [...emergencyServices];
+	const all = await resolveEmergencyServices();
+	return [...all];
 };
 
 /**
- * Get active announcements (emergency alerts)
+ * Get active announcements (emergency alerts). Powers the site-wide
+ * EmergencyBanner in the town layout.
  */
 export const getActiveAnnouncements = async () => {
+	const all = await resolveAnnouncements();
 	const now = new Date().toISOString();
-	return announcements.filter((a) => {
+	return all.filter((a) => {
 		if (!a.isActive) return false;
 		if (a.startsAt && a.startsAt > now) return false;
 		if (a.endsAt && a.endsAt < now) return false;
 		return true;
 	});
+};
+
+/**
+ * Get map businesses for the interactive map page.
+ */
+export const getMapBusinesses = async (): Promise<MapBusiness[]> => {
+	return [...(await resolveMapBusinesses())];
 };
 
 /**
@@ -323,7 +426,8 @@ export const getAnnouncements = async (options?: {
 }) => {
 	const { limit = 10, page = 1, level, activeOnly } = options ?? {};
 
-	let filtered = [...announcements];
+	const all = await resolveAnnouncements();
+	let filtered = [...all];
 
 	if (level) {
 		filtered = filtered.filter((a) => a.level === level);
@@ -347,8 +451,9 @@ export const getAnnouncements = async (options?: {
 /**
  * Get a single announcement by ID
  */
-export const getAnnouncementById = async (id: number) => {
-	return announcements.find((a) => a.id === id) ?? null;
+export const getAnnouncementById = async (id: number | string) => {
+	const all = await resolveAnnouncements();
+	return all.find((a) => String(a.id) === String(id)) ?? null;
 };
 
 /**
@@ -363,7 +468,8 @@ export const getBusinesses = async (options?: {
 }) => {
 	const { limit = 10, page = 1, category, search, featured } = options ?? {};
 
-	let filtered = [...businesses];
+	const all = await resolveBusinesses();
+	let filtered = [...all];
 
 	if (category) {
 		filtered = filtered.filter((b) => b.category === category);
@@ -393,7 +499,8 @@ export const getBusinesses = async (options?: {
  * Get a single business by slug
  */
 export const getBusinessBySlug = async (slug: string) => {
-	return businesses.find((b) => b.slug === slug) ?? null;
+	const all = await resolveBusinesses();
+	return all.find((b) => b.slug === slug) ?? null;
 };
 
 /**
@@ -407,7 +514,8 @@ export const getElections = async (options?: {
 }) => {
 	const { limit = 10, page = 1, status, search } = options ?? {};
 
-	let filtered = [...elections];
+	const all = await resolveElections();
+	let filtered = [...all];
 	const today = new Date().toISOString().split("T")[0]!;
 
 	if (status === "upcoming") {
@@ -433,7 +541,8 @@ export const getElections = async (options?: {
  * Get a single election by slug
  */
 export const getElectionBySlug = async (slug: string) => {
-	return elections.find((e) => e.slug === slug) ?? null;
+	const all = await resolveElections();
+	return all.find((e) => e.slug === slug) ?? null;
 };
 
 /**
@@ -466,7 +575,8 @@ export const getEventFilterOptions = async () => {
  * Only types/years/statuses that match at least one public meeting are returned.
  */
 export const getMeetingFilterOptions = async () => {
-	const publicMeetings = meetings.filter((m) => m.isPublic);
+	const allMeetings = await resolveMeetings();
+	const publicMeetings = allMeetings.filter((m) => m.isPublic);
 
 	const typeSet = new Set<string>();
 	const yearSet = new Set<number>();
@@ -507,7 +617,8 @@ export const getMeetingFilterOptions = async () => {
  * Only categories/months that have at least one published article are returned.
  */
 export const getNewsFilterOptions = async () => {
-	const published = news.filter((n) => n.status === "published");
+	const allNews = await resolveNews();
+	const published = allNews.filter((n) => n.status === "published");
 
 	const categorySet = new Set<string>();
 	const monthSet = new Set<string>();

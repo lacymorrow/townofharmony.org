@@ -4,7 +4,6 @@ import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
-import { mapBusinesses } from "@/data/town/map-businesses";
 import { BusinessSidebar } from "@/components/town/map/business-sidebar";
 import { MapLegend } from "@/components/town/map/map-legend";
 import type { MapBusiness, BusinessCategory } from "@/lib/map-utils";
@@ -41,7 +40,11 @@ function parseCatsParam(value: string | null): Set<BusinessCategory> {
 	return cats.length > 0 ? new Set(cats as BusinessCategory[]) : new Set(ALL_CATEGORIES);
 }
 
-export const InteractiveMap = () => {
+interface InteractiveMapProps {
+	businesses: MapBusiness[];
+}
+
+export const InteractiveMap = ({ businesses }: InteractiveMapProps) => {
 	const mapRef = useRef<HarmonyMapHandle>(null);
 	const searchParams = useSearchParams();
 	const router = useRouter();
@@ -55,7 +58,7 @@ export const InteractiveMap = () => {
 	);
 	const [selectedBusiness, setSelectedBusiness] = useState<MapBusiness | null>(() => {
 		const bizId = searchParams?.get("biz");
-		return bizId ? mapBusinesses.find((b) => b.id === bizId) ?? null : null;
+		return bizId ? businesses.find((b) => b.id === bizId) ?? null : null;
 	});
 	const [sidebarOpen, setSidebarOpen] = useState(true);
 	const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
@@ -87,7 +90,7 @@ export const InteractiveMap = () => {
 	}, [selectedBusiness, searchQuery, activeCategories, pathname, router]);
 
 	const filteredBusinesses = useMemo(() => {
-		return mapBusinesses
+		return businesses
 			.filter((b) => activeCategories.has(b.category))
 			.filter(
 				(b) =>
@@ -96,7 +99,7 @@ export const InteractiveMap = () => {
 					b.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
 					b.category.toLowerCase().includes(searchQuery.toLowerCase()),
 			);
-	}, [activeCategories, searchQuery]);
+	}, [businesses, activeCategories, searchQuery]);
 
 	const handleToggleCategory = useCallback((category: BusinessCategory) => {
 		setActiveCategories((prev) => {
@@ -202,7 +205,7 @@ export const InteractiveMap = () => {
 					{sidebarOpen && (
 						<div className="w-[380px] h-full">
 							<BusinessSidebar
-								businesses={mapBusinesses}
+								businesses={businesses}
 								searchQuery={searchQuery}
 								onSearchChange={setSearchQuery}
 								activeCategories={activeCategories}
@@ -254,7 +257,7 @@ export const InteractiveMap = () => {
 					</div>
 					<div className="flex-1 min-h-0 overflow-hidden">
 						<BusinessSidebar
-							businesses={mapBusinesses}
+							businesses={businesses}
 							searchQuery={searchQuery}
 							onSearchChange={setSearchQuery}
 							activeCategories={activeCategories}
