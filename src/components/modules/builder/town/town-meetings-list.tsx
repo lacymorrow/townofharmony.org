@@ -162,7 +162,7 @@ export const TownMeetingsList = ({
 						onChange={(e) =>
 							updateParams({ type: e.target.value || undefined })
 						}
-						className="px-3 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+						className="town-select px-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
 					>
 						<option value="">All Types</option>
 						{MEETING_TYPES.map((t) => (
@@ -177,7 +177,7 @@ export const TownMeetingsList = ({
 						onChange={(e) =>
 							updateParams({ status: e.target.value || undefined })
 						}
-						className="px-3 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+						className="town-select px-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
 					>
 						<option value="">All Meetings</option>
 						{STATUS_OPTIONS.map((s) => (
@@ -197,7 +197,7 @@ export const TownMeetingsList = ({
 									: undefined,
 							})
 						}
-						className="px-3 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+						className="town-select px-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
 					>
 						<option value="">All Months</option>
 						{MONTHS.map((m) => (
@@ -212,7 +212,7 @@ export const TownMeetingsList = ({
 						onChange={(e) =>
 							updateParams({ year: e.target.value || undefined })
 						}
-						className="px-3 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+						className="town-select px-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
 					>
 						<option value="">All Years</option>
 						{years.map((y) => (

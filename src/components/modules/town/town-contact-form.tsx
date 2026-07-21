@@ -256,7 +256,7 @@ export const TownContactForm = () => {
 					aria-invalid={!!errors.inquiryType}
 					aria-describedby={errors.inquiryType ? "inquiryType-error" : undefined}
 					defaultValue="general"
-					className={inputClass(!!errors.inquiryType)}
+					className={`town-select pr-10 ${inputClass(!!errors.inquiryType)}`}
 				>
 					<option value="" disabled>
 						Select a topic…
