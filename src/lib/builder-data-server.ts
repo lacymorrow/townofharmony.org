@@ -46,7 +46,7 @@ async function getBuilderPageContent(
 		url.searchParams.set("limit", "1");
 
 		const res = await fetch(url.toString(), {
-			next: { revalidate: 3600 },
+			next: { revalidate: 60, tags: ["builder-content"] },
 		});
 
 		if (!res.ok) {
@@ -90,7 +90,9 @@ async function fetchBuilderSection(
 		if (urlPath) url.searchParams.set("userAttributes.urlPath", urlPath);
 		url.searchParams.set("limit", "1");
 		url.searchParams.set("noCache", "true");
-		const res = await fetch(url.toString(), { next: { revalidate: 60 } });
+		const res = await fetch(url.toString(), {
+			next: { revalidate: 60, tags: ["builder-content"] },
+		});
 		if (!res.ok) return null;
 		const data = await res.json();
 		return (data?.results?.[0] as Record<string, unknown>) ?? null;

@@ -1,6 +1,8 @@
 import { revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 
+const REVALIDATE_TAGS = ["town-settings", "town-navigation", "builder-content"];
+
 export async function POST(request: NextRequest) {
 	const secret = process.env.BUILDER_WEBHOOK_SECRET;
 	if (secret) {
@@ -10,12 +12,9 @@ export async function POST(request: NextRequest) {
 		}
 	}
 
-	const body = await request.json().catch(() => null);
-	const model = (body as Record<string, unknown> | null)?.modelName ?? (body as Record<string, unknown> | null)?.model;
-
-	if (model === "town-settings" || !model) {
-		revalidateTag("town-settings");
+	for (const tag of REVALIDATE_TAGS) {
+		revalidateTag(tag);
 	}
 
-	return NextResponse.json({ revalidated: true });
+	return NextResponse.json({ revalidated: true, tags: REVALIDATE_TAGS });
 }
