@@ -242,6 +242,21 @@ export interface TownSettings {
 		county: string;
 		state: string;
 	};
+	homepage: {
+		heroBadgeText: string;
+		heroSecondaryCtaText: string;
+		heroSecondaryCtaHref: string;
+		quickLinksHeading: string;
+		quickLinksSubheading: string;
+		latestNewsHeading: string;
+		upcomingEventsHeading: string;
+		spotlightBadge: string;
+		spotlightTitle: string;
+		spotlightDescription: string;
+		spotlightCtaText: string;
+		spotlightCtaHref: string;
+		spotlightImageLetter: string;
+	};
 }
 
 export interface TownNavItem {

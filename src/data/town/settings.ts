@@ -27,6 +27,22 @@ export const settings: TownSettings = {
 		county: "Iredell County",
 		state: "North Carolina",
 	},
+	homepage: {
+		heroBadgeText: "Est. 1927 · Iredell County",
+		heroSecondaryCtaText: "Meeting Agendas",
+		heroSecondaryCtaHref: "/meetings",
+		quickLinksHeading: "Town Services",
+		quickLinksSubheading: "Find what you need quickly",
+		latestNewsHeading: "Latest News",
+		upcomingEventsHeading: "Upcoming Events",
+		spotlightBadge: "Community Spotlight",
+		spotlightTitle: "Harmony Hill Camp Meeting",
+		spotlightDescription:
+			"A two-week revival tradition first held in 1846, the Harmony Hill Camp Meeting still gathers each year on the second weekend of October on the grounds of present-day Harmony Elementary School. The town takes its name from these meetings.",
+		spotlightCtaText: "Learn More",
+		spotlightCtaHref: "/history",
+		spotlightImageLetter: "H",
+	},
 };
 
 /** Flat shape returned by Builder.io for the town-settings data model. */
@@ -45,6 +61,19 @@ export interface BuilderSettingsFlat {
 	brandingEstablished?: string;
 	brandingCounty?: string;
 	brandingState?: string;
+	homepageHeroBadgeText?: string;
+	homepageHeroSecondaryCtaText?: string;
+	homepageHeroSecondaryCtaHref?: string;
+	homepageQuickLinksHeading?: string;
+	homepageQuickLinksSubheading?: string;
+	homepageLatestNewsHeading?: string;
+	homepageUpcomingEventsHeading?: string;
+	homepageSpotlightBadge?: string;
+	homepageSpotlightTitle?: string;
+	homepageSpotlightDescription?: string;
+	homepageSpotlightCtaText?: string;
+	homepageSpotlightCtaHref?: string;
+	homepageSpotlightImageLetter?: string;
 }
 
 /** Transform flat Builder.io settings into nested TownSettings shape. */
@@ -74,5 +103,30 @@ export const toTownSettings = (flat: BuilderSettingsFlat): TownSettings => ({
 		established: flat.brandingEstablished ?? settings.branding.established,
 		county: flat.brandingCounty ?? settings.branding.county,
 		state: flat.brandingState ?? settings.branding.state,
+	},
+	homepage: {
+		heroBadgeText: flat.homepageHeroBadgeText ?? settings.homepage.heroBadgeText,
+		heroSecondaryCtaText:
+			flat.homepageHeroSecondaryCtaText ?? settings.homepage.heroSecondaryCtaText,
+		heroSecondaryCtaHref:
+			flat.homepageHeroSecondaryCtaHref ?? settings.homepage.heroSecondaryCtaHref,
+		quickLinksHeading:
+			flat.homepageQuickLinksHeading ?? settings.homepage.quickLinksHeading,
+		quickLinksSubheading:
+			flat.homepageQuickLinksSubheading ?? settings.homepage.quickLinksSubheading,
+		latestNewsHeading:
+			flat.homepageLatestNewsHeading ?? settings.homepage.latestNewsHeading,
+		upcomingEventsHeading:
+			flat.homepageUpcomingEventsHeading ?? settings.homepage.upcomingEventsHeading,
+		spotlightBadge: flat.homepageSpotlightBadge ?? settings.homepage.spotlightBadge,
+		spotlightTitle: flat.homepageSpotlightTitle ?? settings.homepage.spotlightTitle,
+		spotlightDescription:
+			flat.homepageSpotlightDescription ?? settings.homepage.spotlightDescription,
+		spotlightCtaText:
+			flat.homepageSpotlightCtaText ?? settings.homepage.spotlightCtaText,
+		spotlightCtaHref:
+			flat.homepageSpotlightCtaHref ?? settings.homepage.spotlightCtaHref,
+		spotlightImageLetter:
+			flat.homepageSpotlightImageLetter ?? settings.homepage.spotlightImageLetter,
 	},
 });

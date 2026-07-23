@@ -11,7 +11,7 @@ import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import "@/styles/builder-io.css";
-import { getNews } from "@/lib/town-data";
+import { getNews, getSettings } from "@/lib/town-data";
 
 export const metadata: Metadata = {
 	title: routeMetadata.home.title,
@@ -62,7 +62,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 		return <RenderBuilderContent content={content ?? undefined} model="page" />;
 	}
 
-	const { docs: newsArticles } = await getNews({ limit: 1 });
+	const [{ docs: newsArticles }, settings] = await Promise.all([
+		getNews({ limit: 1 }),
+		getSettings(),
+	]);
 	const hasNews = newsArticles.length > 0;
 
 	return (
@@ -76,7 +79,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 						{hasNews && (
 							<div>
 								<h2 className="text-2xl font-serif font-bold text-sage-dark mb-6 pb-3 border-b-2 border-wheat">
-									Latest News
+									{settings.homepage.latestNewsHeading}
 								</h2>
 								<Suspense fallback={<div className="text-[#635E56]">Loading news...</div>}>
 									<LatestNews />
@@ -86,7 +89,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
 						<div>
 							<h2 className="text-2xl font-serif font-bold text-sage-dark mb-6 pb-3 border-b-2 border-wheat">
-								Upcoming Events
+								{settings.homepage.upcomingEventsHeading}
 							</h2>
 							<Suspense fallback={<div className="text-[#635E56]">Loading events...</div>}>
 								<UpcomingEvents />

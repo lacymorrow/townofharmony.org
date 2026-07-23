@@ -16,7 +16,13 @@ export interface HeroSlide {
   ctaHref?: string;
 }
 
-interface HeroCarouselProps {
+export interface HeroChromeProps {
+  badgeText: string;
+  secondaryCtaText: string;
+  secondaryCtaHref: string;
+}
+
+interface HeroCarouselProps extends HeroChromeProps {
   slides: HeroSlide[];
   autoplayDelayMs?: number;
 }
@@ -34,7 +40,13 @@ function usePrefersReducedMotion(): boolean {
   return prefers;
 }
 
-export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselProps) {
+export function HeroCarousel({
+  slides,
+  autoplayDelayMs = 6000,
+  badgeText,
+  secondaryCtaText,
+  secondaryCtaHref,
+}: HeroCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [isPaused, setIsPaused] = React.useState(false);
@@ -93,6 +105,9 @@ export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselPro
               isActive={i === selectedIndex}
               prefersReducedMotion={prefersReducedMotion}
               onVideoEnded={handleVideoEnded}
+              badgeText={badgeText}
+              secondaryCtaText={secondaryCtaText}
+              secondaryCtaHref={secondaryCtaHref}
             />
           ))}
         </div>
@@ -125,12 +140,15 @@ function HeroSlideView({
   isActive,
   prefersReducedMotion,
   onVideoEnded,
+  badgeText,
+  secondaryCtaText,
+  secondaryCtaHref,
 }: {
   slide: HeroSlide;
   isActive: boolean;
   prefersReducedMotion: boolean;
   onVideoEnded: () => void;
-}) {
+} & HeroChromeProps) {
   const linkTabIndex = isActive ? 0 : -1;
 
   return (
@@ -144,7 +162,7 @@ function HeroSlideView({
       <div className="grid min-h-[460px] grid-cols-1 lg:grid-cols-2">
         <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12">
           <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-wheat/30 bg-wheat/15 px-3.5 py-1.5 text-[13px] font-semibold tracking-wide text-[#E8D5A3]">
-            Est. 1927 &middot; Iredell County
+            {badgeText}
           </div>
           <h1 className="mb-4 text-balance font-serif text-3xl font-bold leading-[1.15] md:text-[42px]">
             {slide.title}
@@ -162,11 +180,11 @@ function HeroSlideView({
               {slide.ctaText ?? "Discover Harmony"}
             </Link>
             <Link
-              href="/meetings"
+              href={secondaryCtaHref}
               className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-7 py-3.5 text-[15px] font-medium text-white transition-colors hover:border-white/30 hover:bg-white/15"
               tabIndex={linkTabIndex}
             >
-              Meeting Agendas
+              {secondaryCtaText}
             </Link>
           </div>
         </div>
@@ -188,14 +206,19 @@ function HeroSlideView({
  * Single-slide hero (renders when 0 or 1 Builder slides exist).
  * Client component so it can honor prefers-reduced-motion for video slides.
  */
-export function HeroSingleSlide({ slide }: { slide?: HeroSlide }) {
+export function HeroSingleSlide({
+  slide,
+  badgeText,
+  secondaryCtaText,
+  secondaryCtaHref,
+}: { slide?: HeroSlide } & HeroChromeProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
     <div className="grid min-h-[460px] grid-cols-1 lg:grid-cols-2">
       <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12">
         <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-wheat/30 bg-wheat/15 px-3.5 py-1.5 text-[13px] font-semibold tracking-wide text-[#E8D5A3]">
-          Est. 1927 &middot; Iredell County
+          {badgeText}
         </div>
         <h1 className="mb-4 text-balance font-serif text-3xl font-bold leading-[1.15] md:text-[42px]">
           {slide?.title ?? "Welcome to the Town of Harmony"}
@@ -212,10 +235,10 @@ export function HeroSingleSlide({ slide }: { slide?: HeroSlide }) {
             {slide?.ctaText ?? "Discover Harmony"}
           </Link>
           <Link
-            href="/meetings"
+            href={secondaryCtaHref}
             className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-7 py-3.5 text-[15px] font-medium text-white transition-colors hover:border-white/30 hover:bg-white/15"
           >
-            Meeting Agendas
+            {secondaryCtaText}
           </Link>
         </div>
       </div>
