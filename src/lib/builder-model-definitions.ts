@@ -402,6 +402,31 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		],
 	},
 
+	// --- Static Pages ---
+	// Editable prose for a small set of hardcoded routes (/about, /accessibility,
+	// /privacy). The routes themselves stay hardcoded in Next.js — this model
+	// only carries the body copy. Slug matches the URL segment (e.g. "about").
+	{
+		name: "town-static-page",
+		kind: "data",
+		nameField: "title",
+		helperText:
+			"Editable prose for hardcoded pages like /about, /accessibility, /privacy. The `slug` must match the URL segment (e.g. `about`). Leave blank to fall back to the built-in copy.",
+		fields: [
+			text("slug", true, {
+				helperText:
+					"URL segment for the page — e.g. `about` for /about, `accessibility` for /accessibility, `privacy` for /privacy.",
+			}),
+			text("title", true, {
+				helperText: "Page heading rendered as <h1>.",
+			}),
+			richText("body", {
+				helperText:
+					"Full page body. Rendered as sanitized HTML inside a standard prose container.",
+			}),
+		],
+	},
+
 	// --- Homepage ---
 	{
 		name: "town-homepage-slide",

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
+import { sanitizeHtml } from "@/lib/sanitize-html";
+import { getStaticPage } from "@/lib/town-data";
 
 export const metadata: Metadata = {
 	title: "Privacy Policy | Town of Harmony, NC",
@@ -16,7 +18,23 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+	const cms = await getStaticPage("privacy");
+
+	if (cms) {
+		return (
+			<main id="main-content" className="container mx-auto px-4 py-12 max-w-3xl">
+				<h1 className="text-3xl font-serif font-bold text-sage-dark mb-8">
+					{cms.title}
+				</h1>
+				<div
+					className="prose prose-stone max-w-none space-y-6"
+					dangerouslySetInnerHTML={{ __html: sanitizeHtml(cms.body) }}
+				/>
+			</main>
+		);
+	}
+
 	return (
 		<main id="main-content" className="container mx-auto px-4 py-12 max-w-3xl">
 			<h1 className="text-3xl font-serif font-bold text-sage-dark mb-8">

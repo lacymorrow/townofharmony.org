@@ -637,6 +637,37 @@ export const getNewsFilterOptions = async () => {
 	};
 };
 
+/**
+ * Get an editable prose body for a hardcoded static page (e.g. /about,
+ * /accessibility, /privacy). Returns null when Builder.io has no matching
+ * entry — the caller should render its built-in fallback copy in that case.
+ *
+ * The `town-static-page` model is intentionally kept separate from the
+ * Builder visual page catch-all so the routes stay hardcoded and Builder
+ * only supplies the body copy.
+ */
+export const getStaticPage = cache(
+	async (slug: string): Promise<{ title: string; body: string } | null> => {
+		try {
+			const entry = await fetchBuilderEntry<{ slug?: string; title?: string; body?: string }>(
+				"town-static-page",
+				{ "data.slug": slug },
+			);
+			if (!entry) return null;
+			const title = entry.title?.trim();
+			const body = entry.body?.trim();
+			if (!title && !body) return null;
+			return { title: title ?? "", body: body ?? "" };
+		} catch (err) {
+			logger.warn("Failed to fetch town-static-page from Builder.io — falling back", {
+				slug,
+				error: err instanceof Error ? err.message : String(err),
+			});
+			return null;
+		}
+	},
+);
+
 // --- Globals ---
 
 /**
