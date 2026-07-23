@@ -27,7 +27,34 @@ export const settings: TownSettings = {
 		county: "Iredell County",
 		state: "North Carolina",
 	},
+	footer: {
+		copyright: "© {year} {siteTitle}. All rights reserved.",
+		legalLinks: [
+			{ name: "Privacy", href: "/privacy" },
+			{ name: "Accessibility", href: "/accessibility" },
+		],
+	},
+	notFound: {
+		eyebrow: "Page not found",
+		heading: "We couldn't find that page",
+		body: "The page you're looking for may have moved, been renamed, or is no longer available. Below are some options to help you find what you need.",
+		ctaLabel: "Return to Homepage",
+	},
+	map: {
+		pageTitle: "Interactive Business Map",
+		legendTitle: "Legend",
+		boundaryLabel: "Town Boundary",
+	},
+	team: {
+		introText: "Elected officials and staff serving the Town of Harmony.",
+	},
 };
+
+/** Substitute `{year}` and `{siteTitle}` placeholders in a copyright template. */
+export const renderCopyright = (template: string, siteTitle: string): string =>
+	template
+		.replace(/\{year\}/g, String(new Date().getFullYear()))
+		.replace(/\{siteTitle\}/g, siteTitle);
 
 /** Flat shape returned by Builder.io for the town-settings data model. */
 export interface BuilderSettingsFlat {
@@ -45,6 +72,16 @@ export interface BuilderSettingsFlat {
 	brandingEstablished?: string;
 	brandingCounty?: string;
 	brandingState?: string;
+	footerCopyright?: string;
+	footerLegalLinks?: { name?: string; href?: string }[];
+	notFoundEyebrow?: string;
+	notFoundHeading?: string;
+	notFoundBody?: string;
+	notFoundCtaLabel?: string;
+	mapPageTitle?: string;
+	mapLegendTitle?: string;
+	mapBoundaryLabel?: string;
+	teamIntroText?: string;
 }
 
 /** Transform flat Builder.io settings into nested TownSettings shape. */
@@ -74,5 +111,30 @@ export const toTownSettings = (flat: BuilderSettingsFlat): TownSettings => ({
 		established: flat.brandingEstablished ?? settings.branding.established,
 		county: flat.brandingCounty ?? settings.branding.county,
 		state: flat.brandingState ?? settings.branding.state,
+	},
+	footer: {
+		copyright: flat.footerCopyright ?? settings.footer.copyright,
+		legalLinks: (() => {
+			const raw = flat.footerLegalLinks;
+			if (!Array.isArray(raw) || raw.length === 0) return settings.footer.legalLinks;
+			const cleaned = raw
+				.map((link) => ({ name: link?.name ?? "", href: link?.href ?? "" }))
+				.filter((link) => link.name && link.href);
+			return cleaned.length > 0 ? cleaned : settings.footer.legalLinks;
+		})(),
+	},
+	notFound: {
+		eyebrow: flat.notFoundEyebrow ?? settings.notFound.eyebrow,
+		heading: flat.notFoundHeading ?? settings.notFound.heading,
+		body: flat.notFoundBody ?? settings.notFound.body,
+		ctaLabel: flat.notFoundCtaLabel ?? settings.notFound.ctaLabel,
+	},
+	map: {
+		pageTitle: flat.mapPageTitle ?? settings.map.pageTitle,
+		legendTitle: flat.mapLegendTitle ?? settings.map.legendTitle,
+		boundaryLabel: flat.mapBoundaryLabel ?? settings.map.boundaryLabel,
+	},
+	team: {
+		introText: flat.teamIntroText ?? settings.team.introText,
 	},
 });

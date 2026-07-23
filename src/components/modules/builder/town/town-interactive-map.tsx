@@ -3,6 +3,7 @@
 import { InteractiveMap } from "@/app/(app)/(town)/map/interactive-map";
 import { useBuilderData } from "@/lib/builder-data";
 import { mapBusinesses as fallbackMapBusinesses } from "@/data/town/map-businesses";
+import { settings as staticSettings } from "@/data/town/settings";
 import type { MapBusiness } from "@/lib/map-utils";
 
 interface TownInteractiveMapProps {
@@ -21,7 +22,7 @@ export const TownInteractiveMap = ({
 
 	return (
 		<div style={{ height, minHeight }}>
-			<InteractiveMap businesses={businesses} />
+			<InteractiveMap businesses={businesses} labels={staticSettings.map} />
 		</div>
 	);
 };

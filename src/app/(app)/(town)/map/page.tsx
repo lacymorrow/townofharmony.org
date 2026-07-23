@@ -4,6 +4,7 @@ import { InteractiveMap } from "./interactive-map";
 import { isFeatureEnabled } from "@/lib/preview-flags";
 import { siteConfig } from "@/config/site-config";
 import { getMapBusinesses } from "@/lib/town-data";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
 	title: "Interactive Town Map | Town of Harmony, NC",
@@ -24,6 +25,9 @@ export default async function MapPage() {
 	if (!await isFeatureEnabled("map")) {
 		notFound();
 	}
-	const businesses = await getMapBusinesses();
-	return <InteractiveMap businesses={businesses} />;
+	const [businesses, settings] = await Promise.all([
+		getMapBusinesses(),
+		getBuilderSettings(),
+	]);
+	return <InteractiveMap businesses={businesses} labels={settings.map} />;
 }
