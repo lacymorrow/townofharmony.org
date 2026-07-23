@@ -29,6 +29,7 @@ import type {
 import type { MapBusiness } from "@/lib/map-utils";
 import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-server";
 import { fetchBuilderEntries } from "@/lib/builder-content-fetch";
+import { getTodayString, toDateOnly } from "@/lib/date-only";
 import { logger } from "@/lib/logger";
 import { slugify } from "@/lib/utils/extract-headings";
 
@@ -305,13 +306,13 @@ export const getMeetings = async (options?: {
 	}
 
 	if (status) {
-		const today = new Date().toISOString().split("T")[0]!;
+		const today = getTodayString();
 		switch (status) {
 			case "upcoming":
-				filtered = filtered.filter((m) => (m.meetingDate.split("T")[0] ?? "") >= today);
+				filtered = filtered.filter((m) => (toDateOnly(m.meetingDate) ?? "") >= today);
 				break;
 			case "past":
-				filtered = filtered.filter((m) => (m.meetingDate.split("T")[0] ?? "") <= today);
+				filtered = filtered.filter((m) => (toDateOnly(m.meetingDate) ?? "") <= today);
 				break;
 			case "has-recordings":
 				filtered = filtered.filter((m) => m.videoUrl || m.audioUrl);
@@ -516,14 +517,14 @@ export const getElections = async (options?: {
 
 	const all = await resolveElections();
 	let filtered = [...all];
-	const today = new Date().toISOString().split("T")[0]!;
+	const today = getTodayString();
 
 	if (status === "upcoming") {
-		filtered = filtered.filter((e) => (e.electionDate.split("T")[0] ?? "") > today);
+		filtered = filtered.filter((e) => (toDateOnly(e.electionDate) ?? "") > today);
 	} else if (status === "today") {
-		filtered = filtered.filter((e) => e.electionDate.split("T")[0] === today);
+		filtered = filtered.filter((e) => toDateOnly(e.electionDate) === today);
 	} else if (status === "past") {
-		filtered = filtered.filter((e) => (e.electionDate.split("T")[0] ?? "") < today);
+		filtered = filtered.filter((e) => (toDateOnly(e.electionDate) ?? "") < today);
 	}
 
 	if (search) {
@@ -580,7 +581,7 @@ export const getMeetingFilterOptions = async () => {
 
 	const typeSet = new Set<string>();
 	const yearSet = new Set<number>();
-	const today = new Date().toISOString().split("T")[0]!;
+	const today = getTodayString();
 
 	let hasUpcoming = false;
 	let hasPast = false;
@@ -589,10 +590,11 @@ export const getMeetingFilterOptions = async () => {
 
 	for (const m of publicMeetings) {
 		typeSet.add(m.type);
-		const [yearStr] = m.meetingDate.split("-");
-		if (yearStr) yearSet.add(Number(yearStr));
+		const dateOnly = toDateOnly(m.meetingDate);
+		if (!dateOnly) continue;
+		const yearStr = dateOnly.slice(0, 4);
+		yearSet.add(Number(yearStr));
 
-		const dateOnly = m.meetingDate.split("T")[0]!;
 		if (!hasUpcoming && dateOnly >= today) hasUpcoming = true;
 		if (!hasPast && dateOnly < today) hasPast = true;
 		if (!hasMinutes && (m.minutes || m.minutesUrl)) hasMinutes = true;
