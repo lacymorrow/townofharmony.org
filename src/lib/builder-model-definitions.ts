@@ -411,6 +411,11 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("subtitle"),
 			longText("description"),
 			file("image"),
+			{
+				...file("video", ["mp4", "webm", "mov", "m4v"]),
+				helperText:
+					"Optional background video (muted, autoplay, playsInline). Image field is used as the poster and as the fallback when video is missing or the browser can't play it, or when the visitor prefers reduced motion.",
+			},
 			text("ctaText"),
 			text("ctaHref"),
 		],

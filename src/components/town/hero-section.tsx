@@ -1,8 +1,6 @@
-import Link from "next/link";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
 import { getHomepage } from "@/lib/town-data";
-import { getMediaUrl } from "@/lib/utils/get-media-url";
-import { HeroCarousel, type HeroSlide } from "./hero-carousel";
+import { HeroCarousel, HeroSingleSlide, type HeroSlide } from "./hero-carousel";
 
 export async function HeroSection() {
   const homepage = await getHomepage();
@@ -22,62 +20,14 @@ export async function HeroSection() {
   }
 
   return (
-    <section className="bg-gradient-to-r from-sage-deep via-sage-dark to-sage text-white relative overflow-hidden">
+    <section className="relative overflow-hidden bg-gradient-to-r from-sage-deep via-sage-dark to-sage text-white">
       <div className="container mx-auto">
-        {slides.length > 1 ? <HeroCarousel slides={slides} /> : <StaticHero slide={slides[0]} />}
+        {slides.length > 1 ? (
+          <HeroCarousel slides={slides} />
+        ) : (
+          <HeroSingleSlide slide={slides[0]} />
+        )}
       </div>
     </section>
-  );
-}
-
-function StaticHero({ slide }: { slide?: HeroSlide }) {
-  const heroImageUrl = slide?.image ? getMediaUrl(slide.image) : null;
-
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[460px]">
-      <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12">
-        <div className="inline-flex items-center gap-2 bg-wheat/15 border border-wheat/30 text-[#E8D5A3] px-3.5 py-1.5 rounded-full text-[13px] font-semibold tracking-wide w-fit mb-5">
-          Est. 1927 &middot; Iredell County
-        </div>
-        <h1 className="text-3xl md:text-[42px] font-serif font-bold leading-[1.15] mb-4 text-balance">
-          {slide?.title ?? "Welcome to the Town of Harmony"}
-        </h1>
-        <p className="text-lg text-white/90 mb-8 max-w-[480px] leading-relaxed">
-          {slide?.description ??
-            "Where Harmony LIVES and SINGS! A proud community rooted in southern tradition, natural beauty, and neighborly spirit."}
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href={slide?.ctaHref ?? "/history"}
-            className="inline-flex items-center gap-2 bg-wheat text-sage-deep px-7 py-3.5 rounded-lg text-[15px] font-bold hover:bg-wheat-light transition-colors cursor-pointer"
-          >
-            {slide?.ctaText ?? "Discover Harmony"}
-          </Link>
-          <Link
-            href="/meetings"
-            className="inline-flex items-center gap-2 bg-white/10 text-white px-7 py-3.5 rounded-lg text-[15px] font-medium border border-white/20 hover:bg-white/15 hover:border-white/30 transition-colors cursor-pointer"
-          >
-            Meeting Agendas
-          </Link>
-        </div>
-      </div>
-
-      <div className="hidden lg:flex items-center justify-center relative overflow-hidden">
-        {heroImageUrl ? (
-          <img
-            src={heroImageUrl}
-            alt={slide?.title ?? "Town of Harmony"}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-wheat/[0.08] to-wheat/[0.04]" />
-        )}
-        {!heroImageUrl && (
-          <div className="w-[280px] h-[280px] border-[3px] border-wheat/30 rounded-full flex items-center justify-center relative z-10">
-            <span className="font-serif text-[80px] text-wheat/35 italic">H</span>
-          </div>
-        )}
-      </div>
-    </div>
   );
 }
