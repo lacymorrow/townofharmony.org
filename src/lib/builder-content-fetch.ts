@@ -31,13 +31,14 @@ export interface FetchOptions {
 }
 
 /**
- * Fetch entries from a Builder.io data model.
- * Returns the `data` field from each entry.
+ * Fetch raw entries from a Builder.io data model.
+ * Preserves the top-level `entry.id` so callers can use it (e.g. when the model
+ * has no `id` field of its own but consumers need a stable identifier).
  */
-export async function fetchBuilderContent<T>(
+export async function fetchBuilderEntries<T>(
 	modelName: string,
 	options?: FetchOptions,
-): Promise<{ results: T[]; count: number }> {
+): Promise<{ results: BuilderContentEntry<T>[]; count: number }> {
 	if (!BUILDER_API_KEY) {
 		return { results: [], count: 0 };
 	}
@@ -73,7 +74,18 @@ export async function fetchBuilderContent<T>(
 	}
 
 	const json: BuilderContentResponse<T> = await res.json();
-	const results = json.results.map((entry) => entry.data);
+	return { results: json.results, count: json.results.length };
+}
 
+/**
+ * Fetch entries from a Builder.io data model.
+ * Returns the `data` field from each entry.
+ */
+export async function fetchBuilderContent<T>(
+	modelName: string,
+	options?: FetchOptions,
+): Promise<{ results: T[]; count: number }> {
+	const { results: entries } = await fetchBuilderEntries<T>(modelName, options);
+	const results = entries.map((entry) => entry.data);
 	return { results, count: results.length };
 }
