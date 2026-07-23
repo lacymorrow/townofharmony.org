@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
@@ -12,7 +13,13 @@ interface TownMeetingsListProps {
   showCalendar?: boolean;
 }
 
-const MEETING_TYPES = ["Council", "Planning", "Public Hearing"] as const;
+/**
+ * Well-known meeting types shown first in the type filter, in this order.
+ * Meeting types entered in Builder.io that aren't listed here still appear,
+ * sorted alphabetically after these — editors can add new types without a
+ * code change.
+ */
+const PREFERRED_TYPE_ORDER = ["Council", "Planning", "Public Hearing"] as const;
 
 const STATUS_OPTIONS = [
   { value: "upcoming", label: "Upcoming" },
@@ -107,7 +114,7 @@ export const TownMeetingsList = ({
   const year = searchParams?.get("year") || undefined;
   const status = searchParams?.get("status") || undefined;
 
-  const { docs, totalPages } = useBuilderPaginatedData<TownMeeting>("town-meeting", {
+  const { docs, allData: allMeetings, totalPages } = useBuilderPaginatedData<TownMeeting>("town-meeting", {
     page,
     limit: itemsPerPage,
     fallbackData: staticMeetings,
@@ -132,6 +139,20 @@ export const TownMeetingsList = ({
     },
     clientSort: (a, b) => new Date(b.meetingDate).getTime() - new Date(a.meetingDate).getTime(),
   });
+
+  const availableTypes = useMemo(() => {
+    const typeSet = new Set<string>();
+    for (const meeting of allMeetings) {
+      const t = meeting.type?.trim();
+      if (t) typeSet.add(t);
+    }
+    const preferred = PREFERRED_TYPE_ORDER.filter((t) => typeSet.has(t));
+    const preferredSet = new Set<string>(PREFERRED_TYPE_ORDER);
+    const extras = [...typeSet]
+      .filter((t) => !preferredSet.has(t))
+      .sort((a, b) => a.localeCompare(b));
+    return [...preferred, ...extras];
+  }, [allMeetings]);
 
   const updateParams = (updates: Record<string, string | undefined>) => {
     const params = new URLSearchParams(searchParams?.toString() ?? "");
@@ -162,7 +183,7 @@ export const TownMeetingsList = ({
             className="town-select pl-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
           >
             <option value="">All Types</option>
-            {MEETING_TYPES.map((t) => (
+            {availableTypes.map((t) => (
               <option key={t} value={t}>
                 {t}
               </option>
