@@ -83,22 +83,40 @@ export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselPro
       aria-roledescription="carousel"
       aria-label="Homepage hero"
     >
-      <div ref={emblaRef} className="overflow-hidden">
-        <div className="flex">
-          {slides.map((slide, i) => (
-            <HeroSlideView
-              // biome-ignore lint/suspicious/noArrayIndexKey: slides are fetched with stable priority order; titles may repeat
-              key={i}
-              slide={slide}
-              isActive={i === selectedIndex}
-              prefersReducedMotion={prefersReducedMotion}
-              onVideoEnded={handleVideoEnded}
-            />
-          ))}
+      <div className="grid min-h-[460px] grid-cols-1 lg:grid-cols-2">
+        {/* Text stays static while media rotates; the first (highest-priority)
+            slide is the canonical source of hero copy. */}
+        <HeroTextColumn slide={slides[0]} />
+
+        <div className="relative hidden overflow-hidden lg:block">
+          <div ref={emblaRef} className="h-full overflow-hidden">
+            <div className="flex h-full">
+              {slides.map((slide, i) => (
+                // biome-ignore lint/a11y/useSemanticElements: role="group" with aria-roledescription="slide" is the WAI-ARIA carousel slide pattern
+                <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: slides are fetched with stable priority order; titles may repeat
+                  key={i}
+                  className="relative flex min-w-0 shrink-0 grow-0 basis-full items-center justify-center overflow-hidden"
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-hidden={i !== selectedIndex}
+                >
+                  <HeroMedia
+                    slide={slide}
+                    isActive={i === selectedIndex}
+                    prefersReducedMotion={prefersReducedMotion}
+                    onVideoEnded={handleVideoEnded}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       {slides.length > 1 && (
-        <div className="absolute bottom-5 left-0 right-0 z-10 flex justify-center gap-2 pl-4 pr-4 lg:justify-start">
+        // Media is the only rotating pane and it's hidden below lg, so the
+        // dots are too — otherwise they'd control an invisible carousel.
+        <div className="absolute bottom-5 left-0 right-0 z-10 hidden justify-center gap-2 pl-4 pr-4 lg:flex lg:justify-start">
           {slides.map((_, i) => (
             <button
               // biome-ignore lint/suspicious/noArrayIndexKey: dots map 1:1 to slide indices
@@ -120,65 +138,32 @@ export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselPro
   );
 }
 
-function HeroSlideView({
-  slide,
-  isActive,
-  prefersReducedMotion,
-  onVideoEnded,
-}: {
-  slide: HeroSlide;
-  isActive: boolean;
-  prefersReducedMotion: boolean;
-  onVideoEnded: () => void;
-}) {
-  const linkTabIndex = isActive ? 0 : -1;
-
+function HeroTextColumn({ slide }: { slide?: HeroSlide }) {
   return (
-    // biome-ignore lint/a11y/useSemanticElements: role="group" with aria-roledescription="slide" is the WAI-ARIA carousel slide pattern
-    <div
-      className="min-w-0 shrink-0 grow-0 basis-full"
-      role="group"
-      aria-roledescription="slide"
-      aria-hidden={!isActive}
-    >
-      <div className="grid min-h-[460px] grid-cols-1 lg:grid-cols-2">
-        <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12">
-          <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-wheat/30 bg-wheat/15 px-3.5 py-1.5 text-[13px] font-semibold tracking-wide text-[#E8D5A3]">
-            Est. 1927 &middot; Iredell County
-          </div>
-          <h1 className="mb-4 text-balance font-serif text-3xl font-bold leading-[1.15] md:text-[42px]">
-            {slide.title}
-          </h1>
-          <p className="mb-8 max-w-[480px] text-lg leading-relaxed text-white/90">
-            {slide.description ??
-              "Where Harmony LIVES and SINGS! A proud community rooted in southern tradition, natural beauty, and neighborly spirit."}
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href={slide.ctaHref ?? "/history"}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-wheat px-7 py-3.5 text-[15px] font-bold text-sage-deep transition-colors hover:bg-wheat-light"
-              tabIndex={linkTabIndex}
-            >
-              {slide.ctaText ?? "Discover Harmony"}
-            </Link>
-            <Link
-              href="/meetings"
-              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-7 py-3.5 text-[15px] font-medium text-white transition-colors hover:border-white/30 hover:bg-white/15"
-              tabIndex={linkTabIndex}
-            >
-              Meeting Agendas
-            </Link>
-          </div>
-        </div>
-
-        <div className="relative hidden items-center justify-center overflow-hidden lg:flex">
-          <HeroMedia
-            slide={slide}
-            isActive={isActive}
-            prefersReducedMotion={prefersReducedMotion}
-            onVideoEnded={onVideoEnded}
-          />
-        </div>
+    <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12">
+      <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-wheat/30 bg-wheat/15 px-3.5 py-1.5 text-[13px] font-semibold tracking-wide text-[#E8D5A3]">
+        Est. 1927 &middot; Iredell County
+      </div>
+      <h1 className="mb-4 text-balance font-serif text-3xl font-bold leading-[1.15] md:text-[42px]">
+        {slide?.title ?? "Welcome to the Town of Harmony"}
+      </h1>
+      <p className="mb-8 max-w-[480px] text-lg leading-relaxed text-white/90">
+        {slide?.description ??
+          "Where Harmony LIVES and SINGS! A proud community rooted in southern tradition, natural beauty, and neighborly spirit."}
+      </p>
+      <div className="flex flex-wrap gap-3">
+        <Link
+          href={slide?.ctaHref ?? "/history"}
+          className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-wheat px-7 py-3.5 text-[15px] font-bold text-sage-deep transition-colors hover:bg-wheat-light"
+        >
+          {slide?.ctaText ?? "Discover Harmony"}
+        </Link>
+        <Link
+          href="/meetings"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-7 py-3.5 text-[15px] font-medium text-white transition-colors hover:border-white/30 hover:bg-white/15"
+        >
+          Meeting Agendas
+        </Link>
       </div>
     </div>
   );
@@ -193,32 +178,7 @@ export function HeroSingleSlide({ slide }: { slide?: HeroSlide }) {
 
   return (
     <div className="grid min-h-[460px] grid-cols-1 lg:grid-cols-2">
-      <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12">
-        <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-wheat/30 bg-wheat/15 px-3.5 py-1.5 text-[13px] font-semibold tracking-wide text-[#E8D5A3]">
-          Est. 1927 &middot; Iredell County
-        </div>
-        <h1 className="mb-4 text-balance font-serif text-3xl font-bold leading-[1.15] md:text-[42px]">
-          {slide?.title ?? "Welcome to the Town of Harmony"}
-        </h1>
-        <p className="mb-8 max-w-[480px] text-lg leading-relaxed text-white/90">
-          {slide?.description ??
-            "Where Harmony LIVES and SINGS! A proud community rooted in southern tradition, natural beauty, and neighborly spirit."}
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href={slide?.ctaHref ?? "/history"}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-wheat px-7 py-3.5 text-[15px] font-bold text-sage-deep transition-colors hover:bg-wheat-light"
-          >
-            {slide?.ctaText ?? "Discover Harmony"}
-          </Link>
-          <Link
-            href="/meetings"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-7 py-3.5 text-[15px] font-medium text-white transition-colors hover:border-white/30 hover:bg-white/15"
-          >
-            Meeting Agendas
-          </Link>
-        </div>
-      </div>
+      <HeroTextColumn slide={slide} />
 
       <div className="relative hidden items-center justify-center overflow-hidden lg:flex">
         {slide ? (
