@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { sewerContactInfo, isSewerVisible } from "@/data/town/sewer-rates";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
 	title: "Payment Cancelled",
@@ -12,16 +13,17 @@ export const metadata: Metadata = {
 	robots: { index: false, follow: false },
 };
 
-export default function SewerPaymentCancelPage() {
+export default async function SewerPaymentCancelPage() {
 	if (!isSewerVisible()) {
 		notFound();
 	}
+	const sewerCopy = (await getBuilderSettings()).sewer;
 	return (
 		<div className="container mx-auto max-w-lg px-4 py-12 text-center">
 			<XCircle className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
 			<h1 className="text-3xl font-bold tracking-tight">Payment Cancelled</h1>
 			<p className="mt-2 text-muted-foreground">
-				No charge was made to your card. You can try again or pay in person at Town Hall.
+				{sewerCopy.cancelCopy}
 			</p>
 
 			<div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -34,7 +36,7 @@ export default function SewerPaymentCancelPage() {
 			</div>
 
 			<p className="mt-8 text-sm text-muted-foreground">
-				Need help? Contact {sewerContactInfo.department} at {sewerContactInfo.phone}
+				Need help? Contact {sewerContactInfo.department} at {sewerCopy.contactPhone}
 			</p>
 		</div>
 	);

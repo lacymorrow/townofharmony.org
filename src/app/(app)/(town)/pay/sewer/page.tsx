@@ -5,6 +5,7 @@ import { siteConfig } from "@/config/site-config";
 import { sewerContactInfo, sewerRateTiers, type SewerRateDisplay } from "@/data/town/sewer-rates";
 import { isFeatureEnabled } from "@/lib/preview-flags";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
 	title: "Pay Sewer Bill | Town of Harmony, NC",
@@ -32,6 +33,8 @@ export default async function SewerPaymentPage() {
 	if (!await isFeatureEnabled("sewer")) {
 		notFound();
 	}
+
+	const sewerCopy = (await getBuilderSettings()).sewer;
 
 	let rates: SewerRateDisplay[] = sewerRateTiers.map(
 		({ id, name, description, monthlyRate }) => ({ id, name, description, monthlyRate }),
@@ -68,16 +71,21 @@ export default async function SewerPaymentPage() {
 	return (
 		<div className="container mx-auto max-w-lg px-4 py-12">
 			<div className="mb-8">
-				<h1 className="text-3xl font-bold tracking-tight">Pay Sewer Bill</h1>
+				<h1 className="text-3xl font-bold tracking-tight">{sewerCopy.paymentHeading}</h1>
 				<p className="mt-2 text-muted-foreground">
 					Pay your sewer bill securely online. Have your account number ready (found on your bill).
 				</p>
 			</div>
 
-			<SewerPaymentForm stripeEnabled={true} rates={rates} />
+			<SewerPaymentForm
+				stripeEnabled={true}
+				rates={rates}
+				contactDepartment={sewerContactInfo.department}
+				contactPhone={sewerCopy.contactPhone}
+			/>
 
 			<p className="mt-6 text-center text-sm text-muted-foreground">
-				Questions? Contact {sewerContactInfo.department} at {sewerContactInfo.phone}
+				Questions? Contact {sewerContactInfo.department} at {sewerCopy.contactPhone}
 			</p>
 		</div>
 	);

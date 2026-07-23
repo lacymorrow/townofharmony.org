@@ -243,6 +243,33 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("brandingEstablished"),
 			text("brandingCounty"),
 			text("brandingState"),
+			text("sewerContactAddress", false, {
+				helperText: "Mailing address shown on the /sewer contact block.",
+			}),
+			{
+				...phone("sewerContactPhone"),
+				helperText:
+					"Phone number shown on all sewer pages. Leave blank to fall back to the built-in value.",
+			},
+			text("sewerContactHours", false, {
+				helperText: "Office hours shown on the /sewer contact block.",
+			}),
+			emailField("sewerContactEmail"),
+			text("sewerPageHeading", false, {
+				helperText: "H1 shown at the top of /sewer.",
+			}),
+			longText("sewerPageDescription", {
+				helperText: "Intro paragraph under the /sewer heading.",
+			}),
+			text("sewerPaymentHeading", false, {
+				helperText: "H1 shown at the top of /pay/sewer.",
+			}),
+			longText("sewerSuccessCopy", {
+				helperText: "Body copy shown on the /pay/sewer/success confirmation page.",
+			}),
+			longText("sewerCancelCopy", {
+				helperText: "Body copy shown on the /pay/sewer/cancel page.",
+			}),
 		],
 	},
 	{

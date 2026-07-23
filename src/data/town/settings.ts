@@ -1,5 +1,7 @@
 import type { TownSettings } from "./types";
 
+const officeHoursWeekday = "Monday - Friday: 9:00 AM - 5:00 PM";
+
 export const settings: TownSettings = {
 	siteTitle: "Town of Harmony",
 	siteDescription: "Official website of the Town of Harmony, North Carolina",
@@ -13,7 +15,7 @@ export const settings: TownSettings = {
 		zipCode: "28634",
 	},
 	officeHours: {
-		weekday: "Monday - Friday: 9:00 AM - 5:00 PM",
+		weekday: officeHoursWeekday,
 		weekend: "Saturday - Sunday: Closed",
 	},
 	socialMedia: {
@@ -26,6 +28,19 @@ export const settings: TownSettings = {
 		established: "Incorporated in 1927",
 		county: "Iredell County",
 		state: "North Carolina",
+	},
+	sewer: {
+		contactAddress: "Town of Harmony, PO Box 428, Harmony, NC 28634",
+		contactPhone: "(704) 546-2339",
+		contactHours: officeHoursWeekday,
+		contactEmail: "admin@townofharmony.org",
+		pageHeading: "Sewer Services",
+		pageDescription:
+			"The Town of Harmony provides sewer services to residential and nonresidential properties.",
+		paymentHeading: "Pay Sewer Bill",
+		successCopy: "Thank you for your sewer bill payment.",
+		cancelCopy:
+			"No charge was made to your card. You can try again or pay in person at Town Hall.",
 	},
 };
 
@@ -45,6 +60,15 @@ export interface BuilderSettingsFlat {
 	brandingEstablished?: string;
 	brandingCounty?: string;
 	brandingState?: string;
+	sewerContactAddress?: string;
+	sewerContactPhone?: string;
+	sewerContactHours?: string;
+	sewerContactEmail?: string;
+	sewerPageHeading?: string;
+	sewerPageDescription?: string;
+	sewerPaymentHeading?: string;
+	sewerSuccessCopy?: string;
+	sewerCancelCopy?: string;
 }
 
 /** Transform flat Builder.io settings into nested TownSettings shape. */
@@ -74,5 +98,16 @@ export const toTownSettings = (flat: BuilderSettingsFlat): TownSettings => ({
 		established: flat.brandingEstablished ?? settings.branding.established,
 		county: flat.brandingCounty ?? settings.branding.county,
 		state: flat.brandingState ?? settings.branding.state,
+	},
+	sewer: {
+		contactAddress: flat.sewerContactAddress ?? settings.sewer.contactAddress,
+		contactPhone: flat.sewerContactPhone ?? settings.sewer.contactPhone,
+		contactHours: flat.sewerContactHours ?? settings.sewer.contactHours,
+		contactEmail: flat.sewerContactEmail ?? settings.sewer.contactEmail,
+		pageHeading: flat.sewerPageHeading ?? settings.sewer.pageHeading,
+		pageDescription: flat.sewerPageDescription ?? settings.sewer.pageDescription,
+		paymentHeading: flat.sewerPaymentHeading ?? settings.sewer.paymentHeading,
+		successCopy: flat.sewerSuccessCopy ?? settings.sewer.successCopy,
+		cancelCopy: flat.sewerCancelCopy ?? settings.sewer.cancelCopy,
 	},
 });
