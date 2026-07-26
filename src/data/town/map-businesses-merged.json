@@ -1,8 +1,19 @@
 {
-	"mergedAt": "2026-07-19T04:51:57.828Z",
-	"totalCount": 39,
+	"mergedAt": "2026-07-26T04:04:20.828Z",
+	"totalCount": 40,
 	"newCount": 1,
 	"businesses": [
+		{
+			"id": "builder-ginstone-veterinary-wellness-clinic",
+			"name": "Ginstone Veterinary Wellness Clinic",
+			"address": "3365 Harmony Highway, Harmony NC 28634",
+			"phone": "704 546 5200",
+			"category": "Services & Contractors",
+			"description": "",
+			"source": "builder",
+			"googlePlaceId": "",
+			"isNew": false
+		},
 		{
 			"id": "builder-harmony-methodist-church",
 			"name": "Harmony Methodist Church",
