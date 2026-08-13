@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { siteConfig } from "@/config/site-config";
+import { env } from "@/env";
 import { contactInquiryTypes } from "@/data/town/contact-inquiry-types";
 import type { TownContactInquiryType } from "@/data/town/types";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
@@ -42,6 +43,28 @@ async function loadInquiryTypes(): Promise<TownContactInquiryType[]> {
 	}
 	return contactInquiryTypes.filter((t) => t.isActive !== false);
 }
+
+// Town inquiries route to the shared staff inbox. Recipients are overridable
+// via env (comma-separated) so town staff can re-point routing without a code
+// deploy; defaults reflect Janet's 2026-08 request (LAC-3312).
+const DEFAULT_TOWN_CONTACT_TO = "exploreharmonync@gmail.com";
+const DEFAULT_TOWN_CONTACT_BCC = "harmonync@yadtel.net";
+
+const parseEmailList = (value: string | undefined): string[] =>
+	(value ?? "")
+		.split(",")
+		.map((entry) => entry.trim())
+		.filter(Boolean);
+
+const townContactToRecipients = (): string[] => {
+	const configured = parseEmailList(env.TOWN_CONTACT_TO_EMAIL);
+	return configured.length > 0 ? configured : [DEFAULT_TOWN_CONTACT_TO];
+};
+
+const townContactBccRecipients = (): string[] => {
+	const configured = parseEmailList(env.TOWN_CONTACT_BCC_EMAIL);
+	return configured.length > 0 ? configured : [DEFAULT_TOWN_CONTACT_BCC];
+};
 
 const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/jpeg", "image/png"] as const;
 const MAX_ATTACHMENT_BYTES = 3 * 1024 * 1024;
@@ -146,7 +169,8 @@ export async function submitTownContactForm(
 	try {
 		await resend.emails.send({
 			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
-			to: [siteConfig.email.support],
+			to: townContactToRecipients(),
+			bcc: townContactBccRecipients(),
 			subject: `Contact Form: ${inquiryLabel} — ${firstName.replace(/[\r\n]/g, " ")} ${lastName.replace(/[\r\n]/g, " ")}`,
 			replyTo: email,
 			html: townContactNotificationEmail({
