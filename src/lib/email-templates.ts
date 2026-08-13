@@ -2,18 +2,19 @@ import { siteConfig } from "@/config/site-config";
 import { settings } from "@/data/town/settings";
 
 export const esc = (s: string) =>
-	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 const BRAND = {
-	primary: "#3D5038",
-	accent: "#C9B57E",
-	bg: "#F9F6F0",
-	footer: "#1E2118",
-	text: "#2D2A24",
-	muted: "#635E56",
+  primary: "#3D5038",
+  accent: "#C9B57E",
+  bg: "#F9F6F0",
+  footer: "#1E2118",
+  text: "#2D2A24",
+  muted: "#635E56",
 };
 
-const layout = (body: string) => `
+const layout = (body: string) =>
+  `
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -53,21 +54,21 @@ const layout = (body: string) => `
 `.trim();
 
 const row = (label: string, value: string) =>
-	`<tr>
+  `<tr>
     <td style="padding:6px 16px 6px 0;font-size:14px;color:${BRAND.muted};vertical-align:top;white-space:nowrap;">${label}</td>
     <td style="padding:6px 0;font-size:14px;color:${BRAND.text};vertical-align:top;">${value}</td>
   </tr>`;
 
 export function contactConfirmationEmail(opts: {
-	name: string;
-	contactInfo?: string;
-	message: string;
+  name: string;
+  contactInfo?: string;
+  message: string;
 }): string {
-	const safeName = esc(opts.name);
-	const safeContact = opts.contactInfo ? esc(opts.contactInfo) : null;
-	const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
+  const safeName = esc(opts.name);
+  const safeContact = opts.contactInfo ? esc(opts.contactInfo) : null;
+  const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
 
-	const body = `
+  const body = `
     <h2 style="margin:0 0 8px;font-size:20px;font-weight:normal;color:${BRAND.primary};">Thank You for Reaching Out</h2>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.text};">
       Dear ${safeName}, we have received your message and a member of our team will follow up within <strong>2 business days</strong>.
@@ -86,24 +87,24 @@ export function contactConfirmationEmail(opts: {
     </p>
   `;
 
-	return layout(body);
+  return layout(body);
 }
 
 export function townContactConfirmationEmail(opts: {
-	firstName: string;
-	lastName: string;
-	email: string;
-	phone?: string;
-	inquiryType: string;
-	message: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  inquiryType: string;
+  message: string;
 }): string {
-	const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
-	const safeEmail = esc(opts.email);
-	const safePhone = opts.phone ? esc(opts.phone) : null;
-	const safeInquiry = esc(opts.inquiryType);
-	const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
+  const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
+  const safeEmail = esc(opts.email);
+  const safePhone = opts.phone ? esc(opts.phone) : null;
+  const safeInquiry = esc(opts.inquiryType);
+  const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
 
-	const body = `
+  const body = `
     <h2 style="margin:0 0 8px;font-size:20px;font-weight:normal;color:${BRAND.primary};">Your Inquiry Has Been Received</h2>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.text};">
       Dear ${safeName}, thank you for contacting the ${siteConfig.name}. We will respond to your inquiry within <strong>2 business days</strong>.
@@ -124,20 +125,20 @@ export function townContactConfirmationEmail(opts: {
     </p>
   `;
 
-	return layout(body);
+  return layout(body);
 }
 
 export function contactNotificationEmail(opts: {
-	name: string;
-	contactInfo?: string;
-	message: string;
-	newsletter: boolean;
+  name: string;
+  contactInfo?: string;
+  message: string;
+  newsletter: boolean;
 }): string {
-	const safeName = esc(opts.name);
-	const safeContact = opts.contactInfo ? esc(opts.contactInfo) : null;
-	const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
+  const safeName = esc(opts.name);
+  const safeContact = opts.contactInfo ? esc(opts.contactInfo) : null;
+  const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
 
-	const body = `
+  const body = `
     <h2 style="margin:0 0 8px;font-size:20px;font-weight:normal;color:${BRAND.primary};">New Contact Form Submission</h2>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.text};">
       A visitor has submitted the contact form on the ${siteConfig.name} website.
@@ -152,24 +153,24 @@ export function contactNotificationEmail(opts: {
     </table>
   `;
 
-	return layout(body);
+  return layout(body);
 }
 
 export function townContactNotificationEmail(opts: {
-	firstName: string;
-	lastName: string;
-	email: string;
-	phone?: string;
-	inquiryType: string;
-	message: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  inquiryType: string;
+  message: string;
 }): string {
-	const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
-	const safeEmail = esc(opts.email).replace(/"/g, "&quot;");
-	const safePhone = opts.phone ? esc(opts.phone) : null;
-	const safeInquiry = esc(opts.inquiryType);
-	const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
+  const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
+  const safeEmail = esc(opts.email).replace(/"/g, "&quot;");
+  const safePhone = opts.phone ? esc(opts.phone) : null;
+  const safeInquiry = esc(opts.inquiryType);
+  const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
 
-	const body = `
+  const body = `
     <h2 style="margin:0 0 8px;font-size:20px;font-weight:normal;color:${BRAND.primary};">New Contact Form Submission</h2>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.text};">
       A visitor has submitted the contact form on the ${siteConfig.name} website. Reply to this email to respond directly.
@@ -185,5 +186,87 @@ export function townContactNotificationEmail(opts: {
     </table>
   `;
 
-	return layout(body);
+  return layout(body);
+}
+
+interface CommunityCenterReservationEmailOpts {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  requestedDate: string;
+  requestedTime: string;
+  eventPurpose: string;
+  expectedAttendance: number;
+  notes?: string;
+}
+
+const reservationDetailRows = (opts: CommunityCenterReservationEmailOpts): string => {
+  const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
+  const safeEmail = esc(opts.email).replace(/"/g, "&quot;");
+  const safePhone = opts.phone ? esc(opts.phone) : null;
+  const safeDate = esc(opts.requestedDate);
+  const safeTime = esc(opts.requestedTime);
+  const safePurpose = esc(opts.eventPurpose).replace(/\n/g, "<br>");
+  const safeNotes = opts.notes ? esc(opts.notes).replace(/\n/g, "<br>") : null;
+  const attendance = String(opts.expectedAttendance);
+  return `
+      ${row("Name:", safeName)}
+      ${row("Email:", `<a href="mailto:${safeEmail}" style="color:${BRAND.primary};">${safeEmail}</a>`)}
+      ${safePhone ? row("Phone:", safePhone) : ""}
+      ${row("Requested Date:", safeDate)}
+      ${row("Requested Time:", safeTime)}
+      ${row("Expected Attendance:", attendance)}
+      ${row("Event / Purpose:", safePurpose)}
+      ${safeNotes ? row("Additional Notes:", safeNotes) : ""}
+	`;
+};
+
+export function communityCenterReservationNotificationEmail(
+  opts: CommunityCenterReservationEmailOpts
+): string {
+  const body = `
+    <h2 style="margin:0 0 8px;font-size:20px;font-weight:normal;color:${BRAND.primary};">New Community Center Reservation Request</h2>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.text};">
+      A resident has requested to reserve the Harmony Community Center. Reply to this email to respond directly.
+    </p>
+
+    <h3 style="margin:0 0 10px;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.muted};">Reservation Details</h3>
+    <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+      ${reservationDetailRows(opts)}
+    </table>
+
+    <p style="margin:0;font-size:13px;color:${BRAND.muted};">
+      Reservation is not confirmed until Town Hall reviews the request, collects payment, and communicates approval.
+    </p>
+  `;
+
+  return layout(body);
+}
+
+export function communityCenterReservationConfirmationEmail(
+  opts: CommunityCenterReservationEmailOpts
+): string {
+  const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
+  const body = `
+    <h2 style="margin:0 0 8px;font-size:20px;font-weight:normal;color:${BRAND.primary};">Reservation Request Received</h2>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.text};">
+      Dear ${safeName}, thank you for your Community Center reservation request. A member of Town Hall will follow up within <strong>2 business days</strong> to confirm availability, collect the rental application and payment, and finalize your reservation.
+    </p>
+
+    <h3 style="margin:0 0 10px;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.muted};">Your Request</h3>
+    <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+      ${reservationDetailRows(opts)}
+    </table>
+
+    <p style="margin:0 0 8px;font-size:14px;color:${BRAND.muted};">Need immediate assistance?</p>
+    <p style="margin:0;font-size:14px;color:${BRAND.text};">
+      Call us at <strong>${settings.contactInfo.phone}</strong>, email <a href="mailto:${siteConfig.email.support}" style="color:${BRAND.primary};">${siteConfig.email.support}</a>, or visit us at ${settings.contactInfo.address} during office hours (${settings.officeHours.weekday}).
+    </p>
+    <p style="margin:16px 0 0;font-size:12px;color:${BRAND.muted};">
+      Please note: submitting this form does not guarantee a reservation. Availability is subject to Town Hall confirmation.
+    </p>
+  `;
+
+  return layout(body);
 }
