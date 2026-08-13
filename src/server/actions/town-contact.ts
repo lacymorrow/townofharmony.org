@@ -11,6 +11,10 @@ import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
 import {
+	recordTownContactSubmission,
+	updateTownContactSendResult,
+} from "@/server/services/town-contact-submission-service";
+import {
 	checkContactFormRateLimit,
 	getClientIp,
 	validateSubmissionTiming,
@@ -158,8 +162,31 @@ export async function submitTownContactForm(
 		return { success: false, error: rateLimit.error };
 	}
 
+	// Persist BEFORE the Resend send so a downstream email failure never loses
+	// the lead. Row starts with sendStatus="pending" and is updated after the
+	// send attempt below. If the DB is unavailable we still let the send go
+	// through — email delivery is the primary user-facing signal.
+	const submissionId = await recordTownContactSubmission({
+		firstName,
+		lastName,
+		email,
+		phone,
+		inquiryType,
+		inquiryLabel,
+		message,
+		attachmentFilename: attachment?.filename ?? null,
+		ip,
+	});
+
 	if (!resend) {
 		console.warn("Resend client not initialized - RESEND_API_KEY not set");
+		if (submissionId) {
+			await updateTownContactSendResult({
+				id: submissionId,
+				status: "failed",
+				error: "Resend client not configured",
+			});
+		}
 		return {
 			success: false,
 			error: "Email service is not configured. Please call Town Hall directly.",
@@ -167,7 +194,7 @@ export async function submitTownContactForm(
 	}
 
 	try {
-		await resend.emails.send({
+		const result = await resend.emails.send({
 			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
 			to: townContactToRecipients(),
 			bcc: townContactBccRecipients(),
@@ -193,8 +220,22 @@ export async function submitTownContactForm(
 					}
 				: {}),
 		});
+		if (submissionId) {
+			await updateTownContactSendResult({
+				id: submissionId,
+				status: "sent",
+				resendMessageId: result?.data?.id ?? null,
+			});
+		}
 	} catch (error) {
 		console.error("Error sending town contact form email:", error);
+		if (submissionId) {
+			await updateTownContactSendResult({
+				id: submissionId,
+				status: "failed",
+				error: error instanceof Error ? error.message : String(error),
+			});
+		}
 		return {
 			success: false,
 			error: "Failed to send your message. Please try again or call Town Hall.",

@@ -684,3 +684,43 @@ export type NewDeployment = typeof deployments.$inferInsert;
 export const deploymentsRelations = relations(deployments, ({ one }) => ({
   user: one(users, { fields: [deployments.userId], references: [users.id] }),
 }));
+
+/**
+ * Town contact form submissions — every inquiry from the live town contact
+ * form (submitTownContactForm) is persisted here before the Resend send so a
+ * downstream email failure never loses the lead. Fields contain PII; only
+ * admins may read this table via the CSV export route.
+ */
+export const contactSubmissions = createTable(
+  "contact_submission",
+  {
+    id: text("id")
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    firstName: varchar("first_name", { length: 255 }).notNull(),
+    lastName: varchar("last_name", { length: 255 }).notNull(),
+    email: varchar("email", { length: 320 }).notNull(),
+    phone: varchar("phone", { length: 64 }),
+    inquiryType: varchar("inquiry_type", { length: 128 }).notNull(),
+    inquiryLabel: varchar("inquiry_label", { length: 255 }).notNull(),
+    message: text("message").notNull(),
+    attachmentFilename: varchar("attachment_filename", { length: 512 }),
+    ip: varchar("ip", { length: 64 }),
+    sendStatus: varchar("send_status", { length: 32 }).notNull().default("pending"),
+    sendError: text("send_error"),
+    resendMessageId: varchar("resend_message_id", { length: 255 }),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(() => new Date()),
+  },
+  (submission) => ({
+    createdAtIdx: index("contact_submission_created_at_idx").on(submission.createdAt),
+    sendStatusIdx: index("contact_submission_send_status_idx").on(submission.sendStatus),
+  })
+);
+
+export type ContactSubmission = typeof contactSubmissions.$inferSelect;
+export type NewContactSubmission = typeof contactSubmissions.$inferInsert;

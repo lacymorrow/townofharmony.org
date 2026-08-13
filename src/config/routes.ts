@@ -66,6 +66,7 @@ export const routes = {
 		github: "/admin/github",
 		integrations: "/admin/integrations",
 		feedback: "/admin/feedback",
+		contactSubmissions: "/admin/contact-submissions",
 		payments: "/admin/payments",
 	},
 

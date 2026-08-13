@@ -12,6 +12,7 @@ const navLinks = [
   { href: routes.admin.github, label: "GitHub" },
   { href: routes.admin.integrations, label: "Integrations" },
   { href: routes.admin.feedback, label: "Feedback" },
+  { href: routes.admin.contactSubmissions, label: "Inquiries" },
   { href: routes.admin.payments, label: "Payments" },
 ];
 
