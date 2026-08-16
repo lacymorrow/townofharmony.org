@@ -1,5 +1,5 @@
 {
-	"mergedAt": "2026-08-09T06:43:29.745Z",
+	"mergedAt": "2026-08-16T06:28:47.493Z",
 	"totalCount": 40,
 	"newCount": 1,
 	"businesses": [
@@ -496,14 +496,14 @@
 			"isNew": false
 		},
 		{
-			"id": "builder-sharpe's-catering-&-homemade-meals",
-			"name": "Sharpe's Catering & Homemade Meals",
+			"id": "builder-burritos-n-ribs-mexican-grill",
+			"name": "Burritos N Ribs Mexican Grill",
 			"address": "107 Grose St, Harmony, NC 28634",
-			"phone": "(704) 546-5700",
+			"phone": "980-379-0000",
 			"category": "Restaurant & Food",
 			"lat": 35.9600098,
 			"lng": -80.7778713,
-			"description": "Homemade Southern meals, catering, and daily specials",
+			"description": "We offer delicious Tex-Mex food.",
 			"source": "builder",
 			"googlePlaceId": "",
 			"isNew": false
