@@ -84,7 +84,7 @@ const countDigits = (value: string) => (value.match(/\d/g) ?? []).length;
 const townContactSchema = z
 	.object({
 		firstName: z.string().min(1, "First name is required"),
-		lastName: z.string().min(1, "Last name is required"),
+		lastName: z.string().optional(),
 		email: z
 			.string()
 			.trim()
@@ -190,7 +190,7 @@ export async function submitTownContactForm(
 			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
 			to: townContactToRecipients(),
 			bcc: townContactBccRecipients(),
-			subject: `Contact Form: ${inquiryLabel} — ${firstName.replace(/[\r\n]/g, " ")} ${lastName.replace(/[\r\n]/g, " ")}`,
+			subject: `Contact Form: ${inquiryLabel} — ${[firstName, lastName].filter(Boolean).join(" ").replace(/[\r\n]/g, " ")}`,
 			...(email ? { replyTo: email } : {}),
 			html: townContactNotificationEmail({
 				firstName,

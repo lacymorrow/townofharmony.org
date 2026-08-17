@@ -24,7 +24,6 @@ async function readFileAsBase64(file: File): Promise<string> {
 
 interface FormErrors {
 	firstName?: string;
-	lastName?: string;
 	email?: string;
 	phone?: string;
 	contact?: string;
@@ -77,7 +76,6 @@ export const TownContactForm = () => {
 	const validate = (form: FormData): FormErrors => {
 		const errs: FormErrors = {};
 		if (!form.get("firstName")) errs.firstName = "First name is required";
-		if (!form.get("lastName")) errs.lastName = "Last name is required";
 		const email = ((form.get("email") as string) ?? "").trim();
 		const phone = ((form.get("phone") as string) ?? "").trim();
 		if (!email && !phone) {
@@ -137,7 +135,7 @@ export const TownContactForm = () => {
 		startTransition(async () => {
 			const result = await submitTownContactForm({
 				firstName: form.get("firstName") as string,
-				lastName: form.get("lastName") as string,
+				lastName: (form.get("lastName") as string) || undefined,
 				email: ((form.get("email") as string) || "").trim() || undefined,
 				phone: ((form.get("phone") as string) || "").trim() || undefined,
 				inquiryType: form.get("inquiryType") as TownContactFormData["inquiryType"],
@@ -223,17 +221,13 @@ export const TownContactForm = () => {
 					/>
 				</FieldWrapper>
 
-				<FieldWrapper label="Last Name" id="lastName" error={errors.lastName} required>
+				<FieldWrapper label="Last Name" id="lastName" hint="Optional">
 					<input
 						id="lastName"
 						name="lastName"
 						type="text"
 						autoComplete="family-name"
-						required
-						aria-required="true"
-						aria-invalid={!!errors.lastName}
-						aria-describedby={errors.lastName ? "lastName-error" : undefined}
-						className={inputClass(!!errors.lastName)}
+						className={inputClass(false)}
 					/>
 				</FieldWrapper>
 			</div>
