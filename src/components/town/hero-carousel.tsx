@@ -21,6 +21,18 @@ interface HeroCarouselProps {
   autoplayDelayMs?: number;
 }
 
+/**
+ * Builder text fields come back as empty strings when an editor leaves them
+ * blank (not `undefined`), so `??` would render an empty heading/CTA. Pick the
+ * first value that has actual content and let the caller supply the default.
+ */
+function firstNonEmpty(...values: (string | undefined | null)[]): string | undefined {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim() !== "") return value;
+  }
+  return undefined;
+}
+
 function usePrefersReducedMotion(): boolean {
   const [prefers, setPrefers] = React.useState(false);
   React.useEffect(() => {
@@ -88,7 +100,10 @@ export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselPro
             slide is the canonical source of hero copy. */}
         <HeroTextColumn slide={slides[0]} />
 
-        <div className="relative hidden overflow-hidden lg:block">
+        {/* Media shows on every breakpoint: full-width below lg (stacked under
+            the text) and half-width beside it on lg+. A fixed mobile height
+            gives object-cover a box to fill so it spans the full width. */}
+        <div className="relative h-[280px] overflow-hidden sm:h-[360px] lg:h-auto">
           <div ref={emblaRef} className="h-full overflow-hidden">
             <div className="flex h-full">
               {slides.map((slide, i) => (
@@ -114,9 +129,9 @@ export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselPro
         </div>
       </div>
       {slides.length > 1 && (
-        // Media is the only rotating pane and it's hidden below lg, so the
-        // dots are too — otherwise they'd control an invisible carousel.
-        <div className="absolute bottom-5 left-0 right-0 z-10 hidden justify-center gap-2 pl-4 pr-4 lg:flex lg:justify-start">
+        // Dots sit over the media pane (bottom row on mobile, right column on
+        // lg+) so they track whichever slide is showing at every breakpoint.
+        <div className="absolute bottom-5 left-0 right-0 z-10 flex justify-center gap-2 pl-4 pr-4 lg:justify-start">
           {slides.map((_, i) => (
             <button
               // biome-ignore lint/suspicious/noArrayIndexKey: dots map 1:1 to slide indices
@@ -139,24 +154,30 @@ export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselPro
 }
 
 function HeroTextColumn({ slide }: { slide?: HeroSlide }) {
+  // Blank Builder fields fall back to defaults so the primary CTA never renders
+  // as an empty button / dead link (LAC-3008).
+  const title = firstNonEmpty(slide?.title) ?? "Welcome to the Town of Harmony";
+  const description =
+    firstNonEmpty(slide?.description) ??
+    "Where Harmony LIVES and SINGS! A proud community rooted in southern tradition, natural beauty, and neighborly spirit.";
+  const ctaText = firstNonEmpty(slide?.ctaText) ?? "Discover Harmony";
+  const ctaHref = firstNonEmpty(slide?.ctaHref) ?? "/history";
+
   return (
     <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12">
       <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-wheat/30 bg-wheat/15 px-3.5 py-1.5 text-[13px] font-semibold tracking-wide text-[#E8D5A3]">
         Est. 1927 &middot; Iredell County
       </div>
       <h1 className="mb-4 text-balance font-serif text-3xl font-bold leading-[1.15] md:text-[42px]">
-        {slide?.title ?? "Welcome to the Town of Harmony"}
+        {title}
       </h1>
-      <p className="mb-8 max-w-[480px] text-lg leading-relaxed text-white/90">
-        {slide?.description ??
-          "Where Harmony LIVES and SINGS! A proud community rooted in southern tradition, natural beauty, and neighborly spirit."}
-      </p>
+      <p className="mb-8 max-w-[480px] text-lg leading-relaxed text-white/90">{description}</p>
       <div className="flex flex-wrap gap-3">
         <Link
-          href={slide?.ctaHref ?? "/history"}
+          href={ctaHref}
           className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-wheat px-7 py-3.5 text-[15px] font-bold text-sage-deep transition-colors hover:bg-wheat-light"
         >
-          {slide?.ctaText ?? "Discover Harmony"}
+          {ctaText}
         </Link>
         <Link
           href="/meetings"
@@ -180,7 +201,7 @@ export function HeroSingleSlide({ slide }: { slide?: HeroSlide }) {
     <div className="grid min-h-[460px] grid-cols-1 lg:grid-cols-2">
       <HeroTextColumn slide={slide} />
 
-      <div className="relative hidden items-center justify-center overflow-hidden lg:flex">
+      <div className="relative flex h-[280px] items-center justify-center overflow-hidden sm:h-[360px] lg:h-auto">
         {slide ? (
           <HeroMedia
             slide={slide}
