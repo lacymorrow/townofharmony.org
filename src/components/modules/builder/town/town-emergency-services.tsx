@@ -80,7 +80,7 @@ export const TownEmergencyServices = () => {
 				{/* Critical numbers — big, unmissable */}
 				{immediate.length > 0 && (
 					<div className="mb-10">
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 							{immediate.map((service) => {
 								const Icon = iconMap[service.icon] ?? Phone;
 								const is911 = service.phone === "911";
@@ -90,7 +90,7 @@ export const TownEmergencyServices = () => {
 										key={service.title}
 										className={`block whitespace-normal rounded-2xl p-8 transition-shadow hover:shadow-lg ${
 											is911
-												? "bg-red-600 text-white col-span-full"
+												? "bg-red-600 text-white col-span-full lg:col-span-1"
 												: "bg-red-50 border-2 border-red-200 text-red-900"
 										}`}
 									>
@@ -104,7 +104,7 @@ export const TownEmergencyServices = () => {
 													{service.title}
 												</span>
 											</div>
-											<div className={`font-bold font-mono tracking-wide ${is911 ? "text-6xl md:text-7xl" : "text-3xl sm:text-4xl md:text-5xl"}`}>
+											<div className={`font-bold font-mono tracking-wide ${is911 ? "text-6xl md:text-7xl lg:text-6xl xl:text-7xl" : "text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl"}`}>
 												{service.phone}
 											</div>
 											<p className={`mt-3 text-base leading-relaxed ${is911 ? "text-white/80" : "text-red-700"}`}>
