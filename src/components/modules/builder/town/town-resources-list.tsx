@@ -150,7 +150,8 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 	);
 
 	const typeFilteredResources = React.useMemo(() => {
-		return type ? rawResources.filter((r) => r.type === type) : [...rawResources];
+		const base = type ? rawResources.filter((r) => r.type === type) : [...rawResources];
+		return base.map((r) => ({ ...r, category: (r.category ?? "").trim() || "Other" }));
 	}, [rawResources, type]);
 
 	const allResources = React.useMemo(
