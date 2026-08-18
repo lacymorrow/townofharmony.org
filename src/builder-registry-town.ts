@@ -279,10 +279,28 @@ Builder.registerComponent(TownEmergencyServices, {
 // shows active alerts on every page, making the Builder.io block redundant.
 
 // Form labels, validation, and submit handler are owned by the component
-// for security/consistency — no instance config exposed.
+// for security/consistency. Only recipient routing is exposed to town staff
+// so they can re-point inquiries without a code deploy (LAC-3347). Server
+// validates the addresses and falls back to env/default on a bad value.
 Builder.registerComponent(TownContactForm, {
 	name: "TownContactForm",
-	inputs: [],
+	inputs: [
+		{
+			name: "recipientEmail",
+			type: "string",
+			friendlyName: "Send Inquiries To",
+			helperText:
+				"Where inquiries go. One address, or several separated by commas. Leave blank to use the town default.",
+		},
+		{
+			name: "bccEmail",
+			type: "string",
+			friendlyName: "BCC (hidden copy)",
+			helperText:
+				"Extra address(es) that get a hidden copy of every inquiry. Comma-separated. Leave blank to use the town default.",
+			advanced: true,
+		},
+	],
 });
 
 Builder.registerComponent(TownAgendaMinutes, {

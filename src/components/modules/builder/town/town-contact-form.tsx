@@ -5,7 +5,12 @@ import { useBuilderEntry } from "@/lib/builder-data";
 import { TownContactForm as ContactFormImpl } from "@/components/modules/town/town-contact-form";
 import { settings as staticSettings, toTownSettings, type BuilderSettingsFlat } from "@/data/town/settings";
 
-export const TownContactForm = () => {
+interface TownContactFormProps {
+	recipientEmail?: string;
+	bccEmail?: string;
+}
+
+export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormProps = {}) => {
 	const { data: builderFlat } = useBuilderEntry<BuilderSettingsFlat>(
 		"town-settings",
 		{},
@@ -86,8 +91,10 @@ export const TownContactForm = () => {
 					</div>
 
 					{/* Contact Form — uses the full-featured static form with
-					    server action, validation, honeypot, and Turnstile */}
-					<ContactFormImpl />
+					    server action, validation, honeypot, and Turnstile.
+					    recipient/bcc overrides let town staff re-route inquiries
+					    from Builder without a code deploy (LAC-3347). */}
+					<ContactFormImpl recipientEmail={recipientEmail} bccEmail={bccEmail} />
 				</div>
 			</div>
 		</section>

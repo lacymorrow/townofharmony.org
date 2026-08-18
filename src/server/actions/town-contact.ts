@@ -15,6 +15,11 @@ import {
 	getClientIp,
 	validateSubmissionTiming,
 } from "@/server/utils/contact-rate-limit";
+import {
+	DEFAULT_TOWN_CONTACT_BCC,
+	DEFAULT_TOWN_CONTACT_TO,
+	resolveRecipients,
+} from "@/server/utils/town-contact-recipients";
 
 /**
  * Inquiry types live in the Builder.io `town-contact-inquiry-type` data model
@@ -44,27 +49,6 @@ async function loadInquiryTypes(): Promise<TownContactInquiryType[]> {
 	return contactInquiryTypes.filter((t) => t.isActive !== false);
 }
 
-// Town inquiries route to the shared staff inbox. Recipients are overridable
-// via env (comma-separated) so town staff can re-point routing without a code
-// deploy; defaults reflect Janet's 2026-08 request (LAC-3312).
-const DEFAULT_TOWN_CONTACT_TO = "exploreharmonync@gmail.com";
-const DEFAULT_TOWN_CONTACT_BCC = "harmonync@yadtel.net";
-
-const parseEmailList = (value: string | undefined): string[] =>
-	(value ?? "")
-		.split(",")
-		.map((entry) => entry.trim())
-		.filter(Boolean);
-
-const townContactToRecipients = (): string[] => {
-	const configured = parseEmailList(env.TOWN_CONTACT_TO_EMAIL);
-	return configured.length > 0 ? configured : [DEFAULT_TOWN_CONTACT_TO];
-};
-
-const townContactBccRecipients = (): string[] => {
-	const configured = parseEmailList(env.TOWN_CONTACT_BCC_EMAIL);
-	return configured.length > 0 ? configured : [DEFAULT_TOWN_CONTACT_BCC];
-};
 
 const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/jpeg", "image/png"] as const;
 const MAX_ATTACHMENT_BYTES = 3 * 1024 * 1024;
@@ -89,6 +73,11 @@ const townContactSchema = z.object({
 	attachment: attachmentSchema.optional(),
 	turnstileToken: z.string().optional(),
 	website: z.string().optional(),
+	// Optional Builder-block overrides — accept any string here; malformed
+	// values are dropped in resolveRecipients() rather than failing the whole
+	// submission (defense-in-depth against a CMS typo).
+	recipientEmail: z.string().optional(),
+	bccEmail: z.string().optional(),
 });
 
 export type TownContactFormData = z.infer<typeof townContactSchema>;
@@ -113,7 +102,22 @@ export async function submitTownContactForm(
 		attachment,
 		turnstileToken,
 		website,
+		recipientEmail,
+		bccEmail,
 	} = parsed.data;
+
+	const toRecipients = resolveRecipients(
+		recipientEmail,
+		env.TOWN_CONTACT_TO_EMAIL,
+		DEFAULT_TOWN_CONTACT_TO,
+		"recipientEmail",
+	);
+	const bccRecipients = resolveRecipients(
+		bccEmail,
+		env.TOWN_CONTACT_BCC_EMAIL,
+		DEFAULT_TOWN_CONTACT_BCC,
+		"bccEmail",
+	);
 
 	const inquiryTypes = await loadInquiryTypes();
 	const matched = inquiryTypes.find((t) => t.value === inquiryType);
@@ -169,8 +173,8 @@ export async function submitTownContactForm(
 	try {
 		await resend.emails.send({
 			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
-			to: townContactToRecipients(),
-			bcc: townContactBccRecipients(),
+			to: toRecipients,
+			bcc: bccRecipients,
 			subject: `Contact Form: ${inquiryLabel} — ${firstName.replace(/[\r\n]/g, " ")} ${lastName.replace(/[\r\n]/g, " ")}`,
 			replyTo: email,
 			html: townContactNotificationEmail({

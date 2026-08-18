@@ -31,7 +31,15 @@ interface FormErrors {
 	attachment?: string;
 }
 
-export const TownContactForm = () => {
+interface TownContactFormProps {
+	// Optional Builder-block overrides passed through to submitTownContactForm.
+	// Cleared Builder fields arrive as "" — the server treats empty/whitespace
+	// as unset and falls back to env/default.
+	recipientEmail?: string;
+	bccEmail?: string;
+}
+
+export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormProps = {}) => {
 	const [isPending, startTransition] = useTransition();
 	const [submitted, setSubmitted] = useState(false);
 	const [serverError, setServerError] = useState<string | null>(null);
@@ -128,6 +136,8 @@ export const TownContactForm = () => {
 				attachment,
 				turnstileToken: turnstileTokenRef.current ?? undefined,
 				website: (form.get("website") as string) || undefined,
+				recipientEmail,
+				bccEmail,
 				_loadedAt: loadedAtRef.current,
 			});
 
