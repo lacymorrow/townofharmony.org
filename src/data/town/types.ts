@@ -257,6 +257,25 @@ export interface TownSettings {
 		spotlightCtaHref: string;
 		spotlightImageLetter: string;
 	};
+	footer: {
+		/** Template. `{year}` and `{siteTitle}` are substituted at render time. */
+		copyright: string;
+		legalLinks: { name: string; href: string }[];
+	};
+	notFound: {
+		eyebrow: string;
+		heading: string;
+		body: string;
+		ctaLabel: string;
+	};
+	map: {
+		pageTitle: string;
+		legendTitle: string;
+		boundaryLabel: string;
+	};
+	team: {
+		introText: string;
+	};
 }
 
 export interface TownNavItem {

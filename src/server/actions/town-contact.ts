@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { siteConfig } from "@/config/site-config";
+import { env } from "@/env";
 import { contactInquiryTypes } from "@/data/town/contact-inquiry-types";
 import type { TownContactInquiryType } from "@/data/town/types";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
@@ -43,6 +44,28 @@ async function loadInquiryTypes(): Promise<TownContactInquiryType[]> {
 	return contactInquiryTypes.filter((t) => t.isActive !== false);
 }
 
+// Town inquiries route to the shared staff inbox. Recipients are overridable
+// via env (comma-separated) so town staff can re-point routing without a code
+// deploy; defaults reflect Janet's 2026-08 request (LAC-3312).
+const DEFAULT_TOWN_CONTACT_TO = "exploreharmonync@gmail.com";
+const DEFAULT_TOWN_CONTACT_BCC = "harmonync@yadtel.net";
+
+const parseEmailList = (value: string | undefined): string[] =>
+	(value ?? "")
+		.split(",")
+		.map((entry) => entry.trim())
+		.filter(Boolean);
+
+const townContactToRecipients = (): string[] => {
+	const configured = parseEmailList(env.TOWN_CONTACT_TO_EMAIL);
+	return configured.length > 0 ? configured : [DEFAULT_TOWN_CONTACT_TO];
+};
+
+const townContactBccRecipients = (): string[] => {
+	const configured = parseEmailList(env.TOWN_CONTACT_BCC_EMAIL);
+	return configured.length > 0 ? configured : [DEFAULT_TOWN_CONTACT_BCC];
+};
+
 const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/jpeg", "image/png"] as const;
 const MAX_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 
@@ -56,17 +79,36 @@ const attachmentSchema = z
 		message: "File must be 3 MB or smaller.",
 	});
 
-const townContactSchema = z.object({
-	firstName: z.string().min(1, "First name is required"),
-	lastName: z.string().min(1, "Last name is required"),
-	email: z.string().email("Please enter a valid email address"),
-	phone: z.string().optional(),
-	inquiryType: z.string().min(1, "Please select an inquiry type"),
-	message: z.string().min(10, "Message must be at least 10 characters"),
-	attachment: attachmentSchema.optional(),
-	turnstileToken: z.string().optional(),
-	website: z.string().optional(),
-});
+const countDigits = (value: string) => (value.match(/\d/g) ?? []).length;
+
+const townContactSchema = z
+	.object({
+		firstName: z.string().min(1, "First name is required"),
+		lastName: z.string().optional(),
+		email: z
+			.string()
+			.trim()
+			.email("Please enter a valid email address")
+			.optional()
+			.or(z.literal("").transform(() => undefined)),
+		phone: z
+			.string()
+			.trim()
+			.refine((value) => value.length === 0 || countDigits(value) >= 7, {
+				message: "Please enter a valid phone number",
+			})
+			.transform((value) => (value.length === 0 ? undefined : value))
+			.optional(),
+		inquiryType: z.string().min(1, "Please select an inquiry type"),
+		message: z.string().min(10, "Message must be at least 10 characters"),
+		attachment: attachmentSchema.optional(),
+		turnstileToken: z.string().optional(),
+		website: z.string().optional(),
+	})
+	.refine((data) => Boolean(data.email) || Boolean(data.phone), {
+		message: "Please provide an email address or a phone number so we can reply.",
+		path: ["email"],
+	});
 
 export type TownContactFormData = z.infer<typeof townContactSchema>;
 
@@ -146,9 +188,10 @@ export async function submitTownContactForm(
 	try {
 		await resend.emails.send({
 			from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
-			to: [siteConfig.email.support],
-			subject: `Contact Form: ${inquiryLabel} — ${firstName.replace(/[\r\n]/g, " ")} ${lastName.replace(/[\r\n]/g, " ")}`,
-			replyTo: email,
+			to: townContactToRecipients(),
+			bcc: townContactBccRecipients(),
+			subject: `Contact Form: ${inquiryLabel} — ${[firstName, lastName].filter(Boolean).join(" ").replace(/[\r\n]/g, " ")}`,
+			...(email ? { replyTo: email } : {}),
 			html: townContactNotificationEmail({
 				firstName,
 				lastName,
@@ -177,22 +220,24 @@ export async function submitTownContactForm(
 		};
 	}
 
-	try {
-		await resend.emails.send({
-			from: `${siteConfig.name} <${siteConfig.email.noreply}>`,
-			to: [email],
-			subject: `Your inquiry has been received — ${siteConfig.name}`,
-			html: townContactConfirmationEmail({
-				firstName,
-				lastName,
-				email,
-				phone,
-				inquiryType: inquiryLabel,
-				message,
-			}),
-		});
-	} catch (error) {
-		console.error("Error sending town contact confirmation email:", error);
+	if (email) {
+		try {
+			await resend.emails.send({
+				from: `${siteConfig.name} <${siteConfig.email.noreply}>`,
+				to: [email],
+				subject: `Your inquiry has been received — ${siteConfig.name}`,
+				html: townContactConfirmationEmail({
+					firstName,
+					lastName,
+					email,
+					phone,
+					inquiryType: inquiryLabel,
+					message,
+				}),
+			});
+		} catch (error) {
+			console.error("Error sending town contact confirmation email:", error);
+		}
 	}
 
 	return { success: true };

@@ -34,6 +34,7 @@ import { pointsOfInterest } from "../src/data/town/points-of-interest";
 import { resources } from "../src/data/town/resources";
 import { settings } from "../src/data/town/settings";
 import { sewerRateTiers } from "../src/data/town/sewer-rates";
+import { staticPages } from "../src/data/town/static-pages";
 // Import real static data
 import { teamMembers } from "../src/data/town/team-members";
 import { modelDefinitions } from "../src/lib/builder-model-definitions";
@@ -183,6 +184,14 @@ const seedData: Record<string, SeedEntry[]> = {
 			value: t.value,
 			label: t.label,
 			isActive: t.isActive,
+		},
+	})),
+	"town-static-page": staticPages.map((page) => ({
+		name: page.title,
+		data: {
+			slug: page.slug,
+			title: page.title,
+			body: page.body,
 		},
 	})),
 	"town-sewer-rate": sewerRateTiers.map((tier) => ({

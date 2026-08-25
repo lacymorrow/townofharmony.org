@@ -1,8 +1,19 @@
 {
-	"mergedAt": "2026-07-19T04:51:57.828Z",
-	"totalCount": 39,
+	"mergedAt": "2026-08-23T06:30:05.626Z",
+	"totalCount": 40,
 	"newCount": 1,
 	"businesses": [
+		{
+			"id": "builder-ginstone-veterinary-wellness-clinic",
+			"name": "Ginstone Veterinary Wellness Clinic",
+			"address": "3365 Harmony Highway, Harmony NC 28634",
+			"phone": "704 546 5200",
+			"category": "Services & Contractors",
+			"description": "",
+			"source": "builder",
+			"googlePlaceId": "",
+			"isNew": false
+		},
 		{
 			"id": "builder-harmony-methodist-church",
 			"name": "Harmony Methodist Church",
@@ -485,14 +496,14 @@
 			"isNew": false
 		},
 		{
-			"id": "builder-sharpe's-catering-&-homemade-meals",
-			"name": "Sharpe's Catering & Homemade Meals",
+			"id": "builder-burritos-n-ribs-mexican-grill",
+			"name": "Burritos N Ribs Mexican Grill",
 			"address": "107 Grose St, Harmony, NC 28634",
-			"phone": "(704) 546-5700",
+			"phone": "980-379-0000",
 			"category": "Restaurant & Food",
 			"lat": 35.9600098,
 			"lng": -80.7778713,
-			"description": "Homemade Southern meals, catering, and daily specials",
+			"description": "We offer delicious Tex-Mex food.",
 			"source": "builder",
 			"googlePlaceId": "",
 			"isNew": false

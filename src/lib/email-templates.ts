@@ -91,14 +91,16 @@ export function contactConfirmationEmail(opts: {
 
 export function townContactConfirmationEmail(opts: {
 	firstName: string;
-	lastName: string;
-	email: string;
+	lastName?: string;
+	email?: string;
 	phone?: string;
 	inquiryType: string;
 	message: string;
 }): string {
-	const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
-	const safeEmail = esc(opts.email);
+	const safeName = [esc(opts.firstName), opts.lastName ? esc(opts.lastName) : ""]
+		.filter(Boolean)
+		.join(" ");
+	const safeEmail = opts.email ? esc(opts.email) : null;
 	const safePhone = opts.phone ? esc(opts.phone) : null;
 	const safeInquiry = esc(opts.inquiryType);
 	const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
@@ -112,7 +114,7 @@ export function townContactConfirmationEmail(opts: {
     <h3 style="margin:0 0 10px;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.muted};">Your Submission</h3>
     <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
       ${row("Name:", safeName)}
-      ${row("Email:", safeEmail)}
+      ${safeEmail ? row("Email:", safeEmail) : ""}
       ${safePhone ? row("Phone:", safePhone) : ""}
       ${row("Inquiry Type:", safeInquiry)}
       ${row("Message:", safeMessage)}
@@ -157,28 +159,36 @@ export function contactNotificationEmail(opts: {
 
 export function townContactNotificationEmail(opts: {
 	firstName: string;
-	lastName: string;
-	email: string;
+	lastName?: string;
+	email?: string;
 	phone?: string;
 	inquiryType: string;
 	message: string;
 }): string {
-	const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
-	const safeEmail = esc(opts.email).replace(/"/g, "&quot;");
+	const safeName = [esc(opts.firstName), opts.lastName ? esc(opts.lastName) : ""]
+		.filter(Boolean)
+		.join(" ");
+	const safeEmail = opts.email ? esc(opts.email).replace(/"/g, "&quot;") : null;
 	const safePhone = opts.phone ? esc(opts.phone) : null;
 	const safeInquiry = esc(opts.inquiryType);
 	const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
 
+	const replyHint = safeEmail
+		? "Reply to this email to respond directly."
+		: safePhone
+			? "The visitor did not provide an email — call the phone number below to respond."
+			: "";
+
 	const body = `
     <h2 style="margin:0 0 8px;font-size:20px;font-weight:normal;color:${BRAND.primary};">New Contact Form Submission</h2>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.text};">
-      A visitor has submitted the contact form on the ${siteConfig.name} website. Reply to this email to respond directly.
+      A visitor has submitted the contact form on the ${siteConfig.name} website.${replyHint ? ` ${replyHint}` : ""}
     </p>
 
     <h3 style="margin:0 0 10px;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:${BRAND.muted};">Submission Details</h3>
     <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
       ${row("Name:", safeName)}
-      ${row("Email:", `<a href="mailto:${safeEmail}" style="color:${BRAND.primary};">${safeEmail}</a>`)}
+      ${safeEmail ? row("Email:", `<a href="mailto:${safeEmail}" style="color:${BRAND.primary};">${safeEmail}</a>`) : ""}
       ${safePhone ? row("Phone:", safePhone) : ""}
       ${row("Inquiry Type:", safeInquiry)}
       ${row("Message:", safeMessage)}

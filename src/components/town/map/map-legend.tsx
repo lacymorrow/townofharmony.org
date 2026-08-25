@@ -4,7 +4,12 @@ import { useState } from "react";
 import { ALL_CATEGORIES, getCategoryColor } from "@/lib/map-utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-export const MapLegend = () => {
+interface MapLegendProps {
+	title?: string;
+	boundaryLabel?: string;
+}
+
+export const MapLegend = ({ title = "Legend", boundaryLabel = "Town Boundary" }: MapLegendProps = {}) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -16,7 +21,7 @@ export const MapLegend = () => {
 					aria-expanded={isOpen}
 					aria-controls="map-legend-content"
 				>
-					<span>Legend</span>
+					<span>{title}</span>
 					{isOpen ? (
 						<ChevronDown className="h-3.5 w-3.5 text-[#635E56]" />
 					) : (
@@ -30,7 +35,7 @@ export const MapLegend = () => {
 								className="inline-block w-5 border-t-2 border-dashed border-sage-deep"
 								aria-hidden="true"
 							/>
-							<span className="text-xs text-[#635E56]">Town Boundary</span>
+							<span className="text-xs text-[#635E56]">{boundaryLabel}</span>
 						</div>
 						{ALL_CATEGORIES.map((cat) => (
 							<div key={cat} className="flex items-center gap-2">

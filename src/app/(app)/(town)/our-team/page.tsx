@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { TownTeamMembers } from "@/components/modules/builder/town/town-team-members";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 import "@/styles/builder-io.css";
 
 export const metadata: Metadata = {
@@ -53,7 +54,10 @@ async function getBuilderContent(): Promise<BuilderContent | null> {
 export default async function OurTeamPage({ searchParams }: OurTeamPageProps) {
 	const sp = await searchParams;
 	const isPreview = "builder.preview" in sp;
-	const content = await getBuilderContent();
+	const [content, settings] = await Promise.all([
+		getBuilderContent(),
+		getBuilderSettings(),
+	]);
 
 	if (content || isPreview) {
 		return <RenderBuilderContent content={content ?? undefined} model="page" />;
@@ -66,7 +70,7 @@ export default async function OurTeamPage({ searchParams }: OurTeamPageProps) {
 					Our Team
 				</h1>
 				<p className="text-[#4A4640] mt-2 max-w-2xl">
-					Elected officials and staff serving the Town of Harmony.
+					{settings.team.introText}
 				</p>
 			</div>
 			<TownTeamMembers />

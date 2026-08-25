@@ -282,6 +282,36 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("homepageSpotlightImageLetter", false, {
 				helperText: 'Large decorative letter in the spotlight image area (e.g. "H").',
 			}),
+			longText("footerCopyright", {
+				helperText:
+					"Copyright line in the site footer. Supports {year} and {siteTitle} placeholders. Leave blank to use the default.",
+			}),
+			list("footerLegalLinks", [text("name", true), text("href", true)]),
+			text("notFoundEyebrow", false, {
+				helperText: "Small label above the 404 heading (e.g. 'Page not found').",
+			}),
+			text("notFoundHeading", false, {
+				helperText: "H1 shown on the 404 page.",
+			}),
+			longText("notFoundBody", {
+				helperText: "Body paragraph on the 404 page.",
+			}),
+			text("notFoundCtaLabel", false, {
+				helperText: "Label on the primary 'return home' button on the 404 page.",
+			}),
+			text("mapPageTitle", false, {
+				helperText: "Title shown in the /map toolbar (e.g. 'Interactive Business Map').",
+			}),
+			text("mapLegendTitle", false, {
+				helperText: "Header on the collapsible map legend (e.g. 'Legend').",
+			}),
+			text("mapBoundaryLabel", false, {
+				helperText: "Label for the town boundary line in the map legend.",
+			}),
+			longText("teamIntroText", {
+				helperText:
+					"Intro paragraph under 'Our Team' when no Builder page overrides it. Shown as a fallback.",
+			}),
 		],
 	},
 	{
@@ -438,6 +468,31 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			]),
 			url("resultsUrl"),
 			file("sampleBallot", ["pdf", "jpeg", "png"]),
+		],
+	},
+
+	// --- Static Pages ---
+	// Editable prose for a small set of hardcoded routes (/about, /accessibility,
+	// /privacy). The routes themselves stay hardcoded in Next.js — this model
+	// only carries the body copy. Slug matches the URL segment (e.g. "about").
+	{
+		name: "town-static-page",
+		kind: "data",
+		nameField: "title",
+		helperText:
+			"Editable prose for hardcoded pages like /about, /accessibility, /privacy. The `slug` must match the URL segment (e.g. `about`). Leave blank to fall back to the built-in copy.",
+		fields: [
+			text("slug", true, {
+				helperText:
+					"URL segment for the page — e.g. `about` for /about, `accessibility` for /accessibility, `privacy` for /privacy.",
+			}),
+			text("title", true, {
+				helperText: "Page heading rendered as <h1>.",
+			}),
+			richText("body", {
+				helperText:
+					"Full page body. Rendered as sanitized HTML inside a standard prose container.",
+			}),
 		],
 	},
 

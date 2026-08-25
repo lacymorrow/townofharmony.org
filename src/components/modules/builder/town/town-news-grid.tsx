@@ -8,7 +8,13 @@ import type { TownNews } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 
-const NEWS_CATEGORIES = [
+/**
+ * Well-known categories shown first in the filter bar, in this order.
+ * Categories entered in Builder.io that aren't listed here still appear,
+ * sorted alphabetically after these — editors can add new categories
+ * without a code change.
+ */
+const PREFERRED_CATEGORY_ORDER = [
   "announcements",
   "public-safety",
   "community",
@@ -108,11 +114,17 @@ export const TownNewsGrid = ({
     for (const article of allNews) {
       if (Array.isArray(article.categories)) {
         for (const cat of article.categories) {
-          catSet.add(cat);
+          const trimmed = cat?.trim();
+          if (trimmed) catSet.add(trimmed);
         }
       }
     }
-    return NEWS_CATEGORIES.filter((cat) => catSet.has(cat));
+    const preferred = PREFERRED_CATEGORY_ORDER.filter((cat) => catSet.has(cat));
+    const preferredSet = new Set<string>(PREFERRED_CATEGORY_ORDER);
+    const extras = [...catSet]
+      .filter((cat) => !preferredSet.has(cat))
+      .sort((a, b) => a.localeCompare(b));
+    return [...preferred, ...extras];
   }, [allNews]);
 
   const updateParams = (updates: Record<string, string | undefined>) => {

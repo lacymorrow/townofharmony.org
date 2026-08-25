@@ -2,6 +2,7 @@ import { Facebook, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
 
 import { navigation as defaultNavData } from "@/data/town/navigation";
+import { renderCopyright } from "@/data/town/settings";
 import type { TownNavigation, TownSettings } from "@/data/town/types";
 import { BUILD_TIME_HIDDEN_HREFS, normalizeHref } from "@/lib/hidden-hrefs";
 import { getMapUrl } from "@/lib/map-utils";
@@ -120,14 +121,17 @@ export function TownFooter({
 				{/* Bottom Bar */}
 				<div className="border-t border-white/[0.08] pt-6">
 					<div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[13px]">
-						<span>&copy; {new Date().getFullYear()} {settings.siteTitle}. All rights reserved.</span>
+						<span>{renderCopyright(settings.footer.copyright, settings.siteTitle)}</span>
 						<div className="flex gap-5">
-							<Link href="/privacy" className="text-white/80 hover:text-wheat transition-colors">
-								Privacy
-							</Link>
-							<Link href="/accessibility" className="text-white/80 hover:text-wheat transition-colors">
-								Accessibility
-							</Link>
+							{settings.footer.legalLinks.map((link) => (
+								<Link
+									key={link.href}
+									href={link.href}
+									className="text-white/80 hover:text-wheat transition-colors"
+								>
+									{link.name}
+								</Link>
+							))}
 						</div>
 					</div>
 				</div>

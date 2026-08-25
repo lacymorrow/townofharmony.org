@@ -12,7 +12,13 @@ interface TownBusinessDirectoryProps {
 	showSearch?: boolean;
 }
 
-const BUSINESS_CATEGORIES = [
+/**
+ * Well-known categories shown first in the filter bar, in this order.
+ * Categories entered in Builder.io that aren't listed here still appear,
+ * sorted alphabetically after these — editors can add new categories
+ * without a code change.
+ */
+const PREFERRED_CATEGORY_ORDER = [
 	"retail",
 	"restaurant",
 	"services",
@@ -103,8 +109,16 @@ export const TownBusinessDirectory = ({
 
 	const availableCategories = useMemo(() => {
 		const catSet = new Set<string>();
-		for (const b of allBusinesses) catSet.add(b.category);
-		return BUSINESS_CATEGORIES.filter((cat) => catSet.has(cat));
+		for (const b of allBusinesses) {
+			const cat = b.category?.trim();
+			if (cat) catSet.add(cat);
+		}
+		const preferred = PREFERRED_CATEGORY_ORDER.filter((cat) => catSet.has(cat));
+		const preferredSet = new Set<string>(PREFERRED_CATEGORY_ORDER);
+		const extras = [...catSet]
+			.filter((cat) => !preferredSet.has(cat))
+			.sort((a, b) => a.localeCompare(b));
+		return [...preferred, ...extras];
 	}, [allBusinesses]);
 
 	const updateParams = (updates: Record<string, string | undefined>) => {
