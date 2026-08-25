@@ -162,6 +162,41 @@ If you need a page change to appear immediately, a developer can trigger a redep
 3. Edit the fields (date, time, location, description).
 4. Click **Publish**.
 
+### Add a Meeting and Upload Minutes
+
+Use this any time the Town Clerk sends a set of minutes for a Board of Aldermen, Planning, or Public Hearing meeting.
+
+**Step 1 — Upload the minutes file to the Assets Library.**
+
+1. Go to **Assets** in the left sidebar of Builder.io.
+2. Click **Upload** and pick the file (`.pdf` or `.docx` — both preview inline on the site).
+3. When the upload finishes, click the file and copy its URL from the details panel. It looks like `https://cdn.builder.io/o/assets/.../file.docx`.
+
+**Step 2 — Create the meeting entry.**
+
+1. Go to **Models > town-meeting > + New**.
+2. Fill in the fields:
+   - **title** — e.g., `Board of Aldermen Meeting - July 7, 2025`.
+   - **slug** — a URL-friendly version of the title. Convention: `council-meeting-YYYY-MM-DD` (e.g., `council-meeting-2025-07-07`). Use `special-meeting-YYYY-MM-DD` for special sessions and `planning-meeting-YYYY-MM-DD` for planning. Lowercase, dashes only.
+   - **type** — `Council`, `Planning`, or `Public Hearing`.
+   - **meetingDate** — the meeting date (`YYYY-MM-DD`).
+   - **meetingTime** — e.g., `7:00 PM`.
+   - **location** — usually `Town Hall`.
+   - **isPublic** — `true` for meetings the public can attend and view.
+   - **minutesUrl** — paste the asset URL you copied in Step 1.
+   - Leave **agenda**, **minutes** (the free-text one), **videoUrl**, and **audioUrl** blank unless you have them.
+3. Click **Publish**.
+
+**Step 3 — Verify on the site.**
+
+1. Within about a minute, the meeting shows up on `/meetings`.
+2. Click through to `/meetings/{slug}` — the minutes preview inline on the page, and a **Download** link appears next to the "Meeting Minutes" heading.
+3. If the preview area is blank, make sure the file is `.pdf` or `.docx` (older `.doc` files do not preview — convert to `.docx` first).
+
+**Fixing a mistake.** Wrong file? Edit the meeting entry, replace `minutesUrl`, and Publish again. Wrong date/title? Edit and Publish — the URL updates only if you change the `slug`. Avoid editing the slug once the meeting is live; if you must, ask a developer to add a redirect.
+
+**Historical meetings.** The site ships with 155+ historical meeting entries from 2018 onward already loaded. You do **not** need to re-enter these in Builder. Anything you add in Builder appears alongside the historical entries — adding one new meeting no longer hides the older ones.
+
 ### Add a Team Member
 
 1. Go to **Models > town-team-member > + New**.
@@ -234,7 +269,9 @@ Pages: catch-all [...slug]/page.tsx (ISR, 1hr) or explicit routes
 
 These paths have dedicated Next.js routes and skip the Builder catch-all:
 
-`/`, `/accessibility`, `/map`, `/our-team`, `/pay/sewer`, `/pay/sewer/cancel`, `/pay/sewer/success`, `/privacy`, `/resources/community-center-reservation`, `/resources/park-reservation`, `/sewer`
+`/`, `/accessibility`, `/business`, `/events`, `/events/{slug}`, `/map`, `/meetings/{slug}`, `/our-team`, `/pay/sewer`, `/pay/sewer/cancel`, `/pay/sewer/success`, `/privacy`, `/resources/community-center-reservation`, `/resources/park-reservation`, `/sewer`
+
+The `/meetings/{slug}` route is native but checks Builder first — if a Builder page exists at `/meetings/some-slug`, that page renders; otherwise the native template renders the meeting from the `town-meeting` data model.
 
 ### Seed Scripts
 
