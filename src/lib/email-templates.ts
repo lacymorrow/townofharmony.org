@@ -91,13 +91,15 @@ export function contactConfirmationEmail(opts: {
 
 export function townContactConfirmationEmail(opts: {
 	firstName: string;
-	lastName: string;
+	lastName?: string;
 	email?: string;
 	phone?: string;
 	inquiryType: string;
 	message: string;
 }): string {
-	const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
+	const safeName = [esc(opts.firstName), opts.lastName ? esc(opts.lastName) : ""]
+		.filter(Boolean)
+		.join(" ");
 	const safeEmail = opts.email ? esc(opts.email) : null;
 	const safePhone = opts.phone ? esc(opts.phone) : null;
 	const safeInquiry = esc(opts.inquiryType);
@@ -157,13 +159,15 @@ export function contactNotificationEmail(opts: {
 
 export function townContactNotificationEmail(opts: {
 	firstName: string;
-	lastName: string;
+	lastName?: string;
 	email?: string;
 	phone?: string;
 	inquiryType: string;
 	message: string;
 }): string {
-	const safeName = `${esc(opts.firstName)} ${esc(opts.lastName)}`;
+	const safeName = [esc(opts.firstName), opts.lastName ? esc(opts.lastName) : ""]
+		.filter(Boolean)
+		.join(" ");
 	const safeEmail = opts.email ? esc(opts.email).replace(/"/g, "&quot;") : null;
 	const safePhone = opts.phone ? esc(opts.phone) : null;
 	const safeInquiry = esc(opts.inquiryType);

@@ -1,6 +1,6 @@
 "use client";
 
-import { HeroCarousel, HeroSingleSlide, type HeroSlide } from "@/components/town/hero-carousel";
+import { Hero, type HeroSlide } from "@/components/town/hero-carousel";
 import { useBuilderData } from "@/lib/builder-data";
 import { getHomepageSync } from "@/lib/town-data-client";
 
@@ -37,14 +37,8 @@ export const TownHero = ({ title, subtitle, image, ctaText, ctaHref }: TownHeroP
   });
 
   return (
-    <section className="bg-gradient-to-r from-sage-deep via-sage-dark to-sage text-white relative overflow-hidden">
-      <div className="container mx-auto">
-        {slides.length > 1 ? (
-          <HeroCarousel slides={slides} />
-        ) : (
-          <HeroSingleSlide slide={slides[0] ?? fallbackSlide} />
-        )}
-      </div>
+    <section className="bg-gradient-to-r from-sage-deep via-sage-dark to-sage text-white relative w-full overflow-hidden">
+      <Hero slides={slides.length > 0 ? slides : [fallbackSlide]} />
     </section>
   );
 };
