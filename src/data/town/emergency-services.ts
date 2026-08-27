@@ -17,21 +17,6 @@ export const emergencyServices: TownEmergencyService[] = [
 		],
 	},
 	{
-		id: 2,
-		title: "Fire Department",
-		description: "Harmony Volunteer Fire Department provides fire suppression, rescue, and emergency medical services to the community.",
-		phone: "(704) 546-2300",
-		address: "3351 Harmony Hwy, Harmony, NC 28634",
-		category: "immediate",
-		icon: "Flame",
-		preparedness: [
-			"Install smoke detectors on every level",
-			"Create a fire escape plan",
-			"Keep fire extinguishers accessible",
-			"Never leave cooking unattended",
-		],
-	},
-	{
 		id: 3,
 		title: "Iredell County Sheriff's Office",
 		description: "Law enforcement services for the Harmony community are provided by the Iredell County Sheriff's Office.",
