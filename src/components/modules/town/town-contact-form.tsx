@@ -45,6 +45,8 @@ export const TownContactForm = () => {
 	const [errors, setErrors] = useState<FormErrors>({});
 	const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 	const turnstileTokenRef = useRef<string | null>(null);
+	const turnstileResetRef = useRef<(() => void) | null>(null);
+	const [turnstileFailed, setTurnstileFailed] = useState(false);
 	const loadedAtRef = useRef(Date.now().toString());
 	const successRef = useRef<HTMLOutputElement | null>(null);
 
@@ -150,6 +152,9 @@ export const TownContactForm = () => {
 				setSubmitted(true);
 			} else {
 				setServerError(result.error ?? "Something went wrong.");
+				// Turnstile tokens are single-use — get a fresh one for the retry.
+				turnstileTokenRef.current = null;
+				turnstileResetRef.current?.();
 			}
 		});
 	};
@@ -367,11 +372,22 @@ export const TownContactForm = () => {
 			<Turnstile
 				onVerify={(token) => {
 					turnstileTokenRef.current = token;
+					setTurnstileFailed(false);
+				}}
+				onError={() => {
+					setTurnstileFailed(true);
 				}}
 				onExpire={() => {
 					turnstileTokenRef.current = null;
 				}}
+				resetRef={turnstileResetRef}
 			/>
+			{turnstileFailed && (
+				<p className="text-xs text-red-600" role="alert">
+					The security check couldn't load. Please refresh the page and try again — or call Town
+					Hall if the problem continues.
+				</p>
+			)}
 
 			<button
 				type="submit"

@@ -134,43 +134,58 @@ export async function submitTownContactForm(
 		website,
 	} = parsed.data;
 
+	const ip = await getClientIp();
+
+	// Fail closed (LAC-3546): the soft-fail from LAC-980/LAC-1265 let bots
+	// POST the action directly with no token and still reach staff inboxes.
+	if (website) {
+		logger.warn("Honeypot triggered", {
+			context: "town-contact-form",
+			ip,
+			action: "dropped",
+		});
+		// Fake success so bots don't learn to leave the field empty.
+		return { success: true };
+	}
+
+	if (isTurnstileConfigured()) {
+		if (!turnstileToken) {
+			logger.warn("Turnstile token missing", {
+				context: "town-contact-form",
+				ip,
+				action: "rejected",
+			});
+			return {
+				success: false,
+				error:
+					"The security check hasn't finished loading. Please wait a moment and try again, or call Town Hall.",
+			};
+		}
+		if (!(await verifyTurnstileToken(turnstileToken, ip))) {
+			logger.warn("Turnstile verification failed", {
+				context: "town-contact-form",
+				ip,
+				action: "rejected",
+			});
+			return {
+				success: false,
+				error: "The security check could not be verified. Please try again, or call Town Hall.",
+			};
+		}
+	}
+
+	if (!validateSubmissionTiming(_loadedAt)) {
+		logger.warn("Town contact form rejected: submitted too quickly", { ip });
+		return { success: false, error: "Please take a moment before submitting." };
+	}
+
+	// Bot checks come first so spam never costs a Builder.io fetch.
 	const inquiryTypes = await loadInquiryTypes();
 	const matched = inquiryTypes.find((t) => t.value === inquiryType);
 	if (!matched) {
 		return { success: false, error: "Please select an inquiry type" };
 	}
 	const inquiryLabel = matched.label;
-
-	const isLikelyBot = !!website;
-	if (isLikelyBot) {
-		logger.warn("Honeypot triggered", {
-			context: "town-contact-form",
-			action: "processing_anyway",
-		});
-	}
-
-	if (isTurnstileConfigured()) {
-		if (turnstileToken) {
-			if (!(await verifyTurnstileToken(turnstileToken))) {
-				logger.warn("Turnstile verification failed", {
-					context: "town-contact-form",
-					action: "allowing_submission",
-				});
-			}
-		} else {
-			logger.warn("Turnstile token missing", {
-				context: "town-contact-form",
-				reason: "widget_load_failure",
-			});
-		}
-	}
-
-	const ip = await getClientIp();
-
-	if (!validateSubmissionTiming(_loadedAt)) {
-		logger.warn("Town contact form rejected: submitted too quickly", { ip });
-		return { success: false, error: "Please take a moment before submitting." };
-	}
 
 	const rateLimit = await checkContactFormRateLimit(ip, "town-contact-form");
 	if (!rateLimit.allowed) {
