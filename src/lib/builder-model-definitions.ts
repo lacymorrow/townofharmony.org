@@ -239,6 +239,10 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			longText("siteDescription"),
 			phone("contactPhone"),
 			text("contactAddress"),
+			text("contactMailingAddress", false, {
+				helperText:
+					'Mailing address shown on the Contact page (e.g. "P.O. Box 118, Harmony, NC 28634").',
+			}),
 			emailField("contactEmail"),
 			text("officeHoursWeekday"),
 			text("officeHoursWeekend"),

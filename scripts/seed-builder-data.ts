@@ -126,6 +126,7 @@ function flattenSettings(s: typeof settings): SeedEntry[] {
 				siteDescription: s.siteDescription,
 				contactPhone: s.contactInfo.phone,
 				contactAddress: s.contactInfo.address,
+				contactMailingAddress: s.contactInfo.mailingAddress,
 				officeHoursWeekday: s.officeHours.weekday,
 				officeHoursWeekend: s.officeHours.weekend,
 				socialFacebook: s.socialMedia.facebook,
