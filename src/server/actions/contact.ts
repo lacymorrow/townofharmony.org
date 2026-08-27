@@ -31,14 +31,16 @@ export async function submitContactForm(formData: FormData) {
 				logger.warn("Turnstile token missing", { context: "contact-form", ip, action: "rejected" });
 				return {
 					success: false,
-					error: "The security check hasn't finished loading. Please wait a moment and try again.",
+					error:
+						'Please check the "Verify you are human" box, then try again. If it hasn\'t appeared yet, give it a moment.',
 				};
 			}
-			if (!(await verifyTurnstileToken(token, ip))) {
+			if (!(await verifyTurnstileToken(token))) {
 				logger.warn("Turnstile verification failed", { context: "contact-form", ip, action: "rejected" });
 				return {
 					success: false,
-					error: "The security check could not be verified. Please try again.",
+					error:
+						'The security check could not be verified. Please re-check the "Verify you are human" box and try again.',
 				};
 			}
 		}
