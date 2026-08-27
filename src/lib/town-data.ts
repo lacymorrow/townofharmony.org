@@ -31,6 +31,7 @@ import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-serve
 import { fetchBuilderEntries } from "@/lib/builder-content-fetch";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
 import { logger } from "@/lib/logger";
+import { findMeetingBySlug, getCanonicalMeetingSlug } from "@/lib/meeting-slug";
 import { slugify } from "@/lib/utils/extract-headings";
 
 /**
@@ -78,7 +79,13 @@ const buildBuilderListResolver = <T extends { id?: unknown }>(
 	});
 
 const resolveNews = buildBuilderListResolver<TownNews>("town-news", news);
-const resolveMeetings = buildBuilderListResolver<TownMeeting>("town-meeting", meetings);
+const resolveMeetingsRaw = buildBuilderListResolver<TownMeeting>("town-meeting", meetings);
+// Editors enter recurring slugs ("town-council-meeting") in Builder, so raw
+// slugs collide across months — canonicalize so every link is unique (LAC-3549).
+const resolveMeetings = cache(
+	async (): Promise<TownMeeting[]> =>
+		(await resolveMeetingsRaw()).map((m) => ({ ...m, slug: getCanonicalMeetingSlug(m) })),
+);
 const resolveTeamMembers = buildBuilderListResolver<TownTeamMember>(
 	"town-team-member",
 	teamMembers,
@@ -337,7 +344,7 @@ export const getMeetings = async (options?: {
  */
 export const getMeetingBySlug = async (slug: string) => {
 	const allMeetings = await resolveMeetings();
-	return allMeetings.find((m) => m.slug === slug) ?? null;
+	return findMeetingBySlug(allMeetings, slug);
 };
 
 /**
