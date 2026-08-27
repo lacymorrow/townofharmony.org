@@ -6,6 +6,7 @@ import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
+import { getCanonicalMeetingSlug } from "@/lib/meeting-slug";
 import { cn } from "@/lib/utils";
 
 type Tab = "agenda" | "minutes";
@@ -100,7 +101,7 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
             ) : (
               upcomingMeetings.map((meeting) => (
                 <div
-                  key={meeting.slug}
+                  key={getCanonicalMeetingSlug(meeting)}
                   className="bg-warm-white rounded-xl border border-[#DDD7CC] overflow-hidden"
                 >
                   {/* Meeting header */}
@@ -164,7 +165,7 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
             ) : (
               pastMeetings.map((meeting) => (
                 <div
-                  key={meeting.slug}
+                  key={getCanonicalMeetingSlug(meeting)}
                   className="bg-warm-white rounded-xl border border-[#DDD7CC] overflow-hidden"
                 >
                   {/* Meeting header */}

@@ -40,13 +40,11 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
   // Builder. Fetch entries matching either form and resolve client-side:
   // canonical match first (disambiguates colliding raw slugs by date), then
   // exact raw match for legacy links.
-  const base = getMeetingSlugBase(slug);
-  const staticFallback = findMeetingBySlug(staticMeetings, slug);
   const { data: candidates, loading } = useBuilderData<TownMeeting>("town-meeting", {
-    query: { "data.slug": base === slug ? slug : { $in: [slug, base] } },
-    fallback: staticFallback ? [staticFallback] : [],
+    query: { "data.slug": { $in: [slug, getMeetingSlugBase(slug)] } },
+    fallback: staticMeetings,
   });
-  const meeting = findMeetingBySlug(candidates, slug) ?? staticFallback;
+  const meeting = findMeetingBySlug(candidates, slug) ?? findMeetingBySlug(staticMeetings, slug);
 
   if (loading) {
     return (

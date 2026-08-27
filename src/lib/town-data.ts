@@ -82,8 +82,10 @@ const resolveNews = buildBuilderListResolver<TownNews>("town-news", news);
 const resolveMeetingsRaw = buildBuilderListResolver<TownMeeting>("town-meeting", meetings);
 // Editors enter recurring slugs ("town-council-meeting") in Builder, so raw
 // slugs collide across months — canonicalize so every link is unique (LAC-3549).
-const resolveMeetings = async (): Promise<TownMeeting[]> =>
-	(await resolveMeetingsRaw()).map((m) => ({ ...m, slug: getCanonicalMeetingSlug(m) }));
+const resolveMeetings = cache(
+	async (): Promise<TownMeeting[]> =>
+		(await resolveMeetingsRaw()).map((m) => ({ ...m, slug: getCanonicalMeetingSlug(m) })),
+);
 const resolveTeamMembers = buildBuilderListResolver<TownTeamMember>(
 	"town-team-member",
 	teamMembers,

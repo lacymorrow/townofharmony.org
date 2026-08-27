@@ -10,18 +10,12 @@
  */
 
 import { toDateOnly } from "@/lib/date-only";
+import { slugify } from "@/lib/utils/extract-headings";
 
 interface MeetingSlugFields {
   slug?: string;
   title?: string;
   meetingDate?: string;
-}
-
-function slugifyBase(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 }
 
 /**
@@ -31,7 +25,7 @@ function slugifyBase(value: string): string {
  * date keep their base slug.
  */
 export function getCanonicalMeetingSlug(meeting: MeetingSlugFields): string {
-  const base = slugifyBase(meeting.slug || meeting.title || "meeting");
+  const base = slugify(meeting.slug || meeting.title || "meeting");
   const date = toDateOnly(meeting.meetingDate);
   if (!date || base.endsWith(date)) return base;
   return `${base}-${date}`;
