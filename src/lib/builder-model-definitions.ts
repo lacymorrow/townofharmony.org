@@ -132,7 +132,13 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("name", true),
 			text("title", true),
-			enumText("category", ["Executive", "Town Council", "Board of Aldermen", "Staff"]),
+			enumText("category", [
+				"Executive",
+				"Town Council",
+				"Board of Aldermen",
+				"Department Heads",
+				"Staff",
+			]),
 			emailField("email"),
 			file("image"),
 			phone("phone"),
