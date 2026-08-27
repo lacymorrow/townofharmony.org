@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { getMapUrl } from "@/lib/map-utils";
 import { resolveEvents, getEventBySlug } from "@/lib/town-data";
 
@@ -21,7 +22,8 @@ export async function generateMetadata({
 	const { slug } = await params;
 	const event = await getEventBySlug(slug);
 	if (!event) return { title: "Event Not Found" };
-	const description = event.description ?? `${event.title} — Community event in Harmony, NC.`;
+	const description =
+		htmlToPlainText(event.description) || `${event.title} — Community event in Harmony, NC.`;
 	return {
 		title: `${event.title} | Town of Harmony, NC`,
 		description,

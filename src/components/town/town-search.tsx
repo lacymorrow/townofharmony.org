@@ -34,6 +34,7 @@ import { pointsOfInterest } from "@/data/town/points-of-interest";
 import { resources } from "@/data/town/resources";
 import { isSewerVisible } from "@/data/town/sewer-rates";
 import { teamMembers } from "@/data/town/team-members";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { isExternalUrl, isSafeUrl } from "@/lib/utils";
 
 const SEWER_HREFS = new Set(["/sewer", "/pay/sewer"]);
@@ -418,7 +419,7 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
 						results.push({
 							id: `event-${event.slug}`,
 							title: event.title,
-							subtitle: event.description.slice(0, 80),
+							subtitle: htmlToPlainText(event.description).slice(0, 80),
 							href,
 							category: "Events",
 							icon: <Calendar className="h-4 w-4" />,
