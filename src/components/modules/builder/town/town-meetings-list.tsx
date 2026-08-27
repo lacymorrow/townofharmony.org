@@ -7,6 +7,7 @@ import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
+import { getCanonicalMeetingSlug } from "@/lib/meeting-slug";
 
 interface TownMeetingsListProps {
   itemsPerPage?: number;
@@ -114,7 +115,11 @@ export const TownMeetingsList = ({
   const year = searchParams?.get("year") || undefined;
   const status = searchParams?.get("status") || undefined;
 
-  const { docs, allData: allMeetings, totalPages } = useBuilderPaginatedData<TownMeeting>("town-meeting", {
+  const {
+    docs,
+    allData: allMeetings,
+    totalPages,
+  } = useBuilderPaginatedData<TownMeeting>("town-meeting", {
     page,
     limit: itemsPerPage,
     fallbackData: staticMeetings,
@@ -249,11 +254,14 @@ export const TownMeetingsList = ({
               const meetingDate = new Date(meeting.meetingDate);
               const badgeClass =
                 TYPE_BADGE_COLORS[meeting.type] || "bg-stone text-[#4A4640] border-stone";
+              // Editors reuse slugs across months ("town-council-meeting"), so
+              // link by canonical date-suffixed slug to keep every row unique.
+              const slug = getCanonicalMeetingSlug(meeting);
 
               return (
                 <Link
-                  key={meeting.slug}
-                  href={`/meetings/${meeting.slug}`}
+                  key={slug}
+                  href={`/meetings/${slug}`}
                   className="group block bg-white rounded-lg border border-stone overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   <div className="flex flex-col md:flex-row">
