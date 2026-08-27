@@ -20,9 +20,10 @@ export function isTurnstileConfigured(): boolean {
 /**
  * Verify a Turnstile token with Cloudflare's API.
  * @param token - The token from the Turnstile widget
+ * @param remoteip - The submitting client's IP; lets Cloudflare reject tokens replayed from a different IP
  * @returns Promise<boolean> - Whether the token is valid
  */
-export async function verifyTurnstileToken(token: string): Promise<boolean> {
+export async function verifyTurnstileToken(token: string, remoteip?: string): Promise<boolean> {
   const secretKey = env.TURNSTILE_SECRET_KEY;
 
   if (!secretKey) {
@@ -39,6 +40,7 @@ export async function verifyTurnstileToken(token: string): Promise<boolean> {
       body: new URLSearchParams({
         secret: secretKey,
         response: token,
+        ...(remoteip && remoteip !== "unknown" ? { remoteip } : {}),
       }),
     });
 
