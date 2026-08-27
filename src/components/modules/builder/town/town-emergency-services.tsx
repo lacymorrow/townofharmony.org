@@ -14,6 +14,7 @@ import {
 	Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { useBuilderData } from "@/lib/builder-data";
 import { emergencyServices } from "@/data/town/emergency-services";
 import type { TownEmergencyService } from "@/data/town/types";
@@ -88,17 +89,24 @@ export const TownEmergencyServices = () => {
 								return (
 									<div
 										key={service.title}
-										className={`block whitespace-normal rounded-2xl p-8 transition-shadow hover:shadow-lg ${
+										className={`relative block whitespace-normal rounded-2xl p-8 transition-shadow hover:shadow-lg ${
 											is911
 												? "bg-red-600 text-white col-span-full lg:col-span-1"
 												: "bg-red-50 border-2 border-red-200 text-red-900"
 										}`}
 									>
+										<div className="absolute top-4 right-4 z-10">
+											<PhoneCopyButton
+												phone={service.phone}
+												label={service.title}
+												tone={is911 ? "onDark" : "onLight"}
+											/>
+										</div>
 										<a
 											href={`tel:${service.phone.replace(/[^\d+]/g, "")}`}
 											className="block"
 										>
-											<div className="flex items-center gap-4 mb-3">
+											<div className="flex items-center gap-4 mb-3 pr-10">
 												<Icon className={`h-8 w-8 ${is911 ? "text-white/90" : "text-red-600"}`} />
 												<span className={`text-lg font-semibold ${is911 ? "text-white/90" : "text-red-800"}`}>
 													{service.title}
@@ -164,13 +172,19 @@ export const TownEmergencyServices = () => {
 														{service.title}
 													</h3>
 
-													<a
-														href={`tel:${service.phone.replace(/[^\d+]/g, "")}`}
-														className="inline-flex items-center gap-2 text-2xl font-bold font-mono text-sage-deep hover:text-sage-dark transition-colors mb-2"
-													>
-														<Phone className="h-5 w-5" />
-														{service.phone}
-													</a>
+													<div className="flex items-center gap-1 mb-2 flex-wrap">
+														<a
+															href={`tel:${service.phone.replace(/[^\d+]/g, "")}`}
+															className="inline-flex items-center gap-2 text-2xl font-bold font-mono text-sage-deep hover:text-sage-dark transition-colors"
+														>
+															<Phone className="h-5 w-5" />
+															{service.phone}
+														</a>
+														<PhoneCopyButton
+															phone={service.phone}
+															label={service.title}
+														/>
+													</div>
 
 													<p className="text-base text-[#4A4640] leading-relaxed">
 														{service.description}
