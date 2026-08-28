@@ -73,19 +73,6 @@ export const emergencyServices: TownEmergencyService[] = [
 		],
 	},
 	{
-		id: 8,
-		title: "Road Hazards",
-		description: "Report road hazards including fallen trees, potholes, flooding, and debris on roadways.",
-		phone: "1-877-368-4968",
-		category: "public-safety",
-		icon: "AlertCircle",
-		preparedness: [
-			"Drive cautiously in bad weather",
-			"Report hazards promptly",
-			"Keep an emergency kit in your vehicle",
-		],
-	},
-	{
 		id: 9,
 		title: "Hospital",
 		description: "Iredell Memorial Hospital provides emergency medical care and hospital services to the Harmony area.",
