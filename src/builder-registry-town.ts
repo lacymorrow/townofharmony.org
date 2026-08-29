@@ -268,11 +268,23 @@ Builder.registerComponent(TownPageHeader, {
 	],
 });
 
-// Content fully driven by the town-emergency-service data model — edit
-// individual services there, not on this block.
+// Service cards are driven by the town-emergency-service data model — edit
+// individual services there. The block renders its own page header (with the
+// 911 call block built in), so pages using it don't need a TownPageHeader.
 Builder.registerComponent(TownEmergencyServices, {
 	name: "TownEmergencyServices",
-	inputs: [],
+	inputs: [
+		{
+			name: "title",
+			type: "string",
+			defaultValue: "Emergency Services",
+		},
+		{
+			name: "subtitle",
+			type: "string",
+			defaultValue: "Emergency alerts, contacts, and preparedness",
+		},
+	],
 });
 
 // TownEmergencyAlertsList removed — EmergencyBanner in the layout already
