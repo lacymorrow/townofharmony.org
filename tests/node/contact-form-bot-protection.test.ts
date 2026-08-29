@@ -119,14 +119,16 @@ describe("submitTownContactForm bot protection", () => {
     expect(sendMock).not.toHaveBeenCalled();
   });
 
-  it("accepts submissions with a valid Turnstile token and passes the client IP", async () => {
+  it("accepts submissions with a valid Turnstile token without forwarding the client IP", async () => {
     const result = await submitTownContactForm({
       ...validTownSubmission,
       turnstileToken: "good-token",
     });
 
     expect(result.success).toBe(true);
-    expect(verifyTurnstileTokenMock).toHaveBeenCalledWith("good-token", "203.0.113.7");
+    // LAC-3546 follow-up: forwarding remoteip rejected real users whose egress
+    // IP toward Cloudflare differed from the one we saw (dual-stack, relays).
+    expect(verifyTurnstileTokenMock).toHaveBeenCalledWith("good-token");
     expect(sendMock).toHaveBeenCalled();
   });
 
@@ -171,7 +173,7 @@ describe("submitContactForm bot protection", () => {
     const result = await submitContactForm(buildContactFormData({ turnstileToken: "good-token" }));
 
     expect(result.success).toBe(true);
-    expect(verifyTurnstileTokenMock).toHaveBeenCalledWith("good-token", "203.0.113.7");
+    expect(verifyTurnstileTokenMock).toHaveBeenCalledWith("good-token");
     expect(sendMock).toHaveBeenCalled();
   });
 });
