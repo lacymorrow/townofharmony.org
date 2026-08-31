@@ -136,7 +136,10 @@ function useBuilderPaginatedData<T>(
   const {
     page = 1,
     limit = 10,
-    fetchLimit = 100,
+    // The shared fetcher pages under the hood in chunks of 100 (Builder's
+    // per-request cap), so a large `fetchLimit` here means "give me all
+    // entries" — it's the ceiling, not the request size (LAC-3555).
+    fetchLimit = 1000,
     query,
     sort,
     fallbackData = [],
