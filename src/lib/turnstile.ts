@@ -19,6 +19,12 @@ export function isTurnstileConfigured(): boolean {
 
 /**
  * Verify a Turnstile token with Cloudflare's API.
+ *
+ * Deliberately does NOT forward `remoteip`: the IP a browser presents to
+ * challenges.cloudflare.com can legitimately differ from the one our server
+ * sees (dual-stack IPv4/IPv6, iCloud Private Relay, VPNs), so requiring an IP
+ * match rejects real users. Tokens are single-use, which already blocks replay.
+ *
  * @param token - The token from the Turnstile widget
  * @returns Promise<boolean> - Whether the token is valid
  */

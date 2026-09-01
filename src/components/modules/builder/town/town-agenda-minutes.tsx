@@ -6,6 +6,7 @@ import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
+import { getCanonicalMeetingSlug } from "@/lib/meeting-slug";
 import { cn } from "@/lib/utils";
 
 type Tab = "agenda" | "minutes";
@@ -100,15 +101,17 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
             ) : (
               upcomingMeetings.map((meeting) => (
                 <div
-                  key={meeting.slug}
+                  key={getCanonicalMeetingSlug(meeting)}
                   className="bg-warm-white rounded-xl border border-[#DDD7CC] overflow-hidden"
                 >
                   {/* Meeting header */}
                   <div className="bg-sage-dark text-white px-6 py-4 flex flex-wrap items-center gap-x-6 gap-y-2">
                     <h3 className="font-semibold text-[17px]">{meeting.title}</h3>
-                    <span className="bg-wheat/20 text-[#E8D5A3] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full">
-                      {meeting.type}
-                    </span>
+                    {meeting.type?.trim() && (
+                      <span className="bg-wheat/20 text-[#E8D5A3] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                        {meeting.type}
+                      </span>
+                    )}
                   </div>
 
                   {/* Meeting details */}
@@ -164,15 +167,17 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
             ) : (
               pastMeetings.map((meeting) => (
                 <div
-                  key={meeting.slug}
+                  key={getCanonicalMeetingSlug(meeting)}
                   className="bg-warm-white rounded-xl border border-[#DDD7CC] overflow-hidden"
                 >
                   {/* Meeting header */}
                   <div className="bg-sage/10 px-6 py-4 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-[#DDD7CC]">
                     <h3 className="font-semibold text-[17px] text-[#2D2A24]">{meeting.title}</h3>
-                    <span className="bg-sage-dark/10 text-sage-dark text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full">
-                      {meeting.type}
-                    </span>
+                    {meeting.type?.trim() && (
+                      <span className="bg-sage-dark/10 text-sage-dark text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                        {meeting.type}
+                      </span>
+                    )}
                   </div>
 
                   {/* Meeting details */}

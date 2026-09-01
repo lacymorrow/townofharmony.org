@@ -221,6 +221,7 @@ export interface TownSettings {
 	contactInfo: {
 		phone: string;
 		address: string;
+		mailingAddress: string;
 		email: string;
 		streetAddress: string;
 		city: string;

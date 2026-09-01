@@ -38,13 +38,15 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
           &larr; Back to Meetings
         </Link>
 
-        <div className="mb-4">
-          <span
-            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${typeColors[meeting.type] || typeColors.Council}`}
-          >
-            {meeting.type}
-          </span>
-        </div>
+        {meeting.type?.trim() && (
+          <div className="mb-4">
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${typeColors[meeting.type] || typeColors.Council}`}
+            >
+              {meeting.type}
+            </span>
+          </div>
+        )}
 
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark leading-tight mb-6">
           {meeting.title}

@@ -6,6 +6,7 @@ export const settings: TownSettings = {
 	contactInfo: {
 		phone: "(704) 546-2339",
 		address: "3389 Harmony Hwy, Harmony, NC 28634",
+		mailingAddress: "P.O. Box 118, Harmony, NC 28634",
 		email: "info@townofharmony.org",
 		streetAddress: "3389 Harmony Hwy",
 		city: "Harmony",
@@ -78,6 +79,7 @@ export interface BuilderSettingsFlat {
 	siteDescription?: string;
 	contactPhone?: string;
 	contactAddress?: string;
+	contactMailingAddress?: string;
 	contactEmail?: string;
 	officeHoursWeekday?: string;
 	officeHoursWeekend?: string;
@@ -120,6 +122,8 @@ export const toTownSettings = (flat: BuilderSettingsFlat): TownSettings => ({
 	contactInfo: {
 		phone: flat.contactPhone ?? settings.contactInfo.phone,
 		address: flat.contactAddress ?? settings.contactInfo.address,
+		// Builder returns "" (not undefined) for cleared fields, so || not ??
+		mailingAddress: flat.contactMailingAddress || settings.contactInfo.mailingAddress,
 		email: flat.contactEmail ?? settings.contactInfo.email,
 		streetAddress: settings.contactInfo.streetAddress,
 		city: settings.contactInfo.city,
