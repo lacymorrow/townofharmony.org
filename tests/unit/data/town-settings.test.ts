@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import { settings, toTownSettings } from "@/data/town/settings";
 
 describe("town settings mailing address (LAC-3552)", () => {
-  it("static settings include the P.O. Box mailing address", () => {
-    expect(settings.contactInfo.mailingAddress).toBe("P.O. Box 118, Harmony, NC 28634");
+  it("static settings include the full mailing address (street + P.O. Box)", () => {
+    expect(settings.contactInfo.mailingAddress).toBe(
+      "3389 Harmony Hwy, Harmony, NC 28634\nP.O. Box 118, Harmony, NC 28634"
+    );
   });
 
   it("keeps the physical address separate from the mailing address", () => {
