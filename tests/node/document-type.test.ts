@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   detectKindFromBytes,
   detectKindFromContentType,
+  detectKindFromUrl,
   getExtensionFromUrl,
 } from "@/lib/document-type";
 
@@ -45,6 +46,18 @@ describe("getExtensionFromUrl", () => {
 
   it("returns empty string for unparseable input", () => {
     expect(getExtensionFromUrl("http://")).toBe("");
+  });
+});
+
+describe("detectKindFromUrl", () => {
+  it("maps pdf and docx extensions to their kind", () => {
+    expect(detectKindFromUrl("/docs/meetings/February_3_2025_Minutes.pdf")).toBe("pdf");
+    expect(detectKindFromUrl("/docs/meetings/January_7_2019_Spec._Meeting.docx")).toBe("docx");
+  });
+
+  it("returns unknown for extensionless Builder CDN asset URLs and other extensions", () => {
+    expect(detectKindFromUrl(BUILDER_ASSET_URL)).toBe("unknown");
+    expect(detectKindFromUrl("/docs/report.txt")).toBe("unknown");
   });
 });
 

@@ -6,9 +6,10 @@ export type DocumentKind = "pdf" | "docx" | "unknown";
  * (`/o/assets%2F...%2F<hash>?alt=media`), whose original filename only exists
  * in the Content-Disposition header (LAC-3623).
  */
-export function getExtensionFromUrl(url: string, base = "http://localhost"): string {
+export function getExtensionFromUrl(url: string): string {
   try {
-    const pathname = new URL(url, base).pathname;
+    // Base only anchors relative paths; the pathname is all we read.
+    const pathname = new URL(url, "http://localhost").pathname;
     const lastSegment = decodeURIComponent(pathname.split("/").pop() ?? "");
     const dotIndex = lastSegment.lastIndexOf(".");
     if (dotIndex <= 0 || dotIndex === lastSegment.length - 1) return "";
@@ -16,6 +17,12 @@ export function getExtensionFromUrl(url: string, base = "http://localhost"): str
   } catch {
     return "";
   }
+}
+
+export function detectKindFromUrl(url: string): DocumentKind {
+  const ext = getExtensionFromUrl(url);
+  if (ext === "pdf" || ext === "docx") return ext;
+  return "unknown";
 }
 
 export function detectKindFromContentType(contentType: string | null): DocumentKind {
@@ -28,8 +35,9 @@ export function detectKindFromContentType(contentType: string | null): DocumentK
 
 /**
  * Sniffs magic bytes as a last resort when the server sends a generic
- * content type. The zip signature is shared by all OOXML formats, but for
- * meeting documents docx is the only zip-based type we serve.
+ * content type. The zip signature is shared by all OOXML formats, so a
+ * "docx" answer here is a best guess — callers must tolerate conversion
+ * failing and fall back to offering a download.
  */
 export function detectKindFromBytes(buffer: ArrayBuffer): DocumentKind {
   const bytes = new Uint8Array(buffer.slice(0, 4));
