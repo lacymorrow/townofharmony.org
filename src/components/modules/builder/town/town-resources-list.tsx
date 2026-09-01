@@ -150,7 +150,8 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 	);
 
 	const typeFilteredResources = React.useMemo(() => {
-		return type ? rawResources.filter((r) => r.type === type) : [...rawResources];
+		const base = type ? rawResources.filter((r) => r.type === type) : [...rawResources];
+		return base.map((r) => ({ ...r, category: (r.category ?? "").trim() }));
 	}, [rawResources, type]);
 
 	const allResources = React.useMemo(
@@ -161,7 +162,7 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 		[typeFilteredResources, categoryParam],
 	);
 
-	// Group resources by category
+	// Group resources by category; empty categories share an unlabeled bucket that renders under "All" only.
 	const categories = React.useMemo(() => {
 		const grouped = new Map<string, typeof allResources>();
 		for (const resource of allResources) {
@@ -175,8 +176,9 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 	}, [allResources]);
 
 	// Derive pills from the type-filtered set so the selector stays visible after a category is chosen.
+	// Skip empty categories — an uncategorized resource has no pill and only surfaces under "All".
 	const uniqueCategories = React.useMemo(
-		() => Array.from(new Set(typeFilteredResources.map((r) => r.category))),
+		() => Array.from(new Set(typeFilteredResources.map((r) => r.category).filter(Boolean))),
 		[typeFilteredResources],
 	);
 
@@ -231,10 +233,12 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 					<div className="space-y-10">
 						{Array.from(categories.entries()).map(
 							([categoryName, resources]) => (
-								<div key={categoryName}>
-									<h2 className="text-xl font-bold text-[#2D2A24] mb-4 pb-2 border-b border-stone">
-										{categoryName}
-									</h2>
+								<div key={categoryName || "__uncategorized"}>
+									{categoryName ? (
+										<h2 className="text-xl font-bold text-[#2D2A24] mb-4 pb-2 border-b border-stone">
+											{categoryName}
+										</h2>
+									) : null}
 									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 										{resources.map((resource) => {
 											const typeColor =
@@ -250,12 +254,14 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 														</div>
 
 														<div className="flex-1 min-w-0">
-															{/* Type Badge */}
-															<span
-																className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium border mb-1.5 ${typeColor}`}
-															>
-																{TYPE_LABELS[resource.type] || resource.type}
-															</span>
+															{/* Type Badge — hidden when Builder returns a cleared type ("") */}
+															{(TYPE_LABELS[resource.type] || resource.type?.trim()) && (
+																<span
+																	className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium border mb-1.5 ${typeColor}`}
+																>
+																	{TYPE_LABELS[resource.type] || resource.type}
+																</span>
+															)}
 
 															<h3 className="text-base font-semibold text-[#2D2A24] group-hover:text-sage-dark transition-colors">
 																{resource.title}

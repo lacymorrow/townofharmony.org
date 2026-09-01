@@ -6,7 +6,8 @@ import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import { DocumentViewer } from "@/components/town/document-viewer";
 import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
-import { useBuilderEntry } from "@/lib/builder-data";
+import { useBuilderData } from "@/lib/builder-data";
+import { findMeetingBySlug, getMeetingSlugBase } from "@/lib/meeting-slug";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownMeetingDetailProps {
@@ -34,12 +35,16 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
     }
   })();
 
-  const staticFallback = staticMeetings.find((m) => m.slug === slug) ?? null;
-  const { data: meeting, loading } = useBuilderEntry<TownMeeting>(
-    "town-meeting",
-    { "data.slug": slug },
-    { fallback: staticFallback }
-  );
+  // Editors reuse slugs across months ("town-council-meeting"), so list links
+  // carry a canonical date-suffixed slug that may not exist verbatim in
+  // Builder. Fetch entries matching either form and resolve client-side:
+  // canonical match first (disambiguates colliding raw slugs by date), then
+  // exact raw match for legacy links.
+  const { data: candidates, loading } = useBuilderData<TownMeeting>("town-meeting", {
+    query: { "data.slug": { $in: [slug, getMeetingSlugBase(slug)] } },
+    fallback: staticMeetings,
+  });
+  const meeting = findMeetingBySlug(candidates, slug) ?? findMeetingBySlug(staticMeetings, slug);
 
   if (loading) {
     return (
@@ -96,14 +101,16 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
           &larr; Back to Meetings
         </Link>
 
-        {/* Type badge */}
-        <div className="mb-4">
-          <span
-            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${typeColors[meeting.type] || typeColors.Council}`}
-          >
-            {meeting.type}
-          </span>
-        </div>
+        {/* Type badge — hidden when Builder returns a cleared type ("") */}
+        {meeting.type?.trim() && (
+          <div className="mb-4">
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${typeColors[meeting.type] || typeColors.Council}`}
+            >
+              {meeting.type}
+            </span>
+          </div>
+        )}
 
         {/* Title */}
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark leading-tight mb-6">

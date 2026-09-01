@@ -132,7 +132,13 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 		fields: [
 			text("name", true),
 			text("title", true),
-			enumText("category", ["Executive", "Town Council", "Board of Aldermen", "Staff"]),
+			enumText("category", [
+				"Executive",
+				"Town Council",
+				"Board of Aldermen",
+				"Department Heads",
+				"Staff",
+			]),
 			emailField("email"),
 			file("image"),
 			phone("phone"),
@@ -233,6 +239,10 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			longText("siteDescription"),
 			phone("contactPhone"),
 			text("contactAddress"),
+			text("contactMailingAddress", false, {
+				helperText:
+					'Mailing address shown on the Contact page (e.g. "P.O. Box 118, Harmony, NC 28634").',
+			}),
 			emailField("contactEmail"),
 			text("officeHoursWeekday"),
 			text("officeHoursWeekend"),
@@ -243,6 +253,45 @@ export const modelDefinitions: BuilderModelDefinition[] = [
 			text("brandingEstablished"),
 			text("brandingCounty"),
 			text("brandingState"),
+			text("homepageHeroBadgeText", false, {
+				helperText: 'Small badge above the hero title (e.g. "Est. 1927 · Iredell County").',
+			}),
+			text("homepageHeroSecondaryCtaText", false, {
+				helperText: "Label for the secondary button in the hero.",
+			}),
+			text("homepageHeroSecondaryCtaHref", false, {
+				helperText: 'URL for the secondary hero button (e.g. "/meetings").',
+			}),
+			text("homepageQuickLinksHeading", false, {
+				helperText: 'Heading above the Town Services grid (e.g. "Town Services").',
+			}),
+			text("homepageQuickLinksSubheading", false, {
+				helperText: "Subheading under the Town Services heading.",
+			}),
+			text("homepageLatestNewsHeading", false, {
+				helperText: 'Heading above the Latest News section (e.g. "Latest News").',
+			}),
+			text("homepageUpcomingEventsHeading", false, {
+				helperText: 'Heading above the Upcoming Events section (e.g. "Upcoming Events").',
+			}),
+			text("homepageSpotlightBadge", false, {
+				helperText: "Small badge label above the spotlight title.",
+			}),
+			text("homepageSpotlightTitle", false, {
+				helperText: "Spotlight card title on the homepage.",
+			}),
+			longText("homepageSpotlightDescription", {
+				helperText: "Body copy for the spotlight card.",
+			}),
+			text("homepageSpotlightCtaText", false, {
+				helperText: 'Label for the spotlight link (e.g. "Learn More").',
+			}),
+			text("homepageSpotlightCtaHref", false, {
+				helperText: 'URL for the spotlight link (e.g. "/history").',
+			}),
+			text("homepageSpotlightImageLetter", false, {
+				helperText: 'Large decorative letter in the spotlight image area (e.g. "H").',
+			}),
 			longText("footerCopyright", {
 				helperText:
 					"Copyright line in the site footer. Supports {year} and {siteTitle} placeholders. Leave blank to use the default.",

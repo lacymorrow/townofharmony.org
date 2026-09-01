@@ -16,8 +16,19 @@ export interface HeroSlide {
   ctaHref?: string;
 }
 
-interface HeroCarouselProps {
+export interface HeroChromeProps {
+  badgeText?: string;
+  secondaryCtaText?: string;
+  secondaryCtaHref?: string;
+}
+
+const DEFAULT_BADGE_TEXT = "Est. 1927 · Iredell County";
+const DEFAULT_SECONDARY_CTA_TEXT = "Meeting Agendas";
+const DEFAULT_SECONDARY_CTA_HREF = "/meetings";
+
+interface HeroCarouselProps extends HeroChromeProps {
   slides: HeroSlide[];
+  textSlide?: HeroSlide;
   autoplayDelayMs?: number;
 }
 
@@ -33,6 +44,44 @@ function firstNonEmpty(...values: (string | undefined | null)[]): string | undef
   return undefined;
 }
 
+/**
+ * A slide only earns a carousel spot when it carries real media. Builder
+ * returns empty strings for cleared image/video fields, so length checks alone
+ * would count blank placeholder slides and rotate through gradient fallbacks
+ * (LAC-2906).
+ */
+function hasMedia(slide?: HeroSlide): boolean {
+  if (!slide) return false;
+  const image = typeof slide.image === "string" ? slide.image.trim() : "";
+  const video = typeof slide.video === "string" ? slide.video.trim() : "";
+  return image !== "" || video !== "";
+}
+
+/**
+ * Single entry point for both render paths (static homepage + Builder page).
+ * The carousel only exists when 2+ slides have real media; otherwise the hero
+ * is a single static slide. Hero copy always comes from the first slide so the
+ * heading/CTA stay intact even if that slide has no image.
+ */
+export function Hero({
+  slides,
+  badgeText,
+  secondaryCtaText,
+  secondaryCtaHref,
+}: { slides: HeroSlide[] } & HeroChromeProps) {
+  const textSlide = slides[0];
+  const mediaSlides = slides.filter(hasMedia);
+  const chrome = { badgeText, secondaryCtaText, secondaryCtaHref };
+
+  if (mediaSlides.length > 1) {
+    return <HeroCarousel slides={mediaSlides} textSlide={textSlide} {...chrome} />;
+  }
+
+  return (
+    <HeroSingleSlide mediaSlide={mediaSlides[0] ?? textSlide} textSlide={textSlide} {...chrome} />
+  );
+}
+
 function usePrefersReducedMotion(): boolean {
   const [prefers, setPrefers] = React.useState(false);
   React.useEffect(() => {
@@ -46,7 +95,14 @@ function usePrefersReducedMotion(): boolean {
   return prefers;
 }
 
-export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselProps) {
+export function HeroCarousel({
+  slides,
+  textSlide,
+  autoplayDelayMs = 6000,
+  badgeText,
+  secondaryCtaText,
+  secondaryCtaHref,
+}: HeroCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [isPaused, setIsPaused] = React.useState(false);
@@ -98,7 +154,12 @@ export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselPro
       <div className="grid min-h-[460px] grid-cols-1 lg:grid-cols-2">
         {/* Text stays static while media rotates; the first (highest-priority)
             slide is the canonical source of hero copy. */}
-        <HeroTextColumn slide={slides[0]} />
+        <HeroTextColumn
+          slide={textSlide ?? slides[0]}
+          badgeText={badgeText}
+          secondaryCtaText={secondaryCtaText}
+          secondaryCtaHref={secondaryCtaHref}
+        />
 
         {/* Media shows on every breakpoint: full-width below lg (stacked under
             the text) and half-width beside it on lg+. A fixed mobile height
@@ -153,7 +214,12 @@ export function HeroCarousel({ slides, autoplayDelayMs = 6000 }: HeroCarouselPro
   );
 }
 
-function HeroTextColumn({ slide }: { slide?: HeroSlide }) {
+function HeroTextColumn({
+  slide,
+  badgeText,
+  secondaryCtaText,
+  secondaryCtaHref,
+}: { slide?: HeroSlide } & HeroChromeProps) {
   // Blank Builder fields fall back to defaults so the primary CTA never renders
   // as an empty button / dead link (LAC-3008).
   const title = firstNonEmpty(slide?.title) ?? "Welcome to the Town of Harmony";
@@ -162,11 +228,18 @@ function HeroTextColumn({ slide }: { slide?: HeroSlide }) {
     "Where Harmony LIVES and SINGS! A proud community rooted in southern tradition, natural beauty, and neighborly spirit.";
   const ctaText = firstNonEmpty(slide?.ctaText) ?? "Discover Harmony";
   const ctaHref = firstNonEmpty(slide?.ctaHref) ?? "/history";
+  const resolvedBadge = firstNonEmpty(badgeText) ?? DEFAULT_BADGE_TEXT;
+  const resolvedSecondaryText = firstNonEmpty(secondaryCtaText) ?? DEFAULT_SECONDARY_CTA_TEXT;
+  const resolvedSecondaryHref = firstNonEmpty(secondaryCtaHref) ?? DEFAULT_SECONDARY_CTA_HREF;
 
   return (
-    <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12">
+    // Hero is full-bleed so the media reaches the page edge; keep the text
+    // left-aligned with the rest of the site by matching the container gutter
+    // (2rem padding, 1400px max-width, centered) once the viewport is wider
+    // than the container (LAC-2906).
+    <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12 lg:pl-[max(2rem,calc((100vw-1400px)/2+2rem))]">
       <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-wheat/30 bg-wheat/15 px-3.5 py-1.5 text-[13px] font-semibold tracking-wide text-[#E8D5A3]">
-        Est. 1927 &middot; Iredell County
+        {resolvedBadge}
       </div>
       <h1 className="mb-4 text-balance font-serif text-3xl font-bold leading-[1.15] md:text-[42px]">
         {title}
@@ -180,10 +253,10 @@ function HeroTextColumn({ slide }: { slide?: HeroSlide }) {
           {ctaText}
         </Link>
         <Link
-          href="/meetings"
+          href={resolvedSecondaryHref}
           className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-7 py-3.5 text-[15px] font-medium text-white transition-colors hover:border-white/30 hover:bg-white/15"
         >
-          Meeting Agendas
+          {resolvedSecondaryText}
         </Link>
       </div>
     </div>
@@ -191,20 +264,37 @@ function HeroTextColumn({ slide }: { slide?: HeroSlide }) {
 }
 
 /**
- * Single-slide hero (renders when 0 or 1 Builder slides exist).
+ * Single-slide hero (renders when 0 or 1 slides carry media). Text and media
+ * are decoupled so the heading/CTA come from the canonical first slide while
+ * the media (if any) comes from the lone media-bearing slide.
  * Client component so it can honor prefers-reduced-motion for video slides.
  */
-export function HeroSingleSlide({ slide }: { slide?: HeroSlide }) {
+export function HeroSingleSlide({
+  mediaSlide,
+  textSlide,
+  badgeText,
+  secondaryCtaText,
+  secondaryCtaHref,
+}: {
+  mediaSlide?: HeroSlide;
+  textSlide?: HeroSlide;
+} & HeroChromeProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const showMedia = hasMedia(mediaSlide);
 
   return (
     <div className="grid min-h-[460px] grid-cols-1 lg:grid-cols-2">
-      <HeroTextColumn slide={slide} />
+      <HeroTextColumn
+        slide={textSlide ?? mediaSlide}
+        badgeText={badgeText}
+        secondaryCtaText={secondaryCtaText}
+        secondaryCtaHref={secondaryCtaHref}
+      />
 
       <div className="relative flex h-[280px] items-center justify-center overflow-hidden sm:h-[360px] lg:h-auto">
-        {slide ? (
+        {showMedia && mediaSlide ? (
           <HeroMedia
-            slide={slide}
+            slide={mediaSlide}
             isActive
             prefersReducedMotion={prefersReducedMotion}
             // No carousel to advance in the single-slide case, so we let the
