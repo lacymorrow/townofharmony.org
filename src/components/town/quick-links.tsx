@@ -13,8 +13,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { navigation } from "@/data/town/navigation";
 import { getHiddenHrefs } from "@/lib/preview-flags";
+import { getSettings } from "@/lib/town-data";
+import { getBuilderNavigation } from "@/lib/town-navigation-server";
 
 const iconMap: Record<string, LucideIcon> = {
 	FileText,
@@ -30,7 +31,11 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 export async function QuickLinks() {
-	const hiddenHrefs = await getHiddenHrefs();
+	const [hiddenHrefs, navigation, settings] = await Promise.all([
+		getHiddenHrefs(),
+		getBuilderNavigation(),
+		getSettings(),
+	]);
 	const quickLinks = navigation.quickLinks.filter((link) => !hiddenHrefs.has(link.href));
 
 	return (
@@ -38,9 +43,9 @@ export async function QuickLinks() {
 			<div className="container mx-auto px-4">
 				<div className="text-center mb-10">
 					<h2 className="text-[32px] font-serif font-bold text-sage-dark mb-2">
-						Town Services
+						{settings.homepage.quickLinksHeading}
 					</h2>
-					<p className="text-[#4A4640] text-base">Find what you need quickly</p>
+					<p className="text-[#4A4640] text-base">{settings.homepage.quickLinksSubheading}</p>
 				</div>
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 					{quickLinks.map((link) => {

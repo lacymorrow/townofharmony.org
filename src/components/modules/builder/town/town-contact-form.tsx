@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, MapPin, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useBuilderEntry } from "@/lib/builder-data";
 import { TownContactForm as ContactFormImpl } from "@/components/modules/town/town-contact-form";
 import { settings as staticSettings, toTownSettings, type BuilderSettingsFlat } from "@/data/town/settings";
@@ -25,6 +25,12 @@ export const TownContactForm = () => {
 			label: "Address",
 			value: settings.contactInfo.address,
 			href: `https://maps.google.com/?q=${encodeURIComponent(settings.contactInfo.address)}`,
+		},
+		{
+			icon: Mail,
+			label: "Mailing Address",
+			value: settings.contactInfo.mailingAddress,
+			href: null,
 		},
 		{
 			icon: Clock,

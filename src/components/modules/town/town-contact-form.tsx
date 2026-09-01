@@ -24,12 +24,19 @@ async function readFileAsBase64(file: File): Promise<string> {
 
 interface FormErrors {
 	firstName?: string;
-	lastName?: string;
 	email?: string;
+	phone?: string;
+	contact?: string;
 	inquiryType?: string;
 	message?: string;
 	attachment?: string;
 }
+
+const PHONE_DIGIT_PATTERN = /\d/g;
+const isPlausiblePhone = (value: string) => {
+	const digits = value.match(PHONE_DIGIT_PATTERN)?.length ?? 0;
+	return digits >= 7;
+};
 
 export const TownContactForm = () => {
 	const [isPending, startTransition] = useTransition();
@@ -38,6 +45,8 @@ export const TownContactForm = () => {
 	const [errors, setErrors] = useState<FormErrors>({});
 	const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 	const turnstileTokenRef = useRef<string | null>(null);
+	const turnstileResetRef = useRef<(() => void) | null>(null);
+	const [turnstileFailed, setTurnstileFailed] = useState(false);
 	const loadedAtRef = useRef(Date.now().toString());
 	const successRef = useRef<HTMLOutputElement | null>(null);
 
@@ -69,10 +78,18 @@ export const TownContactForm = () => {
 	const validate = (form: FormData): FormErrors => {
 		const errs: FormErrors = {};
 		if (!form.get("firstName")) errs.firstName = "First name is required";
-		if (!form.get("lastName")) errs.lastName = "Last name is required";
-		const email = form.get("email") as string;
-		if (!email) errs.email = "Email is required";
-		else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = "Please enter a valid email";
+		const email = ((form.get("email") as string) ?? "").trim();
+		const phone = ((form.get("phone") as string) ?? "").trim();
+		if (!email && !phone) {
+			errs.contact = "Please provide an email address or a phone number so we can reply.";
+		} else {
+			if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+				errs.email = "Please enter a valid email";
+			}
+			if (phone && !isPlausiblePhone(phone)) {
+				errs.phone = "Please enter a valid phone number";
+			}
+		}
 		if (!form.get("inquiryType")) errs.inquiryType = "Please select an inquiry type";
 		const message = form.get("message") as string;
 		if (!message || message.length < 10) errs.message = "Message must be at least 10 characters";
@@ -120,9 +137,9 @@ export const TownContactForm = () => {
 		startTransition(async () => {
 			const result = await submitTownContactForm({
 				firstName: form.get("firstName") as string,
-				lastName: form.get("lastName") as string,
-				email: form.get("email") as string,
-				phone: (form.get("phone") as string) || undefined,
+				lastName: (form.get("lastName") as string) || undefined,
+				email: ((form.get("email") as string) || "").trim() || undefined,
+				phone: ((form.get("phone") as string) || "").trim() || undefined,
 				inquiryType: form.get("inquiryType") as TownContactFormData["inquiryType"],
 				message: form.get("message") as string,
 				attachment,
@@ -135,6 +152,9 @@ export const TownContactForm = () => {
 				setSubmitted(true);
 			} else {
 				setServerError(result.error ?? "Something went wrong.");
+				// Turnstile tokens are single-use — get a fresh one for the retry.
+				turnstileTokenRef.current = null;
+				turnstileResetRef.current?.();
 			}
 		});
 	};
@@ -206,46 +226,51 @@ export const TownContactForm = () => {
 					/>
 				</FieldWrapper>
 
-				<FieldWrapper label="Last Name" id="lastName" error={errors.lastName} required>
+				<FieldWrapper label="Last Name" id="lastName" hint="Optional">
 					<input
 						id="lastName"
 						name="lastName"
 						type="text"
 						autoComplete="family-name"
-						required
-						aria-required="true"
-						aria-invalid={!!errors.lastName}
-						aria-describedby={errors.lastName ? "lastName-error" : undefined}
-						className={inputClass(!!errors.lastName)}
+						className={inputClass(false)}
 					/>
 				</FieldWrapper>
 			</div>
 
+			<p className="text-sm text-[#635E56]">
+				Please provide an email address <em>or</em> a phone number so we can reply.
+			</p>
+
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-				<FieldWrapper label="Email" id="email" error={errors.email} required>
+				<FieldWrapper label="Email" id="email" error={errors.email}>
 					<input
 						id="email"
 						name="email"
 						type="email"
 						autoComplete="email"
-						required
-						aria-required="true"
 						aria-invalid={!!errors.email}
 						aria-describedby={errors.email ? "email-error" : undefined}
-						className={inputClass(!!errors.email)}
+						className={inputClass(!!errors.email || !!errors.contact)}
 					/>
 				</FieldWrapper>
 
-				<FieldWrapper label="Phone" id="phone" hint="Optional">
+				<FieldWrapper label="Phone" id="phone" error={errors.phone}>
 					<input
 						id="phone"
 						name="phone"
 						type="tel"
 						autoComplete="tel"
-						className={inputClass(false)}
+						aria-invalid={!!errors.phone}
+						aria-describedby={errors.phone ? "phone-error" : undefined}
+						className={inputClass(!!errors.phone || !!errors.contact)}
 					/>
 				</FieldWrapper>
 			</div>
+			{errors.contact && (
+				<p className="-mt-2 text-xs text-red-600" role="alert">
+					{errors.contact}
+				</p>
+			)}
 
 			<FieldWrapper label="Inquiry Type" id="inquiryType" error={errors.inquiryType} required>
 				<select
@@ -347,11 +372,22 @@ export const TownContactForm = () => {
 			<Turnstile
 				onVerify={(token) => {
 					turnstileTokenRef.current = token;
+					setTurnstileFailed(false);
+				}}
+				onError={() => {
+					setTurnstileFailed(true);
 				}}
 				onExpire={() => {
 					turnstileTokenRef.current = null;
 				}}
+				resetRef={turnstileResetRef}
 			/>
+			{turnstileFailed && (
+				<p className="text-xs text-red-600" role="alert">
+					The security check couldn't load. Please refresh the page and try again — or call Town
+					Hall if the problem continues.
+				</p>
+			)}
 
 			<button
 				type="submit"

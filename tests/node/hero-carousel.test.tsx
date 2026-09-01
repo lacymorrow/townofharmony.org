@@ -40,6 +40,27 @@ describe("HeroCarousel", () => {
     expect(html).not.toContain("Third slide description");
   });
 
+  it("falls back to default CTA text/href when the first slide's fields are blank", () => {
+    // Builder returns empty strings (not undefined) for cleared fields, which
+    // used to render an empty primary CTA button + dead link (LAC-3008).
+    const blankCtaSlides: HeroSlide[] = [
+      {
+        title: "Welcome to the Town of Harmony",
+        description: "Static hero copy.",
+        ctaText: "",
+        ctaHref: "",
+        image: "/images/town/hero-slider-1.jpg",
+      },
+      { title: "Second", image: "/images/town/about-hero.png" },
+    ];
+    const html = renderToString(<HeroCarousel slides={blankCtaSlides} />);
+
+    expect(html).toContain("Discover Harmony");
+    expect(html).toContain('href="/history"');
+    // The primary CTA must never render as an empty anchor.
+    expect(html).not.toContain('href=""');
+  });
+
   it("still renders every slide's media and one dot per slide", () => {
     const html = renderToString(<HeroCarousel slides={slides} />);
 
@@ -47,6 +68,18 @@ describe("HeroCarousel", () => {
     expect(html.match(/Go to slide/g)).toHaveLength(slides.length);
     expect(html.match(/<video/g)).toHaveLength(1);
     expect(html.match(/<img/g)).toHaveLength(2);
+  });
+
+  it("keeps the media pane and dots visible on mobile (not lg-only)", () => {
+    // Regression for LAC-3008: media used to be `hidden lg:block`, so mobile
+    // showed a text-only hero. It must render at every breakpoint.
+    const html = renderToString(<HeroCarousel slides={slides} />);
+
+    // The media pane carries a mobile height instead of being display:none.
+    expect(html).toContain("h-[280px]");
+    // No element should use the standalone `hidden` class (which hides it on
+    // mobile). Matches " hidden " but not "overflow-hidden".
+    expect(html).not.toMatch(/\shidden[\s"]/);
   });
 });
 
