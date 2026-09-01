@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CommunityCenterReservationForm } from "@/components/modules/town/community-center-reservation-form";
 import { siteConfig } from "@/config/site-config";
 import { getMapUrl } from "@/lib/map-utils";
 import { getBuilderSettings } from "@/lib/town-settings-server";
@@ -28,8 +29,8 @@ export default async function CommunityCenterReservationPage() {
 				</h1>
 				<p className="text-[#2D2A24] mb-6">
 					The Harmony Community Center may be reserved for community gatherings,
-					private events, and meetings. To request a reservation, please contact
-					Town Hall directly:
+					private events, and meetings. Submit the application form below to
+					request a reservation, or contact Town Hall directly:
 				</p>
 
 				<div className="bg-white border border-stone rounded p-5 mb-8">
@@ -87,7 +88,17 @@ export default async function CommunityCenterReservationPage() {
 					<li>Day-before decoration available 3:00 PM – 5:00 PM for an additional $50 (only if the building is unrented that day)</li>
 				</ul>
 
-
+				<h2
+					id="reservation-form"
+					className="text-2xl font-serif font-bold text-sage-dark mb-3 scroll-mt-24"
+				>
+					Reservation Application
+				</h2>
+				<p className="text-[#2D2A24] mb-4">
+					Submitting this form sends your request to Town Hall. A reservation is
+					not confirmed until the application and payment are received.
+				</p>
+				<CommunityCenterReservationForm />
 			</div>
 		</article>
 	);
