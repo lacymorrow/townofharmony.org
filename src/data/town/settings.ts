@@ -6,7 +6,7 @@ export const settings: TownSettings = {
 	contactInfo: {
 		phone: "(704) 546-2339",
 		address: "3389 Harmony Hwy, Harmony, NC 28634",
-		mailingAddress: "P.O. Box 118, Harmony, NC 28634",
+		mailingAddress: "3389 Harmony Hwy, Harmony, NC 28634\nP.O. Box 118, Harmony, NC 28634",
 		email: "info@townofharmony.org",
 		streetAddress: "3389 Harmony Hwy",
 		city: "Harmony",
