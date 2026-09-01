@@ -6,7 +6,12 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.stubEnv("NEXT_PUBLIC_BUILDER_API_KEY", "test-builder-key");
+// The module under test reads the API key at module scope; ES imports hoist
+// above any top-level `vi.stubEnv` call, so the stub must be hoisted too or
+// the key is only present when a local `.env` happens to supply it.
+vi.hoisted(() => {
+	process.env.NEXT_PUBLIC_BUILDER_API_KEY = "test-builder-key";
+});
 
 import { fetchBuilderEntries } from "@/lib/builder-content-fetch";
 
@@ -109,5 +114,32 @@ describe("fetchBuilderEntries pagination", () => {
 			const url = new URL(call[0] as string);
 			expect(url.searchParams.get("sort.meetingDate")).toBe("-1");
 		}
+	});
+
+	it("returns empty when a page fails mid-pagination instead of a silently truncated set", async () => {
+		fetchMock
+			.mockResolvedValueOnce(respondWith(makePage(100)))
+			.mockResolvedValueOnce(new Response("upstream error", { status: 500 }));
+
+		const { results, count } = await fetchBuilderEntries("town-meeting", {
+			limit: 1000,
+		});
+
+		expect(results).toHaveLength(0);
+		expect(count).toBe(0);
+	});
+
+	it("treats offset: 0 like an omitted offset and still paginates", async () => {
+		fetchMock
+			.mockResolvedValueOnce(respondWith(makePage(100)))
+			.mockResolvedValueOnce(respondWith(makePage(30)));
+
+		const { results } = await fetchBuilderEntries("town-meeting", {
+			limit: 1000,
+			offset: 0,
+		});
+
+		expect(results).toHaveLength(130);
+		expect(fetchMock).toHaveBeenCalledTimes(2);
 	});
 });

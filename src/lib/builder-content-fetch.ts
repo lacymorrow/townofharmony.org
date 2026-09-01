@@ -55,13 +55,17 @@ export async function fetchBuilderEntries<T>(
 	}
 
 	const requestedLimit = options?.limit ?? BUILDER_PAGE_SIZE;
-	const callerOffset = options?.offset;
+	// `offset: 0` means "from the start", same as omitting it — only a real
+	// caller-driven offset opts out of internal pagination.
+	const callerOffset = options?.offset || undefined;
 	const paginate = callerOffset === undefined && requestedLimit > BUILDER_PAGE_SIZE;
 
+	// `null` signals a failed request, distinct from an empty page (end of
+	// data) — a partial result set must not masquerade as a complete one.
 	const fetchOnePage = async (
 		pageLimit: number,
 		offset: number,
-	): Promise<BuilderContentEntry<T>[]> => {
+	): Promise<BuilderContentEntry<T>[] | null> => {
 		const url = new URL(`${BUILDER_CDN_BASE}/${modelName}`);
 		url.searchParams.set("apiKey", BUILDER_API_KEY);
 		url.searchParams.set("limit", String(pageLimit));
@@ -89,7 +93,7 @@ export async function fetchBuilderEntries<T>(
 		});
 
 		if (!res.ok) {
-			return [];
+			return null;
 		}
 
 		const json: BuilderContentResponse<T> = await res.json();
@@ -98,7 +102,7 @@ export async function fetchBuilderEntries<T>(
 
 	if (!paginate) {
 		const pageLimit = Math.min(requestedLimit, BUILDER_PAGE_SIZE);
-		const results = await fetchOnePage(pageLimit, callerOffset ?? 0);
+		const results = (await fetchOnePage(pageLimit, callerOffset ?? 0)) ?? [];
 		return { results, count: results.length };
 	}
 
@@ -108,6 +112,12 @@ export async function fetchBuilderEntries<T>(
 		const remaining = requestedLimit - collected.length;
 		const pageLimit = Math.min(remaining, BUILDER_PAGE_SIZE);
 		const page = await fetchOnePage(pageLimit, offset);
+		if (page === null) {
+			// A failed page mid-pagination would silently truncate the set —
+			// exactly the bug this fixes. Fail the whole call to empty so
+			// callers' static fallbacks engage, matching single-request errors.
+			return { results: [], count: 0 };
+		}
 		if (page.length === 0) break;
 		collected.push(...page);
 		if (page.length < pageLimit) break;
