@@ -254,12 +254,14 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 														</div>
 
 														<div className="flex-1 min-w-0">
-															{/* Type Badge */}
-															<span
-																className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium border mb-1.5 ${typeColor}`}
-															>
-																{TYPE_LABELS[resource.type] || resource.type}
-															</span>
+															{/* Type Badge — hidden when Builder returns a cleared type ("") */}
+															{(TYPE_LABELS[resource.type] || resource.type?.trim()) && (
+																<span
+																	className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium border mb-1.5 ${typeColor}`}
+																>
+																	{TYPE_LABELS[resource.type] || resource.type}
+																</span>
+															)}
 
 															<h3 className="text-base font-semibold text-[#2D2A24] group-hover:text-sage-dark transition-colors">
 																{resource.title}
