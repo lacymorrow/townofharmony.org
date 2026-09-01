@@ -39,9 +39,11 @@ const HistoryCard = ({ article }: { article: TownHistoryArticle }) => (
               {article.year}
             </span>
           )}
-          <span className="bg-stone/60 text-[#4A4640] px-2.5 py-0.5 rounded-full text-xs capitalize">
-            {article.type}
-          </span>
+          {article.type && (
+            <span className="bg-stone/60 text-[#4A4640] px-2.5 py-0.5 rounded-full text-xs capitalize">
+              {article.type}
+            </span>
+          )}
         </div>
 
         <h2 className="text-xl font-semibold text-[#2D2A24] mb-2 leading-snug">{article.title}</h2>
@@ -61,6 +63,7 @@ const HistoryCard = ({ article }: { article: TownHistoryArticle }) => (
                   className="w-3.5 h-3.5 mt-0.5 text-sage flex-shrink-0"
                   fill="currentColor"
                   viewBox="0 0 20 20"
+                  aria-hidden="true"
                 >
                   <path
                     fillRule="evenodd"
@@ -82,6 +85,7 @@ const HistoryCard = ({ article }: { article: TownHistoryArticle }) => (
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
