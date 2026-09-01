@@ -7,6 +7,7 @@ import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownEvent } from "@/data/town/types";
 import { resolveBuilderRef } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
+import { deriveEventStatus, type EventDisplayStatus } from "@/lib/event-status";
 import { getMapUrl } from "@/lib/map-utils";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 
@@ -23,7 +24,7 @@ const safeDate = (dateStr: unknown): Date | null => {
   return Number.isNaN(d.getTime()) ? null : d;
 };
 
-const statusColors: Record<string, string> = {
+const statusColors: Record<EventDisplayStatus, string> = {
   upcoming: "bg-sage/15 text-sage-dark border-sage/30",
   past: "bg-stone/50 text-sage-dark/60 border-stone",
   cancelled: "bg-barn-red/15 text-barn-red border-barn-red/30",
@@ -81,6 +82,7 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
     );
   }
 
+  const displayStatus = deriveEventStatus(event);
   const parsedDate = safeDate(event.eventDate);
   const eventDate = parsedDate
     ? parsedDate.toLocaleDateString("en-US", {
@@ -105,9 +107,9 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
         {/* Status badge and categories */}
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <span
-            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${statusColors[event.status] || statusColors.upcoming}`}
+            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${statusColors[displayStatus]}`}
           >
-            {event.status}
+            {displayStatus}
           </span>
           {safeCategories(event).map((category) => (
             <span

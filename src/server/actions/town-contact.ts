@@ -158,10 +158,10 @@ export async function submitTownContactForm(
 			return {
 				success: false,
 				error:
-					"The security check hasn't finished loading. Please wait a moment and try again, or call Town Hall.",
+					'Please check the "Verify you are human" box above the Send button, then try again. If it hasn\'t appeared yet, give it a moment — or call Town Hall.',
 			};
 		}
-		if (!(await verifyTurnstileToken(turnstileToken, ip))) {
+		if (!(await verifyTurnstileToken(turnstileToken))) {
 			logger.warn("Turnstile verification failed", {
 				context: "town-contact-form",
 				ip,
@@ -169,7 +169,8 @@ export async function submitTownContactForm(
 			});
 			return {
 				success: false,
-				error: "The security check could not be verified. Please try again, or call Town Hall.",
+				error:
+					'The security check could not be verified. Please re-check the "Verify you are human" box and try again, or call Town Hall.',
 			};
 		}
 	}

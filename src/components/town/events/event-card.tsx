@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { LightboxImage } from "@/components/ui/lightbox-image";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { formatDate, formatTime } from "@/lib/utils";
 
 interface EventCardProps {
@@ -27,6 +28,8 @@ interface EventCardProps {
 export function EventCard({ event }: EventCardProps) {
 	const eventDate = new Date(event.eventDate);
 	const isPast = eventDate < new Date();
+	// Builder rich text descriptions arrive as HTML strings — show plain text in previews
+	const description = htmlToPlainText(event.description);
 
 	return (
 		<Card className="hover:shadow-md transition-shadow">
@@ -72,8 +75,8 @@ export function EventCard({ event }: EventCardProps) {
 						</div>
 					</div>
 
-					{event.description && (
-						<p className="text-muted-foreground text-sm mt-2 line-clamp-1">{event.description}</p>
+					{description && (
+						<p className="text-muted-foreground text-sm mt-2 line-clamp-1">{description}</p>
 					)}
 
 					<div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-muted-foreground">
