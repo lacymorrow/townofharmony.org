@@ -10,12 +10,12 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const dynamicParams = true;
-export const revalidate = 3600;
-
-export async function generateStaticParams() {
-  return [];
-}
+// Builder's page/entry fetch and our Builder list fetch both call dynamic APIs
+// (headers/cookies via preview mode + no-store), so this route can't be
+// prerendered by ISR — attempting to do so surfaces as `DYNAMIC_SERVER_USAGE`
+// 500s on every meeting-detail URL in prod. Force dynamic rendering per
+// request; the underlying Builder responses are still React-cache/deduped.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
