@@ -101,14 +101,16 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
           &larr; Back to Meetings
         </Link>
 
-        {/* Type badge */}
-        <div className="mb-4">
-          <span
-            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${typeColors[meeting.type] || typeColors.Council}`}
-          >
-            {meeting.type}
-          </span>
-        </div>
+        {/* Type badge — hidden when Builder returns a cleared type ("") */}
+        {meeting.type?.trim() && (
+          <div className="mb-4">
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${typeColors[meeting.type] || typeColors.Council}`}
+            >
+              {meeting.type}
+            </span>
+          </div>
+        )}
 
         {/* Title */}
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark leading-tight mb-6">

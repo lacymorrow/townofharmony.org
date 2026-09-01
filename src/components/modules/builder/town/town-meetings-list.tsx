@@ -252,8 +252,11 @@ export const TownMeetingsList = ({
           <div className="space-y-4">
             {docs.map((meeting) => {
               const meetingDate = new Date(meeting.meetingDate);
+              // Builder returns cleared fields as "" — skip the pill entirely
+              // rather than render an empty badge (LAC-3622).
+              const typeLabel = meeting.type?.trim();
               const badgeClass =
-                TYPE_BADGE_COLORS[meeting.type] || "bg-stone text-[#4A4640] border-stone";
+                TYPE_BADGE_COLORS[typeLabel ?? ""] || "bg-stone text-[#4A4640] border-stone";
               // Editors reuse slugs across months ("town-council-meeting"), so
               // link by canonical date-suffixed slug to keep every row unique.
               const slug = getCanonicalMeetingSlug(meeting);
@@ -281,11 +284,13 @@ export const TownMeetingsList = ({
                     {/* Meeting Content */}
                     <div className="flex-1 p-5 md:py-4">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${badgeClass}`}
-                        >
-                          {meeting.type}
-                        </span>
+                        {typeLabel && (
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${badgeClass}`}
+                          >
+                            {typeLabel}
+                          </span>
+                        )}
                         {(meeting.videoUrl || meeting.audioUrl) && (
                           <span className="bg-sage/10 text-sage-dark px-2 py-0.5 rounded-full text-xs">
                             Recording Available
