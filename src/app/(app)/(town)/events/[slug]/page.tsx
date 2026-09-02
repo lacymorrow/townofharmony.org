@@ -5,6 +5,7 @@ import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { getMapUrl } from "@/lib/map-utils";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 import { resolveEvents, getEventBySlug } from "@/lib/town-data";
 
 interface PageProps {
@@ -89,9 +90,14 @@ export default async function EventDetailPage({ params }: PageProps) {
 						/>
 					</div>
 				)}
-				<div className="prose prose-sage max-w-none text-[#2D2A24]">
-					<p>{event.content}</p>
-				</div>
+				{event.content && (
+					<div
+						className="prose prose-sage max-w-none text-[#2D2A24]"
+						// Builder richText fields store HTML strings (LAC-3559); the body
+						// must be sanitized + rendered as HTML, not printed literally (LAC-3642).
+						dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.content) }}
+					/>
+				)}
 				{(event.contactPhone || event.contactEmail) && (
 					<div className="mt-8 p-4 bg-white border border-stone rounded">
 						<h2 className="font-semibold mb-2">Contact</h2>
