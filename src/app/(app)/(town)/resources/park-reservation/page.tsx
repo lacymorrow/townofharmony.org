@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site-config";
 import { getMapUrl } from "@/lib/map-utils";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 const PARK_ADDRESS = "187 Highland Point Ave, Harmony, NC 28634";
@@ -39,6 +41,7 @@ export default async function ParkReservationPage() {
 					>
 						187 Highland Point Ave
 					</a>
+					<AddressCopyButton address={PARK_ADDRESS} label="Tomlinson-Moore Family Park" tone="default" />
 					) may be reserved for events. Reservation of the shelter does not
 					include exclusive use of the park or the Community Center.
 				</p>
@@ -46,19 +49,25 @@ export default async function ParkReservationPage() {
 				<div className="bg-white border border-stone rounded p-5 mb-8">
 					<p className="font-semibold">Town Hall</p>
 					<p>
-						<a href={telHref} className="text-sage-dark hover:underline">
-							{settings.contactInfo.phone}
-						</a>
+						<span className="inline-flex items-center gap-1">
+							<a href={telHref} className="text-sage-dark hover:underline">
+								{settings.contactInfo.phone}
+							</a>
+							<PhoneCopyButton phone={settings.contactInfo.phone} label="Town Hall" tone="default" />
+						</span>
 					</p>
 					<p className="text-sm text-[#4A4640] mt-2">
-						<a
-							href={getMapUrl(settings.contactInfo.address)}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="hover:text-sage-dark hover:underline transition-colors"
-						>
-							{settings.contactInfo.address}
-						</a>
+						<span className="inline-flex items-center gap-1">
+							<a
+								href={getMapUrl(settings.contactInfo.address)}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:text-sage-dark hover:underline transition-colors"
+							>
+								{settings.contactInfo.address}
+							</a>
+							<AddressCopyButton address={settings.contactInfo.address} label="Town Hall" tone="default" />
+						</span>
 						<br />
 						{settings.officeHours.weekday}
 					</p>
@@ -81,9 +90,12 @@ export default async function ParkReservationPage() {
 
 				<p className="text-[#2D2A24]">
 					Report issues during your reservation to Town Hall at{" "}
-					<a href={telHref} className="text-sage-dark hover:underline">
-						{settings.contactInfo.phone}
-					</a>
+					<span className="inline-flex items-center gap-1">
+						<a href={telHref} className="text-sage-dark hover:underline">
+							{settings.contactInfo.phone}
+						</a>
+						<PhoneCopyButton phone={settings.contactInfo.phone} label="Town Hall" tone="default" />
+					</span>
 					.
 				</p>
 			</div>

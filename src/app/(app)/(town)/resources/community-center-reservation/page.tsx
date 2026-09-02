@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { CommunityCenterReservationForm } from "@/components/modules/town/community-center-reservation-form";
 import { siteConfig } from "@/config/site-config";
 import { getMapUrl } from "@/lib/map-utils";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
@@ -36,22 +38,28 @@ export default async function CommunityCenterReservationPage() {
 				<div className="bg-white border border-stone rounded p-5 mb-8">
 					<p className="font-semibold">Town Hall</p>
 					<p>
-						<a
-							href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
-							className="text-sage-dark hover:underline"
-						>
-							{settings.contactInfo.phone}
-						</a>
+						<span className="inline-flex items-center gap-1">
+							<a
+								href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
+								className="text-sage-dark hover:underline"
+							>
+								{settings.contactInfo.phone}
+							</a>
+							<PhoneCopyButton phone={settings.contactInfo.phone} label="Town Hall" tone="default" />
+						</span>
 					</p>
 					<p className="text-sm text-[#4A4640] mt-2">
-						<a
-							href={getMapUrl(settings.contactInfo.address)}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="hover:text-sage-dark hover:underline transition-colors"
-						>
-							{settings.contactInfo.address}
-						</a>
+						<span className="inline-flex items-center gap-1">
+							<a
+								href={getMapUrl(settings.contactInfo.address)}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:text-sage-dark hover:underline transition-colors"
+							>
+								{settings.contactInfo.address}
+							</a>
+							<AddressCopyButton address={settings.contactInfo.address} label="Town Hall" tone="default" />
+						</span>
 						<br />
 						{settings.officeHours.weekday}
 					</p>

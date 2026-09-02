@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { useBuilderData } from "@/lib/builder-data";
 import { resources as staticResources } from "@/data/town/resources";
 import type { TownResource } from "@/data/town/types";
@@ -279,7 +280,10 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
 																resource.contactEmail) && (
 																<div className="mt-2 space-y-0.5 text-sm text-[#635E56]">
 																	{resource.contactPhone && (
-																		<p>Phone: {resource.contactPhone}</p>
+																		<p className="flex items-center gap-2">
+																			Phone: {resource.contactPhone}
+																			<PhoneCopyButton phone={resource.contactPhone} label={resource.title} />
+																		</p>
 																	)}
 																	{resource.contactEmail && (
 																		<p>Email: {resource.contactEmail}</p>

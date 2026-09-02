@@ -9,12 +9,15 @@ import {
 	Share2,
 	Star,
 } from "lucide-react";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { PayloadRichText } from "@/components/town/payload-rich-text";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownBusiness } from "@/data/town/types";
+import { getMapUrl } from "@/lib/map-utils";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
 
 interface BusinessDetailProps {
@@ -152,8 +155,16 @@ export function BusinessDetail({ business }: BusinessDetailProps) {
 								<div className="flex items-start gap-3">
 									<MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
 									<div>
-										<p>{business.address}</p>
+										<a
+											href={getMapUrl(business.address)}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="hover:text-sage transition-colors"
+										>
+											{business.address}
+										</a>
 									</div>
+									<AddressCopyButton address={business.address} label={business.name} tone="default" />
 								</div>
 							)}
 
@@ -166,6 +177,7 @@ export function BusinessDetail({ business }: BusinessDetailProps) {
 									>
 										{business.phone}
 									</a>
+									<PhoneCopyButton phone={business.phone} label={business.name} tone="default" />
 								</div>
 							)}
 

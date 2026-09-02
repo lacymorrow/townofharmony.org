@@ -3,6 +3,9 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { LightboxImage } from "@/components/ui/lightbox-image";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
+import { getMapUrl } from "@/lib/map-utils";
 
 interface BusinessCardProps {
 	business: {
@@ -89,7 +92,15 @@ export function BusinessCard({ business }: BusinessCardProps) {
 					{business.address && (
 						<div className="flex items-start gap-2">
 							<MapPin className="h-4 w-4 text-muted-foreground mt-0.5" aria-hidden="true" />
-							<span className="line-clamp-2">{business.address}</span>
+							<a
+								href={getMapUrl(business.address)}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="line-clamp-2 hover:text-sage-dark transition-colors"
+							>
+								{business.address}
+							</a>
+							<AddressCopyButton address={business.address} label={business.name} tone="default" />
 						</div>
 					)}
 
@@ -99,6 +110,7 @@ export function BusinessCard({ business }: BusinessCardProps) {
 							<a href={`tel:${business.phone}`} className="hover:text-sage-dark transition-colors">
 								{business.phone}
 							</a>
+							<PhoneCopyButton phone={business.phone} label={business.name} tone="default" />
 						</div>
 					)}
 

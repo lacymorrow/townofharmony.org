@@ -1,6 +1,8 @@
 import { Facebook, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
 
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { navigation as defaultNavData } from "@/data/town/navigation";
 import { renderCopyright } from "@/data/town/settings";
 import type { TownNavigation, TownSettings } from "@/data/town/types";
@@ -45,8 +47,17 @@ export function TownFooter({
 							>
 								{settings.contactInfo.address}
 							</a>
+							<AddressCopyButton address={settings.contactInfo.address} label={settings.siteTitle} tone="onDark" />
 							<br />
-							<span className="whitespace-nowrap">{settings.contactInfo.phone}</span>
+							<span className="inline-flex items-center gap-1 whitespace-nowrap">
+								<a
+									href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
+									className="hover:text-wheat transition-colors"
+								>
+									{settings.contactInfo.phone}
+								</a>
+								<PhoneCopyButton phone={settings.contactInfo.phone} label={settings.siteTitle} tone="onDark" />
+							</span>
 						</p>
 						{(settings.officeHours.weekday || settings.officeHours.weekend) && (
 							<p className="text-sm leading-relaxed mt-2">
