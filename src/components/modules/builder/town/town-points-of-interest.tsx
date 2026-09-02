@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import { useBuilderData } from "@/lib/builder-data";
 import { getMapUrl } from "@/lib/map-utils";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { isExternalUrl, isSafeUrl } from "@/lib/utils";
 import { pointsOfInterest as staticPOIs } from "@/data/town/points-of-interest";
 import type { TownPointOfInterest } from "@/data/town/types";
@@ -181,7 +182,7 @@ export const TownPointsOfInterest = ({
 										)}
 									</h2>
 									<p className="text-base text-[#4A4640] mb-3 line-clamp-2">
-										{poi.description}
+										{htmlToPlainText(poi.description)}
 									</p>
 
 									<div className="space-y-1.5 text-sm text-[#635E56]">
