@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { sewerContactInfo, isSewerVisible } from "@/data/town/sewer-rates";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
 	title: "Payment Successful",
@@ -25,6 +26,7 @@ export default async function SewerPaymentSuccessPage({ searchParams }: PageProp
 		notFound();
 	}
 	const { session_id } = await searchParams;
+	const sewerCopy = (await getBuilderSettings()).sewer;
 
 	let accountNumber: string | undefined;
 	let amount: string | undefined;
@@ -49,7 +51,7 @@ export default async function SewerPaymentSuccessPage({ searchParams }: PageProp
 				<CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500" />
 				<h1 className="text-3xl font-bold tracking-tight">Payment Successful</h1>
 				<p className="mt-2 text-muted-foreground">
-					Thank you for your sewer bill payment.
+					{sewerCopy.successCopy}
 				</p>
 			</div>
 
@@ -97,7 +99,7 @@ export default async function SewerPaymentSuccessPage({ searchParams }: PageProp
 
 			<p className="mt-8 text-center text-sm text-muted-foreground">
 				Questions about your payment? Contact {sewerContactInfo.department} at{" "}
-				{sewerContactInfo.phone}
+				{sewerCopy.contactPhone}
 			</p>
 		</div>
 	);

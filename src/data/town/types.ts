@@ -243,6 +243,17 @@ export interface TownSettings {
 		county: string;
 		state: string;
 	};
+	sewer: {
+		contactAddress: string;
+		contactPhone: string;
+		contactHours: string;
+		contactEmail: string;
+		pageHeading: string;
+		pageDescription: string;
+		paymentHeading: string;
+		successCopy: string;
+		cancelCopy: string;
+	};
 	homepage: {
 		heroBadgeText: string;
 		heroSecondaryCtaText: string;

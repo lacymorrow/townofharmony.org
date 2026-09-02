@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
+import { getBuilderSettings } from "@/lib/town-settings-server";
 import { siteConfig } from "@/config/site-config";
 
 interface BuilderSewerRate {
@@ -41,6 +42,8 @@ export default async function SewerPage() {
 		notFound();
 	}
 
+	const sewerCopy = (await getBuilderSettings()).sewer;
+
 	let displayRates: SewerRateTier[] = sewerRateTiers;
 	try {
 		const { results } = await fetchBuilderContent<BuilderSewerRate>("town-sewer-rate", {
@@ -71,9 +74,9 @@ export default async function SewerPage() {
 	return (
 		<div className="container mx-auto max-w-4xl px-4 py-12">
 			<div className="mb-8">
-				<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Sewer Services</h1>
+				<h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{sewerCopy.pageHeading}</h1>
 				<p className="mt-2 text-lg text-muted-foreground">
-					The Town of Harmony provides sewer services to residential and nonresidential properties.
+					{sewerCopy.pageDescription}
 				</p>
 			</div>
 
@@ -113,8 +116,8 @@ export default async function SewerPage() {
 					<p className="text-muted-foreground">
 						To pay your sewer bill, please visit Town Hall or contact the{" "}
 						{sewerContactInfo.department} at{" "}
-						<a href={`tel:${sewerContactInfo.phone.replace(/[^0-9+]/g, "")}`} className="font-medium underline">
-							{sewerContactInfo.phone}
+						<a href={`tel:${sewerCopy.contactPhone.replace(/[^0-9+]/g, "")}`} className="font-medium underline">
+							{sewerCopy.contactPhone}
 						</a>{" "}
 						or use our{" "}
 						<a href="/contact" className="font-medium underline">
@@ -132,7 +135,7 @@ export default async function SewerPage() {
 							<Phone className="mt-0.5 h-5 w-5 text-muted-foreground" />
 							<div>
 								<p className="text-sm font-medium">Phone</p>
-								<p className="text-sm text-muted-foreground">{sewerContactInfo.phone}</p>
+								<p className="text-sm text-muted-foreground">{sewerCopy.contactPhone}</p>
 							</div>
 						</div>
 						<div className="flex items-start gap-3">
@@ -146,14 +149,14 @@ export default async function SewerPage() {
 							<Clock className="mt-0.5 h-5 w-5 text-muted-foreground" />
 							<div>
 								<p className="text-sm font-medium">Office Hours</p>
-								<p className="text-sm text-muted-foreground">{sewerContactInfo.hours}</p>
+								<p className="text-sm text-muted-foreground">{sewerCopy.contactHours}</p>
 							</div>
 						</div>
 						<div className="flex items-start gap-3">
 							<MapPin className="mt-0.5 h-5 w-5 text-muted-foreground" />
 							<div>
 								<p className="text-sm font-medium">Address</p>
-								<p className="text-sm text-muted-foreground">{sewerContactInfo.address}</p>
+								<p className="text-sm text-muted-foreground">{sewerCopy.contactAddress}</p>
 							</div>
 						</div>
 					</CardContent>

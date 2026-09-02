@@ -25,7 +25,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { SEWER_ACCOUNT_REGEX, sewerContactInfo, type SewerRateDisplay } from "@/data/town/sewer-rates";
+import { SEWER_ACCOUNT_REGEX, type SewerRateDisplay } from "@/data/town/sewer-rates";
 import { createSewerCheckoutSession } from "@/server/actions/sewer-payments";
 
 const sewerPaymentFormSchema = z.object({
@@ -44,9 +44,11 @@ type SewerPaymentFormData = z.infer<typeof sewerPaymentFormSchema>;
 interface SewerPaymentFormProps {
 	stripeEnabled: boolean;
 	rates: SewerRateDisplay[];
+	contactDepartment: string;
+	contactPhone: string;
 }
 
-export const SewerPaymentForm = ({ stripeEnabled, rates }: SewerPaymentFormProps) => {
+export const SewerPaymentForm = ({ stripeEnabled, rates, contactDepartment, contactPhone }: SewerPaymentFormProps) => {
 	const { toast } = useToast();
 	const [isRedirecting, setIsRedirecting] = useState(false);
 
@@ -104,7 +106,7 @@ export const SewerPaymentForm = ({ stripeEnabled, rates }: SewerPaymentFormProps
 				</h3>
 				<p className="text-base text-yellow-700 dark:text-yellow-300">
 					Online sewer bill payments are not currently available. Please visit Town Hall or
-					contact the {sewerContactInfo.department} at {sewerContactInfo.phone} to pay your bill.
+					contact the {contactDepartment} at {contactPhone} to pay your bill.
 				</p>
 			</div>
 		);
