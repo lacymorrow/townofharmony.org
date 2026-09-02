@@ -6,6 +6,8 @@ import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { getMapUrl } from "@/lib/map-utils";
 import { resolveEvents, getEventBySlug } from "@/lib/town-data";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 
 interface PageProps {
 	params: Promise<{ slug: string }>;
@@ -70,14 +72,21 @@ export default async function EventDetailPage({ params }: PageProps) {
 				</p>
 				{event.locationAddress && (
 					<p className="text-base text-[#4A4640] mb-6">
-						<a
-							href={getMapUrl(event.locationAddress)}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="hover:text-sage-dark hover:underline transition-colors"
-						>
-							{event.locationAddress}
-						</a>
+						<span className="inline-flex items-center gap-1">
+							<a
+								href={getMapUrl(event.locationAddress)}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:text-sage-dark hover:underline transition-colors"
+							>
+								{event.locationAddress}
+							</a>
+							<AddressCopyButton
+								address={event.locationAddress}
+								label={event.title}
+								tone="default"
+							/>
+						</span>
 					</p>
 				)}
 				{event.featuredImage && (
@@ -97,12 +106,19 @@ export default async function EventDetailPage({ params }: PageProps) {
 						<h2 className="font-semibold mb-2">Contact</h2>
 						{event.contactPhone && (
 							<p>
-								<a
-									href={`tel:${event.contactPhone.replace(/[^0-9+]/g, "")}`}
-									className="text-sage-dark hover:underline"
-								>
-									{event.contactPhone}
-								</a>
+								<span className="inline-flex items-center gap-1">
+									<a
+										href={`tel:${event.contactPhone.replace(/[^0-9+]/g, "")}`}
+										className="text-sage-dark hover:underline"
+									>
+										{event.contactPhone}
+									</a>
+									<PhoneCopyButton
+										phone={event.contactPhone}
+										label={event.title}
+										tone="default"
+									/>
+								</span>
 							</p>
 						)}
 						{event.contactEmail && (

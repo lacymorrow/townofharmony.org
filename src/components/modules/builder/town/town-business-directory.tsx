@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { businesses as staticBusinesses } from "@/data/town/businesses";
 import type { TownBusiness } from "@/data/town/types";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 
 interface TownBusinessDirectoryProps {
 	itemsPerPage?: number;
@@ -261,11 +263,33 @@ export const TownBusinessDirectory = ({
 									</p>
 
 									<div className="space-y-1 text-sm text-[#635E56]">
-										<p>
-											{business.address}, {business.city}, {business.stateCode}{" "}
-											{business.zipCode}
-										</p>
-										<p>{business.phone}</p>
+										{business.address && (
+											<p className="flex items-start gap-1.5">
+												<span>
+													{business.address}, {business.city}, {business.stateCode}{" "}
+													{business.zipCode}
+												</span>
+												<AddressCopyButton
+													address={`${business.address}, ${business.city}, ${business.stateCode} ${business.zipCode}`}
+													label={business.name}
+													tone="default"
+													className="h-6 w-6 shrink-0"
+													iconClassName="h-3.5 w-3.5"
+												/>
+											</p>
+										)}
+										{business.phone && (
+											<p className="flex items-center gap-1.5">
+												<span>{business.phone}</span>
+												<PhoneCopyButton
+													phone={business.phone}
+													label={business.name}
+													tone="default"
+													className="h-6 w-6 shrink-0"
+													iconClassName="h-3.5 w-3.5"
+												/>
+											</p>
+										)}
 									</div>
 								</div>
 							</Link>

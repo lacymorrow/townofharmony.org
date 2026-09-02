@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LightboxImage } from "@/components/ui/lightbox-image";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { useBuilderData } from "@/lib/builder-data";
 import { getMapUrl } from "@/lib/map-utils";
 import { isExternalUrl, isSafeUrl } from "@/lib/utils";
@@ -213,6 +214,15 @@ export const TownPointsOfInterest = ({
 											>
 												{poi.address}
 											</a>
+											{poi.address && (
+												<AddressCopyButton
+													address={poi.address}
+													label={poi.name}
+													tone="default"
+													className="h-6 w-6 shrink-0"
+													iconClassName="h-3.5 w-3.5"
+												/>
+											)}
 										</div>
 										<div className="flex items-start gap-1.5">
 											<svg

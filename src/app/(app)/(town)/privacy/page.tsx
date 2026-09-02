@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { siteConfig } from "@/config/site-config";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 import { getStaticPage } from "@/lib/town-data";
@@ -95,7 +96,14 @@ export default async function PrivacyPage() {
 					<a href="/contact" className="text-sage hover:text-sage-dark underline">
 						contact form
 					</a>{" "}
-					or call <a href="tel:7045462339" className="text-sage hover:text-sage-dark underline">(704) 546-2339</a>.
+					or call{" "}
+					<span className="inline-flex items-center gap-1">
+						<a href="tel:+17045462339" className="text-sage hover:text-sage-dark underline">
+							(704) 546-2339
+						</a>
+						<PhoneCopyButton phone="(704) 546-2339" />
+					</span>
+					.
 				</p>
 
 				<p className="text-sm text-[#635E56] mt-12">

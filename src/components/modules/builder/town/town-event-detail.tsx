@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownEvent } from "@/data/town/types";
 import { resolveBuilderRef } from "@/data/town/types";
@@ -165,14 +167,21 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
                   Location
                 </dt>
                 <dd className="text-sage-dark font-medium">
-                  <a
-                    href={getMapUrl(event.locationAddress)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline"
-                  >
-                    {event.locationAddress}
-                  </a>
+                  <span className="inline-flex items-center gap-1">
+                    <a
+                      href={getMapUrl(event.locationAddress)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      {event.locationAddress}
+                    </a>
+                    <AddressCopyButton
+                      address={event.locationAddress}
+                      label={event.title}
+                      tone="default"
+                    />
+                  </span>
                 </dd>
               </div>
             )}
@@ -208,12 +217,19 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
                   Phone
                 </dt>
                 <dd>
-                  <a
-                    href={`tel:${event.contactPhone}`}
-                    className="text-sage hover:text-sage-dark font-medium transition-colors"
-                  >
-                    {event.contactPhone}
-                  </a>
+                  <span className="inline-flex items-center gap-1">
+                    <a
+                      href={`tel:${event.contactPhone}`}
+                      className="text-sage hover:text-sage-dark font-medium transition-colors"
+                    >
+                      {event.contactPhone}
+                    </a>
+                    <PhoneCopyButton
+                      phone={event.contactPhone}
+                      label={event.title}
+                      tone="default"
+                    />
+                  </span>
                 </dd>
               </div>
             )}

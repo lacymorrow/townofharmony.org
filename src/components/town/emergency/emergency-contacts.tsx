@@ -1,4 +1,5 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { emergencyServices } from "@/data/town/emergency-services";
@@ -10,7 +11,10 @@ export const EmergencyContacts = () => {
 			<div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
 				<h2 className="text-xl font-serif font-bold text-barn-red mb-1">
 					Life-Threatening Emergency: Call{" "}
-					<a href="tel:911" className="text-2xl hover:underline">911</a>
+					<span className="inline-flex items-center gap-2">
+						<a href="tel:911" className="text-2xl hover:underline">911</a>
+						<PhoneCopyButton phone="911" label="911" tone="onLight" />
+					</span>
 				</h2>
 				<p className="text-[#4A4640]">
 					For immediate emergency assistance requiring police, fire, or medical response, always
@@ -34,6 +38,7 @@ export const EmergencyContacts = () => {
 								>
 									{service.phone}
 								</a>
+								<PhoneCopyButton phone={service.phone} label={service.title} />
 							</div>
 
 							{service.description && (
@@ -61,27 +66,39 @@ export const EmergencyContacts = () => {
 					<div className="space-y-2 text-base text-[#4A4640]">
 						<p>
 							<strong className="text-[#2D2A24]">North Carolina Highway Patrol:</strong>{" "}
-							<a href="tel:1-800-662-7956" className="text-sage hover:text-sage-dark underline">
-								1-800-662-7956
-							</a>
+							<span className="inline-flex items-center gap-2">
+								<a href="tel:1-800-662-7956" className="text-sage hover:text-sage-dark underline">
+									1-800-662-7956
+								</a>
+								<PhoneCopyButton phone="1-800-662-7956" label="North Carolina Highway Patrol" />
+							</span>
 						</p>
 						<p>
 							<strong className="text-[#2D2A24]">{settings.branding.county} Emergency Services:</strong>{" "}
-							<a href="tel:704-878-3000" className="text-sage hover:text-sage-dark underline">
-								(704) 878-3000
-							</a>
+							<span className="inline-flex items-center gap-2">
+								<a href="tel:704-878-3000" className="text-sage hover:text-sage-dark underline">
+									(704) 878-3000
+								</a>
+								<PhoneCopyButton phone="(704) 878-3000" label={`${settings.branding.county} Emergency Services`} />
+							</span>
 						</p>
 						<p>
 							<strong className="text-[#2D2A24]">Red Cross Disaster Relief:</strong>{" "}
-							<a href="tel:1-800-733-2767" className="text-sage hover:text-sage-dark underline">
-								1-800-RED-CROSS
-							</a>
+							<span className="inline-flex items-center gap-2">
+								<a href="tel:1-800-733-2767" className="text-sage hover:text-sage-dark underline">
+									1-800-RED-CROSS
+								</a>
+								<PhoneCopyButton phone="1-800-733-2767" label="Red Cross Disaster Relief" />
+							</span>
 						</p>
 						<p>
 							<strong className="text-[#2D2A24]">Crisis Text Line:</strong> Text HOME to{" "}
-							<a href="sms:741741" className="text-sage hover:text-sage-dark underline">
-								741741
-							</a>
+							<span className="inline-flex items-center gap-2">
+								<a href="sms:741741" className="text-sage hover:text-sage-dark underline">
+									741741
+								</a>
+								<PhoneCopyButton phone="741741" label="Crisis Text Line" />
+							</span>
 						</p>
 					</div>
 				</CardContent>

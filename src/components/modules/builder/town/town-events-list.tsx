@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Fragment, useMemo } from "react";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
 import type { TownEvent } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { getTodayString, safeDate, toDateOnly } from "@/lib/date-only";
@@ -322,7 +323,18 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
                             {event.endTime ? ` - ${event.endTime}` : ""}
                           </span>
                         )}
-                        {event.locationAddress && <span>{event.locationAddress}</span>}
+                        {event.locationAddress && (
+                          <span>
+                            {event.locationAddress}
+                            <AddressCopyButton
+                              address={event.locationAddress}
+                              label={event.title || undefined}
+                              tone="default"
+                              className="h-6 w-6 ml-0.5 align-middle"
+                              iconClassName="h-3.5 w-3.5"
+                            />
+                          </span>
+                        )}
                       </div>
                     </div>
 
