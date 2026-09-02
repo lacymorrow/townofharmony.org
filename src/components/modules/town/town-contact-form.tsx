@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Turnstile } from "@/components/turnstile";
-import { contactInquiryTypes } from "@/data/town/contact-inquiry-types";
+import {
+  contactInquiryTypes,
+  isGeneralInquiry,
+  pinGeneralInquiryFirst,
+} from "@/data/town/contact-inquiry-types";
 import type { TownContactInquiryType } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
 import { submitTownContactForm, type TownContactFormData } from "@/server/actions/town-contact";
@@ -52,6 +56,7 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
   const [serverError, setServerError] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [inquiryType, setInquiryType] = useState("");
   const turnstileTokenRef = useRef<string | null>(null);
   const turnstileResetRef = useRef<(() => void) | null>(null);
   const [turnstileFailed, setTurnstileFailed] = useState(false);
@@ -59,18 +64,31 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
   const successRef = useRef<HTMLOutputElement | null>(null);
 
   // Order comes from Builder.io's drag-and-drop priority in the CMS — fetched
-  // in the same priority order other town content uses (sort: { priority: -1 }).
+  // in the same priority order other town content uses (sort: { priority: -1 })
+  // — except General Inquiry, which is always pinned first (LAC-3550).
   const { data: builderInquiryTypes } = useBuilderData<TownContactInquiryType>(
     "town-contact-inquiry-type",
     { sort: { priority: -1 }, fallback: contactInquiryTypes }
   );
   const inquiryOptions = useMemo(
     () =>
-      (builderInquiryTypes ?? [])
-        .filter((t) => t?.isActive !== false && t?.value && t?.label)
-        .map((t) => ({ value: t.value, label: t.label })),
+      pinGeneralInquiryFirst(
+        (builderInquiryTypes ?? [])
+          .filter((t) => t?.isActive !== false && t?.value && t?.label)
+          .map((t) => ({ value: t.value, label: t.label }))
+      ),
     [builderInquiryTypes]
   );
+
+  // Default the select to General Inquiry. The Builder fetch resolves after
+  // mount and can replace the fallback options with different values (the
+  // staff-edited entry is "general inquiry | other", not "general"), so
+  // re-sync whenever the current selection is no longer a valid option.
+  useEffect(() => {
+    if (inquiryOptions.length === 0) return;
+    if (inquiryOptions.some((opt) => opt.value === inquiryType)) return;
+    setInquiryType(inquiryOptions.find(isGeneralInquiry)?.value ?? "");
+  }, [inquiryOptions, inquiryType]);
 
   useEffect(() => {
     if (submitted && successRef.current) {
@@ -290,7 +308,8 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
           aria-required="true"
           aria-invalid={!!errors.inquiryType}
           aria-describedby={errors.inquiryType ? "inquiryType-error" : undefined}
-          defaultValue="general"
+          value={inquiryType}
+          onChange={(e) => setInquiryType(e.target.value)}
           className={`town-select ${inputClass(!!errors.inquiryType, "pr-10")}`}
         >
           <option value="" disabled>
