@@ -7,6 +7,7 @@ import { isFeatureEnabled } from "@/lib/preview-flags";
 import { PayloadRichText } from "@/components/town/payload-rich-text";
 import { RelatedNews } from "@/components/town/news/related-news";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
+import { htmlToPlainText } from "@/lib/html-to-text";
 
 interface PageProps {
 	params: Promise<{ slug: string }>;
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 	if (!article) return { title: "Article Not Found" };
 	return {
 		title: `${article.title} | Town of Harmony`,
-		description: article.excerpt || `${article.title} — News from the Town of Harmony, NC.`,
+		description: htmlToPlainText(article.excerpt) || `${article.title} — News from the Town of Harmony, NC.`,
 	};
 }
 
