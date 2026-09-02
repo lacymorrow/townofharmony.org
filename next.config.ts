@@ -8,6 +8,9 @@ import { withPlugins } from "@/config/with-plugins";
 
 const nextConfig: NextConfig = {
 	transpilePackages: ["@c15t/nextjs"],
+	// isomorphic-dompurify pulls in jsdom on the server; jsdom cannot be
+	// webpack-bundled (ESM-only transitive deps), so keep it external (LAC-3638).
+	serverExternalPackages: ["isomorphic-dompurify"],
 	env: {
 		// Add client-side feature flags
 		...buildTimeFeatureFlags,
