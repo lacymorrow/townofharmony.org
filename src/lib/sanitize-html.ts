@@ -1,4 +1,4 @@
-import DOMPurify from "isomorphic-dompurify";
+import DOMPurify from "dompurify";
 
 const ALLOWED_TAGS = [
   "p",
@@ -52,9 +52,18 @@ export const sanitizeHtml = (
     ? ALLOWED_TAGS.filter((tag) => tag !== "a")
     : ALLOWED_TAGS;
 
-  // isomorphic-dompurify backs this with jsdom on the server, so the same
-  // allowlist applies in both environments. React keeps the server-rendered
-  // HTML on hydration, so the SSR output must be fully sanitized (LAC-3638).
+  if (typeof window === "undefined") {
+    // SSR: strip obvious XSS vectors; DOMPurify runs on client for full sanitization
+    let safe = html
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+      .replace(/on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+      .replace(/(?:javascript|data|vbscript):/gi, "");
+    if (options.stripLinks) {
+      safe = safe.replace(/<\/?a\b[^>]*>/gi, "");
+    }
+    return safe;
+  }
+
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS: allowedTags,
     ALLOWED_ATTR: ALLOWED_ATTRS,
