@@ -2,11 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Turnstile } from "@/components/turnstile";
-import {
-  contactInquiryTypes,
-  isGeneralInquiry,
-  pinGeneralInquiryFirst,
-} from "@/data/town/contact-inquiry-types";
+import { contactInquiryTypes, isGeneralInquiry } from "@/data/town/contact-inquiry-types";
 import type { TownContactInquiryType } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
 import { submitTownContactForm, type TownContactFormData } from "@/server/actions/town-contact";
@@ -65,18 +61,16 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
 
   // Order comes from Builder.io's drag-and-drop priority in the CMS — fetched
   // in the same priority order other town content uses (sort: { priority: -1 })
-  // — except General Inquiry, which is always pinned first (LAC-3550).
+  // and rendered as-is: staff control the option order in Builder (LAC-3550).
   const { data: builderInquiryTypes } = useBuilderData<TownContactInquiryType>(
     "town-contact-inquiry-type",
     { sort: { priority: -1 }, fallback: contactInquiryTypes }
   );
   const inquiryOptions = useMemo(
     () =>
-      pinGeneralInquiryFirst(
-        (builderInquiryTypes ?? [])
-          .filter((t) => t?.isActive !== false && t?.value && t?.label)
-          .map((t) => ({ value: t.value, label: t.label }))
-      ),
+      (builderInquiryTypes ?? [])
+        .filter((t) => t?.isActive !== false && t?.value && t?.label)
+        .map((t) => ({ value: t.value, label: t.label })),
     [builderInquiryTypes]
   );
 

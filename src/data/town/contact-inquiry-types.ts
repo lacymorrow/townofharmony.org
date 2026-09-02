@@ -1,14 +1,6 @@
 import type { TownContactInquiryType } from "./types";
 
 /**
- * Inquiry type options shown in the public contact form.
- * Mirrored in Builder.io model `town-contact-inquiry-type` (editable by staff).
- * The form falls back to this list when Builder returns no entries.
- *
- * Order: managed by Builder.io's drag-and-drop priority in the CMS. This
- * fallback array's declaration order is used only when Builder is unreachable.
- */
-/**
  * Matches the "General Inquiry" option loosely because its Builder entry is
  * staff-editable and the value has drifted before (e.g. "general" became
  * "general inquiry | other"), which silently broke value-equality checks
@@ -19,19 +11,13 @@ export function isGeneralInquiry(option: { value: string; label: string }): bool
 }
 
 /**
- * Pin the General Inquiry option to the top of the list, preserving the
- * relative order of the remaining options. Overrides Builder.io's
- * drag-and-drop priority for this one entry (LAC-3550).
+ * Inquiry type options shown in the public contact form.
+ * Mirrored in Builder.io model `town-contact-inquiry-type` (editable by staff).
+ * The form falls back to this list when Builder returns no entries.
+ *
+ * Order: managed by Builder.io's drag-and-drop priority in the CMS. This
+ * fallback array's declaration order is used only when Builder is unreachable.
  */
-export function pinGeneralInquiryFirst<T extends { value: string; label: string }>(
-  options: T[]
-): T[] {
-  const index = options.findIndex(isGeneralInquiry);
-  const general = options[index];
-  if (index <= 0 || !general) return options;
-  return [general, ...options.slice(0, index), ...options.slice(index + 1)];
-}
-
 export const contactInquiryTypes: TownContactInquiryType[] = [
   { value: "general", label: "General Inquiry", isActive: true },
   { value: "sewer-residential-intown", label: "Sewer In-Town Residential Service", isActive: true },
