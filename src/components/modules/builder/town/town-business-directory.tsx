@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { businesses as staticBusinesses } from "@/data/town/businesses";
 import type { TownBusiness } from "@/data/town/types";
 
@@ -257,7 +258,7 @@ export const TownBusinessDirectory = ({
 									</div>
 
 									<p className="text-base text-[#4A4640] mb-3 line-clamp-2">
-										{business.description}
+										{htmlToPlainText(business.description)}
 									</p>
 
 									<div className="space-y-1 text-sm text-[#635E56]">

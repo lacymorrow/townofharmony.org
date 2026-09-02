@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownBusiness } from "@/data/town/types";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
 
 interface BusinessDetailProps {
@@ -113,7 +114,7 @@ export function BusinessDetail({ business }: BusinessDetailProps) {
 							<CardContent>
 								<div className="space-y-2">
 									{typeof business.hours === "string" ? (
-										<p>{business.hours}</p>
+										<p>{htmlToPlainText(business.hours)}</p>
 									) : (
 										dayOrder.map((day) => {
 											const hoursObj = business.hours as unknown as Record<string, unknown>;
