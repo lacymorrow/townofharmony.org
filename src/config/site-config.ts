@@ -305,9 +305,12 @@ export const siteConfig: SiteConfig = {
 			],
 		},
 		appLinks: {},
-		assetsPath: "/assets",
+		// This site has no /assets index or /blog — empty paths keep the
+		// rel="assets"/rel="archives" head links (and their soft-404 targets)
+		// out of every page (LAC-3516).
+		assetsPath: "",
 		bookmarksPath: "/",
-		blogPath: "/blog",
+		blogPath: "",
 	},
 
 	manifest: {
@@ -382,10 +385,17 @@ if (
 	siteConfig.metadata.appLinks.web.url = siteConfig.url;
 }
 
-// Update paths to be absolute URLs based on siteConfig.url
-siteConfig.metadata.assetsPath = `${siteConfig.url}/assets`;
-siteConfig.metadata.bookmarksPath = `${siteConfig.url}/`;
-siteConfig.metadata.blogPath = `${siteConfig.url}/blog`;
+// Update paths to be absolute URLs based on siteConfig.url; empty paths stay
+// empty so pages that don't exist are never advertised (LAC-3516).
+siteConfig.metadata.assetsPath = siteConfig.metadata.assetsPath
+	? `${siteConfig.url}${siteConfig.metadata.assetsPath}`
+	: "";
+siteConfig.metadata.bookmarksPath = siteConfig.metadata.bookmarksPath
+	? `${siteConfig.url}${siteConfig.metadata.bookmarksPath}`
+	: "";
+siteConfig.metadata.blogPath = siteConfig.metadata.blogPath
+	? `${siteConfig.url}${siteConfig.metadata.blogPath}`
+	: "";
 
 // Freeze the object to prevent accidental modifications later (optional)
 // Object.freeze(siteConfig);
