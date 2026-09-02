@@ -1,3 +1,5 @@
+import { htmlToPlainText } from "@/lib/html-to-text";
+
 interface PayloadRichTextProps {
 	content: string | Record<string, unknown> | null | undefined;
 	className?: string;
@@ -142,7 +144,8 @@ function RichTextNode({ node }: { node: any }) {
  */
 export function extractTextFromRichText(content: string | Record<string, unknown> | null | undefined): string {
 	if (!content) return "";
-	if (typeof content === "string") return content;
+	// Builder rich text fields store HTML strings — strip markup for excerpts (LAC-3559)
+	if (typeof content === "string") return htmlToPlainText(content);
 
 	const lexical = content as { root?: { children?: any[] } };
 	if (!lexical?.root?.children) return "";

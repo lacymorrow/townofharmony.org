@@ -15,23 +15,35 @@ import { contactFormSchema } from "@/types/contact";
 
 export async function submitContactForm(formData: FormData) {
 	try {
-		const isLikelyBot = !!formData.get("website");
-		if (isLikelyBot) {
-			logger.warn("Honeypot triggered", { context: "contact-form", action: "processing_anyway" });
+		const ip = await getClientIp();
+
+		// Fail closed (LAC-3546): the soft-fail from LAC-980/LAC-1265 let bots
+		// POST the action directly with no token and still reach staff inboxes.
+		if (formData.get("website")) {
+			logger.warn("Honeypot triggered", { context: "contact-form", ip, action: "dropped" });
+			// Fake success so bots don't learn to leave the field empty.
+			return { success: true };
 		}
 
 		if (isTurnstileConfigured()) {
 			const token = formData.get("turnstileToken") as string | null;
-			if (token) {
-				if (!(await verifyTurnstileToken(token))) {
-					logger.warn("Turnstile verification failed", { context: "contact-form", action: "allowing_submission" });
-				}
-			} else {
-				logger.warn("Turnstile token missing", { context: "contact-form", reason: "widget_load_failure" });
+			if (!token) {
+				logger.warn("Turnstile token missing", { context: "contact-form", ip, action: "rejected" });
+				return {
+					success: false,
+					error:
+						'Please check the "Verify you are human" box, then try again. If it hasn\'t appeared yet, give it a moment.',
+				};
+			}
+			if (!(await verifyTurnstileToken(token))) {
+				logger.warn("Turnstile verification failed", { context: "contact-form", ip, action: "rejected" });
+				return {
+					success: false,
+					error:
+						'The security check could not be verified. Please re-check the "Verify you are human" box and try again.',
+				};
 			}
 		}
-
-		const ip = await getClientIp();
 
 		const loadedAt = formData.get("_loadedAt") as string | null;
 		if (!validateSubmissionTiming(loadedAt)) {

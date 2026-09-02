@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Clock, MapPin, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { TownContactForm } from "@/components/modules/town/town-contact-form";
 import { settings } from "@/data/town/settings";
 
@@ -21,6 +21,12 @@ const contactCards = [
     label: "Address",
     value: settings.contactInfo.address,
     href: `https://maps.google.com/?q=${encodeURIComponent(settings.contactInfo.address)}`,
+  },
+  {
+    icon: Mail,
+    label: "Mailing Address",
+    value: settings.contactInfo.mailingAddress,
+    href: null,
   },
   {
     icon: Clock,

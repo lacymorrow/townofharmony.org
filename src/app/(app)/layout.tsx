@@ -28,10 +28,17 @@ await initializePaymentProviders();
 // which prevents proper HTTP 404 status on unknown routes (soft-404 problem).
 export default function Layout({
   children,
+  // Pull `params` out of the rest spread. Next.js passes `params` (a Promise in
+  // Next 15) to every layout; if it lands in `...slots` the empty-slot check
+  // below calls Object.keys() on it, which trips the sync-dynamic-apis warning
+  // ("used `...params`... `params` should be awaited"). We don't use params
+  // here, so drop it before enumerating the parallel-route slots.
+  params: _params,
   ...slots
 }: {
   children: React.ReactNode;
-  [key: string]: React.ReactNode;
+  params?: Promise<Record<string, string | string[]>>;
+  [key: string]: React.ReactNode | Promise<Record<string, string | string[]>>;
 }) {
   // In RSC, parallel route slots are synchronous ReactNodes — no await needed.
   const resolvedSlots = Object.entries(slots).filter(

@@ -8,6 +8,9 @@ interface TurnstileProps {
   onVerify: (token: string) => void;
   onError?: () => void;
   onExpire?: () => void;
+  /** Receives a callback that resets the widget — tokens are single-use, so
+   *  callers must reset after a rejected submission to get a fresh token. */
+  resetRef?: React.MutableRefObject<(() => void) | null>;
   className?: string;
 }
 
@@ -25,6 +28,7 @@ declare global {
         }
       ) => string;
       remove: (widgetId: string) => void;
+      reset: (widgetId: string) => void;
     };
   }
 }
@@ -75,7 +79,7 @@ function loadTurnstileScript(): Promise<void> {
   return scriptPromise;
 }
 
-export const Turnstile = ({ onVerify, onError, onExpire, className }: TurnstileProps) => {
+export const Turnstile = ({ onVerify, onError, onExpire, resetRef, className }: TurnstileProps) => {
   const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
@@ -113,6 +117,14 @@ export const Turnstile = ({ onVerify, onError, onExpire, className }: TurnstileP
           "error-callback": () => onErrorRef.current?.(),
           "expired-callback": () => onExpireRef.current?.(),
         });
+
+        if (resetRef) {
+          resetRef.current = () => {
+            if (widgetIdRef.current && window.turnstile?.reset) {
+              window.turnstile.reset(widgetIdRef.current);
+            }
+          };
+        }
       })
       .catch(() => {
         if (isCancelled) return;
@@ -121,6 +133,9 @@ export const Turnstile = ({ onVerify, onError, onExpire, className }: TurnstileP
 
     return () => {
       isCancelled = true;
+      if (resetRef) {
+        resetRef.current = null;
+      }
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;

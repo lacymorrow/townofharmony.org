@@ -31,6 +31,7 @@ import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-serve
 import { fetchBuilderEntries } from "@/lib/builder-content-fetch";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
 import { logger } from "@/lib/logger";
+import { findMeetingBySlug, getCanonicalMeetingSlug } from "@/lib/meeting-slug";
 import { slugify } from "@/lib/utils/extract-headings";
 
 /**
@@ -54,7 +55,16 @@ import { slugify } from "@/lib/utils/extract-headings";
 const buildBuilderListResolver = <T extends { id?: unknown }>(
 	model: string,
 	fallback: T[],
-	options?: { limit?: number; sort?: Record<string, number> },
+	options?: {
+		limit?: number;
+		sort?: Record<string, number>;
+		// When set, static fallback entries whose key is NOT present in Builder
+		// are preserved alongside Builder entries. Prevents Builder becoming an
+		// all-or-nothing override for models where the static array is canonical
+		// historical data (e.g. town-meeting has 155+ historical entries that
+		// must survive after an editor adds a single new meeting in Builder).
+		mergeBy?: (item: T) => string | number | undefined;
+	},
 ) =>
 	cache(async (): Promise<T[]> => {
 		try {
@@ -62,12 +72,28 @@ const buildBuilderListResolver = <T extends { id?: unknown }>(
 				limit: options?.limit ?? 1000,
 				sort: options?.sort,
 			});
-			if (results.length === 0) return fallback;
-			return results.map((entry) => {
+			const builderItems = results.map((entry) => {
 				const data = entry.data as T;
 				if (data.id !== undefined && data.id !== null && data.id !== "") return data;
 				return { ...data, id: entry.id } as T;
 			});
+
+			if (options?.mergeBy) {
+				const mergeBy = options.mergeBy;
+				const builderKeys = new Set<string | number>();
+				for (const item of builderItems) {
+					const key = mergeBy(item);
+					if (key !== undefined && key !== "") builderKeys.add(key);
+				}
+				const preserved = fallback.filter((item) => {
+					const key = mergeBy(item);
+					return key === undefined || key === "" || !builderKeys.has(key);
+				});
+				return [...builderItems, ...preserved];
+			}
+
+			if (builderItems.length === 0) return fallback;
+			return builderItems;
 		} catch (err) {
 			logger.warn(
 				`Failed to fetch ${model} from Builder.io — falling back to static data`,
@@ -78,7 +104,18 @@ const buildBuilderListResolver = <T extends { id?: unknown }>(
 	});
 
 const resolveNews = buildBuilderListResolver<TownNews>("town-news", news);
-const resolveMeetings = buildBuilderListResolver<TownMeeting>("town-meeting", meetings);
+// Merge Builder + static by canonical slug: preserves the ~155 historical
+// static meetings when editors add a new Builder entry (LAC-3447), and
+// dedupes across the two sources using the collision-proof canonical slug.
+const resolveMeetingsRaw = buildBuilderListResolver<TownMeeting>("town-meeting", meetings, {
+	mergeBy: (m) => getCanonicalMeetingSlug(m),
+});
+// Editors enter recurring slugs ("town-council-meeting") in Builder, so raw
+// slugs collide across months — canonicalize so every link is unique (LAC-3549).
+const resolveMeetings = cache(
+	async (): Promise<TownMeeting[]> =>
+		(await resolveMeetingsRaw()).map((m) => ({ ...m, slug: getCanonicalMeetingSlug(m) })),
+);
 const resolveTeamMembers = buildBuilderListResolver<TownTeamMember>(
 	"town-team-member",
 	teamMembers,
@@ -337,7 +374,7 @@ export const getMeetings = async (options?: {
  */
 export const getMeetingBySlug = async (slug: string) => {
 	const allMeetings = await resolveMeetings();
-	return allMeetings.find((m) => m.slug === slug) ?? null;
+	return findMeetingBySlug(allMeetings, slug);
 };
 
 /**

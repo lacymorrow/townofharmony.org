@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { BusinessSidebar } from "@/components/town/map/business-sidebar";
 import { MapLegend } from "@/components/town/map/map-legend";
 import type { MapBusiness, BusinessCategory } from "@/lib/map-utils";
+import type { TownSettings } from "@/data/town/types";
 import { ALL_CATEGORIES } from "@/lib/map-utils";
 import type { HarmonyMapHandle } from "@/components/town/map/harmony-map";
 import {
@@ -42,9 +43,10 @@ function parseCatsParam(value: string | null): Set<BusinessCategory> {
 
 interface InteractiveMapProps {
 	businesses: MapBusiness[];
+	labels: TownSettings["map"];
 }
 
-export const InteractiveMap = ({ businesses }: InteractiveMapProps) => {
+export const InteractiveMap = ({ businesses, labels }: InteractiveMapProps) => {
 	const mapRef = useRef<HarmonyMapHandle>(null);
 	const searchParams = useSearchParams();
 	const router = useRouter();
@@ -145,7 +147,7 @@ export const InteractiveMap = ({ businesses }: InteractiveMapProps) => {
 			<div className="h-11 shrink-0 flex items-center justify-between px-4 bg-sage-deep text-cream shadow-sm">
 				<div className="flex items-center gap-2.5">
 					<h1 className="text-sm font-bold leading-tight tracking-tight">
-						Interactive Business Map
+						{labels.pageTitle}
 					</h1>
 				</div>
 
@@ -227,7 +229,7 @@ export const InteractiveMap = ({ businesses }: InteractiveMapProps) => {
 						selectedBusiness={selectedBusiness}
 						onMarkerClick={handleMarkerClick}
 					/>
-					<MapLegend />
+					<MapLegend title={labels.legendTitle} boundaryLabel={labels.boundaryLabel} />
 
 					<button
 						onClick={() => setMobileSheetOpen(true)}

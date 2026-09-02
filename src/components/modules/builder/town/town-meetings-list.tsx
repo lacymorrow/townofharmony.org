@@ -2,17 +2,25 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
+import { getCanonicalMeetingSlug } from "@/lib/meeting-slug";
 
 interface TownMeetingsListProps {
   itemsPerPage?: number;
   showCalendar?: boolean;
 }
 
-const MEETING_TYPES = ["Council", "Planning", "Public Hearing"] as const;
+/**
+ * Well-known meeting types shown first in the type filter, in this order.
+ * Meeting types entered in Builder.io that aren't listed here still appear,
+ * sorted alphabetically after these — editors can add new types without a
+ * code change.
+ */
+const PREFERRED_TYPE_ORDER = ["Council", "Planning", "Public Hearing"] as const;
 
 const STATUS_OPTIONS = [
   { value: "upcoming", label: "Upcoming" },
@@ -107,7 +115,11 @@ export const TownMeetingsList = ({
   const year = searchParams?.get("year") || undefined;
   const status = searchParams?.get("status") || undefined;
 
-  const { docs, totalPages } = useBuilderPaginatedData<TownMeeting>("town-meeting", {
+  const {
+    docs,
+    allData: allMeetings,
+    totalPages,
+  } = useBuilderPaginatedData<TownMeeting>("town-meeting", {
     page,
     limit: itemsPerPage,
     fallbackData: staticMeetings,
@@ -132,6 +144,20 @@ export const TownMeetingsList = ({
     },
     clientSort: (a, b) => new Date(b.meetingDate).getTime() - new Date(a.meetingDate).getTime(),
   });
+
+  const availableTypes = useMemo(() => {
+    const typeSet = new Set<string>();
+    for (const meeting of allMeetings) {
+      const t = meeting.type?.trim();
+      if (t) typeSet.add(t);
+    }
+    const preferred = PREFERRED_TYPE_ORDER.filter((t) => typeSet.has(t));
+    const preferredSet = new Set<string>(PREFERRED_TYPE_ORDER);
+    const extras = [...typeSet]
+      .filter((t) => !preferredSet.has(t))
+      .sort((a, b) => a.localeCompare(b));
+    return [...preferred, ...extras];
+  }, [allMeetings]);
 
   const updateParams = (updates: Record<string, string | undefined>) => {
     const params = new URLSearchParams(searchParams?.toString() ?? "");
@@ -162,7 +188,7 @@ export const TownMeetingsList = ({
             className="town-select pl-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
           >
             <option value="">All Types</option>
-            {MEETING_TYPES.map((t) => (
+            {availableTypes.map((t) => (
               <option key={t} value={t}>
                 {t}
               </option>
@@ -226,13 +252,19 @@ export const TownMeetingsList = ({
           <div className="space-y-4">
             {docs.map((meeting) => {
               const meetingDate = new Date(meeting.meetingDate);
+              // Builder returns cleared fields as "" — skip the pill entirely
+              // rather than render an empty badge (LAC-3622).
+              const typeLabel = meeting.type?.trim();
               const badgeClass =
-                TYPE_BADGE_COLORS[meeting.type] || "bg-stone text-[#4A4640] border-stone";
+                TYPE_BADGE_COLORS[typeLabel ?? ""] || "bg-stone text-[#4A4640] border-stone";
+              // Editors reuse slugs across months ("town-council-meeting"), so
+              // link by canonical date-suffixed slug to keep every row unique.
+              const slug = getCanonicalMeetingSlug(meeting);
 
               return (
                 <Link
-                  key={meeting.slug}
-                  href={`/meetings/${meeting.slug}`}
+                  key={slug}
+                  href={`/meetings/${slug}`}
                   className="group block bg-white rounded-lg border border-stone overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   <div className="flex flex-col md:flex-row">
@@ -252,11 +284,13 @@ export const TownMeetingsList = ({
                     {/* Meeting Content */}
                     <div className="flex-1 p-5 md:py-4">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${badgeClass}`}
-                        >
-                          {meeting.type}
-                        </span>
+                        {typeLabel && (
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${badgeClass}`}
+                          >
+                            {typeLabel}
+                          </span>
+                        )}
                         {(meeting.videoUrl || meeting.audioUrl) && (
                           <span className="bg-sage/10 text-sage-dark px-2 py-0.5 rounded-full text-xs">
                             Recording Available

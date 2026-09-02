@@ -2,7 +2,8 @@
 
 import { Calendar, FileText, Home, MapPin, Phone, Users } from "lucide-react";
 import Link from "next/link";
-import { settings } from "@/data/town/settings";
+import { renderCopyright, settings as staticSettings } from "@/data/town/settings";
+import type { TownSettings } from "@/data/town/types";
 
 const helpfulLinks = [
 	{
@@ -31,7 +32,11 @@ const helpfulLinks = [
 	},
 ];
 
-export const NotFoundPage = () => {
+interface NotFoundPageProps {
+	settings?: TownSettings;
+}
+
+export const NotFoundPage = ({ settings = staticSettings }: NotFoundPageProps = {}) => {
 	return (
 		<div className="min-h-screen flex flex-col">
 			{/* Simplified header */}
@@ -63,22 +68,20 @@ export const NotFoundPage = () => {
 			<section className="bg-sage-dark text-white py-16">
 				<div className="container mx-auto px-4">
 					<span className="inline-block text-xs font-semibold tracking-widest uppercase bg-white/10 text-white/70 px-3 py-1 rounded-full border border-white/20 mb-6">
-						Page not found
+						{settings.notFound.eyebrow}
 					</span>
 					<h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-						We couldn&apos;t find that page
+						{settings.notFound.heading}
 					</h1>
 					<p className="text-white/80 text-lg max-w-2xl mb-8">
-						The page you&apos;re looking for may have moved, been renamed, or is
-						no longer available. Below are some options to help you find what you
-						need.
+						{settings.notFound.body}
 					</p>
 					<Link
 						href="/"
 						className="inline-flex items-center gap-2 bg-wheat text-sage-deep font-semibold px-6 py-3 rounded-lg hover:bg-wheat-light transition-colors"
 					>
 						<Home className="h-4 w-4" />
-						Return to Homepage
+						{settings.notFound.ctaLabel}
 					</Link>
 				</div>
 			</section>
@@ -151,10 +154,7 @@ export const NotFoundPage = () => {
 			{/* Minimal footer */}
 			<footer className="bg-[#1E2118] text-white/60 py-6">
 				<div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
-					<span>
-						&copy; {new Date().getFullYear()} {settings.siteTitle}. All rights
-						reserved.
-					</span>
+					<span>{renderCopyright(settings.footer.copyright, settings.siteTitle)}</span>
 					<Link
 						href="/"
 						className="text-wheat hover:text-wheat-light transition-colors"

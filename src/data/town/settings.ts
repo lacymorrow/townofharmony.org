@@ -8,6 +8,7 @@ export const settings: TownSettings = {
 	contactInfo: {
 		phone: "(704) 546-2339",
 		address: "3389 Harmony Hwy, Harmony, NC 28634",
+		mailingAddress: "3389 Harmony Hwy, Harmony, NC 28634\nP.O. Box 118, Harmony, NC 28634",
 		email: "info@townofharmony.org",
 		streetAddress: "3389 Harmony Hwy",
 		city: "Harmony",
@@ -42,7 +43,50 @@ export const settings: TownSettings = {
 		cancelCopy:
 			"No charge was made to your card. You can try again or pay in person at Town Hall.",
 	},
+	homepage: {
+		heroBadgeText: "Est. 1927 · Iredell County",
+		heroSecondaryCtaText: "Meeting Agendas",
+		heroSecondaryCtaHref: "/meetings",
+		quickLinksHeading: "Town Services",
+		quickLinksSubheading: "Find what you need quickly",
+		latestNewsHeading: "Latest News",
+		upcomingEventsHeading: "Upcoming Events",
+		spotlightBadge: "Community Spotlight",
+		spotlightTitle: "Harmony Hill Camp Meeting",
+		spotlightDescription:
+			"A two-week revival tradition first held in 1846, the Harmony Hill Camp Meeting still gathers each year on the second weekend of October on the grounds of present-day Harmony Elementary School. The town takes its name from these meetings.",
+		spotlightCtaText: "Learn More",
+		spotlightCtaHref: "/history",
+		spotlightImageLetter: "H",
+	},
+	footer: {
+		copyright: "© {year} {siteTitle}. All rights reserved.",
+		legalLinks: [
+			{ name: "Privacy", href: "/privacy" },
+			{ name: "Accessibility", href: "/accessibility" },
+		],
+	},
+	notFound: {
+		eyebrow: "Page not found",
+		heading: "We couldn't find that page",
+		body: "The page you're looking for may have moved, been renamed, or is no longer available. Below are some options to help you find what you need.",
+		ctaLabel: "Return to Homepage",
+	},
+	map: {
+		pageTitle: "Interactive Business Map",
+		legendTitle: "Legend",
+		boundaryLabel: "Town Boundary",
+	},
+	team: {
+		introText: "Elected officials and staff serving the Town of Harmony.",
+	},
 };
+
+/** Substitute `{year}` and `{siteTitle}` placeholders in a copyright template. */
+export const renderCopyright = (template: string, siteTitle: string): string =>
+	template
+		.replace(/\{year\}/g, String(new Date().getFullYear()))
+		.replace(/\{siteTitle\}/g, siteTitle);
 
 /** Flat shape returned by Builder.io for the town-settings data model. */
 export interface BuilderSettingsFlat {
@@ -50,6 +94,7 @@ export interface BuilderSettingsFlat {
 	siteDescription?: string;
 	contactPhone?: string;
 	contactAddress?: string;
+	contactMailingAddress?: string;
 	contactEmail?: string;
 	officeHoursWeekday?: string;
 	officeHoursWeekend?: string;
@@ -69,6 +114,29 @@ export interface BuilderSettingsFlat {
 	sewerPaymentHeading?: string;
 	sewerSuccessCopy?: string;
 	sewerCancelCopy?: string;
+	homepageHeroBadgeText?: string;
+	homepageHeroSecondaryCtaText?: string;
+	homepageHeroSecondaryCtaHref?: string;
+	homepageQuickLinksHeading?: string;
+	homepageQuickLinksSubheading?: string;
+	homepageLatestNewsHeading?: string;
+	homepageUpcomingEventsHeading?: string;
+	homepageSpotlightBadge?: string;
+	homepageSpotlightTitle?: string;
+	homepageSpotlightDescription?: string;
+	homepageSpotlightCtaText?: string;
+	homepageSpotlightCtaHref?: string;
+	homepageSpotlightImageLetter?: string;
+	footerCopyright?: string;
+	footerLegalLinks?: { name?: string; href?: string }[];
+	notFoundEyebrow?: string;
+	notFoundHeading?: string;
+	notFoundBody?: string;
+	notFoundCtaLabel?: string;
+	mapPageTitle?: string;
+	mapLegendTitle?: string;
+	mapBoundaryLabel?: string;
+	teamIntroText?: string;
 }
 
 /** Transform flat Builder.io settings into nested TownSettings shape. */
@@ -78,6 +146,8 @@ export const toTownSettings = (flat: BuilderSettingsFlat): TownSettings => ({
 	contactInfo: {
 		phone: flat.contactPhone ?? settings.contactInfo.phone,
 		address: flat.contactAddress ?? settings.contactInfo.address,
+		// Builder returns "" (not undefined) for cleared fields, so || not ??
+		mailingAddress: flat.contactMailingAddress || settings.contactInfo.mailingAddress,
 		email: flat.contactEmail ?? settings.contactInfo.email,
 		streetAddress: settings.contactInfo.streetAddress,
 		city: settings.contactInfo.city,
@@ -109,5 +179,55 @@ export const toTownSettings = (flat: BuilderSettingsFlat): TownSettings => ({
 		paymentHeading: flat.sewerPaymentHeading ?? settings.sewer.paymentHeading,
 		successCopy: flat.sewerSuccessCopy ?? settings.sewer.successCopy,
 		cancelCopy: flat.sewerCancelCopy ?? settings.sewer.cancelCopy,
+	},
+	homepage: {
+		heroBadgeText: flat.homepageHeroBadgeText ?? settings.homepage.heroBadgeText,
+		heroSecondaryCtaText:
+			flat.homepageHeroSecondaryCtaText ?? settings.homepage.heroSecondaryCtaText,
+		heroSecondaryCtaHref:
+			flat.homepageHeroSecondaryCtaHref ?? settings.homepage.heroSecondaryCtaHref,
+		quickLinksHeading:
+			flat.homepageQuickLinksHeading ?? settings.homepage.quickLinksHeading,
+		quickLinksSubheading:
+			flat.homepageQuickLinksSubheading ?? settings.homepage.quickLinksSubheading,
+		latestNewsHeading:
+			flat.homepageLatestNewsHeading ?? settings.homepage.latestNewsHeading,
+		upcomingEventsHeading:
+			flat.homepageUpcomingEventsHeading ?? settings.homepage.upcomingEventsHeading,
+		spotlightBadge: flat.homepageSpotlightBadge ?? settings.homepage.spotlightBadge,
+		spotlightTitle: flat.homepageSpotlightTitle ?? settings.homepage.spotlightTitle,
+		spotlightDescription:
+			flat.homepageSpotlightDescription ?? settings.homepage.spotlightDescription,
+		spotlightCtaText:
+			flat.homepageSpotlightCtaText ?? settings.homepage.spotlightCtaText,
+		spotlightCtaHref:
+			flat.homepageSpotlightCtaHref ?? settings.homepage.spotlightCtaHref,
+		spotlightImageLetter:
+			flat.homepageSpotlightImageLetter ?? settings.homepage.spotlightImageLetter,
+	},
+	footer: {
+		copyright: flat.footerCopyright ?? settings.footer.copyright,
+		legalLinks: (() => {
+			const raw = flat.footerLegalLinks;
+			if (!Array.isArray(raw) || raw.length === 0) return settings.footer.legalLinks;
+			const cleaned = raw
+				.map((link) => ({ name: link?.name ?? "", href: link?.href ?? "" }))
+				.filter((link) => link.name && link.href);
+			return cleaned.length > 0 ? cleaned : settings.footer.legalLinks;
+		})(),
+	},
+	notFound: {
+		eyebrow: flat.notFoundEyebrow ?? settings.notFound.eyebrow,
+		heading: flat.notFoundHeading ?? settings.notFound.heading,
+		body: flat.notFoundBody ?? settings.notFound.body,
+		ctaLabel: flat.notFoundCtaLabel ?? settings.notFound.ctaLabel,
+	},
+	map: {
+		pageTitle: flat.mapPageTitle ?? settings.map.pageTitle,
+		legendTitle: flat.mapLegendTitle ?? settings.map.legendTitle,
+		boundaryLabel: flat.mapBoundaryLabel ?? settings.map.boundaryLabel,
+	},
+	team: {
+		introText: flat.teamIntroText ?? settings.team.introText,
 	},
 });

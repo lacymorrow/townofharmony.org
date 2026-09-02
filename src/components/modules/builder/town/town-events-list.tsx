@@ -7,6 +7,7 @@ import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import type { TownEvent } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { getTodayString, safeDate, toDateOnly } from "@/lib/date-only";
+import { htmlToPlainText } from "@/lib/html-to-text";
 
 interface TownEventsListProps {
   itemsPerPage?: number;
@@ -28,7 +29,19 @@ const SectionDivider = ({ label }: { label: string }) => (
   </div>
 );
 
-const EVENT_CATEGORIES = ["community", "recreation", "government", "education", "holiday"] as const;
+/**
+ * Well-known categories shown first in the filter, in this order. Categories
+ * entered in Builder.io that aren't listed here still appear, sorted
+ * alphabetically after these — editors can add new categories without a code
+ * change.
+ */
+const PREFERRED_CATEGORY_ORDER = [
+  "community",
+  "recreation",
+  "government",
+  "education",
+  "holiday",
+] as const;
 
 const MONTHS = [
   { value: "1", label: "January" },
@@ -148,10 +161,16 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
     const catSet = new Set<string>();
     for (const event of allEvents) {
       for (const cat of safeCategories(event)) {
-        catSet.add(cat);
+        const trimmed = cat?.trim();
+        if (trimmed) catSet.add(trimmed);
       }
     }
-    return EVENT_CATEGORIES.filter((cat) => catSet.has(cat));
+    const preferred = PREFERRED_CATEGORY_ORDER.filter((cat) => catSet.has(cat));
+    const preferredSet = new Set<string>(PREFERRED_CATEGORY_ORDER);
+    const extras = [...catSet]
+      .filter((cat) => !preferredSet.has(cat))
+      .sort((a, b) => a.localeCompare(b));
+    return [...preferred, ...extras];
   }, [allEvents]);
 
   const updateParams = (updates: Record<string, string | undefined>) => {
@@ -230,6 +249,7 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
           <div className="space-y-4">
             {docs.map((event, index) => {
               const eventDate = safeDate(event.eventDate);
+              const description = htmlToPlainText(event.description);
               if (!event.slug) return null;
               const isPast = isPastEvent(event, todayStr);
               const prevIsPast = index > 0 && isPastEvent(docs[index - 1]!, todayStr);
@@ -292,10 +312,8 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
                       <h2 className="mb-1 text-lg font-semibold text-[#2D2A24] transition-colors group-hover:text-sage-dark">
                         {event.title || "Untitled Event"}
                       </h2>
-                      {event.description && (
-                        <p className="mb-2 line-clamp-2 text-base text-[#4A4640]">
-                          {event.description}
-                        </p>
+                      {description && (
+                        <p className="mb-2 line-clamp-2 text-base text-[#4A4640]">{description}</p>
                       )}
                       <div className="flex flex-wrap gap-4 text-sm text-[#635E56]">
                         {event.eventTime && (
