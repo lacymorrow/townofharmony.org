@@ -130,8 +130,11 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
 
   if (loading) {
     return (
-      <section className="py-12 bg-cream">
-        <div className="container mx-auto px-4">
+      <section
+        className="py-12 bg-cream overflow-x-hidden"
+        style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}
+      >
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="space-y-8">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="bg-white rounded-xl border border-stone p-6 animate-pulse">
@@ -164,32 +167,35 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
   const showSections = type === "all" && periods.length > 0 && landmarks.length > 0;
 
   return (
-    <section className="py-12 bg-cream">
-      <div className="container mx-auto px-4">
-        {/* --- Mobile layout (< lg): stacked full-width cards --- */}
-        <div className="lg:hidden space-y-6">
-          {showSections && periods.length > 0 && (
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-sage-dark mb-2">
-              Historical Periods
+    <section
+      className="py-12 bg-cream overflow-x-hidden"
+      style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}
+    >
+      {/* --- Mobile layout (< lg): stacked full-width cards --- */}
+      <div className="lg:hidden max-w-2xl mx-auto px-4 space-y-6">
+        {showSections && periods.length > 0 && (
+          <h3 className="text-sm font-semibold uppercase tracking-widest text-sage-dark mb-2">
+            Historical Periods
+          </h3>
+        )}
+        {(showSections ? periods : articles).map((article) => (
+          <HistoryCard key={article.slug} article={article} />
+        ))}
+        {showSections && landmarks.length > 0 && (
+          <>
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-sage-dark mt-8 mb-2">
+              Landmarks
             </h3>
-          )}
-          {(showSections ? periods : articles).map((article) => (
-            <HistoryCard key={article.slug} article={article} />
-          ))}
-          {showSections && landmarks.length > 0 && (
-            <>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-sage-dark mt-8 mb-2">
-                Landmarks
-              </h3>
-              {landmarks.map((article) => (
-                <HistoryCard key={article.slug} article={article} />
-              ))}
-            </>
-          )}
-        </div>
+            {landmarks.map((article) => (
+              <HistoryCard key={article.slug} article={article} />
+            ))}
+          </>
+        )}
+      </div>
 
-        {/* --- Desktop layout (lg+): centered alternating timeline --- */}
-        <div className="hidden lg:block relative">
+      {/* --- Desktop layout (lg+): centered alternating timeline --- */}
+      <div className="hidden lg:block">
+        <div className="relative max-w-7xl mx-auto px-8">
           {/* Vertical line */}
           <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-0.5 bg-sage/25" />
 
@@ -207,14 +213,12 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
               return (
                 <div key={article.slug} className="relative">
                   {/* Timeline dot */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-8 z-10 flex flex-col items-center">
+                  <div className="absolute left-1/2 -translate-x-1/2 top-8 z-10">
                     <div className="w-4 h-4 rounded-full bg-sage-dark border-[3px] border-cream" />
                   </div>
 
                   {/* Card */}
-                  <div
-                    className={`w-[calc(50%-2.5rem)] ${isRight ? "ml-auto pl-0" : "mr-auto pr-0"}`}
-                  >
+                  <div className={`w-[calc(50%-2.5rem)] ${isRight ? "ml-auto" : "mr-auto"}`}>
                     <HistoryCard article={article} />
                   </div>
                 </div>
@@ -238,11 +242,7 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
                       <div className="absolute left-1/2 -translate-x-1/2 top-8 z-10">
                         <div className="w-4 h-4 rounded-full bg-wheat border-[3px] border-cream" />
                       </div>
-                      <div
-                        className={`w-[calc(50%-2.5rem)] ${
-                          isRight ? "ml-auto pl-0" : "mr-auto pr-0"
-                        }`}
-                      >
+                      <div className={`w-[calc(50%-2.5rem)] ${isRight ? "ml-auto" : "mr-auto"}`}>
                         <HistoryCard article={article} />
                       </div>
                     </div>
