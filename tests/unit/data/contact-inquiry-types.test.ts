@@ -1,13 +1,9 @@
 import { describe, expect, it } from "vitest";
-import {
-  contactInquiryTypes,
-  isGeneralInquiry,
-  pinGeneralInquiryFirst,
-} from "@/data/town/contact-inquiry-types";
+import { isGeneralInquiry } from "@/data/town/contact-inquiry-types";
 
 // Mirrors the live Builder.io entries as of LAC-3550: staff renamed the
 // general option's value to "general inquiry | other", which broke the old
-// value === "general" default/pin logic.
+// value === "general" default logic. Option order itself is Builder-managed.
 const liveBuilderOptions = [
   { value: "permits", label: "Permits & Zoning" },
   { value: "taxes", label: "Taxes & Billing" },
@@ -42,34 +38,5 @@ describe("isGeneralInquiry", () => {
     for (const option of liveBuilderOptions.filter((o) => o.value !== "general inquiry | other")) {
       expect(isGeneralInquiry(option)).toBe(false);
     }
-  });
-});
-
-describe("pinGeneralInquiryFirst", () => {
-  it("moves the staff-edited general entry from mid-list to the top (LAC-3550 regression)", () => {
-    const pinned = pinGeneralInquiryFirst(liveBuilderOptions);
-    expect(pinned[0]?.value).toBe("general inquiry | other");
-    expect(pinned).toHaveLength(liveBuilderOptions.length);
-  });
-
-  it("preserves the relative order of all other options", () => {
-    const pinned = pinGeneralInquiryFirst(liveBuilderOptions);
-    expect(pinned.slice(1).map((o) => o.value)).toEqual(
-      liveBuilderOptions.filter((o) => o.value !== "general inquiry | other").map((o) => o.value)
-    );
-  });
-
-  it("returns the same order when general is already first", () => {
-    expect(pinGeneralInquiryFirst(contactInquiryTypes)[0]?.value).toBe("general");
-    expect(pinGeneralInquiryFirst(contactInquiryTypes)).toEqual(contactInquiryTypes);
-  });
-
-  it("returns the list unchanged when no general option exists", () => {
-    const withoutGeneral = liveBuilderOptions.filter((o) => o.value !== "general inquiry | other");
-    expect(pinGeneralInquiryFirst(withoutGeneral)).toEqual(withoutGeneral);
-  });
-
-  it("handles an empty list", () => {
-    expect(pinGeneralInquiryFirst([])).toEqual([]);
   });
 });
