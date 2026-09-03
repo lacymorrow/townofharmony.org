@@ -1,4 +1,9 @@
 import { htmlToPlainText } from "@/lib/html-to-text";
+import { sanitizeHtml } from "@/lib/sanitize-html";
+
+// Builder richText fields store HTML strings (usually one line); static data
+// stores plain newline-delimited text. Detect any HTML tag to branch. (LAC-3639)
+const HTML_TAG_PATTERN = /<[a-z][\s\S]*>/i;
 
 interface PayloadRichTextProps {
 	content: string | Record<string, unknown> | null | undefined;
@@ -14,8 +19,19 @@ export function PayloadRichText({ content, className }: PayloadRichTextProps) {
 		return null;
 	}
 
-	// Handle plain string content (from static data)
+	// Handle plain string content (from static data) or HTML string (Builder)
 	if (typeof content === "string") {
+		// Builder richText fields are HTML strings — sanitize + render as markup
+		// so tags don't print as literal text (same fix as LAC-3559 / PR #258).
+		if (HTML_TAG_PATTERN.test(content)) {
+			return (
+				<div
+					className={className ?? "prose prose-lg max-w-none"}
+					dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
+				/>
+			);
+		}
+
 		const paragraphs = content.split("\n").filter((p) => p.trim());
 		return (
 			<div className={className ?? "prose prose-lg max-w-none"}>
