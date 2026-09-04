@@ -1985,7 +1985,7 @@ export const meetings: TownMeeting[] = [
 		title: "July Town Council Meeting",
 		slug: "july-town-council-meeting",
 		type: "Council",
-		meetingDate: "2026-06-01",
+		meetingDate: "2026-07-06",
 		meetingTime: "6:00 - 8:00 PM",
 		location: "Town Hall",
 		agenda: "",
