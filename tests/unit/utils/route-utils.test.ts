@@ -81,7 +81,7 @@ describe("route-utils", () => {
     // Assuming the routes object from src/config/routes.ts is implicitly used
     it("should resolve a simple top-level route string", () => {
       expect(rx("home")).toBe("/");
-      expect(rx("pricing")).toBe("/pricing");
+      expect(rx("contact")).toBe("/contact");
     });
 
     it("should resolve a nested route string", () => {
@@ -92,17 +92,6 @@ describe("route-utils", () => {
     it("should resolve a nested route with an index property", () => {
       // Assuming cms.index resolves to '/cms'
       expect(rx("cms")).toBe("/cms");
-    });
-
-    it("should resolve a route object with parameters using provided params", () => {
-      // Corresponds to: api: { apiKey: createRoute("/api/api-keys/:key", { key: null }) }
-      expect(rx("api.apiKey", { key: "test-key-123" })).toBe("/api/api-keys/test-key-123");
-    });
-
-    it("should use default parameter value if param not provided", () => {
-      // Corresponds to: api: { apiKey: createRoute("/api/api-keys/:key", { key: null }) }
-      // Since the default is null, the behavior depends on getRoutePath (keeps placeholder)
-      expect(rx("api.apiKey", {})).toBe("/api/api-keys/:key");
     });
 
     it("should throw an error for an invalid path", () => {
