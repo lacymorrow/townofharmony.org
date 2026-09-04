@@ -1,6 +1,5 @@
 import type { NextRequest } from "next/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
 process.env.NEXT_PUBLIC_HAS_BLOG = "true";
@@ -56,7 +55,7 @@ describe("RSS feed route (/rss.xml)", () => {
     expect(xml).toContain(
       `<atom:link href="${siteConfig.url}/rss.xml" rel="self" type="application/rss+xml" />`
     );
-    expect(xml).toContain(`<link>${siteConfig.url}${routes.blog}</link>`);
+    expect(xml).toContain(`<link>${siteConfig.url}/blog</link>`);
 
     // Two items present, draft excluded
     expect(xml.match(/<item>/g)?.length).toBe(2);
