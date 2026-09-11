@@ -45,7 +45,7 @@
     "start": "next start",
     "upstream:add": "tsx scripts/git-add-upstream.ts",
     "upstream:pull": "tsx scripts/git-sync-upstream.ts",
-    "postinstall": "npx next telemetry disable",
+    "postinstall": "npx next telemetry disable && (git config core.hooksPath .githooks 2>/dev/null || true)",
     "pull": "tsx scripts/sync-upstream.ts",
     "workers:build": "tsc -p ./tsconfig.workers.json",
     "workers:dev": "concurrently \"npm run workers:build\" \"tsc -p ./tsconfig.workers.json --watch\"",
