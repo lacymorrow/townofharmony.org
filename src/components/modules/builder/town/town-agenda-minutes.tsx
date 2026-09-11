@@ -7,6 +7,7 @@ import type { TownMeeting } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
 import { getCanonicalMeetingSlug } from "@/lib/meeting-slug";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 import { cn } from "@/lib/utils";
 
 type Tab = "agenda" | "minutes";
@@ -136,9 +137,10 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
                         <p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-2">
                           Agenda
                         </p>
-                        <pre className="text-base text-[#4A4640] whitespace-pre-wrap font-sans leading-relaxed">
-                          {meeting.agenda}
-                        </pre>
+                        <div
+                          className="prose prose-sm max-w-none text-[#4A4640] leading-relaxed"
+                          dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.agenda) }}
+                        />
                       </div>
                     )}
 
@@ -199,9 +201,10 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
                         <p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-2">
                           Minutes
                         </p>
-                        <pre className="text-base text-[#4A4640] whitespace-pre-wrap font-sans leading-relaxed">
-                          {meeting.minutes}
-                        </pre>
+                        <div
+                          className="prose prose-sm max-w-none text-[#4A4640] leading-relaxed"
+                          dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.minutes) }}
+                        />
                       </div>
                     )}
 
