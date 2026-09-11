@@ -31,6 +31,7 @@ import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-serve
 import { fetchBuilderEntries } from "@/lib/builder-content-fetch";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
 import { logger } from "@/lib/logger";
+import { partitionByCoords } from "@/lib/map-coords";
 import { findMeetingBySlug, getCanonicalMeetingSlug } from "@/lib/meeting-slug";
 import { slugify } from "@/lib/utils/extract-headings";
 
@@ -450,7 +451,15 @@ export const getActiveAnnouncements = async () => {
  * Get map businesses for the interactive map page.
  */
 export const getMapBusinesses = async (): Promise<MapBusiness[]> => {
-	return [...(await resolveMapBusinesses())];
+	const { mappable, dropped } = partitionByCoords(await resolveMapBusinesses());
+	if (dropped.length > 0) {
+		// Builder editors can publish a business without coordinates; Leaflet
+		// throws on [undefined, undefined] and unmounts the map page.
+		logger.warn("Skipping map businesses with missing/invalid coordinates", {
+			names: dropped.map((b) => b.name),
+		});
+	}
+	return mappable;
 };
 
 /**

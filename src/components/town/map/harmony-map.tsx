@@ -7,6 +7,7 @@ import { harmonyBoundary } from "@/data/town/harmony-boundary";
 import { settings } from "@/data/town/settings";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { escapeHtml, safeHttpUrl } from "@/lib/map-popup-safe";
+import { hasValidCoords } from "@/lib/map-coords";
 import type L from "leaflet";
 
 const LEAFLET_CSS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
@@ -160,6 +161,7 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 		markersRef.current.clear();
 
 		businesses.forEach((biz) => {
+			if (!hasValidCoords(biz)) return;
 			const color = getCategoryColor(biz.category);
 			const isSelected = selectedBusiness?.id === biz.id;
 			const directionsLink = getDirectionsUrl(biz.address);
@@ -211,7 +213,7 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 
 	const flyTo = useCallback((business: MapBusiness) => {
 		const map = mapRef.current;
-		if (!map) return;
+		if (!map || !hasValidCoords(business)) return;
 
 		map.flyTo([business.lat, business.lng], 17, {
 			duration: 0.8,
