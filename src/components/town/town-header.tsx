@@ -127,7 +127,8 @@ export function TownHeader({
 								priority
 							/>
 							<div>
-								<h1 className="text-2xl font-serif font-bold text-sage-dark">{settings.siteTitle}</h1>
+								{/* Not an h1: the header repeats on every page, so the page's own heading owns the h1 (LAC-3516) */}
+								<p className="text-2xl font-serif font-bold text-sage-dark">{settings.siteTitle}</p>
 								<p className="text-sm text-[#635E56] uppercase tracking-[1.5px] font-semibold">
 									{settings.branding.county}, {settings.branding.state}
 								</p>
