@@ -1,5 +1,6 @@
 import { Calendar } from "lucide-react";
 import Link from "next/link";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { getEvents } from "@/lib/town-data";
 
 export async function UpcomingEvents() {
@@ -39,7 +40,16 @@ export async function UpcomingEvents() {
 								{event.title}
 							</h3>
 							{event.locationAddress && (
-								<p className="text-[13px] text-[#4A4640]">{event.locationAddress}</p>
+								<p className="text-[13px] text-[#4A4640]">
+									{event.locationAddress}
+									<AddressCopyButton
+										address={event.locationAddress}
+										label={event.title}
+										tone="default"
+										className="h-6 w-6 ml-0.5 align-middle"
+										iconClassName="h-3.5 w-3.5"
+									/>
+								</p>
 							)}
 						</div>
 					</Link>

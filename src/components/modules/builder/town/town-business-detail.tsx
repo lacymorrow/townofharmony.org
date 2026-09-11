@@ -7,7 +7,10 @@ import { LightboxImage } from "@/components/ui/lightbox-image";
 import { businesses as staticBusinesses } from "@/data/town/businesses";
 import type { TownBusiness } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
+import { getMapUrl } from "@/lib/map-utils";
 import { sanitizeHtml } from "@/lib/sanitize-html";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 
 interface TownBusinessDetailProps {
   slug?: string;
@@ -138,13 +141,14 @@ const TownBusinessDetailInner = ({ slug: slugProp }: TownBusinessDetailProps) =>
                 <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
                   Phone
                 </dt>
-                <dd>
+                <dd className="flex items-center gap-1">
                   <a
                     href={`tel:${business.phone}`}
                     className="text-sage hover:text-sage-dark font-medium transition-colors"
                   >
                     {business.phone}
                   </a>
+                  <PhoneCopyButton phone={business.phone} label={business.name} tone="default" />
                 </dd>
               </div>
             )}
@@ -180,12 +184,24 @@ const TownBusinessDetailInner = ({ slug: slugProp }: TownBusinessDetailProps) =>
                 </dd>
               </div>
             )}
-            <div className="sm:col-span-2">
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
-                Address
-              </dt>
-              <dd className="text-sage-dark font-medium">{fullAddress}</dd>
-            </div>
+            {business.address && (
+              <div className="sm:col-span-2">
+                <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+                  Address
+                </dt>
+                <dd className="text-sage-dark font-medium flex items-center gap-1">
+                  <a
+                    href={getMapUrl(fullAddress)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-sage-dark transition-colors"
+                  >
+                    {fullAddress}
+                  </a>
+                  <AddressCopyButton address={fullAddress} label={business.name} tone="default" />
+                </dd>
+              </div>
+            )}
           </dl>
         </div>
 

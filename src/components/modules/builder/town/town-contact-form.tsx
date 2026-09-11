@@ -2,12 +2,15 @@
 
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { TownContactForm as ContactFormImpl } from "@/components/modules/town/town-contact-form";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import {
   type BuilderSettingsFlat,
   settings as staticSettings,
   toTownSettings,
 } from "@/data/town/settings";
 import { useBuilderEntry } from "@/lib/builder-data";
+import { getMapUrl } from "@/lib/map-utils";
 
 interface TownContactFormProps {
   recipientEmail?: string;
@@ -28,24 +31,32 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
       label: "Phone",
       value: settings.contactInfo.phone,
       href: `tel:${settings.contactInfo.phone.replace(/[^0-9+]/g, "")}`,
+      copy: settings.contactInfo.phone ? (
+        <PhoneCopyButton phone={settings.contactInfo.phone} label="Phone" />
+      ) : null,
     },
     {
       icon: MapPin,
       label: "Address",
       value: settings.contactInfo.address,
-      href: `https://maps.google.com/?q=${encodeURIComponent(settings.contactInfo.address)}`,
+      href: getMapUrl(settings.contactInfo.address),
+      copy: settings.contactInfo.address ? (
+        <AddressCopyButton address={settings.contactInfo.address} label="Address" />
+      ) : null,
     },
     {
       icon: Mail,
       label: "Mailing Address",
       value: settings.contactInfo.mailingAddress,
       href: null,
+      copy: null,
     },
     {
       icon: Clock,
       label: "Office Hours",
       value: `${settings.officeHours.weekday}\n${settings.officeHours.weekend}`,
       href: null,
+      copy: null,
     },
   ];
 
@@ -57,8 +68,8 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
           <div className="space-y-4">
             {contactCards.map((card) => {
               const Icon = card.icon;
-              const content = (
-                <div className="flex items-start gap-4 rounded-xl border border-[#DDD7CC] bg-warm-white p-5 transition-shadow hover:shadow-md">
+              const inner = (
+                <div className="flex items-start gap-4">
                   <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-sage-dark">
                     <Icon className="h-5 w-5 text-wheat" />
                   </div>
@@ -73,20 +84,28 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
                 </div>
               );
 
-              if (card.href) {
-                return (
-                  <a
-                    key={card.label}
-                    href={card.href}
-                    target={card.label === "Address" ? "_blank" : undefined}
-                    rel={card.label === "Address" ? "noopener noreferrer" : undefined}
-                    className="block cursor-pointer"
-                  >
-                    {content}
-                  </a>
-                );
-              }
-              return <div key={card.label}>{content}</div>;
+              const link = card.href ? (
+                <a
+                  href={card.href}
+                  target={card.label === "Address" ? "_blank" : undefined}
+                  rel={card.label === "Address" ? "noopener noreferrer" : undefined}
+                  className="block flex-1 cursor-pointer"
+                >
+                  {inner}
+                </a>
+              ) : (
+                inner
+              );
+
+              return (
+                <div
+                  key={card.label}
+                  className="flex items-start gap-4 rounded-xl border border-[#DDD7CC] bg-warm-white p-5 transition-shadow hover:shadow-md"
+                >
+                  {link}
+                  {card.copy}
+                </div>
+              );
             })}
           </div>
 

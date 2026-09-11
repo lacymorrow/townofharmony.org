@@ -2,8 +2,10 @@
 
 import { cn } from "@/lib/utils";
 import type { MapBusiness } from "@/lib/map-utils";
-import { getCategoryColor, getDirectionsUrl } from "@/lib/map-utils";
+import { getCategoryColor, getDirectionsUrl, getMapUrl } from "@/lib/map-utils";
 import { MapPin, Phone, Navigation, Globe } from "lucide-react";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 
 interface BusinessCardProps {
 	business: MapBusiness;
@@ -38,12 +40,40 @@ export const BusinessCard = ({ business, isSelected, onClick }: BusinessCardProp
 					</h3>
 					<div className="flex items-center gap-1 mt-1">
 						<MapPin className="h-3 w-3 text-[#635E56] shrink-0" aria-hidden="true" />
-						<p className="text-sm text-[#635E56] leading-tight truncate">{business.address}</p>
+						<a
+							href={getMapUrl(business.address)}
+							target="_blank"
+							rel="noopener noreferrer"
+							onClick={(e) => e.stopPropagation()}
+							className="text-sm text-[#635E56] leading-tight truncate hover:text-sage-dark transition-colors"
+						>
+							{business.address}
+						</a>
+						<AddressCopyButton
+							address={business.address}
+							label={business.name}
+							tone="default"
+							className="h-6 w-6"
+							iconClassName="h-3.5 w-3.5"
+						/>
 					</div>
 					{business.phone && (
 						<div className="flex items-center gap-1 mt-0.5">
 							<Phone className="h-3 w-3 text-[#635E56] shrink-0" aria-hidden="true" />
-							<p className="text-sm text-[#635E56]">{business.phone}</p>
+							<a
+								href={`tel:+1${business.phone.replace(/\D/g, "")}`}
+								onClick={(e) => e.stopPropagation()}
+								className="text-sm text-[#635E56] hover:text-sage-dark transition-colors"
+							>
+								{business.phone}
+							</a>
+							<PhoneCopyButton
+								phone={business.phone}
+								label={business.name}
+								tone="default"
+								className="h-6 w-6"
+								iconClassName="h-3.5 w-3.5"
+							/>
 						</div>
 					)}
 					<div className="mt-1.5 flex items-center gap-1.5 flex-wrap">

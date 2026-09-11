@@ -1,5 +1,6 @@
 import { Calendar, Clock, MapPin, Repeat, Users } from "lucide-react";
 import Link from "next/link";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { LightboxImage } from "@/components/ui/lightbox-image";
@@ -97,6 +98,13 @@ export function EventCard({ event }: EventCardProps) {
 							<span className="align-middle">
 								<MapPin className="h-3.5 w-3.5 inline-block align-middle mr-1" aria-hidden="true" />
 								{event.locationAddress}
+								<AddressCopyButton
+									address={event.locationAddress}
+									label={event.title}
+									tone="default"
+									className="h-6 w-6 ml-0.5 align-middle"
+									iconClassName="h-3.5 w-3.5"
+								/>
 							</span>
 						)}
 

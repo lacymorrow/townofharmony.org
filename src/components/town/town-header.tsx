@@ -4,6 +4,8 @@ import { AlertTriangle, Calendar, Menu, Phone, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { TownSearch } from "@/components/town/town-search";
 import { Button } from "@/components/ui/button";
 import { getMapUrl } from "@/lib/map-utils";
@@ -71,21 +73,27 @@ export function TownHeader({
 				<div className="container mx-auto px-4">
 					<div className="flex items-center justify-between py-2 text-sm">
 						<div className="flex items-center gap-6">
-							<a
-								href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
-								className="flex items-center gap-1 hover:text-white transition-colors"
-							>
-								<Phone className="h-3 w-3" aria-hidden="true" />
-								{settings.contactInfo.phone}
-							</a>
-							<a
-								href={getMapUrl(settings.contactInfo.address)}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hidden md:inline hover:text-white transition-colors"
-							>
-								{settings.contactInfo.address}
-							</a>
+							<span className="inline-flex items-center gap-1">
+								<a
+									href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
+									className="flex items-center gap-1 hover:text-white transition-colors"
+								>
+									<Phone className="h-3 w-3" aria-hidden="true" />
+									{settings.contactInfo.phone}
+								</a>
+								<PhoneCopyButton phone={settings.contactInfo.phone} tone="onDark" />
+							</span>
+							<span className="hidden md:inline-flex items-center gap-1">
+								<a
+									href={getMapUrl(settings.contactInfo.address)}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="hover:text-white transition-colors"
+								>
+									{settings.contactInfo.address}
+								</a>
+								<AddressCopyButton address={settings.contactInfo.address} tone="onDark" />
+							</span>
 						</div>
 						<div className="flex items-center gap-4">
 							{process.env.NEXT_PUBLIC_FEATURE_EVENTS_ENABLED === "true" && (

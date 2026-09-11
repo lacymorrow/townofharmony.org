@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { PayloadRichText } from "@/components/town/payload-rich-text";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAnnouncementById } from "@/lib/town-data";
@@ -254,6 +255,7 @@ export async function EmergencyDetail({ alertId }: EmergencyDetailProps) {
 											<a href={`tel:${contactInfo.phone.replace(/[^\d+]/g, "")}`} className={`font-bold hover:underline ${contactInfo.phone === "911" ? "text-barn-red text-xl" : "text-sage text-lg"}`}>
 												{contactInfo.phone}
 											</a>
+											<PhoneCopyButton phone={contactInfo.phone} label={contactInfo.name || "Emergency Contact"} />
 										</p>
 									)}
 									{contactInfo.email && (
@@ -276,11 +278,17 @@ export async function EmergencyDetail({ alertId }: EmergencyDetailProps) {
 						</CardHeader>
 						<CardContent className="space-y-3">
 							<div>
-								<a href="tel:911" className="text-barn-red font-bold text-2xl hover:underline">911</a>
+								<span className="inline-flex items-center gap-2">
+									<a href="tel:911" className="text-barn-red font-bold text-2xl hover:underline">911</a>
+									<PhoneCopyButton phone="911" label="911" tone="onLight" />
+								</span>
 								<div className="text-sm text-[#4A4640]">Police, Fire, Medical</div>
 							</div>
 							<div>
-								<a href="tel:3045550100" className="text-barn-red font-bold text-lg hover:underline">(304) 555-0100</a>
+								<span className="inline-flex items-center gap-2">
+									<a href="tel:3045550100" className="text-barn-red font-bold text-lg hover:underline">(304) 555-0100</a>
+									<PhoneCopyButton phone="(304) 555-0100" label="Non-Emergency Line" tone="onLight" />
+								</span>
 								<div className="text-sm text-[#4A4640]">Non-life-threatening emergencies</div>
 							</div>
 						</CardContent>

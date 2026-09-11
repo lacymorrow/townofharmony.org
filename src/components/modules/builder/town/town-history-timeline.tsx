@@ -1,5 +1,6 @@
 "use client";
 
+import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import { historyArticles as staticHistory } from "@/data/town/history";
 import type { TownHistoryArticle } from "@/data/town/types";
@@ -106,6 +107,13 @@ const HistoryCard = ({ article }: { article: TownHistoryArticle }) => (
             >
               {article.address}
             </a>
+            <AddressCopyButton
+              address={article.address}
+              label={article.title}
+              tone="default"
+              className="h-6 w-6 ml-1 align-middle"
+              iconClassName="h-3.5 w-3.5"
+            />
           </p>
         )}
       </div>

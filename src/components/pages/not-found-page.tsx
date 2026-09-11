@@ -2,6 +2,7 @@
 
 import { Calendar, FileText, Home, MapPin, Phone, Users } from "lucide-react";
 import Link from "next/link";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { renderCopyright, settings as staticSettings } from "@/data/town/settings";
 import type { TownSettings } from "@/data/town/types";
 
@@ -124,20 +125,23 @@ export const NotFoundPage = ({ settings = staticSettings }: NotFoundPageProps = 
 						Still need help?
 					</h2>
 					<div className="flex flex-col sm:flex-row gap-8 max-w-3xl">
-						<a
-							href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
-							className="flex items-center gap-3 group"
-						>
-							<div className="w-10 h-10 bg-sage-dark rounded-lg flex items-center justify-center flex-shrink-0">
-								<Phone className="h-5 w-5 text-wheat" />
-							</div>
-							<div>
-								<p className="text-sm font-semibold text-[#2D2A24]">Call us</p>
-								<p className="text-sage text-sm group-hover:text-sage-dark transition-colors">
-									{settings.contactInfo.phone}
-								</p>
-							</div>
-						</a>
+						<div className="flex items-center gap-2">
+							<a
+								href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
+								className="flex items-center gap-3 group"
+							>
+								<div className="w-10 h-10 bg-sage-dark rounded-lg flex items-center justify-center flex-shrink-0">
+									<Phone className="h-5 w-5 text-wheat" />
+								</div>
+								<div>
+									<p className="text-sm font-semibold text-[#2D2A24]">Call us</p>
+									<p className="text-sage text-sm group-hover:text-sage-dark transition-colors">
+										{settings.contactInfo.phone}
+									</p>
+								</div>
+							</a>
+							<PhoneCopyButton phone={settings.contactInfo.phone} />
+						</div>
 						<div className="flex items-center gap-3">
 							<div className="w-10 h-10 bg-sage-dark rounded-lg flex items-center justify-center flex-shrink-0">
 								<MapPin className="h-5 w-5 text-wheat" />

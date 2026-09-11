@@ -11,8 +11,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { PayloadRichText, extractTextFromRichText } from "@/components/town/payload-rich-text";
 import { LightboxImage } from "@/components/ui/lightbox-image";
+import { getMapUrl } from "@/lib/map-utils";
 import { formatDate, formatTime } from "@/lib/utils";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
 
@@ -120,7 +123,20 @@ export function EventDetail({ event }: EventDetailProps) {
 									<p className="text-sm text-muted-foreground">Email: {event.contactEmail}</p>
 								)}
 								{event.contactPhone && (
-									<p className="text-sm text-muted-foreground">Phone: {event.contactPhone}</p>
+									<p className="text-sm text-muted-foreground">
+										Phone:{" "}
+										<a
+											href={`tel:+1${event.contactPhone.replace(/\D/g, "")}`}
+											className="text-sage-dark hover:underline"
+										>
+											{event.contactPhone}
+										</a>
+										<PhoneCopyButton
+											phone={event.contactPhone}
+											label={event.title}
+											tone="default"
+										/>
+									</p>
 								)}
 							</CardContent>
 						</Card>
@@ -156,7 +172,21 @@ export function EventDetail({ event }: EventDetailProps) {
 								<div className="flex items-start gap-3">
 									<MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
 									<div>
-										<p className="font-medium">{event.locationAddress}</p>
+										<p className="font-medium">
+											<a
+												href={getMapUrl(event.locationAddress)}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="hover:underline"
+											>
+												{event.locationAddress}
+											</a>
+										</p>
+										<AddressCopyButton
+											address={event.locationAddress}
+											label={event.title}
+											tone="default"
+										/>
 									</div>
 								</div>
 							)}

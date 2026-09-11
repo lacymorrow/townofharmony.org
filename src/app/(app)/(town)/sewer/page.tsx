@@ -11,6 +11,9 @@ import { cn } from "@/lib/utils";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 import { siteConfig } from "@/config/site-config";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { getMapUrl } from "@/lib/map-utils";
 
 interface BuilderSewerRate {
 	tierId: string;
@@ -116,9 +119,12 @@ export default async function SewerPage() {
 					<p className="text-muted-foreground">
 						To pay your sewer bill, please visit Town Hall or contact the{" "}
 						{sewerContactInfo.department} at{" "}
-						<a href={`tel:${sewerCopy.contactPhone.replace(/[^0-9+]/g, "")}`} className="font-medium underline">
-							{sewerCopy.contactPhone}
-						</a>{" "}
+						<span className="inline-flex items-center gap-1">
+							<a href={`tel:${sewerCopy.contactPhone.replace(/[^0-9+]/g, "")}`} className="font-medium underline">
+								{sewerCopy.contactPhone}
+							</a>
+							<PhoneCopyButton phone={sewerCopy.contactPhone} label={sewerContactInfo.department} tone="default" />
+						</span>{" "}
 						or use our{" "}
 						<a href="/contact" className="font-medium underline">
 							contact form
@@ -135,7 +141,14 @@ export default async function SewerPage() {
 							<Phone className="mt-0.5 h-5 w-5 text-muted-foreground" />
 							<div>
 								<p className="text-sm font-medium">Phone</p>
-								<p className="text-sm text-muted-foreground">{sewerCopy.contactPhone}</p>
+								<p className="text-sm text-muted-foreground">
+									<span className="inline-flex items-center gap-1">
+										<a href={`tel:+1${sewerCopy.contactPhone.replace(/\D/g, "")}`} className="underline hover:text-foreground">
+											{sewerCopy.contactPhone}
+										</a>
+										<PhoneCopyButton phone={sewerCopy.contactPhone} label={sewerContactInfo.department} tone="default" />
+									</span>
+								</p>
 							</div>
 						</div>
 						<div className="flex items-start gap-3">
@@ -156,7 +169,14 @@ export default async function SewerPage() {
 							<MapPin className="mt-0.5 h-5 w-5 text-muted-foreground" />
 							<div>
 								<p className="text-sm font-medium">Address</p>
-								<p className="text-sm text-muted-foreground">{sewerCopy.contactAddress}</p>
+								<p className="text-sm text-muted-foreground">
+									<span className="inline-flex items-center gap-1">
+										<a href={getMapUrl(sewerCopy.contactAddress)} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+											{sewerCopy.contactAddress}
+										</a>
+										<AddressCopyButton address={sewerCopy.contactAddress} label={sewerContactInfo.department} tone="default" />
+									</span>
+								</p>
 							</div>
 						</div>
 					</CardContent>

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { siteConfig } from "@/config/site-config";
 import { getMapUrl } from "@/lib/map-utils";
 import { sanitizeHtml } from "@/lib/sanitize-html";
@@ -122,21 +124,27 @@ export default async function AboutPage() {
 						{settings.contactInfo.email}
 					</a>{" "}
 					or call{" "}
-					<a
-						href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
-						className="text-sage hover:text-sage-dark underline"
-					>
-						{settings.contactInfo.phone}
-					</a>
+					<span className="inline-flex items-center gap-1">
+						<a
+							href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
+							className="text-sage hover:text-sage-dark underline"
+						>
+							{settings.contactInfo.phone}
+						</a>
+						<PhoneCopyButton phone={settings.contactInfo.phone} />
+					</span>
 					. Town Hall is located at{" "}
-					<a
-						href={getMapUrl(settings.contactInfo.address)}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="text-sage hover:text-sage-dark underline"
-					>
-						{settings.contactInfo.address}
-					</a>
+					<span className="inline-flex items-center gap-1">
+						<a
+							href={getMapUrl(settings.contactInfo.address)}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="text-sage hover:text-sage-dark underline"
+						>
+							{settings.contactInfo.address}
+						</a>
+						<AddressCopyButton address={settings.contactInfo.address} />
+					</span>
 					.
 				</p>
 			</div>

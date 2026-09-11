@@ -27,6 +27,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { SEWER_ACCOUNT_REGEX, type SewerRateDisplay } from "@/data/town/sewer-rates";
 import { createSewerCheckoutSession } from "@/server/actions/sewer-payments";
+import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 
 const sewerPaymentFormSchema = z.object({
 	name: z.string().min(1, "Name is required"),
@@ -106,7 +107,14 @@ export const SewerPaymentForm = ({ stripeEnabled, rates, contactDepartment, cont
 				</h3>
 				<p className="text-base text-yellow-700 dark:text-yellow-300">
 					Online sewer bill payments are not currently available. Please visit Town Hall or
-					contact the {contactDepartment} at {contactPhone} to pay your bill.
+					contact the {contactDepartment} at{" "}
+					<span className="inline-flex items-center gap-1">
+						<a href={`tel:+1${contactPhone.replace(/\D/g, "")}`} className="underline">
+							{contactPhone}
+						</a>
+						<PhoneCopyButton phone={contactPhone} label={contactDepartment} tone="default" />
+					</span>{" "}
+					to pay your bill.
 				</p>
 			</div>
 		);
@@ -171,8 +179,14 @@ export const SewerPaymentForm = ({ stripeEnabled, rates, contactDepartment, cont
 									</FormControl>
 									<FormDescription>
 										Enter the account number shown on your most recent sewer
-										bill. Contact Town Hall at (704) 546-2339 if you can't
-										locate it.
+										bill. Contact Town Hall at{" "}
+										<span className="inline-flex items-center gap-1">
+											<a href="tel:+17045462339" className="underline">
+												(704) 546-2339
+											</a>
+											<PhoneCopyButton phone="(704) 546-2339" label="Town Hall" tone="default" />
+										</span>{" "}
+										if you can't locate it.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
