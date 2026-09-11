@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import { getNews } from "@/lib/town-data";
 import { extractTextFromRichText } from "@/components/town/payload-rich-text";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
 
 const ITEMS_PER_PAGE = 9;
@@ -49,7 +50,7 @@ export async function NewsGrid({ page, category, search }: NewsGridProps) {
 					const featuredImage = getMediaUrl(article.featuredImage);
 
 					const excerptText =
-						(article.excerpt as string) ||
+						htmlToPlainText(article.excerpt as string) ||
 						extractTextFromRichText(article.content as any)?.substring(0, 150) + "...";
 
 					return (
