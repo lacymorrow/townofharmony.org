@@ -5,6 +5,8 @@ import type { MapBusiness } from "@/lib/map-utils";
 import { getCategoryColor, getDirectionsUrl, HARMONY_CENTER, DEFAULT_ZOOM } from "@/lib/map-utils";
 import { harmonyBoundary } from "@/data/town/harmony-boundary";
 import { settings } from "@/data/town/settings";
+import { htmlToPlainText } from "@/lib/html-to-text";
+import { escapeHtml, safeHttpUrl } from "@/lib/map-popup-safe";
 import type L from "leaflet";
 
 const LEAFLET_CSS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
@@ -82,7 +84,7 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 
 			boundaryLayer.bindPopup(
 				`<div style="font-family: system-ui, sans-serif; min-width: 200px;">
-					<h3 style="margin:0 0 6px; font-size:15px; font-weight:700; color:#2C3B26;">${settings.siteTitle}</h3>
+					<h3 style="margin:0 0 6px; font-size:15px; font-weight:700; color:#2C3B26;">${escapeHtml(settings.siteTitle)}</h3>
 					<div style="display:flex; gap:16px; margin-bottom:8px;">
 						<div>
 							<p style="margin:0; font-size:11px; color:#635E56; text-transform:uppercase; letter-spacing:0.5px;">Population</p>
@@ -93,7 +95,7 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 							<p style="margin:2px 0 0; font-size:16px; font-weight:600; color:#2D2A24;">~1.4 sq mi</p>
 						</div>
 					</div>
-					<p style="margin:0 0 6px; font-size:12px; color:#635E56; line-height:1.4;">${settings.branding.county}, ${settings.branding.state}<br/>Incorporated ${settings.branding.established}</p>
+					<p style="margin:0 0 6px; font-size:12px; color:#635E56; line-height:1.4;">${escapeHtml(settings.branding.county)}, ${escapeHtml(settings.branding.state)}<br/>Incorporated ${escapeHtml(settings.branding.established)}</p>
 					<a href="https://www.townofharmony.org" target="_blank" rel="noopener noreferrer"
 						style="display:inline-block; padding:4px 12px; border-radius:9999px; font-size:11px; font-weight:500; color:#fff; background:#3D5038; text-decoration:none;">
 						Visit townofharmony.org
@@ -171,16 +173,26 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 				fillOpacity: 0.9,
 			}).addTo(map);
 
+			// LAC-3637: biz fields come from Builder CMS / Google Places sync and
+			// land in Leaflet's innerHTML. Escape text, strip rich-text HTML from
+			// description, and reject non-http(s) URLs before href interpolation.
+			const safeName = escapeHtml(biz.name);
+			const safeAddress = escapeHtml(biz.address);
+			const safePhone = escapeHtml(biz.phone);
+			const safeCategory = escapeHtml(biz.category);
+			const safeDescription = escapeHtml(htmlToPlainText(biz.description));
+			const websiteUrl = safeHttpUrl(biz.website);
+
 			marker.bindPopup(
 				`<div style="font-family: system-ui, sans-serif; min-width: 180px;">
-					<h3 style="margin:0 0 4px; font-size:14px; font-weight:600; color:#2D2A24;">${biz.name}</h3>
-					<p style="margin:0 0 3px; font-size:12px; color:#635E56; line-height:1.4;">${biz.address}</p>
-					${biz.phone ? `<p style="margin:0 0 3px; font-size:12px; color:#635E56;">${biz.phone}</p>` : ""}
-					<span style="display:inline-block; margin-top:4px; padding:2px 8px; border-radius:9999px; font-size:11px; font-weight:500; color:#fff; background:${color};">${biz.category}</span>
-					${biz.description ? `<p style="margin:6px 0 0; font-size:11px; color:#635E56; line-height:1.4;">${biz.description}</p>` : ""}
+					<h3 style="margin:0 0 4px; font-size:14px; font-weight:600; color:#2D2A24;">${safeName}</h3>
+					<p style="margin:0 0 3px; font-size:12px; color:#635E56; line-height:1.4;">${safeAddress}</p>
+					${safePhone ? `<p style="margin:0 0 3px; font-size:12px; color:#635E56;">${safePhone}</p>` : ""}
+					<span style="display:inline-block; margin-top:4px; padding:2px 8px; border-radius:9999px; font-size:11px; font-weight:500; color:#fff; background:${color};">${safeCategory}</span>
+					${safeDescription ? `<p style="margin:6px 0 0; font-size:11px; color:#635E56; line-height:1.4;">${safeDescription}</p>` : ""}
 					<div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
-						${biz.website ? `<a href="${biz.website}" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:9999px; font-size:11px; font-weight:500; color:#fff; background:#2E86AB; text-decoration:none;">&#x1F310; Website</a>` : ""}
-						<a href="${directionsLink}" target="_blank" rel="noopener noreferrer"
+						${websiteUrl ? `<a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:9999px; font-size:11px; font-weight:500; color:#fff; background:#2E86AB; text-decoration:none;">&#x1F310; Website</a>` : ""}
+						<a href="${escapeHtml(directionsLink)}" target="_blank" rel="noopener noreferrer"
 							style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:9999px; font-size:11px; font-weight:500; color:#3D5038; background:#D4CBBD66; text-decoration:none;">
 							&#x2794; Directions
 						</a>
