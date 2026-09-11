@@ -93,7 +93,9 @@ describe("HeroSingleSlide", () => {
   });
 
   it("renders the slide's copy when one slide exists", () => {
-    const html = renderToString(<HeroSingleSlide slide={slides[0]} />);
+    // Copy is sourced from textSlide (LAC-2995 made hero copy Builder-editable;
+    // LAC-3008 decoupled the text column from the media slide).
+    const html = renderToString(<HeroSingleSlide textSlide={slides[0]} mediaSlide={slides[0]} />);
 
     expect(html).toContain("First Slide Title");
     expect(html).toContain("See The Town");

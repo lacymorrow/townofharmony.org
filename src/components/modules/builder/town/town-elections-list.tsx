@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { elections as staticElections } from "@/data/town/elections";
 import type { TownElection } from "@/data/town/types";
 
@@ -217,7 +218,7 @@ export const TownElectionsList = ({
 									{/* Body */}
 									<div className="p-5">
 										<p className="text-base text-[#4A4640] mb-4 line-clamp-2">
-											{election.description}
+											{htmlToPlainText(election.description)}
 										</p>
 
 										<div className="space-y-2 text-sm">

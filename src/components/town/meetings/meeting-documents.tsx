@@ -2,6 +2,7 @@ import { Download, FileText, Headphones, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DocumentViewer } from "@/components/town/document-viewer";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 const VIEWER_WRAPPER_CLASS =
 	"border rounded-lg overflow-hidden bg-white h-[60svh] min-h-[420px]";
@@ -184,14 +185,20 @@ export function MeetingDocuments({ meeting }: MeetingDocumentsProps) {
 			{meeting.agenda && (
 				<div className="p-4 bg-cream rounded-lg border border-[#DDD7CC]">
 					<h4 className="font-medium mb-2 text-[#2D2A24]">Agenda Content</h4>
-					<p className="text-sm text-[#2D2A24] whitespace-pre-line">{meeting.agenda}</p>
+					<div
+						className="prose prose-sm max-w-none text-sm text-[#2D2A24]"
+						dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.agenda) }}
+					/>
 				</div>
 			)}
 
 			{meeting.minutes && (
 				<div className="p-4 bg-green-50 rounded-lg border border-green-200">
 					<h4 className="font-medium mb-2 text-green-900">Minutes Content</h4>
-					<p className="text-sm text-green-800 whitespace-pre-line">{meeting.minutes}</p>
+					<div
+						className="prose prose-sm max-w-none text-sm text-green-800"
+						dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.minutes) }}
+					/>
 				</div>
 			)}
 		</div>

@@ -6,6 +6,7 @@ import { LightboxImage } from "@/components/ui/lightbox-image";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { getMapUrl } from "@/lib/map-utils";
+import { htmlToPlainText } from "@/lib/html-to-text";
 
 interface BusinessCardProps {
 	business: {
@@ -85,7 +86,7 @@ export function BusinessCard({ business }: BusinessCardProps) {
 
 			<CardContent className="flex-1 flex flex-col justify-between">
 				{business.description && (
-					<p className="text-sm text-muted-foreground line-clamp-2 mb-4">{business.description}</p>
+					<p className="text-sm text-muted-foreground line-clamp-2 mb-4">{htmlToPlainText(business.description)}</p>
 				)}
 
 				<div className="space-y-2 text-sm">

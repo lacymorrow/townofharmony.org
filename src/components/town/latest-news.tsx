@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { getNews } from "@/lib/town-data";
 import { extractTextFromRichText } from "@/components/town/payload-rich-text";
+import { htmlToPlainText } from "@/lib/html-to-text";
 
 export async function LatestNews() {
 	const { docs: articles } = await getNews({ limit: 3 });
@@ -34,7 +35,7 @@ export async function LatestNews() {
 								{article.title}
 							</h3>
 							<p className="text-sm text-[#4A4640] leading-relaxed line-clamp-2">
-								{article.excerpt || extractTextFromRichText(article.content as any).substring(0, 150) + "..."}
+								{htmlToPlainText(article.excerpt) || extractTextFromRichText(article.content as any).substring(0, 150) + "..."}
 							</p>
 						</div>
 					</Link>

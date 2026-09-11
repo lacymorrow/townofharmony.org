@@ -189,5 +189,12 @@ export const navigation: TownNavigation = {
 				{ name: "Contact Us", href: "/contact" },
 			],
 		},
+		{
+			category: "Reservations",
+			links: [
+				{ name: "Community Center Reservation", href: "/resources/community-center-reservation" },
+				{ name: "Park Reservation", href: "/resources/park-reservation" },
+			],
+		},
 	],
 };

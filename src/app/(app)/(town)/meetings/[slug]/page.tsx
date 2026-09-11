@@ -4,6 +4,7 @@ import { MeetingDetailBody } from "@/components/town/meetings/meeting-detail-bod
 import { siteConfig } from "@/config/site-config";
 import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { getMeetingBySlug } from "@/lib/town-data";
 
 interface PageProps {
@@ -26,7 +27,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       robots: { index: false, follow: false },
     };
   }
-  const description = meeting.minutes ?? `${meeting.title} at ${meeting.location}.`;
+  const rawDescription = meeting.minutes
+    ? htmlToPlainText(meeting.minutes)
+    : `${meeting.title} at ${meeting.location}.`;
+  const description = rawDescription.length > 160 ? rawDescription.slice(0, 157) + "…" : rawDescription;
   return {
     title: `${meeting.title} | Town of Harmony, NC`,
     description,

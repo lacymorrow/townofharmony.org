@@ -1,4 +1,5 @@
 import DOMPurify from "dompurify";
+import type sanitizeHtmlServer from "sanitize-html";
 
 const ALLOWED_TAGS = [
   "p",
@@ -42,26 +43,35 @@ interface SanitizeOptions {
   stripLinks?: boolean;
 }
 
+// Loaded lazily inside the server branch so client bundles never pull in
+// sanitize-html (Next.js replaces `typeof window` at build time and
+// dead-code-eliminates the branch).
+let serverSanitizer: typeof sanitizeHtmlServer | undefined;
+
 export const sanitizeHtml = (
   html: string | null | undefined,
-  options: SanitizeOptions = {},
+  options: SanitizeOptions = {}
 ): string => {
   if (!html) return "";
 
-  const allowedTags = options.stripLinks
-    ? ALLOWED_TAGS.filter((tag) => tag !== "a")
-    : ALLOWED_TAGS;
+  const allowedTags = options.stripLinks ? ALLOWED_TAGS.filter((tag) => tag !== "a") : ALLOWED_TAGS;
 
   if (typeof window === "undefined") {
-    // SSR: strip obvious XSS vectors; DOMPurify runs on client for full sanitization
-    let safe = html
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-      .replace(/on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-      .replace(/(?:javascript|data|vbscript):/gi, "");
-    if (options.stripLinks) {
-      safe = safe.replace(/<\/?a\b[^>]*>/gi, "");
-    }
-    return safe;
+    // Server/SSR: DOMPurify needs a real DOM, and the jsdom-backed
+    // isomorphic-dompurify crashed Vercel serverless functions (PR #277,
+    // reverted in #279). The pure-JS sanitize-html package enforces the same
+    // allowlist instead; scheme rules mirror DOMPurify's defaults (data: URIs
+    // only on <img>). Parity between both paths is enforced by
+    // tests/shared/sanitize-html-spec.ts running under node AND jsdom.
+    serverSanitizer ??= require("sanitize-html") as typeof sanitizeHtmlServer;
+    return serverSanitizer(html, {
+      allowedTags,
+      allowedAttributes: { "*": [...ALLOWED_ATTRS] },
+      allowedSchemes: ["http", "https", "mailto", "tel"],
+      allowedSchemesByTag: { img: ["http", "https", "data"] },
+      allowProtocolRelative: true,
+      disallowedTagsMode: "discard",
+    });
   }
 
   return DOMPurify.sanitize(html, {

@@ -59,12 +59,15 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
   const loadedAtRef = useRef(Date.now().toString());
   const successRef = useRef<HTMLOutputElement | null>(null);
 
-  // Order comes from Builder.io's drag-and-drop priority in the CMS — fetched
-  // in the same priority order other town content uses (sort: { priority: -1 })
-  // and rendered as-is: staff control the option order in Builder (LAC-3550).
+  // Order comes from Builder.io's priority in the CMS. Unlike other town lists
+  // (which use sort: { priority: -1 }), this model has no priorities set, so
+  // Builder falls back to its default entry order — and descending renders
+  // General Inquiry LAST. We sort ascending (priority: 1) so it renders first,
+  // matching the ticket ("move General Inquiry to the top") and the board's
+  // "order is reversed" feedback. Staff can still reorder via Builder (LAC-3550).
   const { data: builderInquiryTypes } = useBuilderData<TownContactInquiryType>(
     "town-contact-inquiry-type",
-    { sort: { priority: -1 }, fallback: contactInquiryTypes }
+    { sort: { priority: 1 }, fallback: contactInquiryTypes }
   );
   const inquiryOptions = useMemo(
     () =>

@@ -29,13 +29,13 @@ import {
  */
 async function loadInquiryTypes(): Promise<TownContactInquiryType[]> {
   try {
-    // Sort matches the form's fetch so server-side validation sees the same
-    // active list the client rendered. Order doesn't affect validation, but
-    // keeping options aligned avoids surprises if we ever need to pick "the
-    // first one" as a default.
+    // Sort matches the form's fetch (ascending — see town-contact-form.tsx) so
+    // server-side validation sees the same active list the client rendered.
+    // Order doesn't affect validation, but keeping options aligned avoids
+    // surprises if we ever need to pick "the first one" as a default.
     const { results } = await fetchBuilderContent<TownContactInquiryType>(
       "town-contact-inquiry-type",
-      { sort: { priority: -1 } }
+      { sort: { priority: 1 } }
     );
     const active = (results ?? []).filter((t) => t?.value && t?.label && t?.isActive !== false);
     if (active.length > 0) return active;

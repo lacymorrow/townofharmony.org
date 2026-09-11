@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useBuilderData } from "@/lib/builder-data";
+import { htmlToPlainText } from "@/lib/html-to-text";
 import { news as staticNews } from "@/data/town/news";
 import type { TownNews } from "@/data/town/types";
 
@@ -108,7 +109,7 @@ export const TownLatestNews = ({ limit = 3 }: TownLatestNewsProps) => {
 										{article.title}
 									</h3>
 									<p className="text-base text-[#4A4640] leading-relaxed line-clamp-3">
-										{article.excerpt}
+										{htmlToPlainText(article.excerpt)}
 									</p>
 								</div>
 							</Link>

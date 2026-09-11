@@ -10,6 +10,11 @@
 const BUILDER_API_KEY = process.env.NEXT_PUBLIC_BUILDER_API_KEY;
 const BUILDER_CDN_BASE = "https://cdn.builder.io/api/v3/content";
 
+// Builder's Content API caps a single request at 100 results regardless of the
+// `limit` param, so we page underneath our callers to honor larger `limit`
+// values (LAC-3555).
+const BUILDER_PAGE_SIZE = 100;
+
 export interface BuilderContentEntry<T> {
 	id: string;
 	name: string;
@@ -34,6 +39,12 @@ export interface FetchOptions {
  * Fetch raw entries from a Builder.io data model.
  * Preserves the top-level `entry.id` so callers can use it (e.g. when the model
  * has no `id` field of its own but consumers need a stable identifier).
+ *
+ * When the requested `limit` exceeds Builder's per-request cap of 100 (or is
+ * omitted — treated as "all"), this pages under the hood using `offset` until
+ * either the requested `limit` is satisfied or a page returns fewer than the
+ * page size (end of data). Callers that pass their own `offset` opt out of the
+ * loop — a manual offset signals they're doing their own pagination.
  */
 export async function fetchBuilderEntries<T>(
 	modelName: string,
@@ -43,38 +54,77 @@ export async function fetchBuilderEntries<T>(
 		return { results: [], count: 0 };
 	}
 
-	const url = new URL(`${BUILDER_CDN_BASE}/${modelName}`);
-	url.searchParams.set("apiKey", BUILDER_API_KEY);
-	url.searchParams.set("limit", String(options?.limit ?? 100));
-	url.searchParams.set("includeUnpublished", "false");
+	const requestedLimit = options?.limit ?? BUILDER_PAGE_SIZE;
+	// `offset: 0` means "from the start", same as omitting it — only a real
+	// caller-driven offset opts out of internal pagination.
+	const callerOffset = options?.offset || undefined;
+	const paginate = callerOffset === undefined && requestedLimit > BUILDER_PAGE_SIZE;
 
-	if (options?.offset) {
-		url.searchParams.set("offset", String(options.offset));
-	}
+	// `null` signals a failed request, distinct from an empty page (end of
+	// data) — a partial result set must not masquerade as a complete one.
+	const fetchOnePage = async (
+		pageLimit: number,
+		offset: number,
+	): Promise<BuilderContentEntry<T>[] | null> => {
+		const url = new URL(`${BUILDER_CDN_BASE}/${modelName}`);
+		url.searchParams.set("apiKey", BUILDER_API_KEY);
+		url.searchParams.set("limit", String(pageLimit));
+		url.searchParams.set("includeUnpublished", "false");
 
-	if (options?.query) {
-		url.searchParams.set("query", JSON.stringify(options.query));
-	}
-
-	// Builder's Content API expects sort as dot-notation query params
-	// (`sort.field=N`), not a JSON-stringified `sort` param — the latter is
-	// silently treated as a query filter and returns 0 results.
-	if (options?.sort) {
-		for (const [field, direction] of Object.entries(options.sort)) {
-			url.searchParams.set(`sort.${field}`, String(direction));
+		if (offset > 0) {
+			url.searchParams.set("offset", String(offset));
 		}
+
+		if (options?.query) {
+			url.searchParams.set("query", JSON.stringify(options.query));
+		}
+
+		// Builder's Content API expects sort as dot-notation query params
+		// (`sort.field=N`), not a JSON-stringified `sort` param — the latter is
+		// silently treated as a query filter and returns 0 results.
+		if (options?.sort) {
+			for (const [field, direction] of Object.entries(options.sort)) {
+				url.searchParams.set(`sort.${field}`, String(direction));
+			}
+		}
+
+		const res = await fetch(url.toString(), {
+			next: { revalidate: 60, tags: ["builder-content"] },
+		});
+
+		if (!res.ok) {
+			return null;
+		}
+
+		const json: BuilderContentResponse<T> = await res.json();
+		return json.results;
+	};
+
+	if (!paginate) {
+		const pageLimit = Math.min(requestedLimit, BUILDER_PAGE_SIZE);
+		const results = (await fetchOnePage(pageLimit, callerOffset ?? 0)) ?? [];
+		return { results, count: results.length };
 	}
 
-	const res = await fetch(url.toString(), {
-		next: { revalidate: 60, tags: ["builder-content"] },
-	});
-
-	if (!res.ok) {
-		return { results: [], count: 0 };
+	const collected: BuilderContentEntry<T>[] = [];
+	let offset = 0;
+	while (collected.length < requestedLimit) {
+		const remaining = requestedLimit - collected.length;
+		const pageLimit = Math.min(remaining, BUILDER_PAGE_SIZE);
+		const page = await fetchOnePage(pageLimit, offset);
+		if (page === null) {
+			// A failed page mid-pagination would silently truncate the set —
+			// exactly the bug this fixes. Fail the whole call to empty so
+			// callers' static fallbacks engage, matching single-request errors.
+			return { results: [], count: 0 };
+		}
+		if (page.length === 0) break;
+		collected.push(...page);
+		if (page.length < pageLimit) break;
+		offset += page.length;
 	}
 
-	const json: BuilderContentResponse<T> = await res.json();
-	return { results: json.results, count: json.results.length };
+	return { results: collected, count: collected.length };
 }
 
 /**
