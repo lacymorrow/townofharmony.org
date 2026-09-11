@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { LightboxImage } from "@/components/ui/lightbox-image";
+import { htmlToPlainText } from "@/lib/html-to-text";
 
 interface BusinessCardProps {
 	business: {
@@ -82,7 +83,7 @@ export function BusinessCard({ business }: BusinessCardProps) {
 
 			<CardContent className="flex-1 flex flex-col justify-between">
 				{business.description && (
-					<p className="text-sm text-muted-foreground line-clamp-2 mb-4">{business.description}</p>
+					<p className="text-sm text-muted-foreground line-clamp-2 mb-4">{htmlToPlainText(business.description)}</p>
 				)}
 
 				<div className="space-y-2 text-sm">
