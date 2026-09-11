@@ -62,10 +62,12 @@ export const HarmonyMap = forwardRef<HarmonyMapHandle, HarmonyMapProps>(function
 				attributionControl: true,
 			});
 
-			Leaf.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+			// CARTO basemaps started returning "API KEY REQUIRED" tiles for keyless
+			// requests (Sep 2026). OSM standard tiles need no key; attribution is
+			// required by the OSM tile usage policy.
+			Leaf.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 				attribution:
-					'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-				subdomains: "abcd",
+					'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 				maxZoom: 19,
 			}).addTo(map);
 
