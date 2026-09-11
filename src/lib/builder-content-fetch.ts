@@ -7,6 +7,8 @@
  * serialization (and any future fix to it) lives in exactly one place.
  */
 
+import { guardBuilderEntries } from "@/lib/builder-entry-guard";
+
 const BUILDER_API_KEY = process.env.NEXT_PUBLIC_BUILDER_API_KEY;
 const BUILDER_CDN_BASE = "https://cdn.builder.io/api/v3/content";
 
@@ -102,7 +104,8 @@ export async function fetchBuilderEntries<T>(
 
 	if (!paginate) {
 		const pageLimit = Math.min(requestedLimit, BUILDER_PAGE_SIZE);
-		const results = (await fetchOnePage(pageLimit, callerOffset ?? 0)) ?? [];
+		const page = (await fetchOnePage(pageLimit, callerOffset ?? 0)) ?? [];
+		const results = guardBuilderEntries(modelName, page);
 		return { results, count: results.length };
 	}
 
@@ -124,7 +127,8 @@ export async function fetchBuilderEntries<T>(
 		offset += page.length;
 	}
 
-	return { results: collected, count: collected.length };
+	const results = guardBuilderEntries(modelName, collected);
+	return { results, count: results.length };
 }
 
 /**

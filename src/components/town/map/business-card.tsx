@@ -17,10 +17,22 @@ export const BusinessCard = ({ business, isSelected, onClick }: BusinessCardProp
 	const color = getCategoryColor(business.category);
 
 	return (
-		<button
+		// A div, not a <button>: the card contains links and copy buttons, and
+		// interactive content inside <button> is invalid HTML. React then fails
+		// hydration on /map and re-renders the whole tree on the client.
+		<div
+			role="button"
+			tabIndex={0}
 			onClick={onClick}
+			onKeyDown={(e) => {
+				if (e.target !== e.currentTarget) return;
+				if (e.key === "Enter" || e.key === " ") {
+					e.preventDefault();
+					onClick();
+				}
+			}}
 			className={cn(
-				"w-full text-left rounded-lg p-3 transition-all border",
+				"w-full cursor-pointer text-left rounded-lg p-3 transition-all border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage",
 				isSelected
 					? "bg-sage/10 border-sage/30 shadow-sm"
 					: "bg-cream border-transparent hover:bg-stone/20 hover:border-stone/40",
@@ -110,6 +122,6 @@ export const BusinessCard = ({ business, isSelected, onClick }: BusinessCardProp
 					</div>
 				</div>
 			</div>
-		</button>
+		</div>
 	);
 };

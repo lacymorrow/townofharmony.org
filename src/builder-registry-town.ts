@@ -1,5 +1,6 @@
 "use client";
 import { Builder } from "@builder.io/react";
+import { withSafeBlock } from "./components/town/safe-block";
 import { TownAgendaMinutes } from "./components/modules/builder/town/town-agenda-minutes";
 import { TownAnnouncementBar } from "./components/modules/builder/town/town-announcement-bar";
 import { TownBusinessDetail } from "./components/modules/builder/town/town-business-detail";
@@ -28,9 +29,16 @@ import { TownResourcesList } from "./components/modules/builder/town/town-resour
 import { TownTeamMembers } from "./components/modules/builder/town/town-team-members";
 import { TownUpcomingEvents } from "./components/modules/builder/town/town-upcoming-events";
 
+// Every town block renders inside a SafeBlock so one bad Builder entry hides
+// that block instead of crashing the page. Editors see a notice in preview.
+const registerComponent = (
+  component: Parameters<typeof Builder.registerComponent>[0],
+  options: Parameters<typeof Builder.registerComponent>[1],
+) => Builder.registerComponent(withSafeBlock(component, options.name), options);
+
 // --- Homepage Components ---
 
-Builder.registerComponent(TownHero, {
+registerComponent(TownHero, {
   name: "TownHero",
   inputs: [
     { name: "title", type: "string", defaultValue: "Welcome to Harmony" },
@@ -46,7 +54,7 @@ Builder.registerComponent(TownHero, {
   ],
 });
 
-Builder.registerComponent(TownQuickLinks, {
+registerComponent(TownQuickLinks, {
   name: "TownQuickLinks",
   inputs: [
     {
@@ -62,7 +70,7 @@ Builder.registerComponent(TownQuickLinks, {
   ],
 });
 
-Builder.registerComponent(TownLatestNews, {
+registerComponent(TownLatestNews, {
   name: "TownLatestNews",
   inputs: [
     {
@@ -74,14 +82,14 @@ Builder.registerComponent(TownLatestNews, {
   ],
 });
 
-Builder.registerComponent(TownUpcomingEvents, {
+registerComponent(TownUpcomingEvents, {
   name: "TownUpcomingEvents",
   inputs: [
     { name: "limit", type: "number", defaultValue: 5, helperText: "Number of events to show" },
   ],
 });
 
-Builder.registerComponent(TownCommunitySpotlight, {
+registerComponent(TownCommunitySpotlight, {
   name: "TownCommunitySpotlight",
   inputs: [
     { name: "badge", type: "string", defaultValue: "Community Spotlight" },
@@ -94,7 +102,7 @@ Builder.registerComponent(TownCommunitySpotlight, {
 
 // --- Collection / Listing Components ---
 
-Builder.registerComponent(TownNewsGrid, {
+registerComponent(TownNewsGrid, {
   name: "TownNewsGrid",
   inputs: [
     { name: "itemsPerPage", type: "number", defaultValue: 9, friendlyName: "Items Per Page" },
@@ -110,7 +118,7 @@ Builder.registerComponent(TownNewsGrid, {
   ],
 });
 
-Builder.registerComponent(TownEventsList, {
+registerComponent(TownEventsList, {
   name: "TownEventsList",
   inputs: [
     { name: "itemsPerPage", type: "number", defaultValue: 10, friendlyName: "Items Per Page" },
@@ -118,7 +126,7 @@ Builder.registerComponent(TownEventsList, {
   ],
 });
 
-Builder.registerComponent(TownMeetingsList, {
+registerComponent(TownMeetingsList, {
   name: "TownMeetingsList",
   inputs: [
     { name: "itemsPerPage", type: "number", defaultValue: 10, friendlyName: "Items Per Page" },
@@ -131,7 +139,7 @@ Builder.registerComponent(TownMeetingsList, {
   ],
 });
 
-Builder.registerComponent(TownBusinessDirectory, {
+registerComponent(TownBusinessDirectory, {
   name: "TownBusinessDirectory",
   inputs: [
     { name: "itemsPerPage", type: "number", defaultValue: 12, friendlyName: "Items Per Page" },
@@ -139,14 +147,14 @@ Builder.registerComponent(TownBusinessDirectory, {
   ],
 });
 
-Builder.registerComponent(TownElectionsList, {
+registerComponent(TownElectionsList, {
   name: "TownElectionsList",
   inputs: [
     { name: "itemsPerPage", type: "number", defaultValue: 6, friendlyName: "Items Per Page" },
   ],
 });
 
-Builder.registerComponent(TownTeamMembers, {
+registerComponent(TownTeamMembers, {
   name: "TownTeamMembers",
   inputs: [
     {
@@ -172,7 +180,7 @@ Builder.registerComponent(TownTeamMembers, {
   ],
 });
 
-Builder.registerComponent(TownPointsOfInterest, {
+registerComponent(TownPointsOfInterest, {
   name: "TownPointsOfInterest",
   inputs: [
     {
@@ -184,7 +192,7 @@ Builder.registerComponent(TownPointsOfInterest, {
   ],
 });
 
-Builder.registerComponent(TownHistoryTimeline, {
+registerComponent(TownHistoryTimeline, {
   name: "TownHistoryTimeline",
   inputs: [
     {
@@ -200,7 +208,7 @@ Builder.registerComponent(TownHistoryTimeline, {
   ],
 });
 
-Builder.registerComponent(TownResourcesList, {
+registerComponent(TownResourcesList, {
   name: "TownResourcesList",
   inputs: [
     {
@@ -218,7 +226,7 @@ Builder.registerComponent(TownResourcesList, {
 
 // --- Detail Components ---
 
-Builder.registerComponent(TownNewsDetail, {
+registerComponent(TownNewsDetail, {
   name: "TownNewsDetail",
   models: ["page"],
   inputs: [
@@ -226,7 +234,7 @@ Builder.registerComponent(TownNewsDetail, {
   ],
 });
 
-Builder.registerComponent(TownEventDetail, {
+registerComponent(TownEventDetail, {
   name: "TownEventDetail",
   models: ["page"],
   inputs: [
@@ -234,7 +242,7 @@ Builder.registerComponent(TownEventDetail, {
   ],
 });
 
-Builder.registerComponent(TownMeetingDetail, {
+registerComponent(TownMeetingDetail, {
   name: "TownMeetingDetail",
   models: ["page"],
   inputs: [
@@ -242,7 +250,7 @@ Builder.registerComponent(TownMeetingDetail, {
   ],
 });
 
-Builder.registerComponent(TownBusinessDetail, {
+registerComponent(TownBusinessDetail, {
   name: "TownBusinessDetail",
   models: ["page"],
   inputs: [
@@ -250,7 +258,7 @@ Builder.registerComponent(TownBusinessDetail, {
   ],
 });
 
-Builder.registerComponent(TownElectionDetail, {
+registerComponent(TownElectionDetail, {
   name: "TownElectionDetail",
   models: ["page"],
   inputs: [
@@ -260,7 +268,7 @@ Builder.registerComponent(TownElectionDetail, {
 
 // --- Utility / Section Components ---
 
-Builder.registerComponent(TownPageHeader, {
+registerComponent(TownPageHeader, {
   name: "TownPageHeader",
   inputs: [
     { name: "title", type: "string", required: true, defaultValue: "Page Title" },
@@ -290,7 +298,7 @@ Builder.registerComponent(TownPageHeader, {
 // Service cards are driven by the town-emergency-service data model — edit
 // individual services there. The block renders its own page header (with the
 // 911 call block built in), so pages using it don't need a TownPageHeader.
-Builder.registerComponent(TownEmergencyServices, {
+registerComponent(TownEmergencyServices, {
   name: "TownEmergencyServices",
   inputs: [
     {
@@ -313,7 +321,7 @@ Builder.registerComponent(TownEmergencyServices, {
 // for security/consistency. Only recipient routing is exposed to town staff
 // so they can re-point inquiries without a code deploy (LAC-3347). Server
 // validates the addresses and falls back to env/default on a bad value.
-Builder.registerComponent(TownContactForm, {
+registerComponent(TownContactForm, {
   name: "TownContactForm",
   inputs: [
     {
@@ -334,7 +342,7 @@ Builder.registerComponent(TownContactForm, {
   ],
 });
 
-Builder.registerComponent(TownAgendaMinutes, {
+registerComponent(TownAgendaMinutes, {
   name: "TownAgendaMinutes",
   models: ["page"],
   inputs: [
@@ -350,7 +358,7 @@ Builder.registerComponent(TownAgendaMinutes, {
   ],
 });
 
-Builder.registerComponent(TownInteractiveMap, {
+registerComponent(TownInteractiveMap, {
   name: "TownInteractiveMap",
   models: ["page"],
   inputs: [
@@ -374,7 +382,7 @@ Builder.registerComponent(TownInteractiveMap, {
 
 // --- Section Components (scoped to Builder.io Section models) ---
 
-Builder.registerComponent(TownAnnouncementBar, {
+registerComponent(TownAnnouncementBar, {
   name: "TownAnnouncementBar",
   models: ["announcement-bar"],
   inputs: [
@@ -402,7 +410,7 @@ Builder.registerComponent(TownAnnouncementBar, {
   ],
 });
 
-Builder.registerComponent(TownHeroBanner, {
+registerComponent(TownHeroBanner, {
   name: "TownHeroBanner",
   models: ["homepage-hero"],
   inputs: [
@@ -414,7 +422,7 @@ Builder.registerComponent(TownHeroBanner, {
   ],
 });
 
-Builder.registerComponent(TownPageCta, {
+registerComponent(TownPageCta, {
   name: "TownPageCta",
   models: ["page-cta"],
   inputs: [

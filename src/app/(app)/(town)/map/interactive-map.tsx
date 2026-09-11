@@ -10,6 +10,7 @@ import type { MapBusiness, BusinessCategory } from "@/lib/map-utils";
 import type { TownSettings } from "@/data/town/types";
 import { ALL_CATEGORIES } from "@/lib/map-utils";
 import type { HarmonyMapHandle } from "@/components/town/map/harmony-map";
+import { SafeBlock } from "@/components/town/safe-block";
 import {
 	Sheet,
 	SheetContent,
@@ -223,12 +224,14 @@ export const InteractiveMap = ({ businesses, labels }: InteractiveMapProps) => {
 
 				{/* Map */}
 				<div className="flex-1 relative">
-					<HarmonyMap
-						ref={mapRef}
-						businesses={filteredBusinesses}
-						selectedBusiness={selectedBusiness}
-						onMarkerClick={handleMarkerClick}
-					/>
+					<SafeBlock name="HarmonyMap" fallback={<MapUnavailable />}>
+						<HarmonyMap
+							ref={mapRef}
+							businesses={filteredBusinesses}
+							selectedBusiness={selectedBusiness}
+							onMarkerClick={handleMarkerClick}
+						/>
+					</SafeBlock>
 					<MapLegend title={labels.legendTitle} boundaryLabel={labels.boundaryLabel} />
 
 					<button
@@ -275,3 +278,18 @@ export const InteractiveMap = ({ businesses, labels }: InteractiveMapProps) => {
 		</div>
 	);
 };
+
+/** Shown in the map pane if Leaflet throws. The directory beside it keeps working. */
+const MapUnavailable = () => (
+	<div
+		role="status"
+		className="absolute inset-0 flex items-center justify-center bg-cream p-6 text-center"
+	>
+		<div className="max-w-sm">
+			<p className="font-serif text-lg font-semibold text-sage-dark">The map could not load</p>
+			<p className="mt-1 text-sm text-[#635E56]">
+				The business list still works. Try again in a moment, or use the Directions links.
+			</p>
+		</div>
+	</div>
+);
