@@ -79,7 +79,7 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
         if (!result.success) {
           await deploymentService.updateDeployment(newDeployment.id, userId, {
             status: "failed",
-            error: result.error || "Deployment failed",
+            error: result.error ?? "Deployment failed",
           });
         }
       } catch (error) {

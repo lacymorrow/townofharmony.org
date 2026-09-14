@@ -18,7 +18,7 @@
     "skipLibCheck": true,
     "verbatimModuleSyntax": false,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2022",
@@ -39,6 +39,9 @@
     "paths": {
       "@payload-config": [
         "./src/payload.config.ts"
+      ],
+      "@/.source/*": [
+        "./.source/*"
       ],
       "@/public/*": [
         "./public/*"
@@ -74,7 +77,9 @@
     "public",
     "packages",
     "cli",
+    "docs-site",
     "debug/**/*.ts",
+    "scripts",
     "src/app/(app)/(demo)/examples/**/*",
     "src/workers/**/*.ts"
   ]
