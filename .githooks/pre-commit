@@ -1,25 +1,24 @@
-#!/usr/bin/env sh
-# Secret scanner — LAC-2555
-#
-# Blocks commits that introduce plaintext credentials.
-# Requires `gitleaks` locally; if not installed we print a warning and
-# fall through — CI still runs the same scan on the PR, so this is
-# defense-in-depth, not the only gate.
-#
-# Install:
-#   macOS   → brew install gitleaks
-#   linux   → https://github.com/gitleaks/gitleaks/releases
+#!/usr/bin/env bash
+# Pre-commit secret scan (see LAC-3163).
+# Runs `gitleaks protect --staged` on staged changes only.
+# To bypass in a true emergency: git commit --no-verify (do not use for
+# routine work — the whole point of this hook is to stop leaks pre-push).
 
-if command -v gitleaks >/dev/null 2>&1; then
-  if ! gitleaks protect --staged --redact --no-banner; then
-    echo ""
-    echo "gitleaks found a potential secret in staged changes."
-    echo "If real: rotate the credential first, then remove it from the diff."
-    echo "If a false positive: extend .gitleaks.toml allowlist or add an inline"
-    echo "'gitleaks:allow' comment. Do not disable the hook."
-    exit 1
-  fi
-else
-  echo "gitleaks not installed — skipping local secret scan (CI still runs)."
-  echo "  install: brew install gitleaks"
+set -euo pipefail
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  cat >&2 <<'EOM'
+gitleaks not found on PATH.
+
+Install it once, then retry the commit:
+  macOS:   brew install gitleaks
+  Linux:   see https://github.com/gitleaks/gitleaks#installing
+
+CI (.github/workflows/gitleaks.yml) will still scan the PR delta, so the
+missing hook does not silently let a secret through — but local scanning
+catches it before it hits any remote.
+EOM
+  exit 1
 fi
+
+gitleaks protect --staged --no-banner --redact

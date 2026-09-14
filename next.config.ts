@@ -168,17 +168,7 @@ const nextConfig: NextConfig = {
 	 */
 	productionBrowserSourceMaps: false,
 
-	/*
-	 * Lint configuration
-	 */
-	eslint: {
-		/*
-	  !! WARNING !!
-	  * This allows production builds to successfully complete even if
-	  * your project has ESLint errors.
-	*/
-		ignoreDuringBuilds: true,
-	},
+	// Next 16 removed `next lint` and the `eslint` config key; lint runs via `bun run lint`.
 	typescript: {
 		/*
 	  !! WARNING !!
@@ -207,12 +197,7 @@ const nextConfig: NextConfig = {
 		serverActions: {
 			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
 		},
-		// @see: https://nextjs.org/docs/app/api-reference/next-config-js/viewTransition
-		viewTransition: true,
 		webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
-
-		// Enhanced client-side router cache
-		clientSegmentCache: true,
 
 		// Optimized prefetching
 		optimisticClientCache: true,
@@ -226,9 +211,22 @@ const nextConfig: NextConfig = {
 			static: 360,
 		},
 
-		// Memory optimization for builds
+		/*
+		 * Reduce peak webpack memory during builds. Vercel's standard build
+		 * container has 8GB total; without this the build can be SIGKILLed by the
+		 * container OOM killer (see build:vercel heap cap in package.json).
+		 */
+		webpackMemoryOptimizations: true,
+
+		/*
+		 * "Collecting page data" spawns one worker per CPU minus one (3 on Vercel's
+		 * 4-core/8GB box), and each worker loads the whole route graph. Three of
+		 * them plus the main process can exceed 8GB and the container OOM-kills the
+		 * build (upstream LAC-3871). One worker fits.
+		 */
+		cpus: 1,
+
 		// webpackBuildWorker: false, // Disable for low memory
-		// cpus: 1, // Limit concurrent operations
 		// workerThreads: false, // Disable worker threads
 	},
 
