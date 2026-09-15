@@ -169,7 +169,7 @@
     "ansi-escape-sequences": "^6.2.4",
     "ansi-to-html": "^0.7.2",
     "ansi-to-react": "^6.2.6",
-    "better-auth": "~1.5.6",
+    "better-auth": "^1.6.33",
     "better-react-mathjax": "^3.0.0",
     "blurhash": "^2.0.5",
     "canvas-confetti": "^1.9.4",
@@ -195,11 +195,11 @@
     "input-otp": "^1.5.0",
     "jotai": "2.18.0",
     "jsonwebtoken": "^9.0.3",
-    "jspdf": "^4.2.0",
+    "jspdf": "^4.2.1",
     "jszip": "^3.10.1",
     "leaflet": "^1.9.4",
     "lint-staged": "16.3.1",
-    "lodash-es": "^4.17.23",
+    "lodash-es": "^4.18.1",
     "lucide-react": "0.576.0",
     "mammoth": "^1.12.0",
     "marked": "^17.0.3",
@@ -245,7 +245,7 @@
     "sanitize-html": "^2.17.7",
     "server-only": "0.0.1",
     "shadcn-prose": "^1.2.1",
-    "sharp": "0.33.5",
+    "sharp": "^0.35.4",
     "simplex-noise": "^4.0.3",
     "sonner": "2.0.8",
     "stripe": "^20.4.0",
@@ -260,7 +260,7 @@
     "uuid": "^13.0.0",
     "vaul": "^1.1.2",
     "web-haptics": "^0.0.6",
-    "ws": "8.19.0",
+    "ws": "^8.21.3",
     "zod": "3.25.76",
     "zsa": "0.6.0",
     "zsa-react": "^0.2.3",
@@ -330,6 +330,9 @@
     "*.{json,md,yml}": [
       "prettier --write"
     ]
+  },
+  "overrides": {
+    "fast-uri": "^3.1.6"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
