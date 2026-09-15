@@ -15,7 +15,7 @@ import { env } from "@/env";
 import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import "@/styles/builder-io.css";
-import { type BuilderContent } from "@builder.io/sdk";
+import type { BuilderContent } from "@builder.io/sdk";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -130,7 +130,7 @@ export async function generateMetadata({
 	// canonical and soft-404 GSC issues.
 	if (!content && !isPreview) {
 		return {
-			title: "Page Not Found — Town of Harmony, NC",
+			title: "Page Not Found",
 			robots: { index: false, follow: false },
 		};
 	}
@@ -141,10 +141,10 @@ export async function generateMetadata({
 		.split("-")
 		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
 		.join(" ");
-	const pageTitle = content?.data?.title ?? `${slugTitle} — Town of Harmony, NC`;
+	const pageTitle = content?.data?.title ?? slugTitle;
 	const pageDescription =
 		content?.data?.description ??
-		`${pageTitle} — Town of Harmony, NC. Find local government information, services, and community resources in Harmony, North Carolina.`;
+		`${pageTitle} - Town of Harmony, NC. Find local government information, services, and community resources in Harmony, North Carolina.`;
 
 	return {
 		title: pageTitle,

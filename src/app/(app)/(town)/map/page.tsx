@@ -7,7 +7,7 @@ import { getMapBusinesses } from "@/lib/town-data";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
-	title: "Interactive Town Map | Town of Harmony, NC",
+	title: "Interactive Town Map",
 	description:
 		"Explore businesses, services, and points of interest in Harmony, NC with our interactive map. Find locations across the Town of Harmony, North Carolina.",
 	alternates: {

@@ -8,7 +8,8 @@ import { getBuilderSettings } from "@/lib/town-settings-server";
 const PARK_ADDRESS = "187 Highland Point Ave, Harmony, NC 28634";
 
 export const metadata: Metadata = {
-	title: "Tomlinson-Moore Family Park Reservation | Town of Harmony, NC",
+	// Absolute: with the layout template suffix this title would exceed 60 chars.
+	title: { absolute: "Tomlinson-Moore Family Park Reservation | Harmony, NC" },
 	description:
 		"Reserve the Tomlinson-Moore Family Park picnic shelter in Harmony, NC. Find rental rules, availability, and contact information for park reservations.",
 	alternates: {

@@ -8,7 +8,7 @@ import { isFeatureEnabled } from "@/lib/preview-flags";
 import "@/styles/builder-io.css";
 
 export const metadata: Metadata = {
-  title: "Business Directory | Town of Harmony, NC",
+  title: "Business Directory",
   description:
     "Find local businesses, restaurants, shops, and services in Harmony, NC. Support our local business community in the Town of Harmony, North Carolina.",
   alternates: {

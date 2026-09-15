@@ -5,6 +5,7 @@ import { siteConfig } from "@/config/site-config";
 import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { htmlToPlainText } from "@/lib/html-to-text";
+import { pageTitle } from "@/lib/page-title";
 import { getMeetingBySlug } from "@/lib/town-data";
 
 interface PageProps {
@@ -23,16 +24,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const meeting = await getMeetingBySlug(slug);
   if (!meeting) {
     return {
-      title: "Meeting Not Found — Town of Harmony, NC",
+      title: "Meeting Not Found",
       robots: { index: false, follow: false },
     };
   }
   const rawDescription = meeting.minutes
     ? htmlToPlainText(meeting.minutes)
     : `${meeting.title} at ${meeting.location}.`;
-  const description = rawDescription.length > 160 ? rawDescription.slice(0, 157) + "…" : rawDescription;
+  const description =
+    rawDescription.length > 160 ? `${rawDescription.slice(0, 157)}…` : rawDescription;
   return {
-    title: `${meeting.title} | Town of Harmony, NC`,
+    title: { absolute: pageTitle(meeting.title) },
     description,
     alternates: { canonical: `${siteConfig.url}/meetings/${slug}` },
     openGraph: {
@@ -46,13 +48,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function MeetingDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
+  // Server-render known meetings. The Builder "/meetings/:slug" template page
+  // only wraps the client-fetching TownMeetingDetail component, so serving it
+  // here ships a loading skeleton as the HTML (no <h1>, no meeting content)
+  // and crawlers index an empty page (Ahrefs "H1 tag missing", LAC-3921).
+  // Builder content still serves one-off pages for slugs not in the data model.
+  const meeting = await getMeetingBySlug(slug);
+  if (meeting) {
+    return <MeetingDetailBody meeting={meeting} />;
+  }
+
   const builderContent = await getBuilderPageContent(`/meetings/${slug}`);
   if (builderContent) {
     return <RenderBuilderContent content={builderContent} model="page" />;
   }
 
-  const meeting = await getMeetingBySlug(slug);
-  if (!meeting) notFound();
-
-  return <MeetingDetailBody meeting={meeting} />;
+  notFound();
 }

@@ -5,7 +5,7 @@ import { sanitizeHtml } from "@/lib/sanitize-html";
 import { getStaticPage } from "@/lib/town-data";
 
 export const metadata: Metadata = {
-	title: "Privacy Policy | Town of Harmony, NC",
+	title: "Privacy Policy",
 	description:
 		"Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your personal information.",
 	alternates: {

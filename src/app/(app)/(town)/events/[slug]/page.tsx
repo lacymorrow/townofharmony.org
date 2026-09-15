@@ -5,6 +5,7 @@ import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { getMapUrl } from "@/lib/map-utils";
+import { pageTitle } from "@/lib/page-title";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 import { resolveEvents, getEventBySlug } from "@/lib/town-data";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
@@ -28,7 +29,7 @@ export async function generateMetadata({
 	const description =
 		htmlToPlainText(event.description) || `${event.title} — Community event in Harmony, NC.`;
 	return {
-		title: `${event.title} | Town of Harmony, NC`,
+		title: { absolute: pageTitle(event.title) },
 		description,
 		alternates: { canonical: `${siteConfig.url}/events/${slug}` },
 		openGraph: {

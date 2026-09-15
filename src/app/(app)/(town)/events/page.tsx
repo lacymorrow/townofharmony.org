@@ -10,7 +10,7 @@ import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { isFeatureEnabled } from "@/lib/preview-flags";
 
 export const metadata: Metadata = {
-	title: "Community Events & Activities | Town of Harmony, NC",
+	title: "Community Events & Activities",
 	description:
 		"Discover upcoming community events, festivals, and activities in Harmony, NC. Find things to do in the Town of Harmony, North Carolina.",
 	alternates: {
