@@ -8,7 +8,7 @@ import { getBuilderSettings } from "@/lib/town-settings-server";
 import "@/styles/builder-io.css";
 
 export const metadata: Metadata = {
-	title: "Our Team | Town of Harmony, NC",
+	title: "Our Team",
 	description:
 		"Meet the elected officials and staff of the Town of Harmony, North Carolina. Learn about our Board of Aldermen and town administration.",
 	alternates: {

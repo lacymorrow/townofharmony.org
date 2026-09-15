@@ -8,7 +8,7 @@ import { fetchBuilderContent } from "@/lib/builder-data-server";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
-	title: "Pay Sewer Bill | Town of Harmony, NC",
+	title: "Pay Sewer Bill",
 	description:
 		"Pay your Town of Harmony sewer bill online with a credit or debit card. Convenient online payment for Harmony, NC sewer customers.",
 	alternates: {

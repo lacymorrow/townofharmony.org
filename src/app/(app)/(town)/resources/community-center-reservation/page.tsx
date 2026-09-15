@@ -7,7 +7,7 @@ import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
-	title: "Community Center Reservation | Town of Harmony, NC",
+	title: "Community Center Reservation",
 	description:
 		"How to reserve the Harmony Community Center for your event, including capacity, rental rules, and contact information for the Town of Harmony, NC.",
 	alternates: {

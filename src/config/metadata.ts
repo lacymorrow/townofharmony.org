@@ -172,7 +172,8 @@ export const constructMetadata = ({
 export const routeMetadata = {
   home: {
     title: {
-      absolute: "Town of Harmony, NC — Official Site | Harmony, North Carolina",
+      // Keep under 60 chars; Ahrefs flags longer titles (LAC-3921).
+      absolute: "Town of Harmony, North Carolina | Official Town Website",
     },
     description:
       "Welcome to the Town of Harmony, North Carolina. Access town meetings, community events, sewer services, and local government resources in Harmony, NC.",

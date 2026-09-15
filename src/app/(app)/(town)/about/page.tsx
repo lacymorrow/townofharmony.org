@@ -8,7 +8,7 @@ import { getStaticPage } from "@/lib/town-data";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
-	title: "About Harmony, NC | Town of Harmony",
+	title: "About Harmony, NC",
 	description:
 		"Learn about the Town of Harmony, North Carolina. Discover our history, government structure, community values, and what makes Harmony a great place to live.",
 	alternates: { canonical: `${siteConfig.url}/about` },
