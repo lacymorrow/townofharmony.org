@@ -20,11 +20,11 @@ jobs:
         with:
           node-version: 22
 
-      - uses: pnpm/action-setup@v6
+      - uses: oven-sh/setup-bun@v2
         with:
-          version: 9
+          bun-version: latest
 
-      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: bun install --frozen-lockfile --ignore-scripts
 
       - name: Sync from Google Places
         env:
