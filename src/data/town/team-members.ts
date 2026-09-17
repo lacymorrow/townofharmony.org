@@ -15,11 +15,11 @@ export const teamMembers: TownTeamMember[] = [
 	},
 	{
 		id: 2,
-		name: "Wanda Edwards",
-		title: "Town Clerk & Finance Officer",
+		name: "Candace Rhyne",
+		title: "Town Clerk / Finance Officer",
 		category: "Executive",
 		email: "",
-		image: "/images/team/wanda-edwards.webp",
+		phone: "(704) 546-2339",
 		isActive: true,
 	},
 	// Town Council
