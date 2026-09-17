@@ -2,6 +2,7 @@ import { Calendar } from "lucide-react";
 import Link from "next/link";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { getEvents } from "@/lib/town-data";
+import { formatTime } from "@/lib/utils";
 
 export async function UpcomingEvents() {
 	const { docs: upcomingEvents } = await getEvents({ limit: 5, status: "upcoming" });
@@ -34,7 +35,7 @@ export async function UpcomingEvents() {
 						<div className="flex-1">
 							<div className="text-xs text-sage font-semibold">
 								{dateStr}
-								{event.eventTime && <> &middot; {event.eventTime}</>}
+								{event.eventTime && <> &middot; {formatTime(event.eventTime)}</>}
 							</div>
 							<h3 className="font-semibold text-[15px] text-[#2D2A24] group-hover:text-sage-dark transition-colors">
 								{event.title}

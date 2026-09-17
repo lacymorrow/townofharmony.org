@@ -9,6 +9,7 @@ import type { TownEvent } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { getTodayString, safeDate, toDateOnly } from "@/lib/date-only";
 import { htmlToPlainText } from "@/lib/html-to-text";
+import { formatTime } from "@/lib/utils";
 
 interface TownEventsListProps {
   itemsPerPage?: number;
@@ -319,8 +320,8 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
                       <div className="flex flex-wrap gap-4 text-sm text-[#635E56]">
                         {event.eventTime && (
                           <span>
-                            {event.eventTime}
-                            {event.endTime ? ` - ${event.endTime}` : ""}
+                            {formatTime(event.eventTime)}
+                            {event.endTime ? ` - ${formatTime(event.endTime)}` : ""}
                           </span>
                         )}
                         {event.locationAddress && (

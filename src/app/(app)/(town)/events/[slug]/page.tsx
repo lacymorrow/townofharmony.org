@@ -8,6 +8,7 @@ import { getMapUrl } from "@/lib/map-utils";
 import { pageTitle } from "@/lib/page-title";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 import { resolveEvents, getEventBySlug } from "@/lib/town-data";
+import { formatTime } from "@/lib/utils";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 
@@ -67,9 +68,9 @@ export default async function EventDetailPage({ params }: PageProps) {
 					{event.title}
 				</h1>
 				<p className="text-base text-[#4A4640]">
-					{dateStr} · {event.eventTime}
+					{dateStr} · {event.eventTime ? formatTime(event.eventTime) : ""}
 					{event.endTime && event.endTime !== event.eventTime
-						? ` – ${event.endTime}`
+						? ` – ${formatTime(event.endTime)}`
 						: ""}
 				</p>
 				{event.locationAddress && (

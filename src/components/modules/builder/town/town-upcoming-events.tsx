@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import type { TownEvent } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
+import { formatTime } from "@/lib/utils";
 
 interface TownUpcomingEventsProps {
   limit?: number;
@@ -75,7 +76,7 @@ const TownUpcomingEventsInner = ({ limit = 5 }: TownUpcomingEventsProps) => {
                 <div className="flex-1">
                   <div className="text-sm text-sage font-semibold">
                     {dateStr}
-                    {event.eventTime && <> &middot; {event.eventTime}</>}
+                    {event.eventTime && <> &middot; {formatTime(event.eventTime)}</>}
                   </div>
                   <h3 className="font-semibold text-[15px] text-[#2D2A24] group-hover:text-sage-dark transition-colors">
                     {event.title}
