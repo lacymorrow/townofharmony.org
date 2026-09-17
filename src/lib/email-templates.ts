@@ -1,5 +1,6 @@
 import { siteConfig } from "@/config/site-config";
 import { settings } from "@/data/town/settings";
+import { formatTime } from "@/lib/utils";
 
 export const esc = (s: string) =>
 	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -226,7 +227,9 @@ function reservationDetailRows(opts: CommunityCenterReservationFields): string {
 			: "",
 		safePhone ? row("Phone:", safePhone) : "",
 		row("Event Date:", esc(opts.eventDate)),
-		row("Time:", `${esc(opts.startTime)} – ${esc(opts.endTime)}`),
+		// The form's <input type="time"> submits 24-hour "HH:mm"; residents and
+		// staff expect standard 12-hour time (LAC-3951).
+		row("Time:", `${esc(formatTime(opts.startTime))} – ${esc(formatTime(opts.endTime))}`),
 		row("Purpose:", esc(opts.eventPurpose).replace(/\n/g, "<br>")),
 		row("Expected Attendance:", String(opts.expectedAttendance)),
 		opts.notes ? row("Notes:", esc(opts.notes).replace(/\n/g, "<br>")) : "",

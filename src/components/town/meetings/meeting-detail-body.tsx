@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DocumentViewer } from "@/components/town/document-viewer";
 import type { TownMeeting } from "@/data/town/types";
 import { sanitizeHtml } from "@/lib/sanitize-html";
+import { formatTime } from "@/lib/utils";
 
 interface MeetingDetailBodyProps {
   meeting: TownMeeting;
@@ -67,7 +68,9 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
               <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
                 Time
               </dt>
-              <dd className="text-sage-dark font-medium">{meeting.meetingTime}</dd>
+              <dd className="text-sage-dark font-medium">
+                {meeting.meetingTime ? formatTime(meeting.meetingTime) : ""}
+              </dd>
             </div>
             <div>
               <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">

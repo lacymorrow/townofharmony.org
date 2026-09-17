@@ -12,6 +12,7 @@ import { useBuilderEntry } from "@/lib/builder-data";
 import { deriveEventStatus, type EventDisplayStatus } from "@/lib/event-status";
 import { getMapUrl } from "@/lib/map-utils";
 import { sanitizeHtml } from "@/lib/sanitize-html";
+import { formatTime } from "@/lib/utils";
 
 interface TownEventDetailProps {
   slug?: string;
@@ -157,8 +158,8 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
                 Time
               </dt>
               <dd className="text-sage-dark font-medium">
-                {event.eventTime}
-                {event.endTime && ` - ${event.endTime}`}
+                {event.eventTime ? formatTime(event.eventTime) : ""}
+                {event.endTime && ` - ${formatTime(event.endTime)}`}
               </dd>
             </div>
             {event.locationAddress && (

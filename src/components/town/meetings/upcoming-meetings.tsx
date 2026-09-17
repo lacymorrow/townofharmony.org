@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { meetings as staticMeetings } from "@/data/town/meetings";
 import type { TownMeeting } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
+import { formatTime } from "@/lib/utils";
 
 interface UpcomingMeetingsProps {
   limit?: number;
@@ -21,8 +22,6 @@ const formatDate = (date: Date) =>
     year: "numeric",
     timeZone: "UTC",
   });
-
-const formatTime = (time: string) => time;
 
 export function UpcomingMeetings({ limit = 5, className }: UpcomingMeetingsProps) {
   const today = new Date().toISOString().split("T")[0];

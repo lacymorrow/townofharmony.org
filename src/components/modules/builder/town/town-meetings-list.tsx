@@ -8,6 +8,7 @@ import type { TownMeeting } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
 import { getCanonicalMeetingSlug } from "@/lib/meeting-slug";
+import { formatTime } from "@/lib/utils";
 
 interface TownMeetingsListProps {
   itemsPerPage?: number;
@@ -306,7 +307,7 @@ export const TownMeetingsList = ({
                         {meeting.title}
                       </h2>
                       <div className="flex flex-wrap gap-4 text-base text-[#635E56] mb-2">
-                        <span>{meeting.meetingTime}</span>
+                        <span>{meeting.meetingTime ? formatTime(meeting.meetingTime) : ""}</span>
                         <span>{meeting.location}</span>
                       </div>
                       {Array.isArray(meeting.attendees) && meeting.attendees.length > 0 && (
