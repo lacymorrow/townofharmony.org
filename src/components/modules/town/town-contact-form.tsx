@@ -24,9 +24,9 @@ async function readFileAsBase64(file: File): Promise<string> {
 
 interface FormErrors {
   firstName?: string;
+  lastName?: string;
   email?: string;
   phone?: string;
-  contact?: string;
   inquiryType?: string;
   message?: string;
   attachment?: string;
@@ -98,20 +98,26 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
     }
   }, [submitted]);
 
+  // Last name, email, and phone are all required (LAC-3977, client request
+  // 9/17), superseding the earlier optional-last-name and "email OR phone"
+  // behavior. Mirrors the server schema in town-contact.ts.
   const validate = (form: FormData): FormErrors => {
     const errs: FormErrors = {};
     if (!form.get("firstName")) errs.firstName = "First name is required";
+    if (!((form.get("lastName") as string) ?? "").trim()) {
+      errs.lastName = "Last name is required";
+    }
     const email = ((form.get("email") as string) ?? "").trim();
     const phone = ((form.get("phone") as string) ?? "").trim();
-    if (!email && !phone) {
-      errs.contact = "Please provide an email address or a phone number so we can reply.";
-    } else {
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        errs.email = "Please enter a valid email";
-      }
-      if (phone && !isPlausiblePhone(phone)) {
-        errs.phone = "Please enter a valid phone number";
-      }
+    if (!email) {
+      errs.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errs.email = "Please enter a valid email";
+    }
+    if (!phone) {
+      errs.phone = "Phone number is required";
+    } else if (!isPlausiblePhone(phone)) {
+      errs.phone = "Please enter a valid phone number";
     }
     if (!form.get("inquiryType")) errs.inquiryType = "Please select an inquiry type";
     const message = form.get("message") as string;
@@ -160,9 +166,9 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
     startTransition(async () => {
       const result = await submitTownContactForm({
         firstName: form.get("firstName") as string,
-        lastName: (form.get("lastName") as string) || undefined,
-        email: ((form.get("email") as string) || "").trim() || undefined,
-        phone: ((form.get("phone") as string) || "").trim() || undefined,
+        lastName: form.get("lastName") as string,
+        email: ((form.get("email") as string) ?? "").trim(),
+        phone: ((form.get("phone") as string) ?? "").trim(),
         inquiryType: form.get("inquiryType") as TownContactFormData["inquiryType"],
         message: form.get("message") as string,
         attachment,
@@ -251,51 +257,50 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
           />
         </FieldWrapper>
 
-        <FieldWrapper label="Last Name" id="lastName" hint="Optional">
+        <FieldWrapper label="Last Name" id="lastName" error={errors.lastName} required>
           <input
             id="lastName"
             name="lastName"
             type="text"
             autoComplete="family-name"
-            className={inputClass(false)}
+            required
+            aria-required="true"
+            aria-invalid={!!errors.lastName}
+            aria-describedby={errors.lastName ? "lastName-error" : undefined}
+            className={inputClass(!!errors.lastName)}
           />
         </FieldWrapper>
       </div>
 
-      <p className="text-sm text-[#635E56]">
-        Please provide an email address <em>or</em> a phone number so we can reply.
-      </p>
-
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <FieldWrapper label="Email" id="email" error={errors.email}>
+        <FieldWrapper label="Email" id="email" error={errors.email} required>
           <input
             id="email"
             name="email"
             type="email"
             autoComplete="email"
+            required
+            aria-required="true"
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? "email-error" : undefined}
-            className={inputClass(!!errors.email || !!errors.contact)}
+            className={inputClass(!!errors.email)}
           />
         </FieldWrapper>
 
-        <FieldWrapper label="Phone" id="phone" error={errors.phone}>
+        <FieldWrapper label="Phone" id="phone" error={errors.phone} required>
           <input
             id="phone"
             name="phone"
             type="tel"
             autoComplete="tel"
+            required
+            aria-required="true"
             aria-invalid={!!errors.phone}
             aria-describedby={errors.phone ? "phone-error" : undefined}
-            className={inputClass(!!errors.phone || !!errors.contact)}
+            className={inputClass(!!errors.phone)}
           />
         </FieldWrapper>
       </div>
-      {errors.contact && (
-        <p className="-mt-2 text-xs text-red-600" role="alert">
-          {errors.contact}
-        </p>
-      )}
 
       <FieldWrapper label="Inquiry Type" id="inquiryType" error={errors.inquiryType} required>
         <select
