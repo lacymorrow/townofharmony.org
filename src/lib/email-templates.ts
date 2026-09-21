@@ -14,6 +14,10 @@ const BRAND = {
 	muted: "#635E56",
 };
 
+// Mail clients auto-detect phone numbers and paint them link-blue; an explicit
+// tel: link styled white keeps the number readable on the dark footer (LAC-3978).
+const telHref = (phone: string) => `tel:+1${phone.replace(/\D/g, "")}`;
+
 const layout = (body: string) => `
 <!DOCTYPE html>
 <html>
@@ -41,8 +45,8 @@ const layout = (body: string) => `
           <td style="background-color:${BRAND.footer};padding:24px 32px;">
             <p style="margin:0 0 8px;color:#aaa;font-size:12px;">${siteConfig.name} — Official Contact Information</p>
             <p style="margin:0 0 4px;color:#ccc;font-size:12px;">${settings.contactInfo.address}</p>
-            <p style="margin:0 0 4px;color:#ccc;font-size:12px;">Phone: ${settings.contactInfo.phone} &nbsp;|&nbsp; Email: ${siteConfig.email.support}</p>
-            <p style="margin:0;color:#888;font-size:11px;">Office Hours: ${settings.officeHours.weekday}</p>
+            <p style="margin:0 0 4px;font-size:14px;"><a href="${telHref(settings.contactInfo.phone)}" style="color:#fff;text-decoration:none;">Phone: ${settings.contactInfo.phone}</a></p>
+            <p style="margin:0;color:#ccc;font-size:11px;">Office Hours: ${settings.officeHours.weekday}</p>
           </td>
         </tr>
 
@@ -83,7 +87,7 @@ export function contactConfirmationEmail(opts: {
 
     <p style="margin:0 0 8px;font-size:14px;color:${BRAND.muted};">Need to reach us sooner?</p>
     <p style="margin:0;font-size:14px;color:${BRAND.text};">
-      Call us at <strong>${settings.contactInfo.phone}</strong> or email <a href="mailto:${siteConfig.email.support}" style="color:${BRAND.primary};">${siteConfig.email.support}</a> during office hours.
+      Call us at <strong>${settings.contactInfo.phone}</strong> during office hours (${settings.officeHours.weekday}).
     </p>
   `;
 
@@ -123,7 +127,7 @@ export function townContactConfirmationEmail(opts: {
 
     <p style="margin:0 0 8px;font-size:14px;color:${BRAND.muted};">Need immediate assistance?</p>
     <p style="margin:0;font-size:14px;color:${BRAND.text};">
-      Call us at <strong>${settings.contactInfo.phone}</strong>, email <a href="mailto:${siteConfig.email.support}" style="color:${BRAND.primary};">${siteConfig.email.support}</a>, or visit us at ${settings.contactInfo.address} during office hours (${settings.officeHours.weekday}).
+      Call us at <strong>${settings.contactInfo.phone}</strong> or visit us at ${settings.contactInfo.address} during office hours (${settings.officeHours.weekday}).
     </p>
   `;
 
@@ -284,7 +288,7 @@ export function communityCenterReservationConfirmationEmail(
 
     <p style="margin:0 0 8px;font-size:14px;color:${BRAND.muted};">Questions?</p>
     <p style="margin:0;font-size:14px;color:${BRAND.text};">
-      Call us at <strong>${settings.contactInfo.phone}</strong>, email <a href="mailto:${siteConfig.email.support}" style="color:${BRAND.primary};">${siteConfig.email.support}</a>, or visit us at ${settings.contactInfo.address} during office hours (${settings.officeHours.weekday}).
+      Call us at <strong>${settings.contactInfo.phone}</strong> or visit us at ${settings.contactInfo.address} during office hours (${settings.officeHours.weekday}).
     </p>
   `;
 
