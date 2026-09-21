@@ -31,6 +31,7 @@
     "db:seed": "dotenv -e .env -- tsx scripts/db-seed.ts",
     "deps:check": "ncu",
     "deps:update": "ncu -u",
+    "check:branding": "bun scripts/check-branding.ts",
     "check:metadata": "npx check-site-meta 3000",
     "check:performance": "next dev & npx react-scan@latest localhost:3000",
     "git:checkpoint": "tsx scripts/git-checkpoint.ts",
