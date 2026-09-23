@@ -1,5 +1,5 @@
 {
-	"mergedAt": "2026-08-30T11:02:01.862Z",
+	"mergedAt": "2026-09-20T10:25:51.869Z",
 	"totalCount": 40,
 	"newCount": 1,
 	"businesses": [
@@ -9,6 +9,8 @@
 			"address": "3365 Harmony Highway, Harmony NC 28634",
 			"phone": "704 546 5200",
 			"category": "Services & Contractors",
+			"lat": 35.957859,
+			"lng": -80.7717651,
 			"description": "",
 			"source": "builder",
 			"googlePlaceId": "",
