@@ -63,7 +63,9 @@ import { submitTownContactForm } from "@/server/actions/town-contact";
 
 const validTownSubmission = {
   firstName: "Jane",
+  lastName: "Doe",
   email: "jane@example.com",
+  phone: "704-555-0123",
   inquiryType: "general",
   message: "I have a question about my tax bill.",
   _loadedAt: "1000",

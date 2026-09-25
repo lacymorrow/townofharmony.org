@@ -23,6 +23,7 @@ const VALID_DATA = {
   firstName: "Jane",
   lastName: "Doe",
   email: "jane.doe@example.com",
+  phone: "704-555-0123",
   message: "This is a test message with enough characters to pass validation.",
 };
 
@@ -52,6 +53,7 @@ async function fillValidForm(page: Page) {
   await page.locator("#firstName").fill(VALID_DATA.firstName);
   await page.locator("#lastName").fill(VALID_DATA.lastName);
   await page.locator("#email").fill(VALID_DATA.email);
+  await page.locator("#phone").fill(VALID_DATA.phone);
   // Inquiry types are Builder-driven, so don't hardcode a value — wait for a
   // real (non-disabled) option to load and pick the first one.
   await page
@@ -88,15 +90,12 @@ test.describe("Town Contact Form", () => {
   test("shows client-side validation errors when required fields are empty", async ({ page }) => {
     await page.getByRole("button", { name: /send message/i }).click();
 
+    // Last name, email, and phone are all required per the client's 9/17
+    // request (LAC-3977), which replaced the earlier "email OR phone" rule.
     await expect(page.getByText(/first name is required/i)).toBeVisible();
-    // Last name is intentionally optional (form labels it "Optional") — no error expected.
-    // Email alone is not required either — the form asks for email OR phone. The
-    // same copy also appears as static helper text, so scope to the alert.
-    await expect(
-      page
-        .getByRole("alert")
-        .filter({ hasText: /please provide an email address or a phone number/i })
-    ).toBeVisible();
+    await expect(page.getByText(/last name is required/i)).toBeVisible();
+    await expect(page.getByText(/email is required/i)).toBeVisible();
+    await expect(page.getByText(/phone number is required/i)).toBeVisible();
     await expect(page.getByText(/message must be at least 10 characters/i)).toBeVisible();
   });
 

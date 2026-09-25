@@ -62,39 +62,38 @@ const attachmentSchema = z
 
 const countDigits = (value: string) => (value.match(/\d/g) ?? []).length;
 
-const townContactSchema = z
-  .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().optional(),
-    email: z
-      .string()
-      .trim()
-      .email("Please enter a valid email address")
-      .optional()
-      .or(z.literal("").transform(() => undefined)),
-    phone: z
-      .string()
-      .trim()
-      .refine((value) => value.length === 0 || countDigits(value) >= 7, {
-        message: "Please enter a valid phone number",
-      })
-      .transform((value) => (value.length === 0 ? undefined : value))
-      .optional(),
-    inquiryType: z.string().min(1, "Please select an inquiry type"),
-    message: z.string().min(10, "Message must be at least 10 characters"),
-    attachment: attachmentSchema.optional(),
-    turnstileToken: z.string().optional(),
-    website: z.string().optional(),
-    // Builder-block overrides. Accept any string; malformed values are
-    // dropped in resolveRecipients() rather than failing the submission
-    // (defense-in-depth against a CMS typo).
-    recipientEmail: z.string().optional(),
-    bccEmail: z.string().optional(),
-  })
-  .refine((data) => Boolean(data.email) || Boolean(data.phone), {
-    message: "Please provide an email address or a phone number so we can reply.",
-    path: ["email"],
-  });
+// Last name, email, and phone are all required per the client's 9/17 request
+// (LAC-3977, Janet/Copper Gate Media), superseding both the 8/19
+// optional-last-name ask and the earlier "email OR phone" rule.
+const townContactSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z
+    .string({ required_error: "Last name is required" })
+    .trim()
+    .min(1, "Last name is required"),
+  email: z
+    .string({ required_error: "Email is required" })
+    .trim()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
+  phone: z
+    .string({ required_error: "Phone number is required" })
+    .trim()
+    .min(1, "Phone number is required")
+    .refine((value) => countDigits(value) >= 7, {
+      message: "Please enter a valid phone number",
+    }),
+  inquiryType: z.string().min(1, "Please select an inquiry type"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+  attachment: attachmentSchema.optional(),
+  turnstileToken: z.string().optional(),
+  website: z.string().optional(),
+  // Builder-block overrides. Accept any string; malformed values are
+  // dropped in resolveRecipients() rather than failing the submission
+  // (defense-in-depth against a CMS typo).
+  recipientEmail: z.string().optional(),
+  bccEmail: z.string().optional(),
+});
 
 export type TownContactFormData = z.infer<typeof townContactSchema>;
 

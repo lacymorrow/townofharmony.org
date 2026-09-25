@@ -1,6 +1,6 @@
 import type { TownSettings } from "./types";
 
-const officeHoursWeekday = "Monday - Friday: 9:00 AM - 5:00 PM";
+const officeHoursWeekday = "Monday - Friday: 9:00 AM - 4:00 PM";
 
 export const settings: TownSettings = {
 	siteTitle: "Town of Harmony",
