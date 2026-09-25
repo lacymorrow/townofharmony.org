@@ -298,7 +298,7 @@
     "chrome-launcher": "^1.2.1",
     "concurrently": "^9.2.4",
     "cross-env": "^10.1.0",
-    "dotenv": "^17.4.2",
+    "dotenv": "^18.0.0",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "16.3.5",
