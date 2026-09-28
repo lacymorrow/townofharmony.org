@@ -3,6 +3,7 @@
 import DOMPurify from "dompurify";
 import { Download, FileText, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { PdfPager } from "@/components/town/pdf-pager";
 import { Button } from "@/components/ui/button";
 import {
   type DocumentKind,
@@ -10,6 +11,7 @@ import {
   detectKindFromContentType,
   detectKindFromUrl,
 } from "@/lib/document-type";
+import { supportsInlinePdf } from "@/lib/inline-pdf-support";
 
 interface DocumentViewerProps {
   url: string;
@@ -132,6 +134,11 @@ export const DocumentViewer = ({ url, title }: DocumentViewerProps) => {
   }
 
   if (state.status === "pdf") {
+    // iOS Safari renders an embedded PDF as a single non-scrollable first
+    // page, and most Android browsers won't render one at all (LAC-4043).
+    if (!supportsInlinePdf()) {
+      return <PdfPager url={state.src} title={title} />;
+    }
     return (
       <iframe
         src={state.src}
