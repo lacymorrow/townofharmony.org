@@ -215,6 +215,7 @@
     "ogl": "^1.0.11",
     "openai": "^6.25.0",
     "payload": "^3.89.0",
+    "pdfjs-dist": "^6.3.289",
     "picocolors": "1.1.1",
     "postgres": "3.4.9",
     "posthog-js": "^1.357.1",
