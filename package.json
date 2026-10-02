@@ -154,7 +154,7 @@
     "@trpc/client": "11.19.0",
     "@trpc/react-query": "11.19.0",
     "@trpc/server": "11.19.0",
-    "@tsparticles/engine": "3.9.1",
+    "@tsparticles/engine": "4.4.0",
     "@tsparticles/react": "3.0.0",
     "@tsparticles/slim": "3.9.1",
     "@uidotdev/usehooks": "2.4.1",
