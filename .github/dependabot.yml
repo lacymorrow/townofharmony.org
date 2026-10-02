@@ -5,13 +5,16 @@
 # batched into a single PR per ecosystem to avoid noise; major bumps open on their
 # own so they get individual review. CI (ci.yml, e2e.yml) gates every PR.
 #
-# Bun note: the npm ecosystem drives Bun projects — Dependabot reads bun.lock.
+# Bun note: the root lockfile is `bun.lock`, so the root entry has to be
+# `package-ecosystem: "bun"`. The `npm_and_yarn` ecosystem cannot update
+# `bun.lock`: it hard-errors with `misconfigured_tooling` and aborts during file
+# fetching, so the root entry never opened a single PR until this was corrected
+# (see LAC-4108, and LAC-4106 for the same bug upstream in shipkit).
 version: 2
 updates:
-  # App JavaScript dependencies (root package.json)
-  - package-ecosystem: "npm"
-    directories:
-      - "/"
+  # App JavaScript dependencies (root package.json), resolved through bun.lock.
+  - package-ecosystem: "bun"
+    directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
