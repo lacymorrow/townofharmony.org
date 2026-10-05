@@ -27,6 +27,22 @@ interface SyncOptions {
 }
 
 /**
+ * Reverts upstream changes to TOH branding assets after a merge.
+ *
+ * git merge has no per-path exclude, so the merge runs and then the branded
+ * icons are reset to `baseSha`. Sync #297 re-added upstream's src/app/icon.svg
+ * and browsers preferred it over the TOH favicon (LAC-3976).
+ */
+function protectBrandingAssets(baseSha: string): void {
+  runCommand(`bun scripts/restore-branding.ts --base ${baseSha}`);
+
+  const staged = runCommand("git diff --cached --name-only").trim();
+  if (staged !== "") {
+    runCommand('git commit -m "chore: keep TOH branding assets through upstream sync"');
+  }
+}
+
+/**
  * Checks if a remote repository is accessible
  * Uses git ls-remote which is lightweight and doesn't clone
  */
@@ -92,6 +108,9 @@ async function syncUpstream(options: SyncOptions): Promise<void> {
     // Fetch the latest changes from upstream
     runCommand(`git fetch ${UPSTREAM_REMOTE}`);
 
+    // Pre-merge ref: branding assets get reset to this once the merge lands.
+    const baseSha = runCommand("git rev-parse HEAD").trim();
+
     if (!options.direct) {
       const tempBranch = generateBranchName("sync-upstream");
 
@@ -107,6 +126,8 @@ async function syncUpstream(options: SyncOptions): Promise<void> {
           `Merging changes from ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH} into ${tempBranch}...`
         );
         runCommand(`git merge ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}`);
+
+        protectBrandingAssets(baseSha);
 
         // Create and push PR
         runCommand(`git push -u origin ${tempBranch}`);
@@ -129,6 +150,8 @@ async function syncUpstream(options: SyncOptions): Promise<void> {
       // Merge upstream changes directly
       console.info(`Merging changes from ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}...`);
       runCommand(`git merge ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}`);
+
+      protectBrandingAssets(baseSha);
     }
 
     console.info("Update from upstream completed successfully.");

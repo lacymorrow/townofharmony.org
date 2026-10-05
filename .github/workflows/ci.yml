@@ -41,6 +41,12 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      # Guards TOH icon files against being overwritten by upstream Shipkit
+      # syncs (LAC-3976: sync #297 re-added Shipkit's icon.svg and the
+      # browser tab showed the rocket instead of the TOH "H").
+      - name: Branding check
+        run: bun run check:branding
+
       # NOTE: `bun run lint` (biome + eslint + prettier) is intentionally not a
       # blocking gate yet — the codebase has ~264 pre-existing lint errors
       # accumulated before this gate existed (mostly in tests/ and scripts/).
