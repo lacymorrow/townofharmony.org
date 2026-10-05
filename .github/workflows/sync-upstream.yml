@@ -83,6 +83,17 @@ jobs:
              exit 1
           fi
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+
+      - name: Protect TOH branding assets
+        # git merge has no per-path exclude, so reset the branded icons to their
+        # pre-merge state before committing. Sync #297 re-added upstream's
+        # icon.svg and it replaced the TOH favicon in browser tabs (LAC-3976).
+        run: bun scripts/restore-branding.ts --base ${{ env.TARGET_BRANCH }}
+
       - name: Commit changes
         run: |
            # Commit if there are changes (clean merge or resolved conflicts)

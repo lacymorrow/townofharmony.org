@@ -8,6 +8,10 @@
  * (LAC-3976). git merge has no per-path protection, so this check runs
  * in CI to catch the next sync that tries the same thing.
  *
+ * The sync itself is handled by scripts/restore-branding.ts; this is the
+ * backstop for anything that reaches a PR by another route (hand edit, a
+ * direct merge, a sync run before the workflow step existed).
+ *
  * If a branding asset is changed ON PURPOSE, update the expectations
  * below in the same PR.
  *
@@ -16,6 +20,7 @@
 
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
+import { BRANDING_ASSETS } from "./branding-assets";
 
 /** Shipkit rocket flame red — present in upstream icon.svg, never in TOH art. */
 const SHIPKIT_MARKER = /e94b35/i;
@@ -62,6 +67,24 @@ if (existsSync("src/app/favicon.ico")) {
 	}
 } else {
 	errors.push("src/app/favicon.ico is missing");
+}
+
+// TOH ships only the four assets checked above. Any other protected path that
+// shows up is an upstream icon route competing with them — the LAC-3976 defect.
+const EXPECTED = new Set([
+	"src/app/favicon.ico",
+	"src/app/icon.svg",
+	"src/app/icon.tsx",
+	"src/app/apple-icon.tsx",
+	"public/favicon.png",
+]);
+
+for (const path of BRANDING_ASSETS) {
+	if (!EXPECTED.has(path) && existsSync(path)) {
+		errors.push(
+			`${path} should not exist — it is an upstream icon route that overrides the TOH icon. Delete it, or add it to EXPECTED in scripts/check-branding.ts if TOH now ships it.`
+		);
+	}
 }
 
 if (errors.length > 0) {
