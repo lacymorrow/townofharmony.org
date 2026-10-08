@@ -16,6 +16,11 @@ import {
   validateSubmissionTiming,
 } from "@/server/utils/contact-rate-limit";
 import {
+  isTestSender,
+  resolveTestRecipient,
+  TEST_SUBJECT_PREFIX,
+} from "@/server/utils/contact-test-sentinel";
+import {
   DEFAULT_TOWN_CONTACT_BCC,
   DEFAULT_TOWN_CONTACT_TO,
   resolveRecipients,
@@ -188,25 +193,41 @@ export async function submitTownContactForm(
     };
   }
 
-  const toRecipients = resolveRecipients(
-    recipientEmail,
-    env.TOWN_CONTACT_TO_EMAIL,
-    DEFAULT_TOWN_CONTACT_TO,
-    "recipientEmail"
-  );
-  const bccRecipients = resolveRecipients(
-    bccEmail,
-    env.TOWN_CONTACT_BCC_EMAIL,
-    DEFAULT_TOWN_CONTACT_BCC,
-    "bccEmail"
-  );
+  const isTest = isTestSender(email);
+  const toRecipients = isTest
+    ? [resolveTestRecipient()]
+    : resolveRecipients(
+        recipientEmail,
+        env.TOWN_CONTACT_TO_EMAIL,
+        DEFAULT_TOWN_CONTACT_TO,
+        "recipientEmail"
+      );
+  // BCC is suppressed on the test path so staff cc'd inboxes never see a test.
+  const bccRecipients = isTest
+    ? []
+    : resolveRecipients(
+        bccEmail,
+        env.TOWN_CONTACT_BCC_EMAIL,
+        DEFAULT_TOWN_CONTACT_BCC,
+        "bccEmail"
+      );
+
+  if (isTest) {
+    logger.info("Town contact test sender detected, rerouting", {
+      context: "town-contact-form",
+      to: toRecipients,
+    });
+  }
 
   try {
     await resend.emails.send({
       from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
       to: toRecipients,
       bcc: bccRecipients,
-      subject: `Contact Form: ${inquiryLabel} — ${[firstName, lastName]
+      subject: `${isTest ? TEST_SUBJECT_PREFIX : ""}Contact Form: ${inquiryLabel} — ${[
+        firstName,
+        lastName,
+      ]
         .filter(Boolean)
         .join(" ")
         .replace(/[\r\n]/g, " ")}`,
@@ -239,7 +260,9 @@ export async function submitTownContactForm(
     };
   }
 
-  if (email) {
+  // Skip the confirmation on the test path (LAC-4202): test.com and
+  // example.com are real domains and must not receive auto-reply mail.
+  if (email && !isTest) {
     try {
       await resend.emails.send({
         from: `${siteConfig.name} <${siteConfig.email.noreply}>`,
