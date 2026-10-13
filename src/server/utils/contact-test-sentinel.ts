@@ -12,8 +12,7 @@
 const TEST_SENDER_DOMAINS = new Set(["test.com", "example.com"]);
 const DEFAULT_TEST_RECIPIENT = "admin@buildandserve.com";
 
-const normalize = (email: string | undefined | null): string =>
-  (email ?? "").trim().toLowerCase();
+const normalize = (email: string | undefined | null): string => (email ?? "").trim().toLowerCase();
 
 const senderDomain = (email: string): string | null => {
   const at = email.lastIndexOf("@");

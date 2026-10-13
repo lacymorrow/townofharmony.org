@@ -62,14 +62,37 @@ export async function GET(request: Request) {
   const [fonts] = await Promise.all([loadAssets()]);
 
   return new ImageResponse(
-    <div tw="flex h-full w-full" style={{ fontFamily: "Geist Sans", backgroundColor: colors.bg, color: colors.fg }}>
-      <div tw="flex absolute inset-y-0 left-16 w-[1px]" style={{ borderLeft: `1px dashed ${colors.border}` }} />
-      <div tw="flex absolute inset-y-0 right-16 w-[1px]" style={{ borderLeft: `1px dashed ${colors.border}` }} />
-      <div tw="flex absolute inset-x-0 h-[1px] top-16" style={{ borderTop: `1px solid ${colors.border}` }} />
-      <div tw="flex absolute inset-x-0 h-[1px] bottom-16" style={{ borderTop: `1px solid ${colors.border}` }} />
+    <div
+      tw="flex h-full w-full"
+      style={{ fontFamily: "Geist Sans", backgroundColor: colors.bg, color: colors.fg }}
+    >
+      <div
+        tw="flex absolute inset-y-0 left-16 w-[1px]"
+        style={{ borderLeft: `1px dashed ${colors.border}` }}
+      />
+      <div
+        tw="flex absolute inset-y-0 right-16 w-[1px]"
+        style={{ borderLeft: `1px dashed ${colors.border}` }}
+      />
+      <div
+        tw="flex absolute inset-x-0 h-[1px] top-16"
+        style={{ borderTop: `1px solid ${colors.border}` }}
+      />
+      <div
+        tw="flex absolute inset-x-0 h-[1px] bottom-16"
+        style={{ borderTop: `1px solid ${colors.border}` }}
+      />
       <div
         tw="flex absolute bottom-24 right-24 items-center justify-center"
-        style={{ width: 80, height: 80, backgroundColor: "#375a3f", borderRadius: "20%", fontSize: 48, fontWeight: 700, color: "#ece5c7" }}
+        style={{
+          width: 80,
+          height: 80,
+          backgroundColor: "#375a3f",
+          borderRadius: "20%",
+          fontSize: 48,
+          fontWeight: 700,
+          color: "#ece5c7",
+        }}
       >
         H
       </div>

@@ -5,111 +5,92 @@ import { sanitizeHtml } from "@/lib/sanitize-html";
 import { getStaticPage } from "@/lib/town-data";
 
 export const metadata: Metadata = {
-	title: "Privacy Policy",
-	description:
-		"Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your personal information.",
-	alternates: {
-		canonical: `${siteConfig.url}/privacy`,
-	},
-	openGraph: {
-		title: "Privacy Policy — Town of Harmony, NC",
-		description:
-			"Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your personal information.",
-		url: `${siteConfig.url}/privacy`,
-	},
+  title: "Privacy Policy",
+  description:
+    "Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your personal information.",
+  alternates: {
+    canonical: `${siteConfig.url}/privacy`,
+  },
+  openGraph: {
+    title: "Privacy Policy — Town of Harmony, NC",
+    description:
+      "Privacy policy for the Town of Harmony website. Learn how we collect, use, and protect your personal information.",
+    url: `${siteConfig.url}/privacy`,
+  },
 };
 
 export default async function PrivacyPage() {
-	const cms = await getStaticPage("privacy");
+  const cms = await getStaticPage("privacy");
 
-	if (cms) {
-		return (
-			<main id="main-content" className="container mx-auto px-4 py-12 max-w-3xl">
-				<h1 className="text-3xl font-serif font-bold text-sage-dark mb-8">
-					{cms.title}
-				</h1>
-				<div
-					className="prose prose-stone max-w-none space-y-6"
-					dangerouslySetInnerHTML={{ __html: sanitizeHtml(cms.body) }}
-				/>
-			</main>
-		);
-	}
+  if (cms) {
+    return (
+      <main id="main-content" className="container mx-auto max-w-3xl px-4 py-12">
+        <h1 className="mb-8 font-serif text-3xl font-bold text-sage-dark">{cms.title}</h1>
+        <div
+          className="prose prose-stone max-w-none space-y-6"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(cms.body) }}
+        />
+      </main>
+    );
+  }
 
-	return (
-		<main id="main-content" className="container mx-auto px-4 py-12 max-w-3xl">
-			<h1 className="text-3xl font-serif font-bold text-sage-dark mb-8">
-				Privacy Policy
-			</h1>
+  return (
+    <main id="main-content" className="container mx-auto max-w-3xl px-4 py-12">
+      <h1 className="mb-8 font-serif text-3xl font-bold text-sage-dark">Privacy Policy</h1>
 
-			<div className="prose prose-stone max-w-none space-y-6">
-				<p className="text-lg text-[#4A4640]">
-					The Town of Harmony is committed to protecting the privacy of visitors
-					to our website. This policy explains what information we collect and
-					how it is used.
-				</p>
+      <div className="prose prose-stone max-w-none space-y-6">
+        <p className="text-lg text-[#4A4640]">
+          The Town of Harmony is committed to protecting the privacy of visitors to our website.
+          This policy explains what information we collect and how it is used.
+        </p>
 
-				<h2 className="text-xl font-semibold text-sage-dark mt-8">
-					Information We Collect
-				</h2>
-				<p>
-					We may collect anonymous usage data through our analytics service to
-					understand how visitors use our website. This includes pages visited,
-					time spent on the site, and general geographic location. No personally
-					identifiable information is collected through analytics.
-				</p>
+        <h2 className="mt-8 text-xl font-semibold text-sage-dark">Information We Collect</h2>
+        <p>
+          We may collect anonymous usage data through our analytics service to understand how
+          visitors use our website. This includes pages visited, time spent on the site, and general
+          geographic location. No personally identifiable information is collected through
+          analytics.
+        </p>
 
-				<h2 className="text-xl font-semibold text-sage-dark mt-8">
-					Contact Forms
-				</h2>
-				<p>
-					When you submit a contact form, we collect the information you provide
-					(such as your name, email address, and message). This information is
-					used only to respond to your inquiry and is not shared with third
-					parties.
-				</p>
+        <h2 className="mt-8 text-xl font-semibold text-sage-dark">Contact Forms</h2>
+        <p>
+          When you submit a contact form, we collect the information you provide (such as your name,
+          email address, and message). This information is used only to respond to your inquiry and
+          is not shared with third parties.
+        </p>
 
-				<h2 className="text-xl font-semibold text-sage-dark mt-8">
-					Third-Party Services
-				</h2>
-				<p>
-					Our website may contain links to external sites. We are not
-					responsible for the privacy practices of other websites. We encourage
-					you to review the privacy policies of any external sites you visit.
-				</p>
+        <h2 className="mt-8 text-xl font-semibold text-sage-dark">Third-Party Services</h2>
+        <p>
+          Our website may contain links to external sites. We are not responsible for the privacy
+          practices of other websites. We encourage you to review the privacy policies of any
+          external sites you visit.
+        </p>
 
-				<h2 className="text-xl font-semibold text-sage-dark mt-8">
-					Public Records
-				</h2>
-				<p>
-					As a municipal government, certain records are subject to public
-					records laws under the North Carolina Public Records Act (N.C.G.S.
-					Chapter 132). Information submitted through government forms may be
-					considered public record.
-				</p>
+        <h2 className="mt-8 text-xl font-semibold text-sage-dark">Public Records</h2>
+        <p>
+          As a municipal government, certain records are subject to public records laws under the
+          North Carolina Public Records Act (N.C.G.S. Chapter 132). Information submitted through
+          government forms may be considered public record.
+        </p>
 
-				<h2 className="text-xl font-semibold text-sage-dark mt-8">
-					Contact Us
-				</h2>
-				<p>
-					If you have questions about this privacy policy, please use our{" "}
-					<a href="/contact" className="text-sage hover:text-sage-dark underline">
-						contact form
-					</a>{" "}
-					or call{" "}
-					<span className="inline-flex items-center gap-1">
-						<a href="tel:+17045462339" className="text-sage hover:text-sage-dark underline">
-							(704) 546-2339
-						</a>
-						<PhoneCopyButton phone="(704) 546-2339" />
-					</span>
-					.
-				</p>
+        <h2 className="mt-8 text-xl font-semibold text-sage-dark">Contact Us</h2>
+        <p>
+          If you have questions about this privacy policy, please use our{" "}
+          <a href="/contact" className="text-sage underline hover:text-sage-dark">
+            contact form
+          </a>{" "}
+          or call{" "}
+          <span className="inline-flex items-center gap-1">
+            <a href="tel:+17045462339" className="text-sage underline hover:text-sage-dark">
+              (704) 546-2339
+            </a>
+            <PhoneCopyButton phone="(704) 546-2339" />
+          </span>
+          .
+        </p>
 
-				<p className="text-sm text-[#635E56] mt-12">
-					Last updated: March 2026
-				</p>
-			</div>
-		</main>
-	);
+        <p className="mt-12 text-sm text-[#635E56]">Last updated: March 2026</p>
+      </div>
+    </main>
+  );
 }

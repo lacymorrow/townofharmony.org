@@ -8,98 +8,110 @@ import { getBuilderSettings } from "@/lib/town-settings-server";
 const PARK_ADDRESS = "187 Highland Point Ave, Harmony, NC 28634";
 
 export const metadata: Metadata = {
-	// Absolute: with the layout template suffix this title would exceed 60 chars.
-	title: { absolute: "Tomlinson-Moore Family Park Reservation | Harmony, NC" },
-	description:
-		"Reserve the Tomlinson-Moore Family Park picnic shelter in Harmony, NC. Find rental rules, availability, and contact information for park reservations.",
-	alternates: {
-		canonical: `${siteConfig.url}/resources/park-reservation`,
-	},
-	openGraph: {
-		title: "Tomlinson-Moore Family Park Reservation",
-		description:
-			"Reserve the Tomlinson-Moore Family Park picnic shelter in Harmony, NC. Find rental rules, availability, and contact information for park reservations.",
-		url: `${siteConfig.url}/resources/park-reservation`,
-	},
+  // Absolute: with the layout template suffix this title would exceed 60 chars.
+  title: { absolute: "Tomlinson-Moore Family Park Reservation | Harmony, NC" },
+  description:
+    "Reserve the Tomlinson-Moore Family Park picnic shelter in Harmony, NC. Find rental rules, availability, and contact information for park reservations.",
+  alternates: {
+    canonical: `${siteConfig.url}/resources/park-reservation`,
+  },
+  openGraph: {
+    title: "Tomlinson-Moore Family Park Reservation",
+    description:
+      "Reserve the Tomlinson-Moore Family Park picnic shelter in Harmony, NC. Find rental rules, availability, and contact information for park reservations.",
+    url: `${siteConfig.url}/resources/park-reservation`,
+  },
 };
 
 export default async function ParkReservationPage() {
-	const settings = await getBuilderSettings();
-	const telHref = `tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`;
-	return (
-		<article className="py-12 bg-cream">
-			<div className="container mx-auto px-4 max-w-3xl">
-				<h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark mb-4">
-					Tomlinson-Moore Family Park Reservation
-				</h1>
-				<p className="text-[#2D2A24] mb-6">
-					The Tomlinson-Moore Family Park picnic shelter (
-					<a
-						href={getMapUrl(PARK_ADDRESS)}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="text-sage-dark hover:underline"
-					>
-						187 Highland Point Ave
-					</a>
-					<AddressCopyButton address={PARK_ADDRESS} label="Tomlinson-Moore Family Park" tone="default" />
-					) may be reserved for events. Reservation of the shelter does not
-					include exclusive use of the park or the Community Center.
-				</p>
+  const settings = await getBuilderSettings();
+  const telHref = `tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`;
+  return (
+    <article className="bg-cream py-12">
+      <div className="container mx-auto max-w-3xl px-4">
+        <h1 className="mb-4 font-serif text-3xl font-bold text-sage-dark md:text-4xl">
+          Tomlinson-Moore Family Park Reservation
+        </h1>
+        <p className="mb-6 text-[#2D2A24]">
+          The Tomlinson-Moore Family Park picnic shelter (
+          <a
+            href={getMapUrl(PARK_ADDRESS)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sage-dark hover:underline"
+          >
+            187 Highland Point Ave
+          </a>
+          <AddressCopyButton
+            address={PARK_ADDRESS}
+            label="Tomlinson-Moore Family Park"
+            tone="default"
+          />
+          ) may be reserved for events. Reservation of the shelter does not include exclusive use of
+          the park or the Community Center.
+        </p>
 
-				<div className="bg-white border border-stone rounded p-5 mb-8">
-					<p className="font-semibold">Town Hall</p>
-					<p>
-						<span className="inline-flex items-center gap-1">
-							<a href={telHref} className="text-sage-dark hover:underline">
-								{settings.contactInfo.phone}
-							</a>
-							<PhoneCopyButton phone={settings.contactInfo.phone} label="Town Hall" tone="default" />
-						</span>
-					</p>
-					<p className="text-sm text-[#4A4640] mt-2">
-						<span className="inline-flex items-center gap-1">
-							<a
-								href={getMapUrl(settings.contactInfo.address)}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:text-sage-dark hover:underline transition-colors"
-							>
-								{settings.contactInfo.address}
-							</a>
-							<AddressCopyButton address={settings.contactInfo.address} label="Town Hall" tone="default" />
-						</span>
-						<br />
-						{settings.officeHours.weekday}
-					</p>
-				</div>
+        <div className="mb-8 rounded border border-stone bg-white p-5">
+          <p className="font-semibold">Town Hall</p>
+          <p>
+            <span className="inline-flex items-center gap-1">
+              <a href={telHref} className="text-sage-dark hover:underline">
+                {settings.contactInfo.phone}
+              </a>
+              <PhoneCopyButton
+                phone={settings.contactInfo.phone}
+                label="Town Hall"
+                tone="default"
+              />
+            </span>
+          </p>
+          <p className="mt-2 text-sm text-[#4A4640]">
+            <span className="inline-flex items-center gap-1">
+              <a
+                href={getMapUrl(settings.contactInfo.address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-sage-dark hover:underline"
+              >
+                {settings.contactInfo.address}
+              </a>
+              <AddressCopyButton
+                address={settings.contactInfo.address}
+                label="Town Hall"
+                tone="default"
+              />
+            </span>
+            <br />
+            {settings.officeHours.weekday}
+          </p>
+        </div>
 
-				<h2 className="text-2xl font-serif font-bold text-sage-dark mb-3">
-					Reservation Rules
-				</h2>
-				<ul className="list-disc list-inside space-y-1 text-[#2D2A24] mb-6">
-					<li>Reservation must be submitted before the month of the event</li>
-					<li>Park hours: dawn to dusk</li>
-					<li>No alcohol, drugs, or firearms</li>
-					<li>No animals, bicycles, or skateboards</li>
-					<li>Only small stereo systems allowed</li>
-					<li>Bouncy houses and similar apparatus are not permitted on town property at any time</li>
-					<li>Up to 6 tables available; no exclusive use of park</li>
-					<li>You must remove your event trash — do not use the park's trash cans</li>
-					<li>Failure to comply forfeits deposit</li>
-				</ul>
+        <h2 className="mb-3 font-serif text-2xl font-bold text-sage-dark">Reservation Rules</h2>
+        <ul className="mb-6 list-inside list-disc space-y-1 text-[#2D2A24]">
+          <li>Reservation must be submitted before the month of the event</li>
+          <li>Park hours: dawn to dusk</li>
+          <li>No alcohol, drugs, or firearms</li>
+          <li>No animals, bicycles, or skateboards</li>
+          <li>Only small stereo systems allowed</li>
+          <li>
+            Bouncy houses and similar apparatus are not permitted on town property at any time
+          </li>
+          <li>Up to 6 tables available; no exclusive use of park</li>
+          <li>You must remove your event trash — do not use the park's trash cans</li>
+          <li>Failure to comply forfeits deposit</li>
+        </ul>
 
-				<p className="text-[#2D2A24]">
-					Report issues during your reservation to Town Hall at{" "}
-					<span className="inline-flex items-center gap-1">
-						<a href={telHref} className="text-sage-dark hover:underline">
-							{settings.contactInfo.phone}
-						</a>
-						<PhoneCopyButton phone={settings.contactInfo.phone} label="Town Hall" tone="default" />
-					</span>
-					.
-				</p>
-			</div>
-		</article>
-	);
+        <p className="text-[#2D2A24]">
+          Report issues during your reservation to Town Hall at{" "}
+          <span className="inline-flex items-center gap-1">
+            <a href={telHref} className="text-sage-dark hover:underline">
+              {settings.contactInfo.phone}
+            </a>
+            <PhoneCopyButton phone={settings.contactInfo.phone} label="Town Hall" tone="default" />
+          </span>
+          .
+        </p>
+      </div>
+    </article>
+  );
 }

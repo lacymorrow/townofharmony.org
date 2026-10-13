@@ -137,12 +137,10 @@ export function InstallSection() {
           <p className="text-muted-foreground [&>a]:font-medium [&>a]:text-blue-400 [&>a]:underline">
             Run this command in your Next.js project after setting up{" "}
             <Link href={"https://ui.shadcn.com/docs/"}>ShadCN UI</Link>. If you would like to start
-            with ShadCN pre-configured, check out the{" "}
-            <Link href={"#" as any}>Bones Starter</Link>.
+            with ShadCN pre-configured, check out the <Link href={"#" as any}>Bones Starter</Link>.
           </p>
           <p className="text-lg text-muted-foreground [&>a]:font-medium [&>a]:text-blue-400 [&>a]:underline">
-            Get more components and ship even faster with{" "}
-            <Link href={"#" as any}>Shipkit</Link>.
+            Get more components and ship even faster with <Link href={"#" as any}>Shipkit</Link>.
           </p>
         </div>
       </div>

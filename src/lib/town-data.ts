@@ -14,17 +14,17 @@ import { settings, toTownSettings, type BuilderSettingsFlat } from "@/data/town/
 import { navigation } from "@/data/town/navigation";
 import { homepage } from "@/data/town/homepage";
 import type {
-	TownAnnouncement,
-	TownBusiness,
-	TownElection,
-	TownEmergencyService,
-	TownEvent,
-	TownHistoryArticle,
-	TownMeeting,
-	TownNews,
-	TownPointOfInterest,
-	TownResource,
-	TownTeamMember,
+  TownAnnouncement,
+  TownBusiness,
+  TownElection,
+  TownEmergencyService,
+  TownEvent,
+  TownHistoryArticle,
+  TownMeeting,
+  TownNews,
+  TownPointOfInterest,
+  TownResource,
+  TownTeamMember,
 } from "@/data/town/types";
 import type { MapBusiness } from "@/lib/map-utils";
 import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-server";
@@ -54,161 +54,157 @@ import { slugify } from "@/lib/utils/extract-headings";
  * the static fallback when Builder is empty or fails.
  */
 const buildBuilderListResolver = <T extends { id?: unknown }>(
-	model: string,
-	fallback: T[],
-	options?: {
-		limit?: number;
-		sort?: Record<string, number>;
-		// When set, static fallback entries whose key is NOT present in Builder
-		// are preserved alongside Builder entries. Prevents Builder becoming an
-		// all-or-nothing override for models where the static array is canonical
-		// historical data (e.g. town-meeting has 155+ historical entries that
-		// must survive after an editor adds a single new meeting in Builder).
-		mergeBy?: (item: T) => string | number | undefined;
-	},
+  model: string,
+  fallback: T[],
+  options?: {
+    limit?: number;
+    sort?: Record<string, number>;
+    // When set, static fallback entries whose key is NOT present in Builder
+    // are preserved alongside Builder entries. Prevents Builder becoming an
+    // all-or-nothing override for models where the static array is canonical
+    // historical data (e.g. town-meeting has 155+ historical entries that
+    // must survive after an editor adds a single new meeting in Builder).
+    mergeBy?: (item: T) => string | number | undefined;
+  }
 ) =>
-	cache(async (): Promise<T[]> => {
-		try {
-			const { results } = await fetchBuilderEntries<T>(model, {
-				limit: options?.limit ?? 1000,
-				sort: options?.sort,
-			});
-			const builderItems = results.map((entry) => {
-				const data = entry.data as T;
-				if (data.id !== undefined && data.id !== null && data.id !== "") return data;
-				return { ...data, id: entry.id } as T;
-			});
+  cache(async (): Promise<T[]> => {
+    try {
+      const { results } = await fetchBuilderEntries<T>(model, {
+        limit: options?.limit ?? 1000,
+        sort: options?.sort,
+      });
+      const builderItems = results.map((entry) => {
+        const data = entry.data as T;
+        if (data.id !== undefined && data.id !== null && data.id !== "") return data;
+        return { ...data, id: entry.id } as T;
+      });
 
-			if (options?.mergeBy) {
-				const mergeBy = options.mergeBy;
-				const builderKeys = new Set<string | number>();
-				for (const item of builderItems) {
-					const key = mergeBy(item);
-					if (key !== undefined && key !== "") builderKeys.add(key);
-				}
-				const preserved = fallback.filter((item) => {
-					const key = mergeBy(item);
-					return key === undefined || key === "" || !builderKeys.has(key);
-				});
-				return [...builderItems, ...preserved];
-			}
+      if (options?.mergeBy) {
+        const mergeBy = options.mergeBy;
+        const builderKeys = new Set<string | number>();
+        for (const item of builderItems) {
+          const key = mergeBy(item);
+          if (key !== undefined && key !== "") builderKeys.add(key);
+        }
+        const preserved = fallback.filter((item) => {
+          const key = mergeBy(item);
+          return key === undefined || key === "" || !builderKeys.has(key);
+        });
+        return [...builderItems, ...preserved];
+      }
 
-			if (builderItems.length === 0) return fallback;
-			return builderItems;
-		} catch (err) {
-			logger.warn(
-				`Failed to fetch ${model} from Builder.io — falling back to static data`,
-				{ error: err instanceof Error ? err.message : String(err) },
-			);
-			return fallback;
-		}
-	});
+      if (builderItems.length === 0) return fallback;
+      return builderItems;
+    } catch (err) {
+      logger.warn(`Failed to fetch ${model} from Builder.io — falling back to static data`, {
+        error: err instanceof Error ? err.message : String(err),
+      });
+      return fallback;
+    }
+  });
 
 const resolveNews = buildBuilderListResolver<TownNews>("town-news", news);
 // Merge Builder + static by canonical slug: preserves the ~155 historical
 // static meetings when editors add a new Builder entry (LAC-3447), and
 // dedupes across the two sources using the collision-proof canonical slug.
 const resolveMeetingsRaw = buildBuilderListResolver<TownMeeting>("town-meeting", meetings, {
-	mergeBy: (m) => getCanonicalMeetingSlug(m),
+  mergeBy: (m) => getCanonicalMeetingSlug(m),
 });
 // Editors enter recurring slugs ("town-council-meeting") in Builder, so raw
 // slugs collide across months — canonicalize so every link is unique (LAC-3549).
-const resolveMeetings = cache(
-	async (): Promise<TownMeeting[]> =>
-		(await resolveMeetingsRaw()).map((m) => ({ ...m, slug: getCanonicalMeetingSlug(m) })),
+const resolveMeetings = cache(async (): Promise<TownMeeting[]> =>
+  (await resolveMeetingsRaw()).map((m) => ({ ...m, slug: getCanonicalMeetingSlug(m) }))
 );
 const resolveTeamMembers = buildBuilderListResolver<TownTeamMember>(
-	"town-team-member",
-	teamMembers,
-	{ sort: { priority: -1 } },
+  "town-team-member",
+  teamMembers,
+  { sort: { priority: -1 } }
 );
 const resolveHistoryArticles = buildBuilderListResolver<TownHistoryArticle>(
-	"town-history-article",
-	historyArticles,
-	{ sort: { priority: -1 } },
+  "town-history-article",
+  historyArticles,
+  { sort: { priority: -1 } }
 );
 const resolvePointsOfInterest = buildBuilderListResolver<TownPointOfInterest>(
-	"town-point-of-interest",
-	pointsOfInterest,
+  "town-point-of-interest",
+  pointsOfInterest
 );
 const resolveResources = buildBuilderListResolver<TownResource>("town-resource", resources);
 const resolveEmergencyServices = buildBuilderListResolver<TownEmergencyService>(
-	"town-emergency-service",
-	emergencyServices,
+  "town-emergency-service",
+  emergencyServices
 );
 const resolveAnnouncements = buildBuilderListResolver<TownAnnouncement>(
-	"town-announcement",
-	announcements,
+  "town-announcement",
+  announcements
 );
 const resolveBusinesses = buildBuilderListResolver<TownBusiness>("town-business", businesses);
 const resolveElections = buildBuilderListResolver<TownElection>("town-election", elections);
 const resolveMapBusinesses = buildBuilderListResolver<MapBusiness>(
-	"town-map-business",
-	mapBusinesses,
+  "town-map-business",
+  mapBusinesses
 );
 
 const paginate = <T>(items: T[], limit: number, page: number) => {
-	const totalDocs = items.length;
-	const totalPages = Math.ceil(totalDocs / limit);
-	const start = (page - 1) * limit;
-	const docs = items.slice(start, start + limit);
-	return { docs, totalDocs, totalPages, page };
+  const totalDocs = items.length;
+  const totalPages = Math.ceil(totalDocs / limit);
+  const start = (page - 1) * limit;
+  const docs = items.slice(start, start + limit);
+  return { docs, totalDocs, totalPages, page };
 };
 
 const likeMatch = (value: string | undefined, search: string): boolean => {
-	if (!value) return false;
-	return value.toLowerCase().includes(search.toLowerCase());
+  if (!value) return false;
+  return value.toLowerCase().includes(search.toLowerCase());
 };
 
 /**
  * Get published news articles
  */
 export const getNews = async (options?: {
-	limit?: number;
-	page?: number;
-	category?: string;
-	search?: string;
+  limit?: number;
+  page?: number;
+  category?: string;
+  search?: string;
 }) => {
-	const { limit = 10, page = 1, category, search } = options ?? {};
+  const { limit = 10, page = 1, category, search } = options ?? {};
 
-	const all = await resolveNews();
-	let filtered = all.filter((n) => n.status === "published");
+  const all = await resolveNews();
+  let filtered = all.filter((n) => n.status === "published");
 
-	if (category) {
-		filtered = filtered.filter((n) => n.categories.includes(category));
-	}
+  if (category) {
+    filtered = filtered.filter((n) => n.categories.includes(category));
+  }
 
-	if (search) {
-		filtered = filtered.filter(
-			(n) => likeMatch(n.title, search) || likeMatch(n.excerpt, search),
-		);
-	}
+  if (search) {
+    filtered = filtered.filter((n) => likeMatch(n.title, search) || likeMatch(n.excerpt, search));
+  }
 
-	filtered.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  filtered.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
-	return paginate(filtered, limit, page);
+  return paginate(filtered, limit, page);
 };
 
 /**
  * Get a single news article by slug
  */
 export const getNewsBySlug = async (slug: string) => {
-	const all = await resolveNews();
-	return all.find((n) => n.slug === slug) ?? null;
+  const all = await resolveNews();
+  return all.find((n) => n.slug === slug) ?? null;
 };
 
 /**
  * Increment view count on a news article (no-op for static data)
  */
 export const incrementNewsViewCount = async (_id: number, _currentCount: number) => {
-	// No-op for static data
+  // No-op for static data
 };
 
 /** Derive a slug from the title when an editor leaves the slug field empty in Builder.io. */
 const ensureEventSlug = (event: TownEvent): TownEvent => {
-	if (event.slug && event.slug.trim() !== "") return event;
-	const derived = event.title ? slugify(event.title) : "";
-	return { ...event, slug: derived || String(event.id ?? "") };
+  if (event.slug && event.slug.trim() !== "") return event;
+  const derived = event.title ? slugify(event.title) : "";
+  return { ...event, slug: derived || String(event.id ?? "") };
 };
 
 /**
@@ -220,8 +216,8 @@ const ensureEventSlug = (event: TownEvent): TownEvent => {
  * `ensureEventSlug` map cost on repeat calls.)
  */
 export const resolveEvents = cache(async (): Promise<TownEvent[]> => {
-	const { results } = await fetchBuilderContent<TownEvent>("town-event", { limit: 1000 });
-	return results.map(ensureEventSlug);
+  const { results } = await fetchBuilderContent<TownEvent>("town-event", { limit: 1000 });
+  return results.map(ensureEventSlug);
 });
 
 /**
@@ -230,56 +226,56 @@ export const resolveEvents = cache(async (): Promise<TownEvent[]> => {
  * blank and we fall back to a title-derived slug).
  */
 const resolveEventBySlugMap = cache(async (): Promise<Map<string, TownEvent>> => {
-	const all = await resolveEvents();
-	const map = new Map<string, TownEvent>();
-	for (const event of all) {
-		if (event.slug) map.set(event.slug, event);
-	}
-	return map;
+  const all = await resolveEvents();
+  const map = new Map<string, TownEvent>();
+  for (const event of all) {
+    if (event.slug) map.set(event.slug, event);
+  }
+  return map;
 });
 
 /**
  * Get upcoming events
  */
 export const getEvents = async (options?: {
-	limit?: number;
-	page?: number;
-	category?: string;
-	status?: string;
-	month?: string;
-	year?: string;
+  limit?: number;
+  page?: number;
+  category?: string;
+  status?: string;
+  month?: string;
+  year?: string;
 }) => {
-	const { limit = 10, page = 1, category, status, month, year } = options ?? {};
+  const { limit = 10, page = 1, category, status, month, year } = options ?? {};
 
-	let filtered = [...(await resolveEvents())];
+  let filtered = [...(await resolveEvents())];
 
-	const now = new Date();
-	if (status === "upcoming") {
-		filtered = filtered.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
-	} else if (status === "past") {
-		filtered = filtered.filter((e) => new Date(e.eventDate) < now);
-	} else if (status) {
-		filtered = filtered.filter((e) => e.status === status);
-	} else {
-		filtered = filtered.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
-	}
+  const now = new Date();
+  if (status === "upcoming") {
+    filtered = filtered.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
+  } else if (status === "past") {
+    filtered = filtered.filter((e) => new Date(e.eventDate) < now);
+  } else if (status) {
+    filtered = filtered.filter((e) => e.status === status);
+  } else {
+    filtered = filtered.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
+  }
 
-	if (category) {
-		filtered = filtered.filter((e) => e.categories.includes(category));
-	}
+  if (category) {
+    filtered = filtered.filter((e) => e.categories.includes(category));
+  }
 
-	if (month && year) {
-		const monthNum = parseInt(month);
-		const yearNum = parseInt(year);
-		filtered = filtered.filter((e) => {
-			const d = new Date(e.eventDate);
-			return d.getMonth() + 1 === monthNum && d.getFullYear() === yearNum;
-		});
-	}
+  if (month && year) {
+    const monthNum = parseInt(month);
+    const yearNum = parseInt(year);
+    filtered = filtered.filter((e) => {
+      const d = new Date(e.eventDate);
+      return d.getMonth() + 1 === monthNum && d.getFullYear() === yearNum;
+    });
+  }
 
-	filtered.sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime());
+  filtered.sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime());
 
-	return paginate(filtered, limit, page);
+  return paginate(filtered, limit, page);
 };
 
 /**
@@ -292,144 +288,147 @@ export const getEvents = async (options?: {
  * not one per missing-slug lookup, with O(1) lookup against the map.
  */
 export const getEventBySlug = async (slug: string): Promise<TownEvent | null> => {
-	const direct = await fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
-	if (direct) return ensureEventSlug(direct);
-	const bySlug = await resolveEventBySlugMap();
-	const match = bySlug.get(slug);
-	if (match) {
-		logger.warn("Event resolved via slug-derivation fallback — Builder entry is missing data.slug", {
-			slug,
-			eventTitle: match.title,
-			eventId: match.id,
-		});
-		return match;
-	}
-	return null;
+  const direct = await fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
+  if (direct) return ensureEventSlug(direct);
+  const bySlug = await resolveEventBySlugMap();
+  const match = bySlug.get(slug);
+  if (match) {
+    logger.warn(
+      "Event resolved via slug-derivation fallback — Builder entry is missing data.slug",
+      {
+        slug,
+        eventTitle: match.title,
+        eventId: match.id,
+      }
+    );
+    return match;
+  }
+  return null;
 };
 
 /**
  * Get meetings
  */
 export const getMeetings = async (options?: {
-	limit?: number;
-	page?: number;
-	type?: string;
-	month?: string;
-	year?: string;
-	status?: string;
-	hasRecordings?: boolean;
+  limit?: number;
+  page?: number;
+  type?: string;
+  month?: string;
+  year?: string;
+  status?: string;
+  hasRecordings?: boolean;
 }) => {
-	const { limit = 10, page = 1, type, month, year, status, hasRecordings } = options ?? {};
+  const { limit = 10, page = 1, type, month, year, status, hasRecordings } = options ?? {};
 
-	const allMeetings = await resolveMeetings();
-	let filtered = allMeetings.filter((m) => m.isPublic);
+  const allMeetings = await resolveMeetings();
+  let filtered = allMeetings.filter((m) => m.isPublic);
 
-	if (type) {
-		filtered = filtered.filter((m) => m.type === type);
-	}
+  if (type) {
+    filtered = filtered.filter((m) => m.type === type);
+  }
 
-	if (month && year) {
-		const monthNum = parseInt(month);
-		const yearNum = parseInt(year);
-		filtered = filtered.filter((m) => {
-			const d = new Date(m.meetingDate);
-			return d.getMonth() + 1 === monthNum && d.getFullYear() === yearNum;
-		});
-	} else if (year) {
-		const yearNum = parseInt(year);
-		filtered = filtered.filter((m) => {
-			const d = new Date(m.meetingDate);
-			return d.getFullYear() === yearNum;
-		});
-	}
+  if (month && year) {
+    const monthNum = parseInt(month);
+    const yearNum = parseInt(year);
+    filtered = filtered.filter((m) => {
+      const d = new Date(m.meetingDate);
+      return d.getMonth() + 1 === monthNum && d.getFullYear() === yearNum;
+    });
+  } else if (year) {
+    const yearNum = parseInt(year);
+    filtered = filtered.filter((m) => {
+      const d = new Date(m.meetingDate);
+      return d.getFullYear() === yearNum;
+    });
+  }
 
-	if (status) {
-		const today = getTodayString();
-		switch (status) {
-			case "upcoming":
-				filtered = filtered.filter((m) => (toDateOnly(m.meetingDate) ?? "") >= today);
-				break;
-			case "past":
-				filtered = filtered.filter((m) => (toDateOnly(m.meetingDate) ?? "") <= today);
-				break;
-			case "has-recordings":
-				filtered = filtered.filter((m) => m.videoUrl || m.audioUrl);
-				break;
-			case "has-minutes":
-				filtered = filtered.filter((m) => m.minutes || m.minutesUrl);
-				break;
-		}
-	}
+  if (status) {
+    const today = getTodayString();
+    switch (status) {
+      case "upcoming":
+        filtered = filtered.filter((m) => (toDateOnly(m.meetingDate) ?? "") >= today);
+        break;
+      case "past":
+        filtered = filtered.filter((m) => (toDateOnly(m.meetingDate) ?? "") <= today);
+        break;
+      case "has-recordings":
+        filtered = filtered.filter((m) => m.videoUrl || m.audioUrl);
+        break;
+      case "has-minutes":
+        filtered = filtered.filter((m) => m.minutes || m.minutesUrl);
+        break;
+    }
+  }
 
-	if (hasRecordings) {
-		filtered = filtered.filter((m) => m.videoUrl || m.audioUrl);
-	}
+  if (hasRecordings) {
+    filtered = filtered.filter((m) => m.videoUrl || m.audioUrl);
+  }
 
-	filtered.sort((a, b) => new Date(b.meetingDate).getTime() - new Date(a.meetingDate).getTime());
+  filtered.sort((a, b) => new Date(b.meetingDate).getTime() - new Date(a.meetingDate).getTime());
 
-	return paginate(filtered, limit, page);
+  return paginate(filtered, limit, page);
 };
 
 /**
  * Get a single meeting by slug
  */
 export const getMeetingBySlug = async (slug: string) => {
-	const allMeetings = await resolveMeetings();
-	return findMeetingBySlug(allMeetings, slug);
+  const allMeetings = await resolveMeetings();
+  return findMeetingBySlug(allMeetings, slug);
 };
 
 /**
  * Get team members, sorted by category
  */
 export const getTeamMembers = async () => {
-	const all = await resolveTeamMembers();
-	return all.filter((m) => m.isActive);
+  const all = await resolveTeamMembers();
+  return all.filter((m) => m.isActive);
 };
 
 /**
  * Get history articles
  */
 export const getHistoryArticles = async (type?: "period" | "landmark") => {
-	const all = await resolveHistoryArticles();
-	if (type) {
-		return all.filter((a) => a.type === type);
-	}
-	return [...all];
+  const all = await resolveHistoryArticles();
+  if (type) {
+    return all.filter((a) => a.type === type);
+  }
+  return [...all];
 };
 
 /**
  * Get points of interest
  */
 export const getPointsOfInterest = async (category?: string) => {
-	const all = await resolvePointsOfInterest();
-	let filtered = [...all];
-	if (category) {
-		filtered = filtered.filter((p) => p.category === category);
-	}
-	return filtered.sort((a, b) => a.name.localeCompare(b.name));
+  const all = await resolvePointsOfInterest();
+  let filtered = [...all];
+  if (category) {
+    filtered = filtered.filter((p) => p.category === category);
+  }
+  return filtered.sort((a, b) => a.name.localeCompare(b.name));
 };
 
 /**
  * Get resources
  */
 export const getResources = async (options?: { type?: string; category?: string }) => {
-	const all = await resolveResources();
-	let filtered = [...all];
-	if (options?.type) {
-		filtered = filtered.filter((r) => r.type === options.type);
-	}
-	if (options?.category) {
-		filtered = filtered.filter((r) => r.category === options.category);
-	}
-	return filtered;
+  const all = await resolveResources();
+  let filtered = [...all];
+  if (options?.type) {
+    filtered = filtered.filter((r) => r.type === options.type);
+  }
+  if (options?.category) {
+    filtered = filtered.filter((r) => r.category === options.category);
+  }
+  return filtered;
 };
 
 /**
  * Get emergency services
  */
 export const getEmergencyServices = async () => {
-	const all = await resolveEmergencyServices();
-	return [...all];
+  const all = await resolveEmergencyServices();
+  return [...all];
 };
 
 /**
@@ -437,159 +436,159 @@ export const getEmergencyServices = async () => {
  * EmergencyBanner in the town layout.
  */
 export const getActiveAnnouncements = async () => {
-	const all = await resolveAnnouncements();
-	const now = new Date().toISOString();
-	return all.filter((a) => {
-		if (!a.isActive) return false;
-		if (a.startsAt && a.startsAt > now) return false;
-		if (a.endsAt && a.endsAt < now) return false;
-		return true;
-	});
+  const all = await resolveAnnouncements();
+  const now = new Date().toISOString();
+  return all.filter((a) => {
+    if (!a.isActive) return false;
+    if (a.startsAt && a.startsAt > now) return false;
+    if (a.endsAt && a.endsAt < now) return false;
+    return true;
+  });
 };
 
 /**
  * Get map businesses for the interactive map page.
  */
 export const getMapBusinesses = async (): Promise<MapBusiness[]> => {
-	const { mappable, dropped } = partitionByCoords(await resolveMapBusinesses());
-	if (dropped.length > 0) {
-		// Builder editors can publish a business without coordinates; Leaflet
-		// throws on [undefined, undefined] and unmounts the map page.
-		logger.warn("Skipping map businesses with missing/invalid coordinates", {
-			names: dropped.map((b) => b.name),
-		});
-	}
-	return mappable;
+  const { mappable, dropped } = partitionByCoords(await resolveMapBusinesses());
+  if (dropped.length > 0) {
+    // Builder editors can publish a business without coordinates; Leaflet
+    // throws on [undefined, undefined] and unmounts the map page.
+    logger.warn("Skipping map businesses with missing/invalid coordinates", {
+      names: dropped.map((b) => b.name),
+    });
+  }
+  return mappable;
 };
 
 /**
  * Get all announcements (for listing page)
  */
 export const getAnnouncements = async (options?: {
-	limit?: number;
-	page?: number;
-	level?: string;
-	activeOnly?: boolean;
+  limit?: number;
+  page?: number;
+  level?: string;
+  activeOnly?: boolean;
 }) => {
-	const { limit = 10, page = 1, level, activeOnly } = options ?? {};
+  const { limit = 10, page = 1, level, activeOnly } = options ?? {};
 
-	const all = await resolveAnnouncements();
-	let filtered = [...all];
+  const all = await resolveAnnouncements();
+  let filtered = [...all];
 
-	if (level) {
-		filtered = filtered.filter((a) => a.level === level);
-	}
+  if (level) {
+    filtered = filtered.filter((a) => a.level === level);
+  }
 
-	if (activeOnly) {
-		const now = new Date().toISOString();
-		filtered = filtered.filter((a) => {
-			if (!a.isActive) return false;
-			if (a.startsAt && a.startsAt > now) return false;
-			if (a.endsAt && a.endsAt < now) return false;
-			return true;
-		});
-	}
+  if (activeOnly) {
+    const now = new Date().toISOString();
+    filtered = filtered.filter((a) => {
+      if (!a.isActive) return false;
+      if (a.startsAt && a.startsAt > now) return false;
+      if (a.endsAt && a.endsAt < now) return false;
+      return true;
+    });
+  }
 
-	filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-	return paginate(filtered, limit, page);
+  return paginate(filtered, limit, page);
 };
 
 /**
  * Get a single announcement by ID
  */
 export const getAnnouncementById = async (id: number | string) => {
-	const all = await resolveAnnouncements();
-	return all.find((a) => String(a.id) === String(id)) ?? null;
+  const all = await resolveAnnouncements();
+  return all.find((a) => String(a.id) === String(id)) ?? null;
 };
 
 /**
  * Get businesses
  */
 export const getBusinesses = async (options?: {
-	limit?: number;
-	page?: number;
-	category?: string;
-	search?: string;
-	featured?: boolean;
+  limit?: number;
+  page?: number;
+  category?: string;
+  search?: string;
+  featured?: boolean;
 }) => {
-	const { limit = 10, page = 1, category, search, featured } = options ?? {};
+  const { limit = 10, page = 1, category, search, featured } = options ?? {};
 
-	const all = await resolveBusinesses();
-	let filtered = [...all];
+  const all = await resolveBusinesses();
+  let filtered = [...all];
 
-	if (category) {
-		filtered = filtered.filter((b) => b.category === category);
-	}
+  if (category) {
+    filtered = filtered.filter((b) => b.category === category);
+  }
 
-	if (search) {
-		filtered = filtered.filter(
-			(b) => likeMatch(b.name, search) || likeMatch(b.description, search),
-		);
-	}
+  if (search) {
+    filtered = filtered.filter(
+      (b) => likeMatch(b.name, search) || likeMatch(b.description, search)
+    );
+  }
 
-	if (featured) {
-		filtered = filtered.filter((b) => b.isFeatured);
-	}
+  if (featured) {
+    filtered = filtered.filter((b) => b.isFeatured);
+  }
 
-	// Sort: featured first, then verified, then alphabetical
-	filtered.sort((a, b) => {
-		if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
-		if (a.isVerified !== b.isVerified) return a.isVerified ? -1 : 1;
-		return a.name.localeCompare(b.name);
-	});
+  // Sort: featured first, then verified, then alphabetical
+  filtered.sort((a, b) => {
+    if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
+    if (a.isVerified !== b.isVerified) return a.isVerified ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
 
-	return paginate(filtered, limit, page);
+  return paginate(filtered, limit, page);
 };
 
 /**
  * Get a single business by slug
  */
 export const getBusinessBySlug = async (slug: string) => {
-	const all = await resolveBusinesses();
-	return all.find((b) => b.slug === slug) ?? null;
+  const all = await resolveBusinesses();
+  return all.find((b) => b.slug === slug) ?? null;
 };
 
 /**
  * Get elections
  */
 export const getElections = async (options?: {
-	limit?: number;
-	page?: number;
-	status?: "upcoming" | "today" | "past";
-	search?: string;
+  limit?: number;
+  page?: number;
+  status?: "upcoming" | "today" | "past";
+  search?: string;
 }) => {
-	const { limit = 10, page = 1, status, search } = options ?? {};
+  const { limit = 10, page = 1, status, search } = options ?? {};
 
-	const all = await resolveElections();
-	let filtered = [...all];
-	const today = getTodayString();
+  const all = await resolveElections();
+  let filtered = [...all];
+  const today = getTodayString();
 
-	if (status === "upcoming") {
-		filtered = filtered.filter((e) => (toDateOnly(e.electionDate) ?? "") > today);
-	} else if (status === "today") {
-		filtered = filtered.filter((e) => toDateOnly(e.electionDate) === today);
-	} else if (status === "past") {
-		filtered = filtered.filter((e) => (toDateOnly(e.electionDate) ?? "") < today);
-	}
+  if (status === "upcoming") {
+    filtered = filtered.filter((e) => (toDateOnly(e.electionDate) ?? "") > today);
+  } else if (status === "today") {
+    filtered = filtered.filter((e) => toDateOnly(e.electionDate) === today);
+  } else if (status === "past") {
+    filtered = filtered.filter((e) => (toDateOnly(e.electionDate) ?? "") < today);
+  }
 
-	if (search) {
-		filtered = filtered.filter(
-			(e) => likeMatch(e.title, search) || likeMatch(e.description, search),
-		);
-	}
+  if (search) {
+    filtered = filtered.filter(
+      (e) => likeMatch(e.title, search) || likeMatch(e.description, search)
+    );
+  }
 
-	filtered.sort((a, b) => new Date(b.electionDate).getTime() - new Date(a.electionDate).getTime());
+  filtered.sort((a, b) => new Date(b.electionDate).getTime() - new Date(a.electionDate).getTime());
 
-	return paginate(filtered, limit, page);
+  return paginate(filtered, limit, page);
 };
 
 /**
  * Get a single election by slug
  */
 export const getElectionBySlug = async (slug: string) => {
-	const all = await resolveElections();
-	return all.find((e) => e.slug === slug) ?? null;
+  const all = await resolveElections();
+  return all.find((e) => e.slug === slug) ?? null;
 };
 
 /**
@@ -597,24 +596,26 @@ export const getElectionBySlug = async (slug: string) => {
  * Only categories/months that have at least one upcoming event are returned.
  */
 export const getEventFilterOptions = async () => {
-	const now = new Date();
-	const allEvents = await resolveEvents();
-	const upcomingEvents = allEvents.filter((e) => e.status !== "cancelled" && new Date(e.eventDate) >= now);
+  const now = new Date();
+  const allEvents = await resolveEvents();
+  const upcomingEvents = allEvents.filter(
+    (e) => e.status !== "cancelled" && new Date(e.eventDate) >= now
+  );
 
-	const categorySet = new Set<string>();
-	const monthSet = new Set<string>();
+  const categorySet = new Set<string>();
+  const monthSet = new Set<string>();
 
-	for (const e of upcomingEvents) {
-		for (const cat of e.categories) categorySet.add(cat);
-		// Extract year/month directly from the date string to avoid timezone shifts
-		const [year, month] = e.eventDate.split("-");
-		if (year && month) monthSet.add(`${year}-${month}`);
-	}
+  for (const e of upcomingEvents) {
+    for (const cat of e.categories) categorySet.add(cat);
+    // Extract year/month directly from the date string to avoid timezone shifts
+    const [year, month] = e.eventDate.split("-");
+    if (year && month) monthSet.add(`${year}-${month}`);
+  }
 
-	return {
-		categories: [...categorySet].sort(),
-		months: [...monthSet].sort(),
-	};
+  return {
+    categories: [...categorySet].sort(),
+    months: [...monthSet].sort(),
+  };
 };
 
 /**
@@ -622,42 +623,42 @@ export const getEventFilterOptions = async () => {
  * Only types/years/statuses that match at least one public meeting are returned.
  */
 export const getMeetingFilterOptions = async () => {
-	const allMeetings = await resolveMeetings();
-	const publicMeetings = allMeetings.filter((m) => m.isPublic);
+  const allMeetings = await resolveMeetings();
+  const publicMeetings = allMeetings.filter((m) => m.isPublic);
 
-	const typeSet = new Set<string>();
-	const yearSet = new Set<number>();
-	const today = getTodayString();
+  const typeSet = new Set<string>();
+  const yearSet = new Set<number>();
+  const today = getTodayString();
 
-	let hasUpcoming = false;
-	let hasPast = false;
-	let hasMinutes = false;
-	let hasRecordings = false;
+  let hasUpcoming = false;
+  let hasPast = false;
+  let hasMinutes = false;
+  let hasRecordings = false;
 
-	for (const m of publicMeetings) {
-		typeSet.add(m.type);
-		const dateOnly = toDateOnly(m.meetingDate);
-		if (!dateOnly) continue;
-		const yearStr = dateOnly.slice(0, 4);
-		yearSet.add(Number(yearStr));
+  for (const m of publicMeetings) {
+    typeSet.add(m.type);
+    const dateOnly = toDateOnly(m.meetingDate);
+    if (!dateOnly) continue;
+    const yearStr = dateOnly.slice(0, 4);
+    yearSet.add(Number(yearStr));
 
-		if (!hasUpcoming && dateOnly >= today) hasUpcoming = true;
-		if (!hasPast && dateOnly < today) hasPast = true;
-		if (!hasMinutes && (m.minutes || m.minutesUrl)) hasMinutes = true;
-		if (!hasRecordings && (m.videoUrl || m.audioUrl)) hasRecordings = true;
-	}
+    if (!hasUpcoming && dateOnly >= today) hasUpcoming = true;
+    if (!hasPast && dateOnly < today) hasPast = true;
+    if (!hasMinutes && (m.minutes || m.minutesUrl)) hasMinutes = true;
+    if (!hasRecordings && (m.videoUrl || m.audioUrl)) hasRecordings = true;
+  }
 
-	const statuses: string[] = [];
-	if (hasUpcoming) statuses.push("upcoming");
-	if (hasPast) statuses.push("past");
-	if (hasMinutes) statuses.push("has-minutes");
-	if (hasRecordings) statuses.push("has-recordings");
+  const statuses: string[] = [];
+  if (hasUpcoming) statuses.push("upcoming");
+  if (hasPast) statuses.push("past");
+  if (hasMinutes) statuses.push("has-minutes");
+  if (hasRecordings) statuses.push("has-recordings");
 
-	return {
-		types: [...typeSet].sort(),
-		years: [...yearSet].sort((a, b) => b - a),
-		statuses,
-	};
+  return {
+    types: [...typeSet].sort(),
+    years: [...yearSet].sort((a, b) => b - a),
+    statuses,
+  };
 };
 
 /**
@@ -665,22 +666,22 @@ export const getMeetingFilterOptions = async () => {
  * Only categories/months that have at least one published article are returned.
  */
 export const getNewsFilterOptions = async () => {
-	const allNews = await resolveNews();
-	const published = allNews.filter((n) => n.status === "published");
+  const allNews = await resolveNews();
+  const published = allNews.filter((n) => n.status === "published");
 
-	const categorySet = new Set<string>();
-	const monthSet = new Set<string>();
+  const categorySet = new Set<string>();
+  const monthSet = new Set<string>();
 
-	for (const n of published) {
-		for (const cat of n.categories) categorySet.add(cat);
-		const [year, month] = n.publishedAt.split("-");
-		if (year && month) monthSet.add(`${year}-${month}`);
-	}
+  for (const n of published) {
+    for (const cat of n.categories) categorySet.add(cat);
+    const [year, month] = n.publishedAt.split("-");
+    if (year && month) monthSet.add(`${year}-${month}`);
+  }
 
-	return {
-		categories: [...categorySet].sort(),
-		months: [...monthSet].sort().reverse(),
-	};
+  return {
+    categories: [...categorySet].sort(),
+    months: [...monthSet].sort().reverse(),
+  };
 };
 
 /**
@@ -693,25 +694,25 @@ export const getNewsFilterOptions = async () => {
  * only supplies the body copy.
  */
 export const getStaticPage = cache(
-	async (slug: string): Promise<{ title: string; body: string } | null> => {
-		try {
-			const entry = await fetchBuilderEntry<{ slug?: string; title?: string; body?: string }>(
-				"town-static-page",
-				{ "data.slug": slug },
-			);
-			if (!entry) return null;
-			const title = entry.title?.trim();
-			const body = entry.body?.trim();
-			if (!title && !body) return null;
-			return { title: title ?? "", body: body ?? "" };
-		} catch (err) {
-			logger.warn("Failed to fetch town-static-page from Builder.io — falling back", {
-				slug,
-				error: err instanceof Error ? err.message : String(err),
-			});
-			return null;
-		}
-	},
+  async (slug: string): Promise<{ title: string; body: string } | null> => {
+    try {
+      const entry = await fetchBuilderEntry<{ slug?: string; title?: string; body?: string }>(
+        "town-static-page",
+        { "data.slug": slug }
+      );
+      if (!entry) return null;
+      const title = entry.title?.trim();
+      const body = entry.body?.trim();
+      if (!title && !body) return null;
+      return { title: title ?? "", body: body ?? "" };
+    } catch (err) {
+      logger.warn("Failed to fetch town-static-page from Builder.io — falling back", {
+        slug,
+        error: err instanceof Error ? err.message : String(err),
+      });
+      return null;
+    }
+  }
 );
 
 // --- Globals ---
@@ -720,30 +721,27 @@ export const getStaticPage = cache(
  * Get settings global — fetches from Builder.io with static fallback.
  */
 export const getSettings = async () => {
-	try {
-		const builderSettings = await fetchBuilderEntry<BuilderSettingsFlat>(
-			"town-settings",
-			{},
-		);
-		if (builderSettings) {
-			return toTownSettings(builderSettings);
-		}
-	} catch (err) {
-		console.error("Failed to fetch settings from Builder.io:", err);
-	}
-	return settings;
+  try {
+    const builderSettings = await fetchBuilderEntry<BuilderSettingsFlat>("town-settings", {});
+    if (builderSettings) {
+      return toTownSettings(builderSettings);
+    }
+  } catch (err) {
+    console.error("Failed to fetch settings from Builder.io:", err);
+  }
+  return settings;
 };
 
 /**
  * Get navigation global
  */
 export const getNavigation = async () => {
-	return navigation;
+  return navigation;
 };
 
 /**
  * Get homepage global
  */
 export const getHomepage = async () => {
-	return homepage;
+  return homepage;
 };

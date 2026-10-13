@@ -15,16 +15,16 @@
  */
 
 export interface TownStaticPage {
-	slug: string;
-	title: string;
-	body: string;
+  slug: string;
+  title: string;
+  body: string;
 }
 
 export const staticPages: TownStaticPage[] = [
-	{
-		slug: "about",
-		title: "About Town of Harmony, NC",
-		body: `<p>Harmony is a small town located in Iredell County, North Carolina. Incorporated in 1927, the town has grown into a close-knit community proud of its history, natural beauty, and welcoming spirit. With a population of roughly 500 residents, Harmony maintains the small-town character and neighborly atmosphere that make it a special place to call home.</p>
+  {
+    slug: "about",
+    title: "About Town of Harmony, NC",
+    body: `<p>Harmony is a small town located in Iredell County, North Carolina. Incorporated in 1927, the town has grown into a close-knit community proud of its history, natural beauty, and welcoming spirit. With a population of roughly 500 residents, Harmony maintains the small-town character and neighborly atmosphere that make it a special place to call home.</p>
 <h2>Our Government</h2>
 <p>The Town of Harmony is governed by a Town Council and a Mayor. The Council meets regularly to address town business, hear from residents, and make decisions that shape the community. All meetings are open to the public and we encourage residents to attend and participate. Meeting agendas and minutes are posted to this website so every citizen can stay informed about local decisions.</p>
 <h2>Community &amp; Parks</h2>
@@ -36,11 +36,11 @@ export const staticPages: TownStaticPage[] = [
 <p>Harmony is located in southern Iredell County, approximately 35 miles north of Charlotte, North Carolina. The town sits near the crossroads of US-21 and NC-901, making it easily accessible while preserving its quiet, rural character. Nearby communities include Statesville to the north and Mooresville to the east.</p>
 <h2>Contact Us</h2>
 <p>Have questions about the Town of Harmony? We're here to help. Reach us at <a href="mailto:info@townofharmony.org">info@townofharmony.org</a> or call <a href="tel:+17045462339">(704) 546-2339</a>. Town Hall is located at 3389 Harmony Hwy, Harmony, NC 28634.</p>`,
-	},
-	{
-		slug: "accessibility",
-		title: "Accessibility Statement",
-		body: `<p>The Town of Harmony is committed to ensuring that our website is accessible to all visitors, including people with disabilities. We strive to meet or exceed the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA standards.</p>
+  },
+  {
+    slug: "accessibility",
+    title: "Accessibility Statement",
+    body: `<p>The Town of Harmony is committed to ensuring that our website is accessible to all visitors, including people with disabilities. We strive to meet or exceed the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA standards.</p>
 <h2>Our Commitment</h2>
 <p>As a municipal government website, we recognize our responsibility to provide equal access to information and services for all residents and visitors. We continuously work to improve the accessibility of our website.</p>
 <h2>Accessibility Features</h2>
@@ -64,11 +64,11 @@ export const staticPages: TownStaticPage[] = [
 </ul>
 <p>We will make every effort to provide the information you need in an accessible format within a reasonable timeframe.</p>
 <p><em>Last updated: March 2026</em></p>`,
-	},
-	{
-		slug: "privacy",
-		title: "Privacy Policy",
-		body: `<p>The Town of Harmony is committed to protecting the privacy of visitors to our website. This policy explains what information we collect and how it is used.</p>
+  },
+  {
+    slug: "privacy",
+    title: "Privacy Policy",
+    body: `<p>The Town of Harmony is committed to protecting the privacy of visitors to our website. This policy explains what information we collect and how it is used.</p>
 <h2>Information We Collect</h2>
 <p>We may collect anonymous usage data through our analytics service to understand how visitors use our website. This includes pages visited, time spent on the site, and general geographic location. No personally identifiable information is collected through analytics.</p>
 <h2>Contact Forms</h2>
@@ -80,5 +80,5 @@ export const staticPages: TownStaticPage[] = [
 <h2>Contact Us</h2>
 <p>If you have questions about this privacy policy, please use our <a href="/contact">contact form</a> or call <a href="tel:+17045462339">(704) 546-2339</a>.</p>
 <p><em>Last updated: March 2026</em></p>`,
-	},
+  },
 ];

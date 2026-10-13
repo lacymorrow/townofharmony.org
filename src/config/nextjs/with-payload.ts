@@ -5,5 +5,5 @@ import type { NextConfig } from "next";
  * Now a pass-through since Payload has been removed.
  */
 export function withPayloadConfig(nextConfig: NextConfig): NextConfig {
-	return nextConfig;
+  return nextConfig;
 }

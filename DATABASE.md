@@ -71,7 +71,7 @@ services:
     image: postgres:16-alpine
     container_name: toh-postgres
     ports:
-      - "5435:5432"  # External:Internal
+      - "5435:5432" # External:Internal
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -108,6 +108,7 @@ docker-compose -f docker-compose.dev.yml exec postgres psql -U postgres toh_dev 
 ### Port Already in Use
 
 If port 5435 is already in use, you can change it in:
+
 1. `docker-compose.dev.yml` - Update the ports section
 2. `.env` - Update DATABASE_URL with the new port
 
@@ -120,6 +121,7 @@ If port 5435 is already in use, you can change it in:
 ### Permission Denied
 
 If you get permission errors, ensure the Docker daemon is running and you have proper permissions:
+
 ```bash
 # On macOS/Linux
 sudo docker-compose -f docker-compose.dev.yml up -d
@@ -128,5 +130,6 @@ sudo docker-compose -f docker-compose.dev.yml up -d
 ## Data Persistence
 
 Database data is persisted in a Docker volume named `postgres_data`. This means:
+
 - Data survives container restarts
 - To completely reset, use: `docker-compose -f docker-compose.dev.yml down -v`

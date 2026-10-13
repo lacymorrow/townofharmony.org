@@ -2,11 +2,7 @@
 
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import type { LucideIcon } from "lucide-react";
-import {
-  ArrowLeftFromLineIcon,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
+import { ArrowLeftFromLineIcon, Settings2, SquareTerminal } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
@@ -32,9 +28,7 @@ const data = [
   {
     title: "Management",
     icon: Settings2,
-    items: [
-      { title: "API Keys", url: routes.app.apiKeys },
-    ],
+    items: [{ title: "API Keys", url: routes.app.apiKeys }],
   },
 ];
 
@@ -82,7 +76,7 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
               {"icon" in item && item.icon && (
                 <item.icon
                   className={cn(
-                    "text-muted-foreground transition-colors shrink-0",
+                    "shrink-0 text-muted-foreground transition-colors",
                     "group-hover:text-foreground",
                     isActive && "text-foreground"
                   )}
@@ -90,7 +84,7 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
               )}
               <span
                 className={cn(
-                  "text-muted-foreground transition-colors truncate",
+                  "truncate text-muted-foreground transition-colors",
                   "group-hover:text-foreground",
                   isActive && "font-medium text-foreground"
                 )}
@@ -121,7 +115,7 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
                 {item.icon && (
                   <item.icon
                     className={cn(
-                      "text-muted-foreground transition-colors shrink-0",
+                      "shrink-0 text-muted-foreground transition-colors",
                       "group-hover:text-foreground",
                       (isActive || hasActiveChild) && "text-foreground"
                     )}
@@ -129,7 +123,7 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
                 )}
                 <span
                   className={cn(
-                    "text-muted-foreground transition-colors truncate",
+                    "truncate text-muted-foreground transition-colors",
                     "group-hover:text-foreground",
                     (isActive || hasActiveChild) && "font-medium text-foreground"
                   )}
@@ -143,7 +137,7 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
             </SidebarMenuButton>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <SidebarMenuSub className="pr-0 mr-0 max-w-full">
+            <SidebarMenuSub className="mr-0 max-w-full pr-0">
               {item.items?.map((subItem) => renderMenuItem(subItem))}
             </SidebarMenuSub>
           </CollapsibleContent>
@@ -156,8 +150,8 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
     <>
       <SidebarGroup
         className={cn(
-          "relative pl-0 max-w-full",
-          "opacity-50 hover:opacity-100 transition-opacity"
+          "relative max-w-full pl-0",
+          "opacity-50 transition-opacity hover:opacity-100"
         )}
       >
         <SidebarGroupLabel className="p-0">
@@ -165,7 +159,7 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
             href={routes.home}
             className={cn(
               buttonVariants({ variant: "link", size: "sm" }),
-              "flex items-center justify-start gap-2 w-full max-w-full"
+              "flex w-full max-w-full items-center justify-start gap-2"
             )}
           >
             <ArrowLeftFromLineIcon className="h-4 w-4 shrink-0" />

@@ -8,8 +8,8 @@ import "@/builder-registry-town";
 builder.init(env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
 interface RenderBuilderSectionProps {
-	model: string;
-	content?: Record<string, unknown>;
+  model: string;
+  content?: Record<string, unknown>;
 }
 
 /**
@@ -18,7 +18,7 @@ interface RenderBuilderSectionProps {
  * safe to use in layouts and shared UI zones.
  */
 export function RenderBuilderSection({ model, content }: RenderBuilderSectionProps) {
-	const isPreviewing = useIsPreviewing();
-	if (!content && !isPreviewing) return null;
-	return <BuilderComponent model={model} content={content} />;
+  const isPreviewing = useIsPreviewing();
+  if (!content && !isPreviewing) return null;
+  return <BuilderComponent model={model} content={content} />;
 }

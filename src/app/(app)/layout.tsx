@@ -43,8 +43,7 @@ export default function Layout({
   // In RSC, parallel route slots are synchronous ReactNodes — no await needed.
   const resolvedSlots = Object.entries(slots).filter(
     ([, slot]) =>
-      slot != null &&
-      !(typeof slot === "object" && Object.keys(slot as object).length === 0)
+      slot != null && !(typeof slot === "object" && Object.keys(slot as object).length === 0)
   ) as [string, React.ReactNode][];
 
   return (
@@ -79,7 +78,11 @@ export default function Layout({
               },
               foundingDate: settings.branding.established,
               logo: `${siteConfig.url}/logo.png`,
-              sameAs: [settings.socialMedia.facebook, settings.socialMedia.twitter, settings.socialMedia.youtube].filter(Boolean),
+              sameAs: [
+                settings.socialMedia.facebook,
+                settings.socialMedia.twitter,
+                settings.socialMedia.youtube,
+              ].filter(Boolean),
             }),
           }}
         />

@@ -237,7 +237,7 @@ function HeroTextColumn({
     // left-aligned with the rest of the site by matching the container gutter
     // (2rem padding, 1400px max-width, centered) once the viewport is wider
     // than the container (LAC-2906).
-    <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pr-12 lg:pl-[max(2rem,calc((100vw-1400px)/2+2rem))]">
+    <div className="flex flex-col justify-center py-12 pl-4 pr-4 lg:py-16 lg:pl-[max(2rem,calc((100vw-1400px)/2+2rem))] lg:pr-12">
       <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-wheat/30 bg-wheat/15 px-3.5 py-1.5 text-[13px] font-semibold tracking-wide text-[#E8D5A3]">
         {resolvedBadge}
       </div>

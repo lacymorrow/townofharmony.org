@@ -38,31 +38,27 @@ const contactCards = [
 
 export default function ContactPage() {
   return (
-    <section className="py-16 bg-warm-white">
+    <section className="bg-warm-white py-16">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-10">
-          <h1 className="text-[32px] font-serif font-bold text-sage-dark mb-2">
-            Contact Us
-          </h1>
-          <p className="text-[#635E56] text-base">
-            Get in touch with the Town of Harmony
-          </p>
+        <div className="mb-10 text-center">
+          <h1 className="mb-2 font-serif text-[32px] font-bold text-sage-dark">Contact Us</h1>
+          <p className="text-base text-[#635E56]">Get in touch with the Town of Harmony</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <div className="space-y-4">
             {contactCards.map((card) => {
               const Icon = card.icon;
               const content = (
-                <div className="flex items-start gap-4 bg-warm-white rounded-xl border border-[#DDD7CC] p-5 hover:shadow-md transition-shadow">
-                  <div className="w-11 h-11 bg-sage-dark rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="flex items-start gap-4 rounded-xl border border-[#DDD7CC] bg-warm-white p-5 transition-shadow hover:shadow-md">
+                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-sage-dark">
                     <Icon className="h-5 w-5 text-wheat" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[#4A4640] uppercase tracking-wider mb-1">
+                    <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-[#4A4640]">
                       {card.label}
                     </p>
-                    <p className="text-[15px] text-[#2D2A24] font-medium whitespace-pre-line">
+                    <p className="whitespace-pre-line text-[15px] font-medium text-[#2D2A24]">
                       {card.value}
                     </p>
                   </div>

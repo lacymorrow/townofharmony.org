@@ -46,12 +46,12 @@ const Pagination = ({
   }
 
   return (
-    <nav className="flex items-center justify-center gap-2 mt-8">
+    <nav className="mt-8 flex items-center justify-center gap-2">
       <button
         type="button"
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
-        className="px-3 py-2 text-sm font-medium rounded-md border border-stone bg-white text-sage-dark hover:bg-cream disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="rounded-md border border-stone bg-white px-3 py-2 text-sm font-medium text-sage-dark transition-colors hover:bg-cream disabled:cursor-not-allowed disabled:opacity-40"
       >
         Previous
       </button>
@@ -60,7 +60,7 @@ const Pagination = ({
           key={p}
           type="button"
           onClick={() => onPageChange(p)}
-          className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+          className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
             p === page
               ? "bg-sage-dark text-white"
               : "border border-stone bg-white text-sage-dark hover:bg-cream"
@@ -73,7 +73,7 @@ const Pagination = ({
         type="button"
         onClick={() => onPageChange(page + 1)}
         disabled={page >= totalPages}
-        className="px-3 py-2 text-sm font-medium rounded-md border border-stone bg-white text-sage-dark hover:bg-cream disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="rounded-md border border-stone bg-white px-3 py-2 text-sm font-medium text-sage-dark transition-colors hover:bg-cream disabled:cursor-not-allowed disabled:opacity-40"
       >
         Next
       </button>
@@ -93,7 +93,11 @@ export const TownNewsGrid = ({
   const category = searchParams?.get("category") || undefined;
   const search = searchParams?.get("search") || undefined;
 
-  const { docs, allData: allNews, totalPages } = useBuilderPaginatedData<TownNews>("town-news", {
+  const {
+    docs,
+    allData: allNews,
+    totalPages,
+  } = useBuilderPaginatedData<TownNews>("town-news", {
     page,
     limit: itemsPerPage,
     fallbackData: staticNews,
@@ -144,7 +148,7 @@ export const TownNewsGrid = ({
   };
 
   return (
-    <section className="py-12 bg-cream">
+    <section className="bg-cream py-12">
       <div className="container mx-auto px-4">
         {/* Search and Filters */}
         {(showSearch || showFilters) && (
@@ -162,7 +166,7 @@ export const TownNewsGrid = ({
                       });
                     }
                   }}
-                  className="w-full px-4 py-2.5 rounded-lg border border-stone bg-white text-[#2D2A24] placeholder:text-[#635E56] focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+                  className="w-full rounded-lg border border-stone bg-white px-4 py-2.5 text-[#2D2A24] placeholder:text-[#635E56] focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/40"
                 />
               </div>
             )}
@@ -172,10 +176,10 @@ export const TownNewsGrid = ({
                 <button
                   type="button"
                   onClick={() => updateParams({ category: undefined })}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
                     !category
                       ? "bg-sage-dark text-white"
-                      : "bg-white border border-stone text-[#4A4640] hover:bg-stone"
+                      : "border border-stone bg-white text-[#4A4640] hover:bg-stone"
                   }`}
                 >
                   All
@@ -185,10 +189,10 @@ export const TownNewsGrid = ({
                     key={cat}
                     type="button"
                     onClick={() => updateParams({ category: cat })}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium capitalize transition-colors ${
+                    className={`rounded-full px-3 py-1.5 text-sm font-medium capitalize transition-colors ${
                       category === cat
                         ? "bg-sage-dark text-white"
-                        : "bg-white border border-stone text-[#4A4640] hover:bg-stone"
+                        : "border border-stone bg-white text-[#4A4640] hover:bg-stone"
                     }`}
                   >
                     {cat.replace("-", " ")}
@@ -201,19 +205,19 @@ export const TownNewsGrid = ({
 
         {/* News Grid */}
         {docs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {docs.map((article) => (
               <Link
                 key={article.slug}
                 href={`/news/${article.slug}`}
-                className="group bg-white rounded-lg border border-stone overflow-hidden hover:shadow-lg transition-shadow"
+                className="group overflow-hidden rounded-lg border border-stone bg-white transition-shadow hover:shadow-lg"
               >
                 {article.featuredImage && (
                   <div className="h-48 overflow-hidden">
                     <img
                       src={article.featuredImage}
                       alt={article.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       width={800}
                       height={600}
                     />
@@ -221,22 +225,22 @@ export const TownNewsGrid = ({
                 )}
                 <div className="p-5">
                   {Array.isArray(article.categories) && article.categories.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-2">
+                    <div className="mb-2 flex flex-wrap gap-1.5">
                       {article.categories.map((cat) => (
                         <span
                           key={cat}
-                          className="bg-stone text-sage-dark px-2 py-0.5 rounded-full text-xs capitalize"
+                          className="rounded-full bg-stone px-2 py-0.5 text-xs capitalize text-sage-dark"
                         >
                           {cat.replace("-", " ")}
                         </span>
                       ))}
                     </div>
                   )}
-                  <h2 className="text-lg font-semibold text-[#2D2A24] mb-2 group-hover:text-sage-dark transition-colors line-clamp-2">
+                  <h2 className="mb-2 line-clamp-2 text-lg font-semibold text-[#2D2A24] transition-colors group-hover:text-sage-dark">
                     {article.title}
                   </h2>
                   <div
-                    className="text-base text-[#4A4640] mb-3 line-clamp-3 prose prose-sm max-w-none"
+                    className="prose prose-sm mb-3 line-clamp-3 max-w-none text-base text-[#4A4640]"
                     dangerouslySetInnerHTML={{
                       __html: sanitizeHtml(article.excerpt || "", { stripLinks: true }),
                     }}
@@ -253,8 +257,8 @@ export const TownNewsGrid = ({
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-[#635E56] text-lg">No news articles found.</p>
+          <div className="py-12 text-center">
+            <p className="text-lg text-[#635E56]">No news articles found.</p>
           </div>
         )}
 

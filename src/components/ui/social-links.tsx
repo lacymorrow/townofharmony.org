@@ -52,9 +52,7 @@ function getEnabled(
   platforms?: SocialPlatform[]
 ): Array<{ platform: SocialPlatform; url: string }> {
   const social = (siteConfig as { social?: Partial<Record<SocialPlatform, string>> }).social ?? {};
-  const entries = Object.entries(social) as Array<
-    [SocialPlatform, string | undefined]
-  >;
+  const entries = Object.entries(social) as Array<[SocialPlatform, string | undefined]>;
   const filtered = entries
     .filter(([, url]) => typeof url === "string" && url.trim().length > 0)
     .map(([platform, url]) => ({ platform, url: url as string }));

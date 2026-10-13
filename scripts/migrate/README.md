@@ -26,6 +26,7 @@ python export-django-data.py
 ```
 
 This will create JSON files in the `data/` directory:
+
 - `users.json` - User accounts
 - `news.json` - News articles
 - `events.json` - Events
@@ -36,11 +37,13 @@ This will create JSON files in the `data/` directory:
 ### Step 2: Set Up Next.js Database
 
 1. Create the database (if not exists):
+
 ```bash
 createdb toh_dev
 ```
 
 2. Generate and run migrations:
+
 ```bash
 pnpm db:generate
 pnpm db:migrate
@@ -56,6 +59,7 @@ pnpm tsx scripts/migrate/import-to-nextjs.ts
 ```
 
 This will:
+
 - Import users (with new UUIDs)
 - Convert StreamField content to MDX
 - Import news, events, and businesses
@@ -70,6 +74,7 @@ pnpm tsx scripts/migrate/validate-migration.ts
 ```
 
 This will check:
+
 - Record counts match between Django and Next.js
 - Required fields are populated
 - No duplicate slugs
@@ -89,7 +94,7 @@ rsync -av /Users/lacy/repo/TOH/media/ /Users/lacy/repo/TOH-new/public/media/
 
 ### Step 6: Post-Migration Tasks
 
-1. **Update Image References**: 
+1. **Update Image References**:
    - Update database records to point to new media URLs
    - Consider using a CDN for production
 
@@ -112,11 +117,13 @@ rsync -av /Users/lacy/repo/TOH/media/ /Users/lacy/repo/TOH-new/public/media/
 If you get database connection errors:
 
 1. Check PostgreSQL is running:
+
 ```bash
 pg_ctl status
 ```
 
 2. Verify database exists:
+
 ```bash
 psql -l | grep toh_dev
 ```
@@ -128,11 +135,13 @@ psql -l | grep toh_dev
 If the Django export script fails:
 
 1. Ensure Django settings module is correct:
+
 ```python
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'harmonycms.settings.development')
 ```
 
 2. Check Python path includes Django project:
+
 ```python
 sys.path.insert(0, '/Users/lacy/repo/TOH')
 ```
@@ -150,6 +159,7 @@ If content doesn't convert properly:
 ## Custom Block Types
 
 The migration handles these Wagtail StreamField blocks:
+
 - `heading` → H2 markdown
 - `paragraph` / `richtext` → Plain text
 - `image` → Markdown image
@@ -159,25 +169,27 @@ Add custom handlers in `blocksToMDX()` for other block types.
 
 ## Data Mapping
 
-| Django Model | Next.js Table | Notes |
-|-------------|---------------|-------|
-| User | users | New UUID, role mapping |
-| NewsDetailPage | news | StreamField → MDX |
-| EventPage | events | Date parsing, status calc |
-| BusinessDetailPage | businesses | Needs categorization |
-| Page | (various) | Depends on content type |
+| Django Model       | Next.js Table | Notes                     |
+| ------------------ | ------------- | ------------------------- |
+| User               | users         | New UUID, role mapping    |
+| NewsDetailPage     | news          | StreamField → MDX         |
+| EventPage          | events        | Date parsing, status calc |
+| BusinessDetailPage | businesses    | Needs categorization      |
+| Page               | (various)     | Depends on content type   |
 
 ## Rollback
 
 To rollback the migration:
 
 1. Drop all toh_ prefixed tables:
+
 ```sql
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 ```
 
 2. Re-run initial migrations:
+
 ```bash
 pnpm db:generate
 pnpm db:migrate

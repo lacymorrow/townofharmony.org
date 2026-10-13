@@ -7,27 +7,24 @@ import { getMapBusinesses } from "@/lib/town-data";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
-	title: "Interactive Town Map",
-	description:
-		"Explore businesses, services, and points of interest in Harmony, NC with our interactive map. Find locations across the Town of Harmony, North Carolina.",
-	alternates: {
-		canonical: `${siteConfig.url}/map`,
-	},
-	openGraph: {
-		title: "Interactive Map — Town of Harmony, NC",
-		description:
-			"Explore businesses, services, and points of interest in Harmony, NC with our interactive map. Find locations across the Town of Harmony, North Carolina.",
-		url: `${siteConfig.url}/map`,
-	},
+  title: "Interactive Town Map",
+  description:
+    "Explore businesses, services, and points of interest in Harmony, NC with our interactive map. Find locations across the Town of Harmony, North Carolina.",
+  alternates: {
+    canonical: `${siteConfig.url}/map`,
+  },
+  openGraph: {
+    title: "Interactive Map — Town of Harmony, NC",
+    description:
+      "Explore businesses, services, and points of interest in Harmony, NC with our interactive map. Find locations across the Town of Harmony, North Carolina.",
+    url: `${siteConfig.url}/map`,
+  },
 };
 
 export default async function MapPage() {
-	if (!await isFeatureEnabled("map")) {
-		notFound();
-	}
-	const [businesses, settings] = await Promise.all([
-		getMapBusinesses(),
-		getBuilderSettings(),
-	]);
-	return <InteractiveMap businesses={businesses} labels={settings.map} />;
+  if (!(await isFeatureEnabled("map"))) {
+    notFound();
+  }
+  const [businesses, settings] = await Promise.all([getMapBusinesses(), getBuilderSettings()]);
+  return <InteractiveMap businesses={businesses} labels={settings.map} />;
 }

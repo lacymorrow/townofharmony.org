@@ -9,8 +9,7 @@ const business = {
   id: 1,
   name: "Harmony Hardware",
   slug: "harmony-hardware",
-  description:
-    '<p class="">Tools, paint &amp; friendly advice for every project.</p>',
+  description: '<p class="">Tools, paint &amp; friendly advice for every project.</p>',
   category: "retail",
   address: "1 Main St",
   phone: "555-1234",

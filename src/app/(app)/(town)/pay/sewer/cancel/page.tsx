@@ -8,36 +8,34 @@ import { sewerContactInfo, isSewerVisible } from "@/data/town/sewer-rates";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
-	title: "Payment Cancelled",
-	description: "Your sewer bill payment was cancelled.",
-	robots: { index: false, follow: false },
+  title: "Payment Cancelled",
+  description: "Your sewer bill payment was cancelled.",
+  robots: { index: false, follow: false },
 };
 
 export default async function SewerPaymentCancelPage() {
-	if (!isSewerVisible()) {
-		notFound();
-	}
-	const sewerCopy = (await getBuilderSettings()).sewer;
-	return (
-		<div className="container mx-auto max-w-lg px-4 py-12 text-center">
-			<XCircle className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
-			<h1 className="text-3xl font-bold tracking-tight">Payment Cancelled</h1>
-			<p className="mt-2 text-muted-foreground">
-				{sewerCopy.cancelCopy}
-			</p>
+  if (!isSewerVisible()) {
+    notFound();
+  }
+  const sewerCopy = (await getBuilderSettings()).sewer;
+  return (
+    <div className="container mx-auto max-w-lg px-4 py-12 text-center">
+      <XCircle className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+      <h1 className="text-3xl font-bold tracking-tight">Payment Cancelled</h1>
+      <p className="mt-2 text-muted-foreground">{sewerCopy.cancelCopy}</p>
 
-			<div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-				<Link href="/pay/sewer" className={cn(buttonVariants())}>
-					Try Again
-				</Link>
-				<Link href="/sewer" className={cn(buttonVariants({ variant: "outline" }))}>
-					Sewer Services
-				</Link>
-			</div>
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+        <Link href="/pay/sewer" className={cn(buttonVariants())}>
+          Try Again
+        </Link>
+        <Link href="/sewer" className={cn(buttonVariants({ variant: "outline" }))}>
+          Sewer Services
+        </Link>
+      </div>
 
-			<p className="mt-8 text-sm text-muted-foreground">
-				Need help? Contact {sewerContactInfo.department} at {sewerCopy.contactPhone}
-			</p>
-		</div>
-	);
+      <p className="mt-8 text-sm text-muted-foreground">
+        Need help? Contact {sewerContactInfo.department} at {sewerCopy.contactPhone}
+      </p>
+    </div>
+  );
 }

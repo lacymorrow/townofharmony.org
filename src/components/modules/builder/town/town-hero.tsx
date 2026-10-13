@@ -37,7 +37,7 @@ export const TownHero = ({ title, subtitle, image, ctaText, ctaHref }: TownHeroP
   });
 
   return (
-    <section className="bg-gradient-to-r from-sage-deep via-sage-dark to-sage text-white relative w-full overflow-hidden">
+    <section className="relative w-full overflow-hidden bg-gradient-to-r from-sage-deep via-sage-dark to-sage text-white">
       <Hero slides={slides.length > 0 ? slides : [fallbackSlide]} />
     </section>
   );

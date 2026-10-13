@@ -32,13 +32,15 @@ const check = (ok, label) => {
     const c = document.querySelector("canvas");
     return c && c.width > 0;
   });
-  const pixelsAt = () =>
-    page.evaluate(() => document.querySelector("canvas").toDataURL());
+  const pixelsAt = () => page.evaluate(() => document.querySelector("canvas").toDataURL());
   await page.waitForTimeout(1500);
   await page.screenshot({ path: `${outDir}/lac-4043-mobile-page1.png` });
   const page1Pixels = await pixelsAt();
 
-  await page.getByRole("button", { name: "Previous page" }).isDisabled().then((d) => check(d, "mobile: Prev disabled on page 1"));
+  await page
+    .getByRole("button", { name: "Previous page" })
+    .isDisabled()
+    .then((d) => check(d, "mobile: Prev disabled on page 1"));
   await page.getByRole("button", { name: "Next page" }).click();
   await page.getByText(/Page 2 of \d+/).waitFor({ timeout: 15000 });
   await page.waitForTimeout(1500);
@@ -65,7 +67,10 @@ const check = (ok, label) => {
   const pdfViewerEnabled = await page.evaluate(() => navigator.pdfViewerEnabled);
   if (pdfViewerEnabled) {
     await page.locator("iframe").waitFor({ timeout: 30000 });
-    check((await page.locator("canvas").count()) === 0, "desktop(native pdf): iframe kept, no pager");
+    check(
+      (await page.locator("canvas").count()) === 0,
+      "desktop(native pdf): iframe kept, no pager"
+    );
   } else {
     await page.getByText(/Page 1 of \d+/).waitFor({ timeout: 30000 });
     check((await page.locator("iframe").count()) === 0, "desktop(no pdf plugin): pager shown");

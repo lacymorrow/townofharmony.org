@@ -31,9 +31,7 @@ describe("PayloadRichText", () => {
   });
 
   it("still renders plain-text static strings as paragraphs", () => {
-    const { container } = render(
-      <PayloadRichText content={"First line\nSecond line"} />
-    );
+    const { container } = render(<PayloadRichText content={"First line\nSecond line"} />);
 
     const paragraphs = container.querySelectorAll("p");
     expect(paragraphs).toHaveLength(2);

@@ -26,8 +26,7 @@ const builtByVariants = cva(
 );
 
 export interface AttributionProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof builtByVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof builtByVariants> {
   title?: string;
   description?: string;
   onClose?: () => void;
@@ -99,7 +98,7 @@ export function Attribution({
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute top-2 right-2 h-6 w-6"
+            className="absolute right-2 top-2 h-6 w-6"
           >
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
@@ -117,7 +116,7 @@ export function Attribution({
           type="button"
           variant="ghost"
           size="icon"
-          className="absolute top-2 right-2 h-6 w-6"
+          className="absolute right-2 top-2 h-6 w-6"
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
@@ -126,7 +125,7 @@ export function Attribution({
         <CardHeader>
           <Content />
         </CardHeader>
-        <CardContent className="flex gap-2 justify-end mt-auto">{children}</CardContent>
+        <CardContent className="mt-auto flex justify-end gap-2">{children}</CardContent>
         <CardFooter className="mt-auto">
           {href && (
             <Link href={href} className={cn(buttonVariants({ variant: "outline" }), "w-full")}>

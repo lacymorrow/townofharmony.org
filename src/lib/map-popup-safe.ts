@@ -8,16 +8,16 @@
  */
 
 const HTML_ESCAPES: Record<string, string> = {
-	"&": "&amp;",
-	"<": "&lt;",
-	">": "&gt;",
-	'"': "&quot;",
-	"'": "&#39;",
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
 };
 
 export const escapeHtml = (value: string | null | undefined): string => {
-	if (value == null) return "";
-	return String(value).replace(/[&<>"']/g, (ch) => HTML_ESCAPES[ch] ?? ch);
+  if (value == null) return "";
+  return String(value).replace(/[&<>"']/g, (ch) => HTML_ESCAPES[ch] ?? ch);
 };
 
 /**
@@ -26,14 +26,14 @@ export const escapeHtml = (value: string | null | undefined): string => {
  * breakouts, and other scheme abuse before the value is written into `href`.
  */
 export const safeHttpUrl = (value: string | null | undefined): string | null => {
-	if (!value) return null;
-	const trimmed = String(value).trim();
-	if (!trimmed) return null;
-	try {
-		const url = new URL(trimmed);
-		if (url.protocol === "http:" || url.protocol === "https:") return url.toString();
-		return null;
-	} catch {
-		return null;
-	}
+  if (!value) return null;
+  const trimmed = String(value).trim();
+  if (!trimmed) return null;
+  try {
+    const url = new URL(trimmed);
+    if (url.protocol === "http:" || url.protocol === "https:") return url.toString();
+    return null;
+  } catch {
+    return null;
+  }
 };

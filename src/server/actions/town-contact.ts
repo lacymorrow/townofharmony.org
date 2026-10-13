@@ -205,12 +205,7 @@ export async function submitTownContactForm(
   // BCC is suppressed on the test path so staff cc'd inboxes never see a test.
   const bccRecipients = isTest
     ? []
-    : resolveRecipients(
-        bccEmail,
-        env.TOWN_CONTACT_BCC_EMAIL,
-        DEFAULT_TOWN_CONTACT_BCC,
-        "bccEmail"
-      );
+    : resolveRecipients(bccEmail, env.TOWN_CONTACT_BCC_EMAIL, DEFAULT_TOWN_CONTACT_BCC, "bccEmail");
 
   if (isTest) {
     logger.info("Town contact test sender detected, rerouting", {

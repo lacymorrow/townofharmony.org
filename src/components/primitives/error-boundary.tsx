@@ -145,10 +145,10 @@ const DefaultFallback: React.FC<{
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <h4 className="text-sm font-medium">Suggested solutions:</h4>
-          <ul className="text-sm text-muted-foreground space-y-1">
+          <ul className="space-y-1 text-sm text-muted-foreground">
             {getErrorSolution().map((solution, index) => (
               <li key={index} className="flex items-start gap-2">
-                <span className="text-xs mt-1">•</span>
+                <span className="mt-1 text-xs">•</span>
                 <span>{solution}</span>
               </li>
             ))}
@@ -165,12 +165,12 @@ const DefaultFallback: React.FC<{
           >
             {isRetrying ? (
               <>
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                 Retrying...
               </>
             ) : (
               <>
-                <RefreshCw className="h-4 w-4 mr-2" />
+                <RefreshCw className="mr-2 h-4 w-4" />
                 Try Again
               </>
             )}
@@ -187,7 +187,7 @@ const DefaultFallback: React.FC<{
           <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
             Technical Details
           </summary>
-          <pre className="mt-2 p-2 bg-muted rounded text-xs overflow-auto">{error.message}</pre>
+          <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs">{error.message}</pre>
         </details>
       </CardContent>
     </Card>

@@ -24,18 +24,21 @@ This directory contains all the components for the Town of Harmony meetings func
 ## Features
 
 ### Database Integration
+
 - Uses the `meetings` table from `schema-town.ts`
 - Supports all meeting fields: agenda, minutes, videos, audio, documents
 - Public/private meeting visibility
 - Type-safe queries with Drizzle ORM
 
 ### Filtering & Search
+
 - Filter by meeting type (Council, Planning, Zoning, etc.)
 - Filter by date (month/year)
 - Filter by status (upcoming, past, has recordings, has minutes)
 - Pagination support
 
 ### Document Support
+
 - PDF agenda and minutes display
 - Video recording integration (YouTube, etc.)
 - Audio recording support
@@ -43,6 +46,7 @@ This directory contains all the components for the Town of Harmony meetings func
 - Download links for all documents
 
 ### Calendar View
+
 - Month-by-month calendar display
 - Meeting preview on calendar days
 - Navigation between months
@@ -50,6 +54,7 @@ This directory contains all the components for the Town of Harmony meetings func
 - Meeting type badges
 
 ### Responsive Design
+
 - Mobile-friendly layouts
 - Card-based design consistent with other town components
 - Proper loading states and error handling
@@ -57,11 +62,14 @@ This directory contains all the components for the Town of Harmony meetings func
 ## Usage
 
 ### Pages
+
 The components are used in:
+
 - `/src/app/(public)/meetings/page.tsx` - Main meetings listing page
 - `/src/app/(public)/meetings/[slug]/page.tsx` - Individual meeting detail page
 
 ### Import Examples
+
 ```tsx
 // Import individual components
 import { MeetingCard } from "@/components/town/meetings/meeting-card";
@@ -72,7 +80,9 @@ import { MeetingCard, MeetingsCalendar } from "@/components/town/meetings";
 ```
 
 ### Component Integration
+
 These components follow the same patterns as other town components:
+
 - Server components for data fetching
 - Client components for interactivity
 - Consistent styling with Shadcn/UI
@@ -82,6 +92,7 @@ These components follow the same patterns as other town components:
 ## Database Schema Usage
 
 The components work with the `meetings` table which includes:
+
 - Basic info: title, slug, type, date, time, location
 - Content: agenda (MDX), minutes (MDX)
 - Documents: agendaUrl, minutesUrl, documents array
@@ -92,6 +103,7 @@ The components work with the `meetings` table which includes:
 ## Styling
 
 Components use:
+
 - Tailwind CSS for styling
 - Shadcn/UI components (Card, Badge, Button, etc.)
 - Lucide React icons

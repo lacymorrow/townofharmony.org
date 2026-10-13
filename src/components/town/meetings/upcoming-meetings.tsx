@@ -74,14 +74,14 @@ export function UpcomingMeetings({ limit = 5, className }: UpcomingMeetingsProps
               <Link
                 key={meeting.slug}
                 href={`/meetings/${meeting.slug}`}
-                className="block p-4 border rounded-lg hover:shadow-md transition-all hover:border-[#DDD7CC]"
+                className="block rounded-lg border p-4 transition-all hover:border-[#DDD7CC] hover:shadow-md"
               >
-                <div className="flex justify-between items-start gap-4">
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold truncate">{meeting.title}</h4>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="truncate font-semibold">{meeting.title}</h4>
 
                     {meeting.type && (
-                      <Badge variant="secondary" className="mt-1 mb-2">
+                      <Badge variant="secondary" className="mb-2 mt-1">
                         {meeting.type}
                       </Badge>
                     )}
@@ -115,7 +115,7 @@ export function UpcomingMeetings({ limit = 5, className }: UpcomingMeetingsProps
                     </div>
                   </div>
 
-                  <div className="text-sm text-muted-foreground text-right">
+                  <div className="text-right text-sm text-muted-foreground">
                     {meeting.agenda && <div className="mb-1">Agenda available</div>}
                     {(meeting.videoUrl || meeting.audioUrl) && <div>Recording planned</div>}
                   </div>

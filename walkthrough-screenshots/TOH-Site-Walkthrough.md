@@ -30,11 +30,11 @@ A utility bar across the very top shows the phone number (704-546-2339), street 
 
 Three of those menu items have dropdowns:
 
-| Menu | Links inside |
-|------|-------|
-| Agenda & Minutes | Town Meetings, Agendas & Minutes |
-| Explore | Interactive Map, Points of Interest, Events |
-| Town | Our Team, History, Resources, Sewer Services |
+| Menu             | Links inside                                 |
+| ---------------- | -------------------------------------------- |
+| Agenda & Minutes | Town Meetings, Agendas & Minutes             |
+| Explore          | Interactive Map, Points of Interest, Events  |
+| Town             | Our Team, History, Resources, Sewer Services |
 
 **Screenshot:** `02-nav-agenda-dropdown.png`
 
@@ -140,20 +140,20 @@ Same footer on every page:
 
 ## Quick reference
 
-| Page | URL | What it does |
-|------|-----|--------------|
-| Homepage | `/` | Welcome, quick links, upcoming events, community spotlight |
-| Meetings | `/meetings` | Board of Aldermen schedules, agendas, downloadable minutes |
-| Events | `/events` | Community calendar with category and month filters |
-| Contact | `/contact` | Contact form, Town Hall info, office hours, emergency numbers |
-| Our Team | `/our-team` | Mayor, Board, and staff directory with photos |
-| History | `/history` | Timeline of Harmony from 1846 to present |
-| Map | `/map` | Business map with 29 listings and category filters |
-| Business | `/business` | Business directory |
-| Resources | `/resources` | Resident resources |
-| Emergency | `/emergency` | Emergency services and contacts |
-| Sewer | `/sewer` | Sewer services information |
+| Page      | URL          | What it does                                                  |
+| --------- | ------------ | ------------------------------------------------------------- |
+| Homepage  | `/`          | Welcome, quick links, upcoming events, community spotlight    |
+| Meetings  | `/meetings`  | Board of Aldermen schedules, agendas, downloadable minutes    |
+| Events    | `/events`    | Community calendar with category and month filters            |
+| Contact   | `/contact`   | Contact form, Town Hall info, office hours, emergency numbers |
+| Our Team  | `/our-team`  | Mayor, Board, and staff directory with photos                 |
+| History   | `/history`   | Timeline of Harmony from 1846 to present                      |
+| Map       | `/map`       | Business map with 29 listings and category filters            |
+| Business  | `/business`  | Business directory                                            |
+| Resources | `/resources` | Resident resources                                            |
+| Emergency | `/emergency` | Emergency services and contacts                               |
+| Sewer     | `/sewer`     | Sewer services information                                    |
 
 ---
 
-*Questions or feedback? Head to [townofharmony.org/contact](https://www.townofharmony.org/contact) or call (704) 546-2339.*
+_Questions or feedback? Head to [townofharmony.org/contact](https://www.townofharmony.org/contact) or call (704) 546-2339._

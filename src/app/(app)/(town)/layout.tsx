@@ -16,14 +16,16 @@ import { AnnouncementBarSection } from "@/components/town/announcement-bar-secti
 // cached (unstable_cache, revalidate: 3600) so the blocking cost is negligible
 // after the first request per ISR cycle.
 export default function TownLayout({ children }: { children: React.ReactNode }) {
-	return (
-		<div className="min-h-screen flex flex-col">
-			<BuilderPreviewInit />
-			<TownHeaderServer />
-			<AnnouncementBarSection />
-			<EmergencyBanner />
-			<main id="main-content" className="flex-grow">{children}</main>
-			<TownFooterServer />
-		</div>
-	);
+  return (
+    <div className="flex min-h-screen flex-col">
+      <BuilderPreviewInit />
+      <TownHeaderServer />
+      <AnnouncementBarSection />
+      <EmergencyBanner />
+      <main id="main-content" className="flex-grow">
+        {children}
+      </main>
+      <TownFooterServer />
+    </div>
+  );
 }

@@ -13,55 +13,55 @@ interface TownHistoryTimelineProps {
 }
 
 const HistoryCard = ({ article }: { article: TownHistoryArticle }) => (
-  <div className="bg-white rounded-xl border border-stone shadow-sm overflow-hidden">
+  <div className="overflow-hidden rounded-xl border border-stone bg-white shadow-sm">
     <div className="flex flex-col sm:flex-row">
       {article.image && (
-        <div className="sm:w-2/5 lg:w-[280px] shrink-0">
+        <div className="shrink-0 sm:w-2/5 lg:w-[280px]">
           <LightboxImage
             src={article.image}
             alt={article.title}
             wrapperClassName="w-full h-52 sm:h-full sm:min-h-[200px]"
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
             width={800}
             height={600}
           />
         </div>
       )}
 
-      <div className="p-5 sm:p-6 flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
+      <div className="min-w-0 flex-1 p-5 sm:p-6">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
           {article.era && (
-            <span className="bg-sage-dark text-white px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase">
+            <span className="rounded-full bg-sage-dark px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
               {article.era}
             </span>
           )}
           {article.year && (
-            <span className="bg-wheat/40 text-[#5C4E1A] px-3 py-1 rounded-full text-xs font-semibold">
+            <span className="rounded-full bg-wheat/40 px-3 py-1 text-xs font-semibold text-[#5C4E1A]">
               {article.year}
             </span>
           )}
           {article.type && (
-            <span className="bg-stone/60 text-[#4A4640] px-2.5 py-0.5 rounded-full text-xs capitalize">
+            <span className="rounded-full bg-stone/60 px-2.5 py-0.5 text-xs capitalize text-[#4A4640]">
               {article.type}
             </span>
           )}
         </div>
 
-        <h2 className="text-xl font-semibold text-[#2D2A24] mb-2 leading-snug">{article.title}</h2>
+        <h2 className="mb-2 text-xl font-semibold leading-snug text-[#2D2A24]">{article.title}</h2>
 
         <div
-          className="text-[#4A4640] mb-4 prose prose-sm max-w-none leading-relaxed"
+          className="prose prose-sm mb-4 max-w-none leading-relaxed text-[#4A4640]"
           dangerouslySetInnerHTML={{
             __html: sanitizeHtml(article.description || ""),
           }}
         />
 
         {article.highlights && article.highlights.length > 0 && (
-          <ul className="space-y-1.5 mb-4">
+          <ul className="mb-4 space-y-1.5">
             {article.highlights.slice(0, 3).map((highlight, idx) => (
               <li key={idx} className="flex items-start gap-2 text-sm text-[#635E56]">
                 <svg
-                  className="w-3.5 h-3.5 mt-0.5 text-sage flex-shrink-0"
+                  className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-sage"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
@@ -79,9 +79,9 @@ const HistoryCard = ({ article }: { article: TownHistoryArticle }) => (
         )}
 
         {article.address && (
-          <p className="text-sm text-[#635E56] pt-3 border-t border-stone/60">
+          <p className="border-t border-stone/60 pt-3 text-sm text-[#635E56]">
             <svg
-              className="w-3.5 h-3.5 inline-block mr-1 -mt-0.5 text-sage"
+              className="-mt-0.5 mr-1 inline-block h-3.5 w-3.5 text-sage"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -103,7 +103,7 @@ const HistoryCard = ({ article }: { article: TownHistoryArticle }) => (
               href={getMapUrl(article.address)}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-sage-dark underline underline-offset-2 decoration-stone transition-colors"
+              className="underline decoration-stone underline-offset-2 transition-colors hover:text-sage-dark"
             >
               {article.address}
             </a>
@@ -111,7 +111,7 @@ const HistoryCard = ({ article }: { article: TownHistoryArticle }) => (
               address={article.address}
               label={article.title}
               tone="default"
-              className="h-6 w-6 ml-1 align-middle"
+              className="ml-1 h-6 w-6 align-middle"
               iconClassName="h-3.5 w-3.5"
             />
           </p>
@@ -139,23 +139,23 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
   if (loading) {
     return (
       <section
-        className="py-12 bg-cream overflow-x-hidden"
+        className="overflow-x-hidden bg-cream py-12"
         style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}
       >
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <div className="space-y-8">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl border border-stone p-6 animate-pulse">
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="sm:w-2/5 h-52 bg-stone/20 rounded-lg" />
+              <div key={i} className="animate-pulse rounded-xl border border-stone bg-white p-6">
+                <div className="flex flex-col gap-6 sm:flex-row">
+                  <div className="h-52 rounded-lg bg-stone/20 sm:w-2/5" />
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-2">
-                      <div className="h-6 w-20 bg-sage/20 rounded-full" />
-                      <div className="h-6 w-16 bg-wheat/20 rounded-full" />
+                      <div className="h-6 w-20 rounded-full bg-sage/20" />
+                      <div className="h-6 w-16 rounded-full bg-wheat/20" />
                     </div>
-                    <div className="h-6 w-3/4 bg-stone/30 rounded" />
-                    <div className="h-4 w-full bg-stone/20 rounded" />
-                    <div className="h-4 w-5/6 bg-stone/20 rounded" />
+                    <div className="h-6 w-3/4 rounded bg-stone/30" />
+                    <div className="h-4 w-full rounded bg-stone/20" />
+                    <div className="h-4 w-5/6 rounded bg-stone/20" />
                   </div>
                 </div>
               </div>
@@ -176,13 +176,13 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
 
   return (
     <section
-      className="py-12 bg-cream overflow-x-hidden"
+      className="overflow-x-hidden bg-cream py-12"
       style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}
     >
       {/* --- Mobile layout (< lg): stacked full-width cards --- */}
-      <div className="lg:hidden max-w-2xl mx-auto px-4 space-y-6">
+      <div className="mx-auto max-w-2xl space-y-6 px-4 lg:hidden">
         {showSections && periods.length > 0 && (
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-sage-dark mb-2">
+          <h3 className="mb-2 text-sm font-semibold uppercase tracking-widest text-sage-dark">
             Historical Periods
           </h3>
         )}
@@ -191,7 +191,7 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
         ))}
         {showSections && landmarks.length > 0 && (
           <>
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-sage-dark mt-8 mb-2">
+            <h3 className="mb-2 mt-8 text-sm font-semibold uppercase tracking-widest text-sage-dark">
               Landmarks
             </h3>
             {landmarks.map((article) => (
@@ -203,12 +203,12 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
 
       {/* --- Desktop layout (lg+): centered alternating timeline --- */}
       <div className="hidden lg:block">
-        <div className="relative max-w-7xl mx-auto px-8">
+        <div className="relative mx-auto max-w-7xl px-8">
           {/* Vertical line */}
-          <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-0.5 bg-sage/25" />
+          <div className="absolute bottom-0 left-1/2 top-0 w-0.5 -translate-x-px bg-sage/25" />
 
           {showSections && periods.length > 0 && (
-            <div className="relative flex justify-center mb-10">
+            <div className="relative mb-10 flex justify-center">
               <span className="relative z-10 bg-cream px-5 py-1.5 text-sm font-semibold uppercase tracking-widest text-sage-dark">
                 Historical Periods
               </span>
@@ -221,8 +221,8 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
               return (
                 <div key={article.slug} className="relative">
                   {/* Timeline dot */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-8 z-10">
-                    <div className="w-4 h-4 rounded-full bg-sage-dark border-[3px] border-cream" />
+                  <div className="absolute left-1/2 top-8 z-10 -translate-x-1/2">
+                    <div className="h-4 w-4 rounded-full border-[3px] border-cream bg-sage-dark" />
                   </div>
 
                   {/* Card */}
@@ -236,7 +236,7 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
 
           {showSections && landmarks.length > 0 && (
             <>
-              <div className="relative flex justify-center my-14">
+              <div className="relative my-14 flex justify-center">
                 <span className="relative z-10 bg-cream px-5 py-1.5 text-sm font-semibold uppercase tracking-widest text-sage-dark">
                   Landmarks
                 </span>
@@ -247,12 +247,10 @@ export const TownHistoryTimeline = ({ type = "all" }: TownHistoryTimelineProps) 
                   const isRight = index % 2 !== 0;
                   return (
                     <div key={article.slug} className="relative">
-                      <div className="absolute left-1/2 -translate-x-1/2 top-8 z-10">
-                        <div className="w-4 h-4 rounded-full bg-wheat border-[3px] border-cream" />
+                      <div className="absolute left-1/2 top-8 z-10 -translate-x-1/2">
+                        <div className="h-4 w-4 rounded-full border-[3px] border-cream bg-wheat" />
                       </div>
-                      <div
-                        className={`w-[calc(50%-2.5rem)] ${isRight ? "ml-auto" : "mr-auto"}`}
-                      >
+                      <div className={`w-[calc(50%-2.5rem)] ${isRight ? "ml-auto" : "mr-auto"}`}>
                         <HistoryCard article={article} />
                       </div>
                     </div>

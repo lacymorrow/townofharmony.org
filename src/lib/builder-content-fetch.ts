@@ -18,23 +18,23 @@ const BUILDER_CDN_BASE = "https://cdn.builder.io/api/v3/content";
 const BUILDER_PAGE_SIZE = 100;
 
 export interface BuilderContentEntry<T> {
-	id: string;
-	name: string;
-	data: T;
-	published: string;
-	createdDate: number;
-	lastUpdated: number;
+  id: string;
+  name: string;
+  data: T;
+  published: string;
+  createdDate: number;
+  lastUpdated: number;
 }
 
 interface BuilderContentResponse<T> {
-	results: BuilderContentEntry<T>[];
+  results: BuilderContentEntry<T>[];
 }
 
 export interface FetchOptions {
-	query?: Record<string, unknown>;
-	sort?: Record<string, number>;
-	limit?: number;
-	offset?: number;
+  query?: Record<string, unknown>;
+  sort?: Record<string, number>;
+  limit?: number;
+  offset?: number;
 }
 
 /**
@@ -49,86 +49,86 @@ export interface FetchOptions {
  * loop — a manual offset signals they're doing their own pagination.
  */
 export async function fetchBuilderEntries<T>(
-	modelName: string,
-	options?: FetchOptions,
+  modelName: string,
+  options?: FetchOptions
 ): Promise<{ results: BuilderContentEntry<T>[]; count: number }> {
-	if (!BUILDER_API_KEY) {
-		return { results: [], count: 0 };
-	}
+  if (!BUILDER_API_KEY) {
+    return { results: [], count: 0 };
+  }
 
-	const requestedLimit = options?.limit ?? BUILDER_PAGE_SIZE;
-	// `offset: 0` means "from the start", same as omitting it — only a real
-	// caller-driven offset opts out of internal pagination.
-	const callerOffset = options?.offset || undefined;
-	const paginate = callerOffset === undefined && requestedLimit > BUILDER_PAGE_SIZE;
+  const requestedLimit = options?.limit ?? BUILDER_PAGE_SIZE;
+  // `offset: 0` means "from the start", same as omitting it — only a real
+  // caller-driven offset opts out of internal pagination.
+  const callerOffset = options?.offset || undefined;
+  const paginate = callerOffset === undefined && requestedLimit > BUILDER_PAGE_SIZE;
 
-	// `null` signals a failed request, distinct from an empty page (end of
-	// data) — a partial result set must not masquerade as a complete one.
-	const fetchOnePage = async (
-		pageLimit: number,
-		offset: number,
-	): Promise<BuilderContentEntry<T>[] | null> => {
-		const url = new URL(`${BUILDER_CDN_BASE}/${modelName}`);
-		url.searchParams.set("apiKey", BUILDER_API_KEY);
-		url.searchParams.set("limit", String(pageLimit));
-		url.searchParams.set("includeUnpublished", "false");
+  // `null` signals a failed request, distinct from an empty page (end of
+  // data) — a partial result set must not masquerade as a complete one.
+  const fetchOnePage = async (
+    pageLimit: number,
+    offset: number
+  ): Promise<BuilderContentEntry<T>[] | null> => {
+    const url = new URL(`${BUILDER_CDN_BASE}/${modelName}`);
+    url.searchParams.set("apiKey", BUILDER_API_KEY);
+    url.searchParams.set("limit", String(pageLimit));
+    url.searchParams.set("includeUnpublished", "false");
 
-		if (offset > 0) {
-			url.searchParams.set("offset", String(offset));
-		}
+    if (offset > 0) {
+      url.searchParams.set("offset", String(offset));
+    }
 
-		if (options?.query) {
-			url.searchParams.set("query", JSON.stringify(options.query));
-		}
+    if (options?.query) {
+      url.searchParams.set("query", JSON.stringify(options.query));
+    }
 
-		// Builder's Content API expects sort as dot-notation query params
-		// (`sort.field=N`), not a JSON-stringified `sort` param — the latter is
-		// silently treated as a query filter and returns 0 results.
-		if (options?.sort) {
-			for (const [field, direction] of Object.entries(options.sort)) {
-				url.searchParams.set(`sort.${field}`, String(direction));
-			}
-		}
+    // Builder's Content API expects sort as dot-notation query params
+    // (`sort.field=N`), not a JSON-stringified `sort` param — the latter is
+    // silently treated as a query filter and returns 0 results.
+    if (options?.sort) {
+      for (const [field, direction] of Object.entries(options.sort)) {
+        url.searchParams.set(`sort.${field}`, String(direction));
+      }
+    }
 
-		const res = await fetch(url.toString(), {
-			next: { revalidate: 60, tags: ["builder-content"] },
-		});
+    const res = await fetch(url.toString(), {
+      next: { revalidate: 60, tags: ["builder-content"] },
+    });
 
-		if (!res.ok) {
-			return null;
-		}
+    if (!res.ok) {
+      return null;
+    }
 
-		const json: BuilderContentResponse<T> = await res.json();
-		return json.results;
-	};
+    const json: BuilderContentResponse<T> = await res.json();
+    return json.results;
+  };
 
-	if (!paginate) {
-		const pageLimit = Math.min(requestedLimit, BUILDER_PAGE_SIZE);
-		const page = (await fetchOnePage(pageLimit, callerOffset ?? 0)) ?? [];
-		const results = guardBuilderEntries(modelName, page);
-		return { results, count: results.length };
-	}
+  if (!paginate) {
+    const pageLimit = Math.min(requestedLimit, BUILDER_PAGE_SIZE);
+    const page = (await fetchOnePage(pageLimit, callerOffset ?? 0)) ?? [];
+    const results = guardBuilderEntries(modelName, page);
+    return { results, count: results.length };
+  }
 
-	const collected: BuilderContentEntry<T>[] = [];
-	let offset = 0;
-	while (collected.length < requestedLimit) {
-		const remaining = requestedLimit - collected.length;
-		const pageLimit = Math.min(remaining, BUILDER_PAGE_SIZE);
-		const page = await fetchOnePage(pageLimit, offset);
-		if (page === null) {
-			// A failed page mid-pagination would silently truncate the set —
-			// exactly the bug this fixes. Fail the whole call to empty so
-			// callers' static fallbacks engage, matching single-request errors.
-			return { results: [], count: 0 };
-		}
-		if (page.length === 0) break;
-		collected.push(...page);
-		if (page.length < pageLimit) break;
-		offset += page.length;
-	}
+  const collected: BuilderContentEntry<T>[] = [];
+  let offset = 0;
+  while (collected.length < requestedLimit) {
+    const remaining = requestedLimit - collected.length;
+    const pageLimit = Math.min(remaining, BUILDER_PAGE_SIZE);
+    const page = await fetchOnePage(pageLimit, offset);
+    if (page === null) {
+      // A failed page mid-pagination would silently truncate the set —
+      // exactly the bug this fixes. Fail the whole call to empty so
+      // callers' static fallbacks engage, matching single-request errors.
+      return { results: [], count: 0 };
+    }
+    if (page.length === 0) break;
+    collected.push(...page);
+    if (page.length < pageLimit) break;
+    offset += page.length;
+  }
 
-	const results = guardBuilderEntries(modelName, collected);
-	return { results, count: results.length };
+  const results = guardBuilderEntries(modelName, collected);
+  return { results, count: results.length };
 }
 
 /**
@@ -136,10 +136,10 @@ export async function fetchBuilderEntries<T>(
  * Returns the `data` field from each entry.
  */
 export async function fetchBuilderContent<T>(
-	modelName: string,
-	options?: FetchOptions,
+  modelName: string,
+  options?: FetchOptions
 ): Promise<{ results: T[]; count: number }> {
-	const { results: entries } = await fetchBuilderEntries<T>(modelName, options);
-	const results = entries.map((entry) => entry.data);
-	return { results, count: results.length };
+  const { results: entries } = await fetchBuilderEntries<T>(modelName, options);
+  const results = entries.map((entry) => entry.data);
+  return { results, count: results.length };
 }

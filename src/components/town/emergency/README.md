@@ -5,15 +5,17 @@ This directory contains emergency-related components for the Town of Harmony web
 ## Components
 
 ### EmergencyAlert
+
 - **File**: `emergency-alert.tsx`
 - **Purpose**: Individual emergency alert display component
-- **Features**: 
+- **Features**:
   - Supports different alert levels (info, warning, critical)
   - Optional dismiss functionality
   - Compact mode for smaller displays
   - Shows affected areas and contact information
 
-### EmergencyAlertsList  
+### EmergencyAlertsList
+
 - **File**: `emergency-alerts-list.tsx`
 - **Purpose**: Lists emergency alerts with filtering and pagination
 - **Features**:
@@ -23,6 +25,7 @@ This directory contains emergency-related components for the Town of Harmony web
   - Links to detailed alert pages
 
 ### EmergencyContacts
+
 - **File**: `emergency-contacts.tsx`
 - **Purpose**: Directory of emergency contact information
 - **Features**:
@@ -32,6 +35,7 @@ This directory contains emergency-related components for the Town of Harmony web
   - Additional resources section
 
 ### EmergencyServices
+
 - **File**: `emergency-services.tsx`
 - **Purpose**: Comprehensive emergency services information
 - **Features**:
@@ -41,6 +45,7 @@ This directory contains emergency-related components for the Town of Harmony web
   - Service availability status
 
 ### EmergencyDetail
+
 - **File**: `emergency-detail.tsx`
 - **Purpose**: Detailed view of individual emergency alert
 - **Features**:
@@ -75,6 +80,7 @@ All components integrate with the `emergencyAlerts` table from `schema-town.ts`:
 ## Pages
 
 ### Emergency Information Page
+
 - **Path**: `/emergency`
 - **File**: `src/app/(public)/emergency/page.tsx`
 - **Features**:
@@ -84,6 +90,7 @@ All components integrate with the `emergencyAlerts` table from `schema-town.ts`:
   - Emergency preparedness guide
 
 ### Emergency Alerts Page
+
 - **Path**: `/emergency/alerts`
 - **File**: `src/app/(public)/emergency/alerts/page.tsx`
 - **Features**:
@@ -92,6 +99,7 @@ All components integrate with the `emergencyAlerts` table from `schema-town.ts`:
   - Links to detailed alert pages
 
 ### Emergency Alert Detail Page
+
 - **Path**: `/emergency/alerts/[id]`
 - **File**: `src/app/(public)/emergency/alerts/[id]/page.tsx`
 - **Features**:
@@ -102,6 +110,7 @@ All components integrate with the `emergencyAlerts` table from `schema-town.ts`:
 ## Updated Components
 
 ### EmergencyBanner
+
 - **File**: `src/components/town/emergency-banner.tsx` (existing, updated)
 - **Changes**:
   - Enhanced database querying with proper ordering
@@ -111,12 +120,12 @@ All components integrate with the `emergencyAlerts` table from `schema-town.ts`:
 ## Usage
 
 ```typescript
-import { 
+import {
   EmergencyAlert,
   EmergencyAlertsList,
   EmergencyContacts,
   EmergencyServices,
-  EmergencyDetail 
+  EmergencyDetail
 } from '@/components/town/emergency';
 
 // Display active alerts
@@ -142,8 +151,9 @@ import {
 ## Emergency Contact Information
 
 The components include comprehensive emergency contact information for:
+
 - Police (911)
-- Fire Department (911) 
+- Fire Department (911)
 - Emergency Medical Services (911)
 - Emergency Management Office
 - Public Works Department
@@ -155,6 +165,7 @@ The components include comprehensive emergency contact information for:
 ## Preparedness Resources
 
 Emergency preparedness information includes:
+
 - Emergency kit checklists
 - Family communication plans
 - Home emergency procedures
