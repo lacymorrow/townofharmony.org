@@ -19,6 +19,11 @@ docs-site
 .vercel
 .source
 public
+# Written by scripts/prebuild-content.mjs, which CI runs (via `typecheck`)
+# before the format check. Gitignored build output; a long CMS entry title
+# could make the generated manifest exceed printWidth and fail the gate with
+# nothing a human could commit to fix it.
+src/lib/generated
 
 # Editor notepads, not source. Biome and ESLint ignore these too.
 .cursor
