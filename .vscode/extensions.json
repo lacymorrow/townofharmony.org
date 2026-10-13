@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
     "foxundermoon.shell-format",
     "ms-azuretools.vscode-docker",
     "biomejs.biome",

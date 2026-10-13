@@ -11,18 +11,22 @@
     "titleBar.activeForeground": "#ffffff"
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  // Prettier is the single formatter of record (see CLAUDE.md). Format-on-save
+  // used to run the TypeScript language service on .ts/.tsx and Biome on
+  // .js/.jsx, so saved files drifted away from what `bun run lint` checks --
+  // that is how 247 files ended up unformatted after the June cleanup.
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
   "typescript.updateImportsOnFileMove.enabled": "always",
@@ -40,7 +44,7 @@
   "typescript.suggest.autoImports": true,
   "javascript.suggest.autoImports": true,
   "[markdown]": {
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[dotenv]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
@@ -49,7 +53,7 @@
     "**/src/app/(app)/(demo)/**": true
   },
   "[mdx]": {
-    "editor.defaultFormatter": "unifiedjs.vscode-mdx"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[git-commit]": {
     "editor.wordWrap": "on"

@@ -47,8 +47,15 @@ jobs:
       - name: Branding check
         run: bun run check:branding
 
-      # NOTE: `bun run lint` (biome + eslint + prettier) is intentionally not a
-      # blocking gate yet — the codebase has ~264 pre-existing lint errors
-      # accumulated before this gate existed (mostly in tests/ and scripts/).
-      # Adding it as a gate now would block every PR. Re-enable once the
-      # baseline is cleaned up via `bun run lint:fix` + manual review.
+      # Formatting IS a gate. Prettier is the single formatter of record
+      # (LAC-4312); run `bun run format` to fix. This is gateable because the
+      # whole repo was reformatted clean, unlike the lint rules below.
+      - name: Format check
+        run: bun run format:check
+
+      # NOTE: `bun run lint` (biome lint + eslint) is intentionally not a
+      # blocking gate yet — the codebase has pre-existing lint errors
+      # accumulated before this gate existed (90 biome + 222 eslint as of
+      # 2026-10-13, mostly in tests/ and scripts/). Adding it as a gate now
+      # would block every PR. Tracked in LAC-3629 and LAC-3562; re-enable
+      # once that baseline is cleaned up.

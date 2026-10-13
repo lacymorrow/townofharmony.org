@@ -20,19 +20,9 @@
     ]
   },
   "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineWidth": 100,
-    "formatWithErrors": true
+    "enabled": false
   },
   "javascript": {
-    "formatter": {
-      "quoteStyle": "double",
-      "semicolons": "always",
-      "trailingCommas": "es5",
-      "arrowParentheses": "always"
-    },
     "globals": ["React"]
   },
   "linter": {

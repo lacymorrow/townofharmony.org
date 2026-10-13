@@ -36,8 +36,12 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      # See note in ci.yml — `bun run lint` is not a gate yet because the
-      # codebase has ~264 pre-existing lint errors. Re-enable once cleaned up.
+      - name: Format check
+        run: bun run format:check
+
+      # See note in ci.yml — `bun run lint` (biome lint + eslint) is not a gate
+      # yet because of the pre-existing lint-error baseline. Formatting is
+      # gated above.
 
       - name: Configure Git
         run: |

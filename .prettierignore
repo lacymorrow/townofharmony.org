@@ -11,3 +11,14 @@ docs-site
 
 # local agent worktrees and run artifacts (untracked)
 .claude
+
+# Build output. Formatting these would make `format:check` fail the moment
+# anything regenerates them: public/data/document-index.json comes from
+# `build:docs-index`, public/registry/ from `build:blocks`, and
+# public/workers/ from `workers:build`.
+.vercel
+.source
+public
+
+# Editor notepads, not source. Biome and ESLint ignore these too.
+.cursor
