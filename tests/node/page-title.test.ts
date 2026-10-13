@@ -26,6 +26,17 @@ describe("pageTitle (LAC-3921)", () => {
 		);
 	});
 
+	it("normalizes stray whitespace from editor-entered titles", () => {
+		// Live regression: /meetings/council-meeting-2025-07-07 rendered
+		// "Town Council Meeting  | Town of Harmony, NC" (double space).
+		expect(pageTitle("Town Council Meeting ")).toBe("Town Council Meeting | Town of Harmony, NC");
+		expect(pageTitle("  Special  Meeting  ")).toBe("Special Meeting | Town of Harmony, NC");
+	});
+
+	it("falls back to the bare brand name for a blank title", () => {
+		expect(pageTitle("   ")).toBe("Town of Harmony, NC");
+	});
+
 	it("keeps every real CMS meeting title within 60 chars", () => {
 		for (const title of [
 			"August Town Council Meeting",
