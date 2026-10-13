@@ -41,9 +41,16 @@ breaking, so with both on, `bun run lint` can never pass and every PR picks up
 unrelated reflow noise (LAC-4312).
 
 `bun run format:check` is gated in CI and passes on `main`, so it is the
-pre-PR gate. `bun run lint` also runs Biome's and ESLint's rules, which still
-have a pre-existing error baseline (LAC-3629, LAC-3562), so it exits non-zero
-on a clean checkout until that baseline is burned down.
+pre-PR gate. `bun run lint` runs that check first and then Biome's and
+ESLint's rules, which still have a pre-existing error baseline (LAC-3629,
+LAC-3562) — so `lint` exits non-zero on a clean checkout until that baseline
+is burned down. A clean `format:check` with lint errors after it is the
+expected state today.
+
+Note that `bun run lint:fix` also runs `biome check --write`, which sorts
+imports across ~115 files on a clean checkout. That is Biome's
+organize-imports assist, not formatting, and it is unrelated to your change —
+don't commit it.
 
 ### Database Operations
 

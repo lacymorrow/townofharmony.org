@@ -1,0 +1,10 @@
+# Commits that only reformat code. `git blame` skips these so it still shows
+# who last changed a line's content, not who ran the formatter.
+#
+# Enable locally (once per clone):
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# GitHub honors this file automatically in its blame view.
+
+# style: reformat repo with Prettier (LAC-4312, 257 files)
+e14a7322d562f1923faa4a66bf0d229a5890c918
