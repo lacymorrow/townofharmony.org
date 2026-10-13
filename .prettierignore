@@ -11,3 +11,19 @@ docs-site
 
 # local agent worktrees and run artifacts (untracked)
 .claude
+
+# Build output. Formatting these would make `format:check` fail the moment
+# anything regenerates them: public/data/document-index.json comes from
+# `build:docs-index`, public/registry/ from `build:blocks`, and
+# public/workers/ from `workers:build`.
+.vercel
+.source
+public
+# Written by scripts/prebuild-content.mjs, which CI runs (via `typecheck`)
+# before the format check. Gitignored build output; a long CMS entry title
+# could make the generated manifest exceed printWidth and fail the gate with
+# nothing a human could commit to fix it.
+src/lib/generated
+
+# Editor notepads, not source. Biome and ESLint ignore these too.
+.cursor

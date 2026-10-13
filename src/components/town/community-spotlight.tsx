@@ -2,39 +2,39 @@ import Link from "next/link";
 import { getSettings } from "@/lib/town-data";
 
 export async function CommunitySpotlight() {
-	const { homepage } = await getSettings();
+  const { homepage } = await getSettings();
 
-	return (
-		<section className="py-16 bg-cream">
-			<div className="container mx-auto px-4">
-				<div className="bg-warm-white rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 border border-[#DDD7CC]">
-					{/* Image area */}
-					<div className="bg-gradient-to-br from-sage-dark to-sage min-h-[320px] flex items-center justify-center">
-						<span className="font-serif text-[56px] text-wheat italic opacity-50">
-							&ldquo;{homepage.spotlightImageLetter}&rdquo;
-						</span>
-					</div>
+  return (
+    <section className="bg-cream py-16">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-[#DDD7CC] bg-warm-white md:grid-cols-2">
+          {/* Image area */}
+          <div className="flex min-h-[320px] items-center justify-center bg-gradient-to-br from-sage-dark to-sage">
+            <span className="font-serif text-[56px] italic text-wheat opacity-50">
+              &ldquo;{homepage.spotlightImageLetter}&rdquo;
+            </span>
+          </div>
 
-					{/* Content */}
-					<div className="p-12 flex flex-col justify-center">
-						<div className="bg-sage/10 text-sage-dark px-3 py-1 rounded text-xs font-bold uppercase tracking-wider w-fit mb-4">
-							{homepage.spotlightBadge}
-						</div>
-						<h2 className="text-2xl font-serif font-bold text-sage-dark mb-3">
-							{homepage.spotlightTitle}
-						</h2>
-						<p className="text-base text-[#4A4640] leading-relaxed mb-5">
-							{homepage.spotlightDescription}
-						</p>
-						<Link
-							href={homepage.spotlightCtaHref}
-							className="text-sage font-semibold text-base hover:text-sage-dark hover:underline transition-colors cursor-pointer"
-						>
-							{homepage.spotlightCtaText} &rarr;
-						</Link>
-					</div>
-				</div>
-			</div>
-		</section>
-	);
+          {/* Content */}
+          <div className="flex flex-col justify-center p-12">
+            <div className="mb-4 w-fit rounded bg-sage/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-sage-dark">
+              {homepage.spotlightBadge}
+            </div>
+            <h2 className="mb-3 font-serif text-2xl font-bold text-sage-dark">
+              {homepage.spotlightTitle}
+            </h2>
+            <p className="mb-5 text-base leading-relaxed text-[#4A4640]">
+              {homepage.spotlightDescription}
+            </p>
+            <Link
+              href={homepage.spotlightCtaHref}
+              className="cursor-pointer text-base font-semibold text-sage transition-colors hover:text-sage-dark hover:underline"
+            >
+              {homepage.spotlightCtaText} &rarr;
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

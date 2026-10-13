@@ -27,10 +27,30 @@ bun run test:e2e       # Run Playwright E2E tests
 ### Linting & Type Checking
 
 ```bash
-bun run lint           # Run all linting (Biome, ESLint, Prettier)
-bun run lint:fix       # Fix all linting issues
+bun run format:check   # Check formatting (CI gates on this)
+bun run format         # Fix formatting
+bun run lint           # Full report: Biome lint, ESLint, formatting
+bun run lint:fix       # Fix what is auto-fixable
 bun run typecheck      # Run TypeScript type checking
 ```
+
+**Prettier is the single formatter of record.** Biome's formatter is disabled
+(`biome.json` → `formatter.enabled: false`); Biome does linting and import
+organizing only. Do not re-enable it: Biome and Prettier disagree on line
+breaking, so with both on, `bun run lint` can never pass and every PR picks up
+unrelated reflow noise (LAC-4312).
+
+`bun run format:check` is gated in CI and passes on `main`, so it is the
+pre-PR gate. `bun run lint` runs that check first and then Biome's and
+ESLint's rules, which still have a pre-existing error baseline (LAC-3629,
+LAC-3562) — so `lint` exits non-zero on a clean checkout until that baseline
+is burned down. A clean `format:check` with lint errors after it is the
+expected state today.
+
+Note that `bun run lint:fix` also runs `biome check --write`, which sorts
+imports across ~115 files on a clean checkout. That is Biome's
+organize-imports assist, not formatting, and it is unrelated to your change —
+don't commit it.
 
 ### Database Operations
 

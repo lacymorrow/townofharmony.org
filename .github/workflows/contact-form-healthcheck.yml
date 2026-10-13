@@ -14,7 +14,7 @@ name: Contact form health check
 
 on:
   schedule:
-    - cron: '0 13 * * *' # 13:00 UTC daily (~9am ET)
+    - cron: "0 13 * * *" # 13:00 UTC daily (~9am ET)
   workflow_dispatch: {} # allow manual runs
 
 jobs:

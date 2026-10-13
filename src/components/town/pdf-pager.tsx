@@ -105,7 +105,7 @@ export const PdfPager = ({ url, title }: PdfPagerProps) => {
 
   if (state.status === "loading") {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-3 h-full">
+      <div className="flex h-full flex-col items-center justify-center gap-3 py-20">
         <Loader2 className="h-8 w-8 animate-spin text-sage" />
         <p className="text-sm text-muted-foreground">Loading document...</p>
       </div>
@@ -114,7 +114,7 @@ export const PdfPager = ({ url, title }: PdfPagerProps) => {
 
   if (state.status === "error") {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4 h-full">
+      <div className="flex h-full flex-col items-center justify-center gap-4 py-20">
         <FileText className="h-12 w-12 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">The document could not be displayed.</p>
         <Button asChild variant="outline" size="sm">
@@ -132,7 +132,7 @@ export const PdfPager = ({ url, title }: PdfPagerProps) => {
       <div ref={scrollRef} className="flex-1 overflow-auto overscroll-contain">
         <canvas
           ref={canvasRef}
-          className="block mx-auto"
+          className="mx-auto block"
           role="img"
           aria-label={`${title ?? "Document"} — page ${pageNumber} of ${state.pageCount}`}
         />
@@ -147,7 +147,7 @@ export const PdfPager = ({ url, title }: PdfPagerProps) => {
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <p className="text-sm text-muted-foreground tabular-nums" aria-live="polite">
+        <p className="text-sm tabular-nums text-muted-foreground" aria-live="polite">
           Page {pageNumber} of {state.pageCount}
         </p>
         <Button

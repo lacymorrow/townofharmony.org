@@ -68,12 +68,12 @@ const Pagination = ({
   }
 
   return (
-    <nav className="flex items-center justify-center gap-2 mt-8">
+    <nav className="mt-8 flex items-center justify-center gap-2">
       <button
         type="button"
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
-        className="px-3 py-2 text-sm font-medium rounded-md border border-stone bg-white text-sage-dark hover:bg-cream disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="rounded-md border border-stone bg-white px-3 py-2 text-sm font-medium text-sage-dark transition-colors hover:bg-cream disabled:cursor-not-allowed disabled:opacity-40"
       >
         Previous
       </button>
@@ -82,7 +82,7 @@ const Pagination = ({
           key={p}
           type="button"
           onClick={() => onPageChange(p)}
-          className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+          className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
             p === page
               ? "bg-sage-dark text-white"
               : "border border-stone bg-white text-sage-dark hover:bg-cream"
@@ -95,7 +95,7 @@ const Pagination = ({
         type="button"
         onClick={() => onPageChange(page + 1)}
         disabled={page >= totalPages}
-        className="px-3 py-2 text-sm font-medium rounded-md border border-stone bg-white text-sage-dark hover:bg-cream disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="rounded-md border border-stone bg-white px-3 py-2 text-sm font-medium text-sage-dark transition-colors hover:bg-cream disabled:cursor-not-allowed disabled:opacity-40"
       >
         Next
       </button>
@@ -179,14 +179,14 @@ export const TownMeetingsList = ({
   const years = [String(currentYear - 1), String(currentYear), String(currentYear + 1)];
 
   return (
-    <section className="py-12 bg-cream">
+    <section className="bg-cream py-12">
       <div className="container mx-auto px-4">
         {/* Filters */}
         <div className="mb-8 flex flex-wrap gap-4">
           <select
             value={type || ""}
             onChange={(e) => updateParams({ type: e.target.value || undefined })}
-            className="town-select pl-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+            className="town-select rounded-lg border border-stone bg-white py-2 pl-3 pr-9 text-sm text-[#2D2A24] focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/40"
           >
             <option value="">All Types</option>
             {availableTypes.map((t) => (
@@ -199,7 +199,7 @@ export const TownMeetingsList = ({
           <select
             value={status || ""}
             onChange={(e) => updateParams({ status: e.target.value || undefined })}
-            className="town-select pl-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+            className="town-select rounded-lg border border-stone bg-white py-2 pl-3 pr-9 text-sm text-[#2D2A24] focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/40"
           >
             <option value="">All Meetings</option>
             {STATUS_OPTIONS.map((s) => (
@@ -217,7 +217,7 @@ export const TownMeetingsList = ({
                 year: e.target.value ? year || String(currentYear) : undefined,
               })
             }
-            className="town-select pl-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+            className="town-select rounded-lg border border-stone bg-white py-2 pl-3 pr-9 text-sm text-[#2D2A24] focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/40"
           >
             <option value="">All Months</option>
             {MONTHS.map((m) => (
@@ -230,7 +230,7 @@ export const TownMeetingsList = ({
           <select
             value={year || ""}
             onChange={(e) => updateParams({ year: e.target.value || undefined })}
-            className="town-select pl-3 pr-9 py-2 rounded-lg border border-stone bg-white text-[#2D2A24] text-sm focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+            className="town-select rounded-lg border border-stone bg-white py-2 pl-3 pr-9 text-sm text-[#2D2A24] focus:border-sage focus:outline-none focus:ring-2 focus:ring-sage/40"
           >
             <option value="">All Years</option>
             {years.map((y) => (
@@ -243,7 +243,7 @@ export const TownMeetingsList = ({
 
         {/* Calendar View Placeholder */}
         {showCalendar && (
-          <div className="mb-8 p-6 bg-white border border-stone rounded-lg text-center text-[#635E56]">
+          <div className="mb-8 rounded-lg border border-stone bg-white p-6 text-center text-[#635E56]">
             <p className="text-sm">Calendar view - meeting dates are highlighted below</p>
           </div>
         )}
@@ -266,11 +266,11 @@ export const TownMeetingsList = ({
                 <Link
                   key={slug}
                   href={`/meetings/${slug}`}
-                  className="group block bg-white rounded-lg border border-stone overflow-hidden hover:shadow-lg transition-shadow"
+                  className="group block overflow-hidden rounded-lg border border-stone bg-white transition-shadow hover:shadow-lg"
                 >
                   <div className="flex flex-col md:flex-row">
                     {/* Date Badge */}
-                    <div className="flex-shrink-0 w-full md:w-28 bg-sage-dark text-white flex flex-col items-center justify-center py-4 md:py-0">
+                    <div className="flex w-full flex-shrink-0 flex-col items-center justify-center bg-sage-dark py-4 text-white md:w-28 md:py-0">
                       <span className="text-sm font-medium uppercase">
                         {meetingDate.toLocaleDateString("en-US", {
                           month: "short",
@@ -284,29 +284,29 @@ export const TownMeetingsList = ({
 
                     {/* Meeting Content */}
                     <div className="flex-1 p-5 md:py-4">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <div className="mb-2 flex flex-wrap items-center gap-2">
                         {typeLabel && (
                           <span
-                            className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${badgeClass}`}
+                            className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${badgeClass}`}
                           >
                             {typeLabel}
                           </span>
                         )}
                         {(meeting.videoUrl || meeting.audioUrl) && (
-                          <span className="bg-sage/10 text-sage-dark px-2 py-0.5 rounded-full text-xs">
+                          <span className="rounded-full bg-sage/10 px-2 py-0.5 text-xs text-sage-dark">
                             Recording Available
                           </span>
                         )}
                         {(meeting.minutes || meeting.minutesUrl) && (
-                          <span className="bg-wheat/20 text-[#7A6520] px-2 py-0.5 rounded-full text-xs">
+                          <span className="rounded-full bg-wheat/20 px-2 py-0.5 text-xs text-[#7A6520]">
                             Minutes Available
                           </span>
                         )}
                       </div>
-                      <h2 className="text-lg font-semibold text-[#2D2A24] group-hover:text-sage-dark transition-colors mb-1">
+                      <h2 className="mb-1 text-lg font-semibold text-[#2D2A24] transition-colors group-hover:text-sage-dark">
                         {meeting.title}
                       </h2>
-                      <div className="flex flex-wrap gap-4 text-base text-[#635E56] mb-2">
+                      <div className="mb-2 flex flex-wrap gap-4 text-base text-[#635E56]">
                         <span>{meeting.meetingTime ? formatTime(meeting.meetingTime) : ""}</span>
                         <span>{meeting.location}</span>
                       </div>
@@ -323,8 +323,8 @@ export const TownMeetingsList = ({
             })}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-[#635E56] text-lg">No meetings found.</p>
+          <div className="py-12 text-center">
+            <p className="text-lg text-[#635E56]">No meetings found.</p>
           </div>
         )}
 

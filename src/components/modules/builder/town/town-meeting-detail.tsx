@@ -40,11 +40,11 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
   if (loading) {
     return (
       <section className="bg-warm-white py-12">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="container mx-auto max-w-3xl px-4">
           <div className="animate-pulse space-y-4">
-            <div className="h-4 w-32 bg-stone/40 rounded" />
-            <div className="h-8 w-3/4 bg-stone/40 rounded" />
-            <div className="h-48 bg-stone/20 rounded-xl" />
+            <div className="h-4 w-32 rounded bg-stone/40" />
+            <div className="h-8 w-3/4 rounded bg-stone/40" />
+            <div className="h-48 rounded-xl bg-stone/20" />
           </div>
         </div>
       </section>
@@ -55,13 +55,13 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
     return (
       <section className="bg-warm-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl font-serif font-bold text-sage-dark mb-4">Meeting not found</h1>
-          <p className="text-sage-dark/70 mb-8">
+          <h1 className="mb-4 font-serif text-3xl font-bold text-sage-dark">Meeting not found</h1>
+          <p className="mb-8 text-sage-dark/70">
             The meeting you are looking for could not be found.
           </p>
           <Link
             href="/meetings"
-            className="inline-flex items-center gap-2 bg-sage text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
           >
             &larr; Back to Meetings
           </Link>
@@ -76,12 +76,12 @@ const TownMeetingDetailInner = ({ slug: slugProp }: TownMeetingDetailProps) => {
 const MeetingDetailErrorFallback = () => (
   <section className="bg-warm-white py-16">
     <div className="container mx-auto px-4 text-center">
-      <p className="text-sage-dark/70 mb-8">
+      <p className="mb-8 text-sage-dark/70">
         Unable to load this meeting. Please try refreshing the page.
       </p>
       <Link
         href="/meetings"
-        className="inline-flex items-center gap-2 bg-sage text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+        className="inline-flex items-center gap-2 rounded-lg bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
       >
         &larr; Back to Meetings
       </Link>

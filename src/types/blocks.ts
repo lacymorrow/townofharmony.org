@@ -5,69 +5,65 @@
  */
 
 interface PayloadMedia {
-	url?: string;
+  url?: string;
 }
 
 export interface HeroBlock {
-	blockType: "hero";
-	heading: string;
-	subheading?: string;
-	image?: PayloadMedia;
-	ctaText?: string;
-	ctaLink?: string;
-	style?: "default" | "centered" | "split";
+  blockType: "hero";
+  heading: string;
+  subheading?: string;
+  image?: PayloadMedia;
+  ctaText?: string;
+  ctaLink?: string;
+  style?: "default" | "centered" | "split";
 }
 
 interface LexicalRoot {
-	root?: {
-		children?: Array<{
-			type: string;
-			tag?: string;
-			children?: Array<{ text?: string }>;
-		}>;
-	};
+  root?: {
+    children?: Array<{
+      type: string;
+      tag?: string;
+      children?: Array<{ text?: string }>;
+    }>;
+  };
 }
 
 export interface ContentBlock {
-	blockType: "content";
-	content?: LexicalRoot;
-	width?: "default" | "wide" | "narrow";
-	background?: "none" | "gray" | "accent";
+  blockType: "content";
+  content?: LexicalRoot;
+  width?: "default" | "wide" | "narrow";
+  background?: "none" | "gray" | "accent";
 }
 
 export interface Feature {
-	id?: string;
-	name: string;
-	description?: string;
-	icon?: React.ComponentType<{ className?: string }>;
+  id?: string;
+  name: string;
+  description?: string;
+  icon?: React.ComponentType<{ className?: string }>;
 }
 
 export interface FeaturesBlock {
-	blockType: "features";
-	heading?: string;
-	features: Feature[];
-	layout?: "grid" | "list" | "carousel";
-	columns?: "2" | "3" | "4";
+  blockType: "features";
+  heading?: string;
+  features: Feature[];
+  layout?: "grid" | "list" | "carousel";
+  columns?: "2" | "3" | "4";
 }
 
 export interface Testimonial {
-	id?: string;
-	name: string;
-	title?: string;
-	content: string;
-	image?: PayloadMedia;
+  id?: string;
+  name: string;
+  title?: string;
+  content: string;
+  image?: PayloadMedia;
 }
 
 export interface TestimonialsBlock {
-	blockType: "testimonials";
-	heading?: string;
-	testimonials: Testimonial[];
-	layout?: "grid" | "slider" | "single";
-	background?: "none" | "light" | "dark";
+  blockType: "testimonials";
+  heading?: string;
+  testimonials: Testimonial[];
+  layout?: "grid" | "slider" | "single";
+  background?: "none" | "light" | "dark";
 }
 
-export type PageBlock =
-	| HeroBlock
-	| ContentBlock
-	| FeaturesBlock
-	| TestimonialsBlock;
+export type PageBlock = HeroBlock | ContentBlock | FeaturesBlock | TestimonialsBlock;

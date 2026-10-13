@@ -46,20 +46,17 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
     }
   })();
 
-  const { data: event, loading } = useBuilderEntry<TownEvent>(
-    "town-event",
-    { "data.slug": slug },
-  );
+  const { data: event, loading } = useBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
 
   if (loading) {
     return (
       <section className="bg-warm-white py-12">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="container mx-auto max-w-3xl px-4">
           <div className="animate-pulse space-y-4">
-            <div className="h-4 w-32 bg-stone/40 rounded" />
-            <div className="h-8 w-3/4 bg-stone/40 rounded" />
-            <div className="h-48 bg-stone/20 rounded-xl" />
-            <div className="h-4 w-full bg-stone/20 rounded" />
+            <div className="h-4 w-32 rounded bg-stone/40" />
+            <div className="h-8 w-3/4 rounded bg-stone/40" />
+            <div className="h-48 rounded-xl bg-stone/20" />
+            <div className="h-4 w-full rounded bg-stone/20" />
           </div>
         </div>
       </section>
@@ -70,13 +67,13 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
     return (
       <section className="bg-warm-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl font-serif font-bold text-sage-dark mb-4">Event not found</h1>
-          <p className="text-sage-dark/70 mb-8">
+          <h1 className="mb-4 font-serif text-3xl font-bold text-sage-dark">Event not found</h1>
+          <p className="mb-8 text-sage-dark/70">
             The event you are looking for could not be found.
           </p>
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 bg-sage text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
           >
             &larr; Back to Events
           </Link>
@@ -98,26 +95,26 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
 
   return (
     <section className="bg-warm-white py-12">
-      <div className="container mx-auto px-4 max-w-3xl">
+      <div className="container mx-auto max-w-3xl px-4">
         {/* Back link */}
         <Link
           href="/events"
-          className="inline-flex items-center gap-2 text-sage hover:text-sage-dark text-sm font-medium mb-8 transition-colors"
+          className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-sage transition-colors hover:text-sage-dark"
         >
           &larr; Back to Events
         </Link>
 
         {/* Status badge and categories */}
-        <div className="flex flex-wrap items-center gap-2 mb-4">
+        <div className="mb-4 flex flex-wrap items-center gap-2">
           <span
-            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${statusColors[displayStatus]}`}
+            className={`inline-block rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${statusColors[displayStatus]}`}
           >
             {displayStatus}
           </span>
           {safeCategories(event).map((category) => (
             <span
               key={category}
-              className="inline-block bg-wheat/30 text-sage-dark px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide"
+              className="inline-block rounded-full bg-wheat/30 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-sage-dark"
             >
               {category}
             </span>
@@ -125,7 +122,7 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark leading-tight mb-6">
+        <h1 className="mb-6 font-serif text-3xl font-bold leading-tight text-sage-dark md:text-4xl">
           {event.title}
         </h1>
 
@@ -135,39 +132,39 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
             src={event.featuredImage}
             alt={event.title}
             wrapperClassName="mb-8 rounded-xl w-full"
-            className="w-full h-auto object-cover max-h-[400px]"
+            className="h-auto max-h-[400px] w-full object-cover"
             width={800}
             height={600}
           />
         )}
 
         {/* Event details card */}
-        <div className="bg-cream border border-stone rounded-xl p-6 mb-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-4">
+        <div className="mb-8 rounded-xl border border-stone bg-cream p-6">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
             Event Details
           </h2>
-          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+              <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                 Date
               </dt>
-              <dd className="text-sage-dark font-medium">{eventDate}</dd>
+              <dd className="font-medium text-sage-dark">{eventDate}</dd>
             </div>
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+              <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                 Time
               </dt>
-              <dd className="text-sage-dark font-medium">
+              <dd className="font-medium text-sage-dark">
                 {event.eventTime ? formatTime(event.eventTime) : ""}
                 {event.endTime && ` - ${formatTime(event.endTime)}`}
               </dd>
             </div>
             {event.locationAddress && (
               <div>
-                <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+                <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                   Location
                 </dt>
-                <dd className="text-sage-dark font-medium">
+                <dd className="font-medium text-sage-dark">
                   <span className="inline-flex items-center gap-1">
                     <a
                       href={getMapUrl(event.locationAddress)}
@@ -190,22 +187,22 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
               const organizerName = resolveBuilderRef(event.organizer);
               return organizerName ? (
                 <div>
-                  <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+                  <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                     Organizer
                   </dt>
-                  <dd className="text-sage-dark font-medium">{organizerName}</dd>
+                  <dd className="font-medium text-sage-dark">{organizerName}</dd>
                 </div>
               ) : null;
             })()}
             {event.contactEmail && (
               <div>
-                <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+                <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                   Email
                 </dt>
                 <dd>
                   <a
                     href={`mailto:${event.contactEmail}`}
-                    className="text-sage hover:text-sage-dark font-medium transition-colors"
+                    className="font-medium text-sage transition-colors hover:text-sage-dark"
                   >
                     {event.contactEmail}
                   </a>
@@ -214,14 +211,14 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
             )}
             {event.contactPhone && (
               <div>
-                <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+                <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                   Phone
                 </dt>
                 <dd>
                   <span className="inline-flex items-center gap-1">
                     <a
                       href={`tel:${event.contactPhone}`}
-                      className="text-sage hover:text-sage-dark font-medium transition-colors"
+                      className="font-medium text-sage transition-colors hover:text-sage-dark"
                     >
                       {event.contactPhone}
                     </a>
@@ -240,7 +237,7 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
         {/* Description */}
         {event.description && (
           <div
-            className="prose prose-lg max-w-none text-sage-dark/80 leading-relaxed mb-6"
+            className="prose prose-lg mb-6 max-w-none leading-relaxed text-sage-dark/80"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.description) }}
           />
         )}
@@ -248,10 +245,7 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
         {/* Content */}
         {event.content && (
           <div
-            className="prose prose-lg max-w-none text-sage-dark/85 leading-relaxed
-							prose-headings:text-sage-dark prose-headings:font-serif
-							prose-a:text-sage prose-a:hover:text-sage-dark
-							prose-strong:text-sage-dark"
+            className="prose prose-lg max-w-none leading-relaxed text-sage-dark/85 prose-headings:font-serif prose-headings:text-sage-dark prose-a:text-sage prose-a:hover:text-sage-dark prose-strong:text-sage-dark"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.content) }}
           />
         )}
@@ -263,13 +257,13 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
 const EventDetailErrorFallback = () => (
   <section className="bg-warm-white py-16">
     <div className="container mx-auto px-4 text-center">
-      <h1 className="text-3xl font-serif font-bold text-sage-dark mb-4">Something went wrong</h1>
-      <p className="text-sage-dark/70 mb-8">
+      <h1 className="mb-4 font-serif text-3xl font-bold text-sage-dark">Something went wrong</h1>
+      <p className="mb-8 text-sage-dark/70">
         We couldn&apos;t load this event. Please try refreshing the page.
       </p>
       <Link
         href="/events"
-        className="inline-flex items-center gap-2 bg-sage text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+        className="inline-flex items-center gap-2 rounded-lg bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
       >
         &larr; Back to Events
       </Link>

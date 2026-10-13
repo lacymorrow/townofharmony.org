@@ -7,371 +7,371 @@ import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 
 const nextConfig: NextConfig = {
-	transpilePackages: ["@c15t/nextjs"],
-	env: {
-		// Add client-side feature flags
-		...buildTimeFeatureFlags,
+  transpilePackages: ["@c15t/nextjs"],
+  env: {
+    // Add client-side feature flags
+    ...buildTimeFeatureFlags,
 
-		// Server-only secrets injected at build time. They will not be exposed to the client
-		// unless prefixed with NEXT_PUBLIC_. Consumers should read via process.env on server.
-		...getDerivedSecrets(),
+    // Server-only secrets injected at build time. They will not be exposed to the client
+    // unless prefixed with NEXT_PUBLIC_. Consumers should read via process.env on server.
+    ...getDerivedSecrets(),
 
-		// You can add other build-time env variables here if needed
-	},
+    // You can add other build-time env variables here if needed
+  },
 
-	/*
-	 * Next.js configuration
-	 */
-	images: {
-		remotePatterns: [
-			{ hostname: "townofharmony.org" },
-			{ hostname: "picsum.photos" }, // @dev: for testing
-			{ hostname: "avatar.vercel.sh" }, // @dev: for testing
-			{ hostname: "github.com" }, // @dev: for testing
-			{ hostname: "images.unsplash.com" }, // @dev: for testing
-			{ hostname: "2.gravatar.com" }, // @dev: for testing
-			{ hostname: "avatars.githubusercontent.com" }, // @dev: github avatars
-			{ hostname: "vercel.com" }, // @dev: vercel button
-			{
-				protocol: "https",
-				hostname: "**.vercel.app",
-			},
-			{
-				protocol: "https",
-				hostname: "**.s3.**.amazonaws.com",
-			},
-			{
-				protocol: "https",
-				hostname: "better-auth.com",
-			},
-			{
-				protocol: "https",
-				hostname: "cdn.builder.io",
-			},
-		],
-		/*
-		 * Next.js 15+ Enhanced Image Optimization
-		 * Optimized for Core Web Vitals and performance
-		 */
-		formats: ["image/avif", "image/webp"],
-		deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-		imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-		minimumCacheTTL: 3600, // 1 hour cache
-		// dangerouslyAllowSVG: true,
-		// contentDispositionType: "attachment",
-		// contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-	},
+  /*
+   * Next.js configuration
+   */
+  images: {
+    remotePatterns: [
+      { hostname: "townofharmony.org" },
+      { hostname: "picsum.photos" }, // @dev: for testing
+      { hostname: "avatar.vercel.sh" }, // @dev: for testing
+      { hostname: "github.com" }, // @dev: for testing
+      { hostname: "images.unsplash.com" }, // @dev: for testing
+      { hostname: "2.gravatar.com" }, // @dev: for testing
+      { hostname: "avatars.githubusercontent.com" }, // @dev: github avatars
+      { hostname: "vercel.com" }, // @dev: vercel button
+      {
+        protocol: "https",
+        hostname: "**.vercel.app",
+      },
+      {
+        protocol: "https",
+        hostname: "**.s3.**.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "better-auth.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.builder.io",
+      },
+    ],
+    /*
+     * Next.js 15+ Enhanced Image Optimization
+     * Optimized for Core Web Vitals and performance
+     */
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 3600, // 1 hour cache
+    // dangerouslyAllowSVG: true,
+    // contentDispositionType: "attachment",
+    // contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
 
-	/*
-	 * Redirects are located in the `src/config/routes.ts` file
-	 */
-	async redirects() {
-		const internalRedirects = await redirects();
-		return [
-			...internalRedirects,
-			{ source: "/admin", destination: "https://builder.io/content", permanent: false },
-			{ source: "/admin/", destination: "https://builder.io/content", permanent: false },
-		];
-	},
+  /*
+   * Redirects are located in the `src/config/routes.ts` file
+   */
+  async redirects() {
+    const internalRedirects = await redirects();
+    return [
+      ...internalRedirects,
+      { source: "/admin", destination: "https://builder.io/content", permanent: false },
+      { source: "/admin/", destination: "https://builder.io/content", permanent: false },
+    ];
+  },
 
-	/*
-	 * PostHog reverse proxy configuration
-	 */
-	async rewrites() {
-		return [
-			{
-				source: "/relay-64tM/static/:path*",
-				destination: "https://us-assets.i.posthog.com/static/:path*",
-			},
-			{
-				source: "/relay-64tM/:path*",
-				destination: "https://us.i.posthog.com/:path*",
-			},
-			{
-				source: "/relay-64tM/flags",
-				destination: "https://us.i.posthog.com/flags",
-			},
-		];
-	},
-	// This is required to support PostHog trailing slash API requests
-	skipTrailingSlashRedirect: true,
+  /*
+   * PostHog reverse proxy configuration
+   */
+  async rewrites() {
+    return [
+      {
+        source: "/relay-64tM/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/relay-64tM/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/relay-64tM/flags",
+        destination: "https://us.i.posthog.com/flags",
+      },
+    ];
+  },
+  // This is required to support PostHog trailing slash API requests
+  skipTrailingSlashRedirect: true,
 
-	async headers() {
-		return Promise.resolve([
-			// /install
-			{
-				source: "/install",
-				headers: [
-					{
-						key: "Cross-Origin-Opener-Policy",
-						value: "same-origin",
-					},
-					{
-						key: "Cross-Origin-Embedder-Policy",
-						value: "require-corp",
-					},
-				],
-			},
-			/*
-			 * Enhanced Security Headers
-			 * Adds Content Security Policy for better security
-			 */
-			{
-				source: "/(.*)",
-				headers: [
-					{
-						key: "Content-Security-Policy",
-						value: "frame-ancestors 'self' https://builder.io https://*.builder.io;",
-					},
-					{
-						key: "X-Content-Type-Options",
-						value: "nosniff",
-					},
-					{
-						key: "Referrer-Policy",
-						value: "origin-when-cross-origin",
-					},
-					{
-						key: "X-XSS-Protection",
-						value: "1; mode=block",
-					},
-					// X-Frame-Options is intentionally omitted: the CSP `frame-ancestors`
-					// directive above already enforces framing policy and correctly allows
-					// Builder.io. Adding XFO: SAMEORIGIN would conflict with that allowance
-					// on scanners/proxies that still honor the legacy header.
-					{
-						key: "Strict-Transport-Security",
-						value: "max-age=63072000; includeSubDomains; preload",
-					},
-					// @production
-					// {
-					// 	key: "Permissions-Policy",
-					// 	value: "camera=(), microphone=(), geolocation=()",
-					// },
-				],
-			},
-		]);
-	},
+  async headers() {
+    return Promise.resolve([
+      // /install
+      {
+        source: "/install",
+        headers: [
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "Cross-Origin-Embedder-Policy",
+            value: "require-corp",
+          },
+        ],
+      },
+      /*
+       * Enhanced Security Headers
+       * Adds Content Security Policy for better security
+       */
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "frame-ancestors 'self' https://builder.io https://*.builder.io;",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "origin-when-cross-origin",
+          },
+          {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          // X-Frame-Options is intentionally omitted: the CSP `frame-ancestors`
+          // directive above already enforces framing policy and correctly allows
+          // Builder.io. Adding XFO: SAMEORIGIN would conflict with that allowance
+          // on scanners/proxies that still honor the legacy header.
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          // @production
+          // {
+          // 	key: "Permissions-Policy",
+          // 	value: "camera=(), microphone=(), geolocation=()",
+          // },
+        ],
+      },
+    ]);
+  },
 
-	// Production optimizations
-	compress: true,
-	poweredByHeader: false,
+  // Production optimizations
+  compress: true,
+  poweredByHeader: false,
 
-	/*
-	 * React configuration
-	 */
-	reactStrictMode: true,
+  /*
+   * React configuration
+   */
+  reactStrictMode: true,
 
-	/*
-	 * Source maps - DISABLED to reduce memory usage during build
-	 * Enable only in development or when specifically needed
-	 */
-	productionBrowserSourceMaps: false,
+  /*
+   * Source maps - DISABLED to reduce memory usage during build
+   * Enable only in development or when specifically needed
+   */
+  productionBrowserSourceMaps: false,
 
-	// Next 16 removed `next lint` and the `eslint` config key; lint runs via `bun run lint`.
-	typescript: {
-		/*
+  // Next 16 removed `next lint` and the `eslint` config key; lint runs via `bun run lint`.
+  typescript: {
+    /*
 	  !! WARNING !!
 	  * Dangerously allow production builds to successfully complete even if
 	  * your project has type errors.
 	*/
-		ignoreBuildErrors: true,
-	},
+    ignoreBuildErrors: true,
+  },
 
-	// Configure `pageExtensions` to include markdown and MDX files
-	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  // Configure `pageExtensions` to include markdown and MDX files
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
-	/*
-	 * Experimental configuration
-	 */
-	experimental: {
-		// esmExternals: true,
-		// mdxRs: true,
-		// mdxRs: {
-		// 	jsxRuntime: "automatic",
-		// 	jsxImportSource: "jsx-runtime",
-		// 	mdxType: "gfm",
-		// },
+  /*
+   * Experimental configuration
+   */
+  experimental: {
+    // esmExternals: true,
+    // mdxRs: true,
+    // mdxRs: {
+    // 	jsxRuntime: "automatic",
+    // 	jsxImportSource: "jsx-runtime",
+    // 	mdxType: "gfm",
+    // },
 
-		nextScriptWorkers: true,
-		serverActions: {
-			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
-		},
-		webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
+    nextScriptWorkers: true,
+    serverActions: {
+      bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
+    },
+    webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
 
-		// Optimized prefetching
-		optimisticClientCache: true,
+    // Optimized prefetching
+    optimisticClientCache: true,
 
-		/*
-		 * Client-side Router Cache Configuration
-		 * Optimizes navigation performance by caching page segments
-		 */
-		staleTimes: {
-			dynamic: 90,
-			static: 360,
-		},
+    /*
+     * Client-side Router Cache Configuration
+     * Optimizes navigation performance by caching page segments
+     */
+    staleTimes: {
+      dynamic: 90,
+      static: 360,
+    },
 
-		/*
-		 * Reduce peak webpack memory during builds. Vercel's standard build
-		 * container has 8GB total; without this the build can be SIGKILLed by the
-		 * container OOM killer (see build:vercel heap cap in package.json).
-		 */
-		webpackMemoryOptimizations: true,
+    /*
+     * Reduce peak webpack memory during builds. Vercel's standard build
+     * container has 8GB total; without this the build can be SIGKILLed by the
+     * container OOM killer (see build:vercel heap cap in package.json).
+     */
+    webpackMemoryOptimizations: true,
 
-		/*
-		 * "Collecting page data" spawns one worker per CPU minus one (3 on Vercel's
-		 * 4-core/8GB box), and each worker loads the whole route graph. Three of
-		 * them plus the main process can exceed 8GB and the container OOM-kills the
-		 * build (upstream LAC-3871). One worker fits.
-		 */
-		cpus: 1,
+    /*
+     * "Collecting page data" spawns one worker per CPU minus one (3 on Vercel's
+     * 4-core/8GB box), and each worker loads the whole route graph. Three of
+     * them plus the main process can exceed 8GB and the container OOM-kills the
+     * build (upstream LAC-3871). One worker fits.
+     */
+    cpus: 1,
 
-		// webpackBuildWorker: false, // Disable for low memory
-		// workerThreads: false, // Disable worker threads
-	},
+    // webpackBuildWorker: false, // Disable for low memory
+    // workerThreads: false, // Disable worker threads
+  },
 
-	/*
-	 * Miscellaneous configuration
-	 */
-	devIndicators: {
-		position: "bottom-left" as const,
-	},
+  /*
+   * Miscellaneous configuration
+   */
+  devIndicators: {
+    position: "bottom-left" as const,
+  },
 
-	/*
-	 * Logging configuration
-	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
-	 */
-	logging: {
-		fetches: {
-			fullUrl: true, // This will log the full URL of the fetch request even if cached
-			// hmrRefreshes: true,
-		},
-	},
+  /*
+   * Logging configuration
+   * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
+   */
+  logging: {
+    fetches: {
+      fullUrl: true, // This will log the full URL of the fetch request even if cached
+      // hmrRefreshes: true,
+    },
+  },
 
-	compiler: {
-		// Logs are disabled in production unless DISABLE_LOGGING is set
-		// Use DISABLE_LOGGING to disable all logging except error logs
-		// Use DISABLE_ERROR_LOGGING to disable error logging too
-		removeConsole:
-			process.env.DISABLE_LOGGING === "true" ||
-			(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
-				? process.env.DISABLE_ERROR_LOGGING === "true" ||
-					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
-					? true
-					: { exclude: ["error"] }
-				: false,
-	},
+  compiler: {
+    // Logs are disabled in production unless DISABLE_LOGGING is set
+    // Use DISABLE_LOGGING to disable all logging except error logs
+    // Use DISABLE_ERROR_LOGGING to disable error logging too
+    removeConsole:
+      process.env.DISABLE_LOGGING === "true" ||
+      (process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+        ? process.env.DISABLE_ERROR_LOGGING === "true" ||
+          (process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
+          ? true
+          : { exclude: ["error"] }
+        : false,
+  },
 
-	/*
-	 * Bundle Size Optimization - Enhanced
-	 * Excludes additional heavy dependencies and dev tools from production bundles
-	 */
-	outputFileTracingExcludes: {
-		"*": [
-			"**/*.test.*",
-			"**/*.spec.*",
-			"**/*.stories.*",
-			"**/tests/**",
-			"**/.git/**",
-			"**/.github/**",
-			"**/.vscode/**",
-			"**/.next/cache/**",
-			"**/node_modules/typescript/**",
-			"**/node_modules/@types/**",
-			"**/node_modules/eslint/**",
-			"**/node_modules/prettier/**",
-			"**/node_modules/typescript/**",
-			"**/node_modules/react-syntax-highlighter/**",
-			"**/node_modules/canvas-confetti/**",
-			"**/node_modules/@huggingface/transformers/**",
-			"**/node_modules/three/**",
-			"**/node_modules/@react-three/**",
-			"**/node_modules/jspdf/**",
-			// Additional Next.js 15 optimizations
-			"**/node_modules/monaco-editor/**",
-			"**/node_modules/@playwright/**",
-			"**/node_modules/typescript/lib/**",
-			// Exclude more heavy dependencies
-			"**/node_modules/remotion/**",
-			"**/node_modules/@opentelemetry/**",
-			"**/node_modules/googleapis/**",
-			"**/node_modules/@tsparticles/**",
-			"**/node_modules/marked/**",
-			"**/node_modules/remark/**",
-			"**/node_modules/rehype/**",
-			// Additional memory-heavy dependencies
-			// "**/node_modules/onnxruntime-node/**",
-			// "**/node_modules/onnxruntime-web/**",
-			"**/node_modules/@tabler/**",
-			"**/node_modules/@stackframe/**",
-			"**/node_modules/@doubletie/**",
-			"**/node_modules/mathjax-full/**",
-			"**/node_modules/@sentry/**",
-			"**/node_modules/@aws-sdk/**",
-			"**/node_modules/@webcontainer/**",
-			"**/node_modules/.cache/**",
-			"**/node_modules/.store/**",
-		],
-	},
-	outputFileTracingIncludes: {
-		"*": ["./src/content/**/*"],
-	},
+  /*
+   * Bundle Size Optimization - Enhanced
+   * Excludes additional heavy dependencies and dev tools from production bundles
+   */
+  outputFileTracingExcludes: {
+    "*": [
+      "**/*.test.*",
+      "**/*.spec.*",
+      "**/*.stories.*",
+      "**/tests/**",
+      "**/.git/**",
+      "**/.github/**",
+      "**/.vscode/**",
+      "**/.next/cache/**",
+      "**/node_modules/typescript/**",
+      "**/node_modules/@types/**",
+      "**/node_modules/eslint/**",
+      "**/node_modules/prettier/**",
+      "**/node_modules/typescript/**",
+      "**/node_modules/react-syntax-highlighter/**",
+      "**/node_modules/canvas-confetti/**",
+      "**/node_modules/@huggingface/transformers/**",
+      "**/node_modules/three/**",
+      "**/node_modules/@react-three/**",
+      "**/node_modules/jspdf/**",
+      // Additional Next.js 15 optimizations
+      "**/node_modules/monaco-editor/**",
+      "**/node_modules/@playwright/**",
+      "**/node_modules/typescript/lib/**",
+      // Exclude more heavy dependencies
+      "**/node_modules/remotion/**",
+      "**/node_modules/@opentelemetry/**",
+      "**/node_modules/googleapis/**",
+      "**/node_modules/@tsparticles/**",
+      "**/node_modules/marked/**",
+      "**/node_modules/remark/**",
+      "**/node_modules/rehype/**",
+      // Additional memory-heavy dependencies
+      // "**/node_modules/onnxruntime-node/**",
+      // "**/node_modules/onnxruntime-web/**",
+      "**/node_modules/@tabler/**",
+      "**/node_modules/@stackframe/**",
+      "**/node_modules/@doubletie/**",
+      "**/node_modules/mathjax-full/**",
+      "**/node_modules/@sentry/**",
+      "**/node_modules/@aws-sdk/**",
+      "**/node_modules/@webcontainer/**",
+      "**/node_modules/.cache/**",
+      "**/node_modules/.store/**",
+    ],
+  },
+  outputFileTracingIncludes: {
+    "*": ["./src/content/**/*"],
+  },
 
-	/*
-	 * Turbopack configuration
-	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/turbo
-	 */
-	turbopack: {
-		rules: {
-			// Add rules for raw-loader to handle specific file types
-			// This mirrors the webpack config for these extensions
-			"*.(node|bin|html)": {
-				loaders: ["raw-loader"],
-				as: "*.js",
-			},
-		},
-	},
+  /*
+   * Turbopack configuration
+   * @see https://nextjs.org/docs/app/api-reference/next-config-js/turbo
+   */
+  turbopack: {
+    rules: {
+      // Add rules for raw-loader to handle specific file types
+      // This mirrors the webpack config for these extensions
+      "*.(node|bin|html)": {
+        loaders: ["raw-loader"],
+        as: "*.js",
+      },
+    },
+  },
 
-	/*
-	 * Webpack configuration
-	 */
-	webpack: (config: any, { dev, isServer }: { dev: boolean; isServer: boolean }) => {
-		// Enable top-level await
-		config.experiments = { ...config.experiments, topLevelAwait: true };
+  /*
+   * Webpack configuration
+   */
+  webpack: (config: any, { dev, isServer }: { dev: boolean; isServer: boolean }) => {
+    // Enable top-level await
+    config.experiments = { ...config.experiments, topLevelAwait: true };
 
-		// Add support for async/await in web workers
-		config.module.rules.push({
-			test: /\.worker\.(js|ts)$/,
-			use: {
-				loader: "worker-loader",
-				options: {
-					filename: "static/[hash].worker.js",
-					publicPath: "/_next/",
-				},
-			},
-		});
+    // Add support for async/await in web workers
+    config.module.rules.push({
+      test: /\.worker\.(js|ts)$/,
+      use: {
+        loader: "worker-loader",
+        options: {
+          filename: "static/[hash].worker.js",
+          publicPath: "/_next/",
+        },
+      },
+    });
 
-		// External heavy dependencies that are not used in most pages
-		if (!dev && isServer) {
-			config.externals = [
-				...config.externals,
-				{
-					"@huggingface/transformers": "commonjs @huggingface/transformers",
-					googleapis: "commonjs googleapis",
-					"monaco-editor": "commonjs monaco-editor",
-				},
-			];
-		}
+    // External heavy dependencies that are not used in most pages
+    if (!dev && isServer) {
+      config.externals = [
+        ...config.externals,
+        {
+          "@huggingface/transformers": "commonjs @huggingface/transformers",
+          googleapis: "commonjs googleapis",
+          "monaco-editor": "commonjs monaco-editor",
+        },
+      ];
+    }
 
-		// Completely ignore ONNX runtime packages
-		config.resolve.alias = {
-			...config.resolve.alias,
-			// "onnxruntime-node": false,
-			// "onnxruntime-common": false,
-		};
+    // Completely ignore ONNX runtime packages
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      // "onnxruntime-node": false,
+      // "onnxruntime-common": false,
+    };
 
-		return config;
-	},
+    return config;
+  },
 };
 
 /*

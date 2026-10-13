@@ -31,10 +31,10 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
 
   return (
     <section className="bg-warm-white py-12">
-      <div className="container mx-auto px-4 max-w-3xl">
+      <div className="container mx-auto max-w-3xl px-4">
         <Link
           href="/meetings"
-          className="inline-flex items-center gap-2 text-sage hover:text-sage-dark text-sm font-medium mb-8 transition-colors"
+          className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-sage transition-colors hover:text-sage-dark"
         >
           &larr; Back to Meetings
         </Link>
@@ -42,57 +42,57 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
         {meeting.type?.trim() && (
           <div className="mb-4">
             <span
-              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${typeColors[meeting.type] || typeColors.Council}`}
+              className={`inline-block rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${typeColors[meeting.type] || typeColors.Council}`}
             >
               {meeting.type}
             </span>
           </div>
         )}
 
-        <h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark leading-tight mb-6">
+        <h1 className="mb-6 font-serif text-3xl font-bold leading-tight text-sage-dark md:text-4xl">
           {meeting.title}
         </h1>
 
-        <div className="bg-cream border border-stone rounded-xl p-6 mb-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-4">
+        <div className="mb-8 rounded-xl border border-stone bg-cream p-6">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
             Meeting Details
           </h2>
-          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+              <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                 Date
               </dt>
-              <dd className="text-sage-dark font-medium">{meetingDate}</dd>
+              <dd className="font-medium text-sage-dark">{meetingDate}</dd>
             </div>
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+              <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                 Time
               </dt>
-              <dd className="text-sage-dark font-medium">
+              <dd className="font-medium text-sage-dark">
                 {meeting.meetingTime ? formatTime(meeting.meetingTime) : ""}
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+              <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                 Location
               </dt>
-              <dd className="text-sage-dark font-medium">{meeting.location}</dd>
+              <dd className="font-medium text-sage-dark">{meeting.location}</dd>
             </div>
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+              <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                 Open to Public
               </dt>
-              <dd className="text-sage-dark font-medium">{meeting.isPublic ? "Yes" : "No"}</dd>
+              <dd className="font-medium text-sage-dark">{meeting.isPublic ? "Yes" : "No"}</dd>
             </div>
           </dl>
         </div>
 
         {safeArray(meeting.attendees).length > 0 && (
           <div className="mb-8">
-            <h2 className="text-lg font-serif font-bold text-sage-dark mb-3">Attendees</h2>
-            <ul className="bg-cream border border-stone rounded-xl divide-y divide-stone">
+            <h2 className="mb-3 font-serif text-lg font-bold text-sage-dark">Attendees</h2>
+            <ul className="divide-y divide-stone rounded-xl border border-stone bg-cream">
               {safeArray(meeting.attendees).map((attendee) => (
-                <li key={attendee} className="px-5 py-3 text-sage-dark/85 text-base">
+                <li key={attendee} className="px-5 py-3 text-base text-sage-dark/85">
                   {attendee}
                 </li>
               ))}
@@ -102,9 +102,9 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
 
         {meeting.agenda && (
           <div className="mb-8">
-            <h2 className="text-lg font-serif font-bold text-sage-dark mb-3">Agenda</h2>
+            <h2 className="mb-3 font-serif text-lg font-bold text-sage-dark">Agenda</h2>
             <div
-              className="prose prose-lg max-w-none bg-cream border border-stone rounded-xl p-6 text-sage-dark/85"
+              className="prose prose-lg max-w-none rounded-xl border border-stone bg-cream p-6 text-sage-dark/85"
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.agenda) }}
             />
           </div>
@@ -112,15 +112,15 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
 
         {(meeting.minutes || meeting.minutesUrl) && (
           <div className="mb-8">
-            <div className="flex items-center justify-between gap-4 mb-3">
-              <h2 className="text-lg font-serif font-bold text-sage-dark">Meeting Minutes</h2>
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <h2 className="font-serif text-lg font-bold text-sage-dark">Meeting Minutes</h2>
               {meeting.minutesUrl && (
                 <a
                   href={meeting.minutesUrl}
                   download
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-sage hover:text-sage-dark font-medium"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-sage hover:text-sage-dark"
                 >
                   Download
                 </a>
@@ -128,12 +128,12 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
             </div>
             {meeting.minutes && (
               <div
-                className="prose prose-lg max-w-none bg-cream border border-stone rounded-xl p-6 mb-3 text-sage-dark/85"
+                className="prose prose-lg mb-3 max-w-none rounded-xl border border-stone bg-cream p-6 text-sage-dark/85"
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.minutes) }}
               />
             )}
             {meeting.minutesUrl && (
-              <div className="border border-stone rounded-xl overflow-hidden bg-white h-[75svh] min-h-[480px]">
+              <div className="h-[75svh] min-h-[480px] overflow-hidden rounded-xl border border-stone bg-white">
                 <DocumentViewer url={meeting.minutesUrl} title={`Minutes - ${meeting.title}`} />
               </div>
             )}
@@ -142,14 +142,14 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
 
         {(meeting.videoUrl || meeting.audioUrl) && (
           <div className="mb-8">
-            <h2 className="text-lg font-serif font-bold text-sage-dark mb-3">Recordings</h2>
+            <h2 className="mb-3 font-serif text-lg font-bold text-sage-dark">Recordings</h2>
             <div className="flex flex-wrap gap-3">
               {meeting.videoUrl && (
                 <a
                   href={meeting.videoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-sage text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+                  className="inline-flex items-center gap-2 rounded-lg bg-sage px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
                 >
                   Watch Video Recording
                 </a>
@@ -159,7 +159,7 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
                   href={meeting.audioUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-wheat text-sage-deep px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-wheat-light transition-colors"
+                  className="inline-flex items-center gap-2 rounded-lg bg-wheat px-5 py-2.5 text-sm font-semibold text-sage-deep transition-colors hover:bg-wheat-light"
                 >
                   Listen to Audio Recording
                 </a>

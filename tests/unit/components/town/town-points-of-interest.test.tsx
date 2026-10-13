@@ -21,8 +21,7 @@ const poi: TownPointOfInterest = {
   id: 1,
   name: "Tomlinson-Moore Family Park",
   slug: "tomlinson-moore-family-park",
-  description:
-    '<p class="">Trails, picnic tables &amp; a playground for all ages.</p>',
+  description: '<p class="">Trails, picnic tables &amp; a playground for all ages.</p>',
   image: null,
   address: "100 Park Ln",
   hours: "Dawn to dusk",

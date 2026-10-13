@@ -1,6 +1,6 @@
 export const LOCAL_STORAGE_KEYS = {
-	location: "location", // User location
-	starredTools: "starred-tools", // Starred tools
-	cardUpgradeDismissed: "card-upgrade-dismissed", // Card upgrade dismissed
-	attributionClosed: "attribution-closed", // Attribution closed
+  location: "location", // User location
+  starredTools: "starred-tools", // Starred tools
+  cardUpgradeDismissed: "card-upgrade-dismissed", // Card upgrade dismissed
+  attributionClosed: "attribution-closed", // Attribution closed
 };

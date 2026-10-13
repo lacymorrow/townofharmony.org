@@ -21,8 +21,7 @@ const election: TownElection = {
   id: 1,
   title: "2026 Municipal Election",
   slug: "2026-municipal-election",
-  description:
-    '<p class="">Vote for mayor &amp; town council. Polls open at 7am.</p>',
+  description: '<p class="">Vote for mayor &amp; town council. Polls open at 7am.</p>',
   electionDate: "2026-11-03T00:00:00.000Z",
   registrationDeadline: "2026-10-05T00:00:00.000Z",
   earlyVotingStart: "2026-10-20T00:00:00.000Z",

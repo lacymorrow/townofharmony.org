@@ -50,11 +50,11 @@ const TownElectionDetailInner = ({ slug: slugProp }: TownElectionDetailProps) =>
   if (loading) {
     return (
       <section className="bg-warm-white py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <div className="container mx-auto max-w-4xl px-4">
           <div className="animate-pulse space-y-4">
-            <div className="h-4 w-32 bg-stone/40 rounded" />
-            <div className="h-8 w-3/4 bg-stone/40 rounded" />
-            <div className="h-48 bg-stone/20 rounded-xl" />
+            <div className="h-4 w-32 rounded bg-stone/40" />
+            <div className="h-8 w-3/4 rounded bg-stone/40" />
+            <div className="h-48 rounded-xl bg-stone/20" />
           </div>
         </div>
       </section>
@@ -65,13 +65,13 @@ const TownElectionDetailInner = ({ slug: slugProp }: TownElectionDetailProps) =>
     return (
       <section className="bg-warm-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl font-serif font-bold text-sage-dark mb-4">Election not found</h1>
-          <p className="text-sage-dark/70 mb-8">
+          <h1 className="mb-4 font-serif text-3xl font-bold text-sage-dark">Election not found</h1>
+          <p className="mb-8 text-sage-dark/70">
             The election you are looking for could not be found.
           </p>
           <Link
             href="/elections"
-            className="inline-flex items-center gap-2 bg-sage text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
           >
             &larr; Back to Elections
           </Link>
@@ -100,64 +100,64 @@ const TownElectionDetailInner = ({ slug: slugProp }: TownElectionDetailProps) =>
 
   return (
     <section className="bg-warm-white py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
+      <div className="container mx-auto max-w-4xl px-4">
         {/* Back link */}
         <Link
           href="/elections"
-          className="inline-flex items-center gap-2 text-sage hover:text-sage-dark text-sm font-medium mb-8 transition-colors"
+          className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-sage transition-colors hover:text-sage-dark"
         >
           &larr; Back to Elections
         </Link>
 
         {/* Title */}
-        <h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark leading-tight mb-4">
+        <h1 className="mb-4 font-serif text-3xl font-bold leading-tight text-sage-dark md:text-4xl">
           {election.title}
         </h1>
 
         {/* Description */}
         <div
-          className="prose prose-lg max-w-none text-sage-dark/80 leading-relaxed mb-8"
+          className="prose prose-lg mb-8 max-w-none leading-relaxed text-sage-dark/80"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(election.description || "") }}
         />
 
         {/* Key dates card */}
-        <div className="bg-cream border border-stone rounded-xl p-6 mb-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-4">
+        <div className="mb-8 rounded-xl border border-stone bg-cream p-6">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
             Key Dates
           </h2>
-          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+              <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                 Election Day
               </dt>
-              <dd className="text-sage-dark font-bold text-lg">
+              <dd className="text-lg font-bold text-sage-dark">
                 {formatDate(election.electionDate)}
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+              <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                 Voter Registration Deadline
               </dt>
-              <dd className="text-sage-dark font-medium">
+              <dd className="font-medium text-sage-dark">
                 {formatShortDate(election.registrationDeadline)}
               </dd>
             </div>
             {election.earlyVotingStart && (
               <div>
-                <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+                <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                   Early Voting Begins
                 </dt>
-                <dd className="text-sage-dark font-medium">
+                <dd className="font-medium text-sage-dark">
                   {formatShortDate(election.earlyVotingStart)}
                 </dd>
               </div>
             )}
             {election.earlyVotingEnd && (
               <div>
-                <dt className="text-sm font-semibold uppercase tracking-wide text-sage-dark/50 mb-1">
+                <dt className="mb-1 text-sm font-semibold uppercase tracking-wide text-sage-dark/50">
                   Early Voting Ends
                 </dt>
-                <dd className="text-sage-dark font-medium">
+                <dd className="font-medium text-sage-dark">
                   {formatShortDate(election.earlyVotingEnd)}
                 </dd>
               </div>
@@ -168,12 +168,12 @@ const TownElectionDetailInner = ({ slug: slugProp }: TownElectionDetailProps) =>
         {/* Polling locations */}
         {pollingLocations.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-lg font-serif font-bold text-sage-dark mb-3">Polling Locations</h2>
+            <h2 className="mb-3 font-serif text-lg font-bold text-sage-dark">Polling Locations</h2>
             <div className="space-y-3">
               {pollingLocations.map((location) => (
-                <div key={location.name} className="bg-cream border border-stone rounded-xl p-5">
-                  <h3 className="font-semibold text-sage-dark mb-1">{location.name}</h3>
-                  <p className="text-base text-sage-dark/70 mb-1">{location.address}</p>
+                <div key={location.name} className="rounded-xl border border-stone bg-cream p-5">
+                  <h3 className="mb-1 font-semibold text-sage-dark">{location.name}</h3>
+                  <p className="mb-1 text-base text-sage-dark/70">{location.address}</p>
                   <p className="text-base text-sage-dark/70">
                     <span className="font-medium text-sage-dark/80">Hours:</span> {location.hours}
                   </p>
@@ -186,27 +186,27 @@ const TownElectionDetailInner = ({ slug: slugProp }: TownElectionDetailProps) =>
         {/* Candidates */}
         {candidates.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-lg font-serif font-bold text-sage-dark mb-4">Candidates</h2>
+            <h2 className="mb-4 font-serif text-lg font-bold text-sage-dark">Candidates</h2>
             {Object.entries(candidatesByPosition).map(([position, candidates]) => (
               <div key={position} className="mb-6 last:mb-0">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-sage-dark/60 mb-3 border-b border-stone pb-2">
+                <h3 className="mb-3 border-b border-stone pb-2 text-sm font-semibold uppercase tracking-wide text-sage-dark/60">
                   {position}
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {candidates
                     .sort((a, b) => a.sortOrder - b.sortOrder)
                     .map((candidate) => (
                       <div
                         key={`${candidate.name}-${candidate.position}`}
-                        className="bg-cream border border-stone rounded-xl p-5"
+                        className="rounded-xl border border-stone bg-cream p-5"
                       >
-                        <h4 className="font-serif font-bold text-sage-dark text-lg mb-1">
+                        <h4 className="mb-1 font-serif text-lg font-bold text-sage-dark">
                           {candidate.name}
                         </h4>
-                        <span className="inline-block bg-wheat/30 text-sage-dark px-2.5 py-0.5 rounded-full text-xs font-semibold mb-3">
+                        <span className="mb-3 inline-block rounded-full bg-wheat/30 px-2.5 py-0.5 text-xs font-semibold text-sage-dark">
                           {candidate.party}
                         </span>
-                        <p className="text-base text-sage-dark/75 leading-relaxed">
+                        <p className="text-base leading-relaxed text-sage-dark/75">
                           {candidate.bio}
                         </p>
                       </div>
@@ -220,12 +220,12 @@ const TownElectionDetailInner = ({ slug: slugProp }: TownElectionDetailProps) =>
         {/* Results URL */}
         {election.resultsUrl && (
           <div className="mb-8">
-            <h2 className="text-lg font-serif font-bold text-sage-dark mb-3">Election Results</h2>
+            <h2 className="mb-3 font-serif text-lg font-bold text-sage-dark">Election Results</h2>
             <a
               href={election.resultsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-sage text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
             >
               View Official Results &rarr;
             </a>
@@ -239,12 +239,12 @@ const TownElectionDetailInner = ({ slug: slugProp }: TownElectionDetailProps) =>
 const ElectionDetailErrorFallback = () => (
   <section className="bg-warm-white py-16">
     <div className="container mx-auto px-4 text-center">
-      <p className="text-sage-dark/70 mb-8">
+      <p className="mb-8 text-sage-dark/70">
         Unable to load this election. Please try refreshing the page.
       </p>
       <Link
         href="/elections"
-        className="inline-flex items-center gap-2 bg-sage text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+        className="inline-flex items-center gap-2 rounded-lg bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
       >
         &larr; Back to Elections
       </Link>

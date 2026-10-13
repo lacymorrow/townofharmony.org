@@ -14,11 +14,11 @@
  * sync — that is what kills a re-added upstream icon.svg / icon.png.
  */
 export const BRANDING_ASSETS = [
-	"src/app/favicon.ico",
-	"src/app/icon.svg",
-	"src/app/icon.tsx",
-	"src/app/icon.png",
-	"src/app/apple-icon.tsx",
-	"src/app/apple-icon.png",
-	"public/favicon.png",
+  "src/app/favicon.ico",
+  "src/app/icon.svg",
+  "src/app/icon.tsx",
+  "src/app/icon.png",
+  "src/app/apple-icon.tsx",
+  "src/app/apple-icon.png",
+  "public/favicon.png",
 ] as const;

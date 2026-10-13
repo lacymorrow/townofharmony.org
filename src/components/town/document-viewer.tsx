@@ -111,7 +111,7 @@ export const DocumentViewer = ({ url, title }: DocumentViewerProps) => {
 
   if (state.status === "loading") {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-3">
+      <div className="flex flex-col items-center justify-center gap-3 py-20">
         <Loader2 className="h-8 w-8 animate-spin text-sage" />
         <p className="text-sm text-muted-foreground">Loading document...</p>
       </div>
@@ -120,7 +120,7 @@ export const DocumentViewer = ({ url, title }: DocumentViewerProps) => {
 
   if (state.status === "error") {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4">
+      <div className="flex flex-col items-center justify-center gap-4 py-20">
         <FileText className="h-12 w-12 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">{state.message}</p>
         <Button asChild variant="outline" size="sm">
@@ -143,7 +143,7 @@ export const DocumentViewer = ({ url, title }: DocumentViewerProps) => {
       <iframe
         src={state.src}
         title={title ?? "Document"}
-        className="w-full h-full border-0 rounded"
+        className="h-full w-full rounded border-0"
       />
     );
   }
@@ -151,14 +151,14 @@ export const DocumentViewer = ({ url, title }: DocumentViewerProps) => {
   if (state.status === "docx") {
     return (
       <div
-        className="prose prose-sm max-w-none p-6 bg-white rounded overflow-auto h-full"
+        className="prose prose-sm h-full max-w-none overflow-auto rounded bg-white p-6"
         dangerouslySetInnerHTML={{ __html: state.html }}
       />
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-20 gap-4">
+    <div className="flex flex-col items-center justify-center gap-4 py-20">
       <FileText className="h-12 w-12 text-muted-foreground" />
       <p className="text-sm text-muted-foreground">This file type cannot be previewed.</p>
       <Button asChild variant="outline" size="sm">

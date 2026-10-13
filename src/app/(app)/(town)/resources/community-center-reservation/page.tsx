@@ -7,107 +7,117 @@ import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
-	title: "Community Center Reservation",
-	description:
-		"How to reserve the Harmony Community Center for your event, including capacity, rental rules, and contact information for the Town of Harmony, NC.",
-	alternates: {
-		canonical: `${siteConfig.url}/resources/community-center-reservation`,
-	},
-	openGraph: {
-		title: "Harmony Community Center Reservation",
-		description:
-			"How to reserve the Harmony Community Center for your event, including capacity, rental rules, and contact information for the Town of Harmony, NC.",
-		url: `${siteConfig.url}/resources/community-center-reservation`,
-	},
+  title: "Community Center Reservation",
+  description:
+    "How to reserve the Harmony Community Center for your event, including capacity, rental rules, and contact information for the Town of Harmony, NC.",
+  alternates: {
+    canonical: `${siteConfig.url}/resources/community-center-reservation`,
+  },
+  openGraph: {
+    title: "Harmony Community Center Reservation",
+    description:
+      "How to reserve the Harmony Community Center for your event, including capacity, rental rules, and contact information for the Town of Harmony, NC.",
+    url: `${siteConfig.url}/resources/community-center-reservation`,
+  },
 };
 
 export default async function CommunityCenterReservationPage() {
-	const settings = await getBuilderSettings();
-	return (
-		<article className="py-12 bg-cream">
-			<div className="container mx-auto px-4 max-w-3xl">
-				<h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark mb-4">
-					Community Center Reservation
-				</h1>
-				<p className="text-[#2D2A24] mb-6">
-					The Harmony Community Center may be reserved for community gatherings,
-					private events, and meetings. Submit the application form below to
-					request a reservation, or contact Town Hall directly:
-				</p>
+  const settings = await getBuilderSettings();
+  return (
+    <article className="bg-cream py-12">
+      <div className="container mx-auto max-w-3xl px-4">
+        <h1 className="mb-4 font-serif text-3xl font-bold text-sage-dark md:text-4xl">
+          Community Center Reservation
+        </h1>
+        <p className="mb-6 text-[#2D2A24]">
+          The Harmony Community Center may be reserved for community gatherings, private events, and
+          meetings. Submit the application form below to request a reservation, or contact Town Hall
+          directly:
+        </p>
 
-				<div className="bg-white border border-stone rounded p-5 mb-8">
-					<p className="font-semibold">Town Hall</p>
-					<p>
-						<span className="inline-flex items-center gap-1">
-							<a
-								href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
-								className="text-sage-dark hover:underline"
-							>
-								{settings.contactInfo.phone}
-							</a>
-							<PhoneCopyButton phone={settings.contactInfo.phone} label="Town Hall" tone="default" />
-						</span>
-					</p>
-					<p className="text-sm text-[#4A4640] mt-2">
-						<span className="inline-flex items-center gap-1">
-							<a
-								href={getMapUrl(settings.contactInfo.address)}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:text-sage-dark hover:underline transition-colors"
-							>
-								{settings.contactInfo.address}
-							</a>
-							<AddressCopyButton address={settings.contactInfo.address} label="Town Hall" tone="default" />
-						</span>
-						<br />
-						{settings.officeHours.weekday}
-					</p>
-				</div>
+        <div className="mb-8 rounded border border-stone bg-white p-5">
+          <p className="font-semibold">Town Hall</p>
+          <p>
+            <span className="inline-flex items-center gap-1">
+              <a
+                href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
+                className="text-sage-dark hover:underline"
+              >
+                {settings.contactInfo.phone}
+              </a>
+              <PhoneCopyButton
+                phone={settings.contactInfo.phone}
+                label="Town Hall"
+                tone="default"
+              />
+            </span>
+          </p>
+          <p className="mt-2 text-sm text-[#4A4640]">
+            <span className="inline-flex items-center gap-1">
+              <a
+                href={getMapUrl(settings.contactInfo.address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-sage-dark hover:underline"
+              >
+                {settings.contactInfo.address}
+              </a>
+              <AddressCopyButton
+                address={settings.contactInfo.address}
+                label="Town Hall"
+                tone="default"
+              />
+            </span>
+            <br />
+            {settings.officeHours.weekday}
+          </p>
+        </div>
 
-				<h2 className="text-2xl font-serif font-bold text-sage-dark mb-3">
-					Equipment Included
-				</h2>
-				<ul className="list-disc list-inside space-y-1 text-[#2D2A24] mb-6">
-					<li>Tables and chairs for up to 120 guests</li>
-					<li>Children's high chairs</li>
-					<li>Electric range, microwave, refrigerator</li>
-					<li>Paper towels, trash bags, broom, mop</li>
-				</ul>
-				<p className="text-sm text-[#4A4640] mb-6">
-					No cleaning supplies, dishcloths, eating/serving utensils, dishes, or
-					glasses are provided. Grills are furnished in the park; personal
-					grills and fryers are not allowed on the premises.
-				</p>
+        <h2 className="mb-3 font-serif text-2xl font-bold text-sage-dark">Equipment Included</h2>
+        <ul className="mb-6 list-inside list-disc space-y-1 text-[#2D2A24]">
+          <li>Tables and chairs for up to 120 guests</li>
+          <li>Children's high chairs</li>
+          <li>Electric range, microwave, refrigerator</li>
+          <li>Paper towels, trash bags, broom, mop</li>
+        </ul>
+        <p className="mb-6 text-sm text-[#4A4640]">
+          No cleaning supplies, dishcloths, eating/serving utensils, dishes, or glasses are
+          provided. Grills are furnished in the park; personal grills and fryers are not allowed on
+          the premises.
+        </p>
 
-				<h2 className="text-2xl font-serif font-bold text-sage-dark mb-3">
-					Reservation Rules
-				</h2>
-				<ul className="list-disc list-inside space-y-1 text-[#2D2A24] mb-6">
-					<li>Available for rental between 10:00 AM and 10:00 PM</li>
-					<li>Reservation application and payment must be received when the reservation is made</li>
-					<li>Cancellation must be made no less than 30 days before the reservation date</li>
-					<li>Maximum capacity per Fire Code: 120 people</li>
-					<li>Application does not include the Tomlinson-Moore Family Park picnic shelter (separate application)</li>
-					<li>No alcohol, drugs, firearms, or animals</li>
-					<li>No loud noise — only small stereo systems permitted</li>
-					<li>No smoking inside the Community Center</li>
-					<li>No nails, screws, staples, or tape on walls, woodwork, floors, or ceiling</li>
-					<li>Day-before decoration available 3:00 PM – 5:00 PM for an additional $50 (only if the building is unrented that day)</li>
-				</ul>
+        <h2 className="mb-3 font-serif text-2xl font-bold text-sage-dark">Reservation Rules</h2>
+        <ul className="mb-6 list-inside list-disc space-y-1 text-[#2D2A24]">
+          <li>Available for rental between 10:00 AM and 10:00 PM</li>
+          <li>Reservation application and payment must be received when the reservation is made</li>
+          <li>Cancellation must be made no less than 30 days before the reservation date</li>
+          <li>Maximum capacity per Fire Code: 120 people</li>
+          <li>
+            Application does not include the Tomlinson-Moore Family Park picnic shelter (separate
+            application)
+          </li>
+          <li>No alcohol, drugs, firearms, or animals</li>
+          <li>No loud noise — only small stereo systems permitted</li>
+          <li>No smoking inside the Community Center</li>
+          <li>No nails, screws, staples, or tape on walls, woodwork, floors, or ceiling</li>
+          <li>
+            Day-before decoration available 3:00 PM – 5:00 PM for an additional $50 (only if the
+            building is unrented that day)
+          </li>
+        </ul>
 
-				<h2
-					id="reservation-form"
-					className="text-2xl font-serif font-bold text-sage-dark mb-3 scroll-mt-24"
-				>
-					Reservation Application
-				</h2>
-				<p className="text-[#2D2A24] mb-4">
-					Submitting this form sends your request to Town Hall. A reservation is
-					not confirmed until the application and payment are received.
-				</p>
-				<CommunityCenterReservationForm />
-			</div>
-		</article>
-	);
+        <h2
+          id="reservation-form"
+          className="mb-3 scroll-mt-24 font-serif text-2xl font-bold text-sage-dark"
+        >
+          Reservation Application
+        </h2>
+        <p className="mb-4 text-[#2D2A24]">
+          Submitting this form sends your request to Town Hall. A reservation is not confirmed until
+          the application and payment are received.
+        </p>
+        <CommunityCenterReservationForm />
+      </div>
+    </article>
+  );
 }

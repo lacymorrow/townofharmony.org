@@ -22,8 +22,7 @@ const ConsentGatedGA = ({ gaId }: { gaId: string }) => {
   const measurementConsent = hasConsentFor("measurement");
 
   useEffect(() => {
-    (window as unknown as Record<string, unknown>)[`ga-disable-${gaId}`] =
-      !measurementConsent;
+    (window as unknown as Record<string, unknown>)[`ga-disable-${gaId}`] = !measurementConsent;
   }, [gaId, measurementConsent]);
 
   if (!measurementConsent) return null;

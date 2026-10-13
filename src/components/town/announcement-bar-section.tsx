@@ -7,7 +7,7 @@ import { RenderBuilderSection } from "@/lib/builder-io/builder-section";
  * Returns nothing when no active section entry exists.
  */
 export async function AnnouncementBarSection() {
-	const content = await fetchBuilderSection("announcement-bar");
-	if (!content) return null;
-	return <RenderBuilderSection model="announcement-bar" content={content} />;
+  const content = await fetchBuilderSection("announcement-bar");
+  if (!content) return null;
+  return <RenderBuilderSection model="announcement-bar" content={content} />;
 }

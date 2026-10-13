@@ -16,75 +16,75 @@ const EVICTION_INTERVAL = 100;
 let checkCount = 0;
 
 function evictExpired(): void {
-	const now = Date.now();
-	for (const [key, entry] of inMemoryStore) {
-		if (now - entry.windowStart > WINDOW_MS) {
-			inMemoryStore.delete(key);
-		}
-	}
+  const now = Date.now();
+  for (const [key, entry] of inMemoryStore) {
+    if (now - entry.windowStart > WINDOW_MS) {
+      inMemoryStore.delete(key);
+    }
+  }
 }
 
 function inMemoryCheck(ip: string): boolean {
-	if (++checkCount % EVICTION_INTERVAL === 0) {
-		evictExpired();
-	}
+  if (++checkCount % EVICTION_INTERVAL === 0) {
+    evictExpired();
+  }
 
-	const now = Date.now();
-	const entry = inMemoryStore.get(ip);
+  const now = Date.now();
+  const entry = inMemoryStore.get(ip);
 
-	if (!entry || now - entry.windowStart > WINDOW_MS) {
-		inMemoryStore.set(ip, { count: 1, windowStart: now });
-		return true;
-	}
+  if (!entry || now - entry.windowStart > WINDOW_MS) {
+    inMemoryStore.set(ip, { count: 1, windowStart: now });
+    return true;
+  }
 
-	if (entry.count >= MAX_REQUESTS) {
-		return false;
-	}
+  if (entry.count >= MAX_REQUESTS) {
+    return false;
+  }
 
-	entry.count++;
-	return true;
+  entry.count++;
+  return true;
 }
 
 export async function getClientIp(): Promise<string> {
-	const headersList = await headers();
-	const forwarded = headersList.get("x-forwarded-for");
-	if (forwarded) {
-		return (forwarded.split(",")[0] ?? forwarded).trim();
-	}
-	return headersList.get("x-real-ip") ?? "unknown";
+  const headersList = await headers();
+  const forwarded = headersList.get("x-forwarded-for");
+  if (forwarded) {
+    return (forwarded.split(",")[0] ?? forwarded).trim();
+  }
+  return headersList.get("x-real-ip") ?? "unknown";
 }
 
 export async function checkContactFormRateLimit(
-	ip: string,
-	action: string,
+  ip: string,
+  action: string
 ): Promise<{ allowed: boolean; error?: string }> {
-	try {
-		await rateLimitService.checkLimit(ip, action, rateLimits.contactForm);
-		return { allowed: true };
-	} catch (err: unknown) {
-		if (ErrorService.isAppError(err) && err.code === "RATE_LIMITED") {
-			logger.warn("Contact form rate limited (Redis)", { ip, action });
-			return {
-				allowed: false,
-				error: "You've submitted too many messages. Please try again in an hour.",
-			};
-		}
-		// Redis unavailable — fall back to in-memory check
-		if (!inMemoryCheck(ip)) {
-			logger.warn("Contact form rate limited (in-memory fallback)", { ip, action });
-			return {
-				allowed: false,
-				error: "You've submitted too many messages. Please try again in an hour.",
-			};
-		}
-		return { allowed: true };
-	}
+  try {
+    await rateLimitService.checkLimit(ip, action, rateLimits.contactForm);
+    return { allowed: true };
+  } catch (err: unknown) {
+    if (ErrorService.isAppError(err) && err.code === "RATE_LIMITED") {
+      logger.warn("Contact form rate limited (Redis)", { ip, action });
+      return {
+        allowed: false,
+        error: "You've submitted too many messages. Please try again in an hour.",
+      };
+    }
+    // Redis unavailable — fall back to in-memory check
+    if (!inMemoryCheck(ip)) {
+      logger.warn("Contact form rate limited (in-memory fallback)", { ip, action });
+      return {
+        allowed: false,
+        error: "You've submitted too many messages. Please try again in an hour.",
+      };
+    }
+    return { allowed: true };
+  }
 }
 
 const TIMING_MIN_MS = 5_000;
 
 export function validateSubmissionTiming(loadedAtStr: string | null | undefined): boolean {
-	if (!loadedAtStr) return false;
-	const loadedAt = parseInt(loadedAtStr, 10);
-	return !Number.isNaN(loadedAt) && Date.now() - loadedAt >= TIMING_MIN_MS;
+  if (!loadedAtStr) return false;
+  const loadedAt = parseInt(loadedAtStr, 10);
+  return !Number.isNaN(loadedAt) && Date.now() - loadedAt >= TIMING_MIN_MS;
 }

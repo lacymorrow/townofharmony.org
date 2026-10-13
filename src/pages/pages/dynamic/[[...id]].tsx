@@ -19,8 +19,8 @@ export default function DynamicPage(props: DynamicPageProps) {
 
   return (
     <PagesRouterLayout>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Dynamic Page Example</h1>
+      <div className="mx-auto max-w-4xl">
+        <h1 className="mb-8 text-4xl font-bold">Dynamic Page Example</h1>
         <Card>
           <CardHeader>
             <CardTitle>Server-Side Rendering (SSR)</CardTitle>
@@ -34,7 +34,7 @@ export default function DynamicPage(props: DynamicPageProps) {
                 Current dynamic ID: <span className="font-mono">{id ?? "(empty path)"}</span>
               </p>
               <p className="text-muted-foreground">Request time: {requestTime}</p>
-              <div className="p-4 bg-muted rounded-lg">
+              <div className="rounded-lg bg-muted p-4">
                 <pre className="whitespace-pre-wrap">
                   <code>
                     {`

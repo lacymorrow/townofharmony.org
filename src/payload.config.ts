@@ -13,27 +13,27 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 export default buildConfig({
-	secret: process.env.PAYLOAD_SECRET ?? "change-me-in-production",
-	db: postgresAdapter({
-		pool: {
-			connectionString: process.env.DATABASE_URL ?? "",
-		},
-		schemaName: "payload",
-	}),
-	editor: lexicalEditor(),
-	routes: {
-		admin: "/cms",
-		api: "/cms-api",
-	},
-	admin: {
-		importMap: {
-			baseDir: path.resolve(dirname),
-		},
-	},
-	collections: [],
-	globals: [],
-	telemetry: false,
-	typescript: {
-		outputFile: path.resolve(dirname, "payload-types.ts"),
-	},
+  secret: process.env.PAYLOAD_SECRET ?? "change-me-in-production",
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URL ?? "",
+    },
+    schemaName: "payload",
+  }),
+  editor: lexicalEditor(),
+  routes: {
+    admin: "/cms",
+    api: "/cms-api",
+  },
+  admin: {
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+  },
+  collections: [],
+  globals: [],
+  telemetry: false,
+  typescript: {
+    outputFile: path.resolve(dirname, "payload-types.ts"),
+  },
 });

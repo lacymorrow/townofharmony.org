@@ -141,8 +141,8 @@ export const Turnstile = ({ onVerify, onError, onExpire, resetRef, className }: 
         widgetIdRef.current = null;
       }
     };
-  // Only re-mount the widget when the site key or theme changes — not on callback changes.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Only re-mount the widget when the site key or theme changes — not on callback changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolvedTheme, siteKey]);
 
   if (!siteKey) {

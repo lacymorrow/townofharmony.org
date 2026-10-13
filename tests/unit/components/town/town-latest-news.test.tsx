@@ -16,8 +16,7 @@ const article: TownNews = {
   id: 1,
   title: "Town Hall Reopens",
   slug: "town-hall-reopens",
-  excerpt:
-    '<p class="">Doors open Monday &amp; parking is free. Come &ldquo;early&rdquo;.</p>',
+  excerpt: '<p class="">Doors open Monday &amp; parking is free. Come &ldquo;early&rdquo;.</p>',
   content: "",
   featuredImage: null,
   status: "published",
@@ -40,7 +39,7 @@ describe("TownLatestNews", () => {
     render(<TownLatestNews />);
 
     expect(
-      screen.getByText('Doors open Monday & parking is free. Come “early”.')
+      screen.getByText("Doors open Monday & parking is free. Come “early”.")
     ).toBeInTheDocument();
     // The raw markup and undecoded entity must not leak into the DOM.
     expect(screen.queryByText(/<p/)).not.toBeInTheDocument();

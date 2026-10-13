@@ -5,7 +5,9 @@ import { promisify } from "util";
 // import "../scripts/env-config.js";
 // Payload CMS has been removed — stub out imports
 const getPayloadClient = async () => null;
-const seed = async () => { console.warn("Payload seed removed"); };
+const seed = async () => {
+  console.warn("Payload seed removed");
+};
 import { db } from "@/server/db";
 
 const execAsync = promisify(exec);

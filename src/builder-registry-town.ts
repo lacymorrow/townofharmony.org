@@ -33,7 +33,7 @@ import { TownUpcomingEvents } from "./components/modules/builder/town/town-upcom
 // that block instead of crashing the page. Editors see a notice in preview.
 const registerComponent = (
   component: Parameters<typeof Builder.registerComponent>[0],
-  options: Parameters<typeof Builder.registerComponent>[1],
+  options: Parameters<typeof Builder.registerComponent>[1]
 ) => Builder.registerComponent(withSafeBlock(component, options.name), options);
 
 // --- Homepage Components ---

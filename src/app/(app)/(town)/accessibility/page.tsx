@@ -8,137 +8,117 @@ import { getStaticPage } from "@/lib/town-data";
 import { getBuilderSettings } from "@/lib/town-settings-server";
 
 export const metadata: Metadata = {
-	title: "Accessibility Statement",
-	description:
-		"Accessibility statement for the Town of Harmony website. We are committed to making our website accessible to all users in Harmony, North Carolina.",
-	alternates: {
-		canonical: `${siteConfig.url}/accessibility`,
-	},
-	openGraph: {
-		title: "Accessibility Statement — Town of Harmony, NC",
-		description:
-			"Accessibility statement for the Town of Harmony website. We are committed to making our website accessible to all users in Harmony, North Carolina.",
-		url: `${siteConfig.url}/accessibility`,
-	},
+  title: "Accessibility Statement",
+  description:
+    "Accessibility statement for the Town of Harmony website. We are committed to making our website accessible to all users in Harmony, North Carolina.",
+  alternates: {
+    canonical: `${siteConfig.url}/accessibility`,
+  },
+  openGraph: {
+    title: "Accessibility Statement — Town of Harmony, NC",
+    description:
+      "Accessibility statement for the Town of Harmony website. We are committed to making our website accessible to all users in Harmony, North Carolina.",
+    url: `${siteConfig.url}/accessibility`,
+  },
 };
 
 export default async function AccessibilityPage() {
-	const [settings, cms] = await Promise.all([
-		getBuilderSettings(),
-		getStaticPage("accessibility"),
-	]);
+  const [settings, cms] = await Promise.all([getBuilderSettings(), getStaticPage("accessibility")]);
 
-	if (cms) {
-		return (
-			<main id="main-content" className="container mx-auto px-4 py-12 max-w-3xl">
-				<h1 className="text-3xl font-serif font-bold text-sage-dark mb-8">
-					{cms.title}
-				</h1>
-				<div
-					className="prose prose-stone max-w-none space-y-6"
-					dangerouslySetInnerHTML={{ __html: sanitizeHtml(cms.body) }}
-				/>
-			</main>
-		);
-	}
+  if (cms) {
+    return (
+      <main id="main-content" className="container mx-auto max-w-3xl px-4 py-12">
+        <h1 className="mb-8 font-serif text-3xl font-bold text-sage-dark">{cms.title}</h1>
+        <div
+          className="prose prose-stone max-w-none space-y-6"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(cms.body) }}
+        />
+      </main>
+    );
+  }
 
-	return (
-		<main id="main-content" className="container mx-auto px-4 py-12 max-w-3xl">
-			<h1 className="text-3xl font-serif font-bold text-sage-dark mb-8">
-				Accessibility Statement
-			</h1>
+  return (
+    <main id="main-content" className="container mx-auto max-w-3xl px-4 py-12">
+      <h1 className="mb-8 font-serif text-3xl font-bold text-sage-dark">Accessibility Statement</h1>
 
-			<div className="prose prose-stone max-w-none space-y-6">
-				<p className="text-lg text-[#4A4640]">
-					The Town of Harmony is committed to ensuring that our website is
-					accessible to all visitors, including people with disabilities. We
-					strive to meet or exceed the Web Content Accessibility Guidelines
-					(WCAG) 2.1 Level AA standards.
-				</p>
+      <div className="prose prose-stone max-w-none space-y-6">
+        <p className="text-lg text-[#4A4640]">
+          The Town of Harmony is committed to ensuring that our website is accessible to all
+          visitors, including people with disabilities. We strive to meet or exceed the Web Content
+          Accessibility Guidelines (WCAG) 2.1 Level AA standards.
+        </p>
 
-				<h2 className="text-xl font-semibold text-sage-dark mt-8">
-					Our Commitment
-				</h2>
-				<p>
-					As a municipal government website, we recognize our responsibility to
-					provide equal access to information and services for all residents and
-					visitors. We continuously work to improve the accessibility of our
-					website.
-				</p>
+        <h2 className="mt-8 text-xl font-semibold text-sage-dark">Our Commitment</h2>
+        <p>
+          As a municipal government website, we recognize our responsibility to provide equal access
+          to information and services for all residents and visitors. We continuously work to
+          improve the accessibility of our website.
+        </p>
 
-				<h2 className="text-xl font-semibold text-sage-dark mt-8">
-					Accessibility Features
-				</h2>
-				<ul className="list-disc pl-6 space-y-2">
-					<li>Keyboard navigation support throughout the site</li>
-					<li>Skip-to-content links for screen reader users</li>
-					<li>Descriptive alt text for images</li>
-					<li>Sufficient color contrast for text readability</li>
-					<li>Semantic HTML structure with proper heading hierarchy</li>
-					<li>Form labels and ARIA attributes for interactive elements</li>
-					<li>Responsive design that works across devices and screen sizes</li>
-				</ul>
+        <h2 className="mt-8 text-xl font-semibold text-sage-dark">Accessibility Features</h2>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>Keyboard navigation support throughout the site</li>
+          <li>Skip-to-content links for screen reader users</li>
+          <li>Descriptive alt text for images</li>
+          <li>Sufficient color contrast for text readability</li>
+          <li>Semantic HTML structure with proper heading hierarchy</li>
+          <li>Form labels and ARIA attributes for interactive elements</li>
+          <li>Responsive design that works across devices and screen sizes</li>
+        </ul>
 
-				<h2 className="text-xl font-semibold text-sage-dark mt-8">
-					Known Limitations
-				</h2>
-				<p>
-					Some content managed through our content management system may not
-					fully meet all accessibility standards. We are working to address
-					these issues. If you encounter any accessibility barriers, please let
-					us know.
-				</p>
+        <h2 className="mt-8 text-xl font-semibold text-sage-dark">Known Limitations</h2>
+        <p>
+          Some content managed through our content management system may not fully meet all
+          accessibility standards. We are working to address these issues. If you encounter any
+          accessibility barriers, please let us know.
+        </p>
 
-				<h2 className="text-xl font-semibold text-sage-dark mt-8">
-					Feedback and Assistance
-				</h2>
-				<p>
-					If you have difficulty accessing any part of our website or need
-					information in an alternative format, please contact us:
-				</p>
-				<ul className="list-disc pl-6 space-y-2">
-					<li>
-						Contact:{" "}
-						<a href="/contact" className="text-sage hover:text-sage-dark underline">
-							Contact form
-						</a>
-					</li>
-					<li>
-						Phone:{" "}
-						<span className="inline-flex items-center gap-1">
-							<a
-								href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
-								className="text-sage hover:text-sage-dark underline"
-							>
-								{settings.contactInfo.phone}
-							</a>
-							<PhoneCopyButton phone={settings.contactInfo.phone} />
-						</span>
-					</li>
-					<li>
-						Address:{" "}
-						<span className="inline-flex items-center gap-1">
-							<a
-								href={getMapUrl(settings.contactInfo.address)}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="text-sage hover:text-sage-dark underline"
-							>
-								{settings.contactInfo.address}
-							</a>
-							<AddressCopyButton address={settings.contactInfo.address} />
-						</span>
-					</li>
-				</ul>
-				<p>
-					We will make every effort to provide the information you need in an
-					accessible format within a reasonable timeframe.
-				</p>
+        <h2 className="mt-8 text-xl font-semibold text-sage-dark">Feedback and Assistance</h2>
+        <p>
+          If you have difficulty accessing any part of our website or need information in an
+          alternative format, please contact us:
+        </p>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>
+            Contact:{" "}
+            <a href="/contact" className="text-sage underline hover:text-sage-dark">
+              Contact form
+            </a>
+          </li>
+          <li>
+            Phone:{" "}
+            <span className="inline-flex items-center gap-1">
+              <a
+                href={`tel:${settings.contactInfo.phone.replace(/[^\d+]/g, "")}`}
+                className="text-sage underline hover:text-sage-dark"
+              >
+                {settings.contactInfo.phone}
+              </a>
+              <PhoneCopyButton phone={settings.contactInfo.phone} />
+            </span>
+          </li>
+          <li>
+            Address:{" "}
+            <span className="inline-flex items-center gap-1">
+              <a
+                href={getMapUrl(settings.contactInfo.address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sage underline hover:text-sage-dark"
+              >
+                {settings.contactInfo.address}
+              </a>
+              <AddressCopyButton address={settings.contactInfo.address} />
+            </span>
+          </li>
+        </ul>
+        <p>
+          We will make every effort to provide the information you need in an accessible format
+          within a reasonable timeframe.
+        </p>
 
-				<p className="text-sm text-[#635E56] mt-12">
-					Last updated: March 2026
-				</p>
-			</div>
-		</main>
-	);
+        <p className="mt-12 text-sm text-[#635E56]">Last updated: March 2026</p>
+      </div>
+    </main>
+  );
 }

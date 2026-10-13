@@ -39,13 +39,13 @@ const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
   if (loading) {
     return (
       <section className="bg-warm-white py-12">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="container mx-auto max-w-3xl px-4">
           <div className="animate-pulse space-y-4">
-            <div className="h-4 w-32 bg-stone/40 rounded" />
-            <div className="h-8 w-3/4 bg-stone/40 rounded" />
-            <div className="h-64 bg-stone/20 rounded-xl" />
-            <div className="h-4 w-full bg-stone/20 rounded" />
-            <div className="h-4 w-full bg-stone/20 rounded" />
+            <div className="h-4 w-32 rounded bg-stone/40" />
+            <div className="h-8 w-3/4 rounded bg-stone/40" />
+            <div className="h-64 rounded-xl bg-stone/20" />
+            <div className="h-4 w-full rounded bg-stone/20" />
+            <div className="h-4 w-full rounded bg-stone/20" />
           </div>
         </div>
       </section>
@@ -56,13 +56,13 @@ const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
     return (
       <section className="bg-warm-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl font-serif font-bold text-sage-dark mb-4">Article not found</h1>
-          <p className="text-sage-dark/70 mb-8">
+          <h1 className="mb-4 font-serif text-3xl font-bold text-sage-dark">Article not found</h1>
+          <p className="mb-8 text-sage-dark/70">
             The news article you are looking for could not be found.
           </p>
           <Link
             href="/news"
-            className="inline-flex items-center gap-2 bg-sage text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
           >
             &larr; Back to News
           </Link>
@@ -79,22 +79,22 @@ const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
 
   return (
     <section className="bg-warm-white py-12">
-      <div className="container mx-auto px-4 max-w-3xl">
+      <div className="container mx-auto max-w-3xl px-4">
         {/* Back link */}
         <Link
           href="/news"
-          className="inline-flex items-center gap-2 text-sage hover:text-sage-dark text-sm font-medium mb-8 transition-colors"
+          className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-sage transition-colors hover:text-sage-dark"
         >
           &larr; Back to News
         </Link>
 
         {/* Categories */}
         {safeArray(article.categories).length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="mb-4 flex flex-wrap gap-2">
             {safeArray(article.categories).map((category) => (
               <span
                 key={category}
-                className="inline-block bg-wheat/30 text-sage-dark px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide"
+                className="inline-block rounded-full bg-wheat/30 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-sage-dark"
               >
                 {category}
               </span>
@@ -103,12 +103,12 @@ const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
         )}
 
         {/* Title */}
-        <h1 className="text-3xl md:text-4xl font-serif font-bold text-sage-dark leading-tight mb-4">
+        <h1 className="mb-4 font-serif text-3xl font-bold leading-tight text-sage-dark md:text-4xl">
           {article.title}
         </h1>
 
         {/* Meta */}
-        <div className="flex flex-wrap items-center gap-4 text-base text-sage-dark/60 mb-8 border-b border-stone pb-6">
+        <div className="mb-8 flex flex-wrap items-center gap-4 border-b border-stone pb-6 text-base text-sage-dark/60">
           <time dateTime={article.publishedAt}>{publishedDate}</time>
           {(() => {
             const authorName = resolveBuilderRef(article.author);
@@ -127,7 +127,7 @@ const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
             src={article.featuredImage}
             alt={article.title}
             wrapperClassName="mb-8 rounded-xl w-full"
-            className="w-full h-auto object-cover max-h-[400px]"
+            className="h-auto max-h-[400px] w-full object-cover"
             width={800}
             height={600}
           />
@@ -135,24 +135,21 @@ const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
 
         {/* Content */}
         <div
-          className="prose prose-lg max-w-none text-sage-dark/85 leading-relaxed
-						prose-headings:text-sage-dark prose-headings:font-serif
-						prose-a:text-sage prose-a:hover:text-sage-dark
-						prose-strong:text-sage-dark"
+          className="prose prose-lg max-w-none leading-relaxed text-sage-dark/85 prose-headings:font-serif prose-headings:text-sage-dark prose-a:text-sage prose-a:hover:text-sage-dark prose-strong:text-sage-dark"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content || "") }}
         />
 
         {/* Tags */}
         {safeArray(article.tags).length > 0 && (
-          <div className="mt-10 pt-6 border-t border-stone">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-sage-dark/50 mb-3">
+          <div className="mt-10 border-t border-stone pt-6">
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-sage-dark/50">
               Tags
             </h2>
             <div className="flex flex-wrap gap-2">
               {safeArray(article.tags).map((tag) => (
                 <span
                   key={tag}
-                  className="inline-block bg-cream text-sage-dark/70 border border-stone px-3 py-1 rounded-md text-xs"
+                  className="inline-block rounded-md border border-stone bg-cream px-3 py-1 text-xs text-sage-dark/70"
                 >
                   {tag}
                 </span>
@@ -168,12 +165,12 @@ const TownNewsDetailInner = ({ slug: slugProp }: TownNewsDetailProps) => {
 const NewsDetailErrorFallback = () => (
   <section className="bg-warm-white py-16">
     <div className="container mx-auto px-4 text-center">
-      <p className="text-sage-dark/70 mb-8">
+      <p className="mb-8 text-sage-dark/70">
         Unable to load this article. Please try refreshing the page.
       </p>
       <Link
         href="/news"
-        className="inline-flex items-center gap-2 bg-sage text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-sage-dark transition-colors"
+        className="inline-flex items-center gap-2 rounded-lg bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-dark"
       >
         &larr; Back to News
       </Link>

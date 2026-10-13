@@ -331,7 +331,7 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
                               address={event.locationAddress}
                               label={event.title || undefined}
                               tone="default"
-                              className="h-6 w-6 ml-0.5 align-middle"
+                              className="ml-0.5 h-6 w-6 align-middle"
                               iconClassName="h-3.5 w-3.5"
                             />
                           </span>

@@ -42,33 +42,33 @@ Pages are built from pre-built Town of Harmony components. To add one:
 
 Available components:
 
-| Component | Purpose | Key Properties |
-|-----------|---------|----------------|
-| **TownHero** | Hero banner with image and CTA | title, subtitle, image, ctaText, ctaHref |
-| **TownQuickLinks** | Grid of icon links | links (list of icon, title, description, href) |
-| **TownLatestNews** | Recent news articles | limit (number to show) |
-| **TownUpcomingEvents** | Upcoming event list | limit (number to show) |
-| **TownCommunitySpotlight** | Featured community content | badge, title, description, linkHref, image |
-| **TownNewsGrid** | Full news listing with search/filters | itemsPerPage, showFilters, showSearch |
-| **TownEventsList** | Event listing with filters | itemsPerPage, showFilters |
-| **TownMeetingsList** | Government meetings list | itemsPerPage, showCalendar |
-| **TownBusinessDirectory** | Business directory with search | itemsPerPage, showSearch |
-| **TownElectionsList** | Elections listing | itemsPerPage |
-| **TownTeamMembers** | Staff and officials | categoryFilter, limit |
-| **TownPointsOfInterest** | Points of interest with categories | showCategoryFilter |
-| **TownHistoryTimeline** | Historical timeline | type (all, period, landmark) |
-| **TownResourcesList** | Documents, services, links | type filter |
-| **TownNewsDetail** | Single news article | slug (auto-detected from URL) |
-| **TownEventDetail** | Single event | slug (auto-detected from URL) |
-| **TownMeetingDetail** | Single meeting with agenda/minutes | slug (auto-detected from URL) |
-| **TownBusinessDetail** | Single business | slug (auto-detected from URL) |
-| **TownElectionDetail** | Single election with candidates | slug (auto-detected from URL) |
-| **TownPageHeader** | Section header bar | title, subtitle, variant (sage/wheat/barn-red) |
-| **TownEmergencyServices** | Emergency contact list | (reads from data model, no config) |
-| **TownEmergencyAlertsList** | Active emergency alerts | showAll, limit |
-| **TownContactForm** | Contact submission form | (no config, security handled internally) |
-| **TownAgendaMinutes** | Meeting agenda/minutes tabs | defaultTab (agenda or minutes) |
-| **TownInteractiveMap** | Leaflet map of the town | height, minHeight |
+| Component                   | Purpose                               | Key Properties                                 |
+| --------------------------- | ------------------------------------- | ---------------------------------------------- |
+| **TownHero**                | Hero banner with image and CTA        | title, subtitle, image, ctaText, ctaHref       |
+| **TownQuickLinks**          | Grid of icon links                    | links (list of icon, title, description, href) |
+| **TownLatestNews**          | Recent news articles                  | limit (number to show)                         |
+| **TownUpcomingEvents**      | Upcoming event list                   | limit (number to show)                         |
+| **TownCommunitySpotlight**  | Featured community content            | badge, title, description, linkHref, image     |
+| **TownNewsGrid**            | Full news listing with search/filters | itemsPerPage, showFilters, showSearch          |
+| **TownEventsList**          | Event listing with filters            | itemsPerPage, showFilters                      |
+| **TownMeetingsList**        | Government meetings list              | itemsPerPage, showCalendar                     |
+| **TownBusinessDirectory**   | Business directory with search        | itemsPerPage, showSearch                       |
+| **TownElectionsList**       | Elections listing                     | itemsPerPage                                   |
+| **TownTeamMembers**         | Staff and officials                   | categoryFilter, limit                          |
+| **TownPointsOfInterest**    | Points of interest with categories    | showCategoryFilter                             |
+| **TownHistoryTimeline**     | Historical timeline                   | type (all, period, landmark)                   |
+| **TownResourcesList**       | Documents, services, links            | type filter                                    |
+| **TownNewsDetail**          | Single news article                   | slug (auto-detected from URL)                  |
+| **TownEventDetail**         | Single event                          | slug (auto-detected from URL)                  |
+| **TownMeetingDetail**       | Single meeting with agenda/minutes    | slug (auto-detected from URL)                  |
+| **TownBusinessDetail**      | Single business                       | slug (auto-detected from URL)                  |
+| **TownElectionDetail**      | Single election with candidates       | slug (auto-detected from URL)                  |
+| **TownPageHeader**          | Section header bar                    | title, subtitle, variant (sage/wheat/barn-red) |
+| **TownEmergencyServices**   | Emergency contact list                | (reads from data model, no config)             |
+| **TownEmergencyAlertsList** | Active emergency alerts               | showAll, limit                                 |
+| **TownContactForm**         | Contact submission form               | (no config, security handled internally)       |
+| **TownAgendaMinutes**       | Meeting agenda/minutes tabs           | defaultTab (agenda or minutes)                 |
+| **TownInteractiveMap**      | Leaflet map of the town               | height, minHeight                              |
 
 ### Page Settings
 
@@ -101,29 +101,29 @@ Data models hold the structured content that components display. To edit them:
 
 **Content collections** -- entries with detail pages:
 
-| Model | Fields | Used By |
-|-------|--------|---------|
-| `town-news` | title, slug, excerpt, content, featuredImage, publishedAt, categories, tags, author | TownNewsGrid, TownNewsDetail, TownLatestNews |
-| `town-event` | title, slug, description, eventDate, eventTime, location, organizer, categories | TownEventsList, TownEventDetail, TownUpcomingEvents |
-| `town-meeting` | title, slug, type, meetingDate, meetingTime, location, agenda, minutes | TownMeetingsList, TownMeetingDetail |
-| `town-business` | name, slug, description, category, email, phone, website, address | TownBusinessDirectory, TownBusinessDetail |
-| `town-election` | title, slug, electionDate, registrationDeadline, candidates, pollingLocations | TownElectionsList, TownElectionDetail |
+| Model           | Fields                                                                              | Used By                                             |
+| --------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `town-news`     | title, slug, excerpt, content, featuredImage, publishedAt, categories, tags, author | TownNewsGrid, TownNewsDetail, TownLatestNews        |
+| `town-event`    | title, slug, description, eventDate, eventTime, location, organizer, categories     | TownEventsList, TownEventDetail, TownUpcomingEvents |
+| `town-meeting`  | title, slug, type, meetingDate, meetingTime, location, agenda, minutes              | TownMeetingsList, TownMeetingDetail                 |
+| `town-business` | name, slug, description, category, email, phone, website, address                   | TownBusinessDirectory, TownBusinessDetail           |
+| `town-election` | title, slug, electionDate, registrationDeadline, candidates, pollingLocations       | TownElectionsList, TownElectionDetail               |
 
 **Reference data** -- entries without their own pages:
 
-| Model | Purpose |
-|-------|---------|
-| `town-team-member` | Mayor, aldermen, staff |
-| `town-emergency-service` | Emergency contacts |
-| `town-history-article` | Historical periods and landmarks |
-| `town-point-of-interest` | Parks, buildings, attractions |
-| `town-resource` | Documents, services, external links |
-| `town-announcement` | Emergency alerts and announcements |
-| `town-settings` | Site-wide settings (title, contact info, hours) |
-| `town-navigation` | Menu links and quick links |
-| `town-homepage-slide` | Homepage hero slides |
-| `town-sewer-rate` | Sewer billing rates |
-| `town-map-business` | Map pins (synced from Google Places) |
+| Model                    | Purpose                                         |
+| ------------------------ | ----------------------------------------------- |
+| `town-team-member`       | Mayor, aldermen, staff                          |
+| `town-emergency-service` | Emergency contacts                              |
+| `town-history-article`   | Historical periods and landmarks                |
+| `town-point-of-interest` | Parks, buildings, attractions                   |
+| `town-resource`          | Documents, services, external links             |
+| `town-announcement`      | Emergency alerts and announcements              |
+| `town-settings`          | Site-wide settings (title, contact info, hours) |
+| `town-navigation`        | Menu links and quick links                      |
+| `town-homepage-slide`    | Homepage hero slides                            |
+| `town-sewer-rate`        | Sewer billing rates                             |
+| `town-map-business`      | Map pins (synced from Google Places)            |
 
 ### Important: Slugs
 
@@ -135,11 +135,11 @@ For content collections (news, events, meetings, businesses, elections), the **s
 
 Builder.io content is fetched by the site with caching:
 
-| Content Type | Cache Duration | What This Means |
-|-------------|---------------|-----------------|
-| Data model entries | 60 seconds | Edits to news, events, team members, etc., appear within ~1 minute |
-| Pages | 1 hour (ISR) | Layout changes to pages appear within ~1 hour without a redeploy |
-| Preview mode | No cache | Adding `?builder.preview=true` always shows the latest draft |
+| Content Type       | Cache Duration | What This Means                                                    |
+| ------------------ | -------------- | ------------------------------------------------------------------ |
+| Data model entries | 60 seconds     | Edits to news, events, team members, etc., appear within ~1 minute |
+| Pages              | 1 hour (ISR)   | Layout changes to pages appear within ~1 hour without a redeploy   |
+| Preview mode       | No cache       | Adding `?builder.preview=true` always shows the latest draft       |
 
 If you need a page change to appear immediately, a developer can trigger a redeployment on Vercel.
 
@@ -232,10 +232,10 @@ Use this any time the Town Clerk sends a set of minutes for a Board of Aldermen,
 
 ### Environment Variables
 
-| Variable | Purpose | Required |
-|----------|---------|----------|
-| `NEXT_PUBLIC_BUILDER_API_KEY` | Public API key for reading content | Yes (enables Builder) |
-| `BUILDER_PRIVATE_KEY` | Private key for seed scripts (write access) | Only for seeding |
+| Variable                      | Purpose                                     | Required              |
+| ----------------------------- | ------------------------------------------- | --------------------- |
+| `NEXT_PUBLIC_BUILDER_API_KEY` | Public API key for reading content          | Yes (enables Builder) |
+| `BUILDER_PRIVATE_KEY`         | Private key for seed scripts (write access) | Only for seeding      |
 
 Builder auto-enables when `NEXT_PUBLIC_BUILDER_API_KEY` is set. The feature flag `NEXT_PUBLIC_FEATURE_BUILDER_ENABLED` is derived from its presence.
 

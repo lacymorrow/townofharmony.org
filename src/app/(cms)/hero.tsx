@@ -64,7 +64,7 @@ export const Hero = ({ block, className }: HeroProps) => {
           <DialogTrigger asChild>
             <button
               type="button"
-              className="group relative aspect-square w-full cursor-zoom-in overflow-hidden p-0 m-0 bg-transparent border-0"
+              className="group relative m-0 aspect-square w-full cursor-zoom-in overflow-hidden border-0 bg-transparent p-0"
             >
               <span className="sr-only">View {heading} full size</span>
               <Image
@@ -77,7 +77,7 @@ export const Hero = ({ block, className }: HeroProps) => {
               />
             </button>
           </DialogTrigger>
-          <DialogContent className="border-none bg-transparent p-0 shadow-none w-fit max-w-[95vw] sm:max-w-[90vw] [&>button]:bg-background/70 [&>button]:hover:bg-background [&>button]:rounded-full [&>button]:p-1">
+          <DialogContent className="w-fit max-w-[95vw] border-none bg-transparent p-0 shadow-none sm:max-w-[90vw] [&>button]:rounded-full [&>button]:bg-background/70 [&>button]:p-1 [&>button]:hover:bg-background">
             <VisuallyHidden>
               <DialogTitle>{heading}</DialogTitle>
               <DialogDescription>Full-size view of {heading}.</DialogDescription>
@@ -85,7 +85,7 @@ export const Hero = ({ block, className }: HeroProps) => {
             <img
               src={image.url}
               alt={heading}
-              className="block max-h-[90vh] max-w-[90vw] w-auto h-auto rounded-lg object-contain"
+              className="block h-auto max-h-[90vh] w-auto max-w-[90vw] rounded-lg object-contain"
             />
           </DialogContent>
         </Dialog>

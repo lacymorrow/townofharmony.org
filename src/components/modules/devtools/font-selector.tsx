@@ -151,7 +151,7 @@ export function FontSelector() {
           GOOGLE_FONTS.map((f) => ({
             family: f.family,
             category: f.category ?? "sans-serif",
-          })),
+          }))
         );
       } finally {
         setInitialLoading(false);

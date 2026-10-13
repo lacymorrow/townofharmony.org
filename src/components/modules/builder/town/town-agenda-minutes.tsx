@@ -49,22 +49,22 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
     });
 
   return (
-    <section className="py-16 bg-warm-white">
+    <section className="bg-warm-white py-16">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-10">
-          <h2 className="text-[32px] font-serif font-bold text-sage-dark mb-2">
+        <div className="mb-10 text-center">
+          <h2 className="mb-2 font-serif text-[32px] font-bold text-sage-dark">
             Agendas &amp; Minutes
           </h2>
-          <p className="text-[#635E56] text-base">Town meeting agendas and official minutes</p>
+          <p className="text-base text-[#635E56]">Town meeting agendas and official minutes</p>
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center justify-center gap-2 mb-8">
+        <div className="mb-8 flex items-center justify-center gap-2">
           <button
             type="button"
             onClick={() => setActiveTab("agenda")}
             className={cn(
-              "px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors",
+              "rounded-lg px-6 py-2.5 text-sm font-semibold transition-colors",
               activeTab === "agenda"
                 ? "bg-sage-dark text-white"
                 : "bg-cream text-[#4A4640] hover:bg-stone"
@@ -79,7 +79,7 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
             type="button"
             onClick={() => setActiveTab("minutes")}
             className={cn(
-              "px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors",
+              "rounded-lg px-6 py-2.5 text-sm font-semibold transition-colors",
               activeTab === "minutes"
                 ? "bg-sage-dark text-white"
                 : "bg-cream text-[#4A4640] hover:bg-stone"
@@ -96,20 +96,20 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
         {activeTab === "agenda" && (
           <div className="space-y-4">
             {upcomingMeetings.length === 0 ? (
-              <div className="bg-cream rounded-xl p-8 text-center text-[#4A4640]">
+              <div className="rounded-xl bg-cream p-8 text-center text-[#4A4640]">
                 No upcoming meetings scheduled at this time.
               </div>
             ) : (
               upcomingMeetings.map((meeting) => (
                 <div
                   key={getCanonicalMeetingSlug(meeting)}
-                  className="bg-warm-white rounded-xl border border-[#DDD7CC] overflow-hidden"
+                  className="overflow-hidden rounded-xl border border-[#DDD7CC] bg-warm-white"
                 >
                   {/* Meeting header */}
-                  <div className="bg-sage-dark text-white px-6 py-4 flex flex-wrap items-center gap-x-6 gap-y-2">
-                    <h3 className="font-semibold text-[17px]">{meeting.title}</h3>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 bg-sage-dark px-6 py-4 text-white">
+                    <h3 className="text-[17px] font-semibold">{meeting.title}</h3>
                     {meeting.type?.trim() && (
-                      <span className="bg-wheat/20 text-[#E8D5A3] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                      <span className="rounded-full bg-wheat/20 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-[#E8D5A3]">
                         {meeting.type}
                       </span>
                     )}
@@ -117,7 +117,7 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
 
                   {/* Meeting details */}
                   <div className="p-6">
-                    <div className="flex flex-wrap gap-x-6 gap-y-2 text-base text-[#4A4640] mb-4">
+                    <div className="mb-4 flex flex-wrap gap-x-6 gap-y-2 text-base text-[#4A4640]">
                       <span className="flex items-center gap-1.5">
                         <Calendar className="h-4 w-4 text-sage" />
                         {formatDate(meeting.meetingDate)}
@@ -133,20 +133,20 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
                     </div>
 
                     {meeting.agenda && (
-                      <div className="bg-cream rounded-lg p-4">
-                        <p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-2">
+                      <div className="rounded-lg bg-cream p-4">
+                        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#4A4640]">
                           Agenda
                         </p>
                         <div
-                          className="prose prose-sm max-w-none text-[#4A4640] leading-relaxed"
+                          className="prose prose-sm max-w-none leading-relaxed text-[#4A4640]"
                           dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.agenda) }}
                         />
                       </div>
                     )}
 
                     {Array.isArray(meeting.attendees) && meeting.attendees.length > 0 && (
-                      <div className="mt-4 pt-3 border-t border-[#DDD7CC]">
-                        <p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-1">
+                      <div className="mt-4 border-t border-[#DDD7CC] pt-3">
+                        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-[#4A4640]">
                           Expected Attendees
                         </p>
                         <p className="text-base text-[#4A4640]">{meeting.attendees.join(", ")}</p>
@@ -163,20 +163,20 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
         {activeTab === "minutes" && (
           <div className="space-y-4">
             {pastMeetings.length === 0 ? (
-              <div className="bg-cream rounded-xl p-8 text-center text-[#4A4640]">
+              <div className="rounded-xl bg-cream p-8 text-center text-[#4A4640]">
                 No meeting minutes available at this time.
               </div>
             ) : (
               pastMeetings.map((meeting) => (
                 <div
                   key={getCanonicalMeetingSlug(meeting)}
-                  className="bg-warm-white rounded-xl border border-[#DDD7CC] overflow-hidden"
+                  className="overflow-hidden rounded-xl border border-[#DDD7CC] bg-warm-white"
                 >
                   {/* Meeting header */}
-                  <div className="bg-sage/10 px-6 py-4 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-[#DDD7CC]">
-                    <h3 className="font-semibold text-[17px] text-[#2D2A24]">{meeting.title}</h3>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-[#DDD7CC] bg-sage/10 px-6 py-4">
+                    <h3 className="text-[17px] font-semibold text-[#2D2A24]">{meeting.title}</h3>
                     {meeting.type?.trim() && (
-                      <span className="bg-sage-dark/10 text-sage-dark text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                      <span className="rounded-full bg-sage-dark/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-sage-dark">
                         {meeting.type}
                       </span>
                     )}
@@ -184,7 +184,7 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
 
                   {/* Meeting details */}
                   <div className="p-6">
-                    <div className="flex flex-wrap gap-x-6 gap-y-2 text-base text-[#4A4640] mb-4">
+                    <div className="mb-4 flex flex-wrap gap-x-6 gap-y-2 text-base text-[#4A4640]">
                       <span className="flex items-center gap-1.5">
                         <Calendar className="h-4 w-4 text-sage" />
                         {formatDate(meeting.meetingDate)}
@@ -197,12 +197,12 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
 
                     {/* Minutes content or link */}
                     {meeting.minutes && (
-                      <div className="bg-cream rounded-lg p-4 mb-3">
-                        <p className="text-xs font-semibold text-[#4A4640] uppercase tracking-wider mb-2">
+                      <div className="mb-3 rounded-lg bg-cream p-4">
+                        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#4A4640]">
                           Minutes
                         </p>
                         <div
-                          className="prose prose-sm max-w-none text-[#4A4640] leading-relaxed"
+                          className="prose prose-sm max-w-none leading-relaxed text-[#4A4640]"
                           dangerouslySetInnerHTML={{ __html: sanitizeHtml(meeting.minutes) }}
                         />
                       </div>
@@ -215,7 +215,7 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
                           href={meeting.minutesUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 bg-sage-dark text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-sage-deep transition-colors"
+                          className="inline-flex items-center gap-2 rounded-lg bg-sage-dark px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-sage-deep"
                         >
                           <FileText className="h-3.5 w-3.5" />
                           View Minutes
@@ -227,7 +227,7 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
                           href={meeting.videoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 bg-cream text-[#2D2A24] px-4 py-2 rounded-lg text-sm font-semibold border border-[#DDD7CC] hover:shadow-md transition-shadow"
+                          className="inline-flex items-center gap-2 rounded-lg border border-[#DDD7CC] bg-cream px-4 py-2 text-sm font-semibold text-[#2D2A24] transition-shadow hover:shadow-md"
                         >
                           <Video className="h-3.5 w-3.5 text-sage" />
                           Video Recording
@@ -239,7 +239,7 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
                           href={meeting.audioUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 bg-cream text-[#2D2A24] px-4 py-2 rounded-lg text-sm font-semibold border border-[#DDD7CC] hover:shadow-md transition-shadow"
+                          className="inline-flex items-center gap-2 rounded-lg border border-[#DDD7CC] bg-cream px-4 py-2 text-sm font-semibold text-[#2D2A24] transition-shadow hover:shadow-md"
                         >
                           <Volume2 className="h-3.5 w-3.5 text-sage" />
                           Audio Recording
@@ -248,7 +248,7 @@ export const TownAgendaMinutes = ({ defaultTab = "agenda" }: TownAgendaMinutesPr
                       )}
 
                       {!meeting.minutes && !meeting.minutesUrl && (
-                        <p className="text-sm text-[#9E9A92] italic">
+                        <p className="text-sm italic text-[#9E9A92]">
                           Minutes not yet available for this meeting.
                         </p>
                       )}

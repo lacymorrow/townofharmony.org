@@ -53,7 +53,7 @@ export default function TownError({ error, reset }: TownErrorProps) {
             Let Town Hall know
           </Link>
           {error.digest ? (
-            <span className="block mt-2 text-xs opacity-70">Reference {error.digest}</span>
+            <span className="mt-2 block text-xs opacity-70">Reference {error.digest}</span>
           ) : null}
         </p>
       </div>

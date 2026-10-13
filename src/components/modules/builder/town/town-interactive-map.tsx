@@ -7,22 +7,22 @@ import { settings as staticSettings } from "@/data/town/settings";
 import type { MapBusiness } from "@/lib/map-utils";
 
 interface TownInteractiveMapProps {
-	height?: string;
-	minHeight?: string;
+  height?: string;
+  minHeight?: string;
 }
 
 export const TownInteractiveMap = ({
-	height = "calc(100vh - 200px)",
-	minHeight = "500px",
+  height = "calc(100vh - 200px)",
+  minHeight = "500px",
 }: TownInteractiveMapProps = {}) => {
-	const { data: businesses } = useBuilderData<MapBusiness>("town-map-business", {
-		fallback: fallbackMapBusinesses,
-		limit: 1000,
-	});
+  const { data: businesses } = useBuilderData<MapBusiness>("town-map-business", {
+    fallback: fallbackMapBusinesses,
+    limit: 1000,
+  });
 
-	return (
-		<div style={{ height, minHeight }}>
-			<InteractiveMap businesses={businesses} labels={staticSettings.map} />
-		</div>
-	);
+  return (
+    <div style={{ height, minHeight }}>
+      <InteractiveMap businesses={businesses} labels={staticSettings.map} />
+    </div>
+  );
 };

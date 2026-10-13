@@ -44,10 +44,8 @@ const allEmails: Record<string, string> = {
     inquiryType: "General",
     message: "Hello",
   }),
-  reservationConfirmation:
-    communityCenterReservationConfirmationEmail(reservation),
-  reservationNotification:
-    communityCenterReservationNotificationEmail(reservation),
+  reservationConfirmation: communityCenterReservationConfirmationEmail(reservation),
+  reservationNotification: communityCenterReservationNotificationEmail(reservation),
 };
 
 describe("email footers (LAC-3978)", () => {

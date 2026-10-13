@@ -9,134 +9,136 @@ import { getMapUrl } from "@/lib/map-utils";
 import { htmlToPlainText } from "@/lib/html-to-text";
 
 interface BusinessCardProps {
-	business: {
-		id: number;
-		name: string;
-		slug: string;
-		description: string | null;
-		category: string;
-		address: string | null;
-		phone: string | null;
-		email: string | null;
-		website: string | null;
-		hours: any;
-		logo: string | null;
-		isVerified: boolean | null;
-		isFeatured: boolean | null;
-	};
+  business: {
+    id: number;
+    name: string;
+    slug: string;
+    description: string | null;
+    category: string;
+    address: string | null;
+    phone: string | null;
+    email: string | null;
+    website: string | null;
+    hours: any;
+    logo: string | null;
+    isVerified: boolean | null;
+    isFeatured: boolean | null;
+  };
 }
 
 const categoryColors: Record<string, string> = {
-	restaurant: "bg-orange-100 text-orange-800",
-	retail: "bg-sage/10 text-sage-dark",
-	service: "bg-purple-100 text-purple-800",
-	healthcare: "bg-red-100 text-red-800",
-	education: "bg-green-100 text-green-800",
-	finance: "bg-yellow-100 text-yellow-800",
-	realestate: "bg-indigo-100 text-indigo-800",
-	other: "bg-stone text-[#2D2A24]",
+  restaurant: "bg-orange-100 text-orange-800",
+  retail: "bg-sage/10 text-sage-dark",
+  service: "bg-purple-100 text-purple-800",
+  healthcare: "bg-red-100 text-red-800",
+  education: "bg-green-100 text-green-800",
+  finance: "bg-yellow-100 text-yellow-800",
+  realestate: "bg-indigo-100 text-indigo-800",
+  other: "bg-stone text-[#2D2A24]",
 };
 
 export function BusinessCard({ business }: BusinessCardProps) {
-	const today = new Date().toLocaleDateString("en-US", { weekday: "long" }).toLowerCase();
-	const todayHours = business.hours?.[today];
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long" }).toLowerCase();
+  const todayHours = business.hours?.[today];
 
-	return (
-		<Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
-			<CardHeader className="pb-3">
-				<div className="flex justify-between items-start gap-2">
-					<div className="flex-1">
-						<Link
-							href={`/business/${business.slug}`}
-							className="hover:text-sage-dark transition-colors"
-						>
-							<h3 className="font-semibold text-lg line-clamp-1">{business.name}</h3>
-						</Link>
-						<div className="flex items-center gap-2 mt-1">
-							<Badge
-								variant="secondary"
-								className={categoryColors[business.category] || categoryColors.other}
-							>
-								{business.category}
-							</Badge>
-							{business.isVerified && (
-								<>
-									<CheckCircle className="h-4 w-4 text-sage" aria-hidden="true" />
-									<span className="sr-only">Verified business</span>
-								</>
-							)}
-							{business.isFeatured && (
-								<>
-									<Star className="h-4 w-4 text-yellow-500 fill-yellow-500" aria-hidden="true" />
-									<span className="sr-only">Featured business</span>
-								</>
-							)}
-						</div>
-					</div>
-					{business.logo && (
-						<LightboxImage
-							src={business.logo}
-							alt={`${business.name} logo`}
-							wrapperClassName="w-12 h-12 rounded shrink-0"
-							className="w-full h-full object-contain"
-						/>
-					)}
-				</div>
-			</CardHeader>
+  return (
+    <Card className="flex h-full flex-col transition-shadow hover:shadow-lg">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1">
+            <Link
+              href={`/business/${business.slug}`}
+              className="transition-colors hover:text-sage-dark"
+            >
+              <h3 className="line-clamp-1 text-lg font-semibold">{business.name}</h3>
+            </Link>
+            <div className="mt-1 flex items-center gap-2">
+              <Badge
+                variant="secondary"
+                className={categoryColors[business.category] || categoryColors.other}
+              >
+                {business.category}
+              </Badge>
+              {business.isVerified && (
+                <>
+                  <CheckCircle className="h-4 w-4 text-sage" aria-hidden="true" />
+                  <span className="sr-only">Verified business</span>
+                </>
+              )}
+              {business.isFeatured && (
+                <>
+                  <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" aria-hidden="true" />
+                  <span className="sr-only">Featured business</span>
+                </>
+              )}
+            </div>
+          </div>
+          {business.logo && (
+            <LightboxImage
+              src={business.logo}
+              alt={`${business.name} logo`}
+              wrapperClassName="w-12 h-12 rounded shrink-0"
+              className="h-full w-full object-contain"
+            />
+          )}
+        </div>
+      </CardHeader>
 
-			<CardContent className="flex-1 flex flex-col justify-between">
-				{business.description && (
-					<p className="text-sm text-muted-foreground line-clamp-2 mb-4">{htmlToPlainText(business.description)}</p>
-				)}
+      <CardContent className="flex flex-1 flex-col justify-between">
+        {business.description && (
+          <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">
+            {htmlToPlainText(business.description)}
+          </p>
+        )}
 
-				<div className="space-y-2 text-sm">
-					{business.address && (
-						<div className="flex items-start gap-2">
-							<MapPin className="h-4 w-4 text-muted-foreground mt-0.5" aria-hidden="true" />
-							<a
-								href={getMapUrl(business.address)}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="line-clamp-2 hover:text-sage-dark transition-colors"
-							>
-								{business.address}
-							</a>
-							<AddressCopyButton address={business.address} label={business.name} tone="default" />
-						</div>
-					)}
+        <div className="space-y-2 text-sm">
+          {business.address && (
+            <div className="flex items-start gap-2">
+              <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <a
+                href={getMapUrl(business.address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="line-clamp-2 transition-colors hover:text-sage-dark"
+              >
+                {business.address}
+              </a>
+              <AddressCopyButton address={business.address} label={business.name} tone="default" />
+            </div>
+          )}
 
-					{business.phone && (
-						<div className="flex items-center gap-2">
-							<Phone className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-							<a href={`tel:${business.phone}`} className="hover:text-sage-dark transition-colors">
-								{business.phone}
-							</a>
-							<PhoneCopyButton phone={business.phone} label={business.name} tone="default" />
-						</div>
-					)}
+          {business.phone && (
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <a href={`tel:${business.phone}`} className="transition-colors hover:text-sage-dark">
+                {business.phone}
+              </a>
+              <PhoneCopyButton phone={business.phone} label={business.name} tone="default" />
+            </div>
+          )}
 
-					{todayHours && (
-						<div className="flex items-center gap-2">
-							<Clock className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-							<span>Today: {todayHours === "Closed" ? "Closed" : todayHours}</span>
-						</div>
-					)}
+          {todayHours && (
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <span>Today: {todayHours === "Closed" ? "Closed" : todayHours}</span>
+            </div>
+          )}
 
-					{business.website && (
-						<div className="flex items-center gap-2">
-							<Globe className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-							<a
-								href={business.website}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:text-sage-dark transition-colors truncate"
-							>
-								Visit website
-							</a>
-						</div>
-					)}
-				</div>
-			</CardContent>
-		</Card>
-	);
+          {business.website && (
+            <div className="flex items-center gap-2">
+              <Globe className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <a
+                href={business.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="truncate transition-colors hover:text-sage-dark"
+              >
+                Visit website
+              </a>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

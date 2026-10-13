@@ -21,8 +21,7 @@ const business: TownBusiness = {
   id: 1,
   name: "Harmony Hardware",
   slug: "harmony-hardware",
-  description:
-    '<p class="">Tools, paint &amp; friendly advice for every project.</p>',
+  description: '<p class="">Tools, paint &amp; friendly advice for every project.</p>',
   logo: null,
   category: "retail",
   contactName: "Pat Smith",
