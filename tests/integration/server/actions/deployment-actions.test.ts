@@ -132,12 +132,31 @@ describe("updateDeployment", () => {
     );
   });
 
-  it("permits a background-task call (userId passed explicitly, no session)", async () => {
+  /*
+   * This case used to assert the opposite: that passing a userId with no
+   * session was a permitted "background-task call". That was the LAC-3944
+   * confused deputy written down as intended behavior. The parameter is gone,
+   * so an unauthenticated call cannot name its own authority.
+   */
+  it("refuses an unauthenticated call that names a user id", async () => {
     const seed = await seedDeployment(OWNER_ID);
     vi.mocked(auth).mockResolvedValue(null as never);
 
-    const updated = await updateDeployment(seed!.id, { status: "completed" }, OWNER_ID);
-    expect(updated?.status).toBe("completed");
+    await expect(
+      (
+        updateDeployment as unknown as (
+          id: string,
+          data: unknown,
+          userId: string
+        ) => Promise<unknown>
+      )(seed!.id, { status: "completed" }, OWNER_ID)
+    ).rejects.toThrow(/unauthorized/i);
+
+    const db = getTestDb();
+    const row = await db.query.deployments.findFirst({
+      where: eq(deployments.id, seed!.id),
+    });
+    expect(row?.status).toBe("deploying");
   });
 });
 

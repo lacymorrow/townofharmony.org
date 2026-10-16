@@ -1,5 +1,10 @@
-"use server";
-
+/*
+ * SECURITY (LAC-3944): this module used to open with a `"use server"`
+ * directive, which published `createTemporaryLink(userId)` and
+ * `getTemporaryLinkData(userId)` as unauthenticated POST endpoints taking a
+ * caller-supplied user id. Anyone could mint or read a temporary link for any
+ * user. Its only consumer is an integration test that imports it directly.
+ */
 import { addMinutes } from "date-fns";
 import { and, eq, gt } from "drizzle-orm";
 import { db } from "@/server/db";

@@ -144,16 +144,14 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
               userId,
             });
 
-            // Call server action to create payment record
+            /*
+             * Send only the order identifier. The action re-reads the order
+             * from the LemonSqueezy API against the session user's email and
+             * writes what the API says, so there is nothing to gain by
+             * forging any of the fields this used to pass (LAC-3944).
+             */
             const result = await createLemonSqueezyPayment({
-              orderId: orderData.attributes.identifier, // Use identifier as primary orderId
-              orderIdentifier: orderData.attributes.identifier, // Keep for backward compatibility
-              userId,
-              userEmail: orderData.attributes.user_email ?? undefined,
-              customData: event.data.custom_data,
-              status: orderData.attributes.status,
-              total: orderData.attributes.total,
-              productName: orderData.attributes.first_order_item?.product_name || "Unknown Product",
+              orderId: orderData.attributes.identifier,
             });
 
             logger.info("Payment record created successfully", {

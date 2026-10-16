@@ -21,10 +21,10 @@ import {
  * access. `requireAdmin()` throws unless the session belongs to an admin.
  */
 
-export async function revokeGitHubAccessAction(targetUserId: string) {
+export async function revokeGitHubAccessAction(userId: string) {
   try {
     await requireAdmin();
-    await revokeGitHubAccess(targetUserId);
+    await revokeGitHubAccess(userId);
     return { success: true };
   } catch (error) {
     console.error("Failed to revoke GitHub access:", error);

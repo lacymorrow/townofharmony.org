@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
@@ -34,11 +34,19 @@ import { describe, expect, it } from "vitest";
 
 const SRC = join(__dirname, "..", "..", "..", "..", "src");
 
-/** Dead `"use server"` modules deleted in this fork; filled in per repo below. */
-const DELETED_MODULES: string[] = [];
+/** Dead `"use server"` modules deleted in this fork. */
+const DELETED_MODULES: string[] = [
+  "src/server/actions/setup/configure-setup.ts",
+  "src/server/actions/temporary-links.ts",
+  "src/server/actions/waitlist-actions.ts",
+  "src/server/actions/resend-actions.ts",
+];
 
 /** Service modules that must not carry a `"use server"` directive. */
-const SERVICE_MODULES: string[] = [];
+const SERVICE_MODULES: string[] = [
+  "src/server/services/waitlist-service.ts",
+  "src/server/services/temporary-links.ts",
+];
 
 /**
  * Markers that prove the body resolves the caller server-side.
@@ -61,6 +69,62 @@ const AUTH_MARKERS = [
   /\bisAdmin\s*\(/,
   /\bErrorService\.throwUnauthorized\s*\(/,
 ];
+
+/**
+ * Both guarded modules in this fork funnel their exports through a small
+ * module-local helper (`requireCallerId`, `requireProjectMember`,
+ * `requireTeamMember`) instead of repeating `getSession()` in every export.
+ * A marker search on the export body alone cannot see through that call, and
+ * reported six guarded exports in `projects.ts` and `teams.ts` as holes.
+ *
+ * Rather than allowlisting the helper *names* — which would let any function
+ * called `requireCallerId` vouch for itself — the body of a module-local
+ * helper the export actually calls is folded in, one level deep. The guard
+ * still has to be real; it just no longer has to be inline.
+ */
+function localHelperBodies(source: ts.SourceFile): Map<string, string> {
+  const bodies = new Map<string, string>();
+  for (const statement of source.statements) {
+    if (ts.isFunctionDeclaration(statement) && statement.name) {
+      bodies.set(statement.name.text, statement.getText(source));
+    } else if (ts.isVariableStatement(statement)) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (ts.isIdentifier(declaration.name) && declaration.initializer) {
+          bodies.set(declaration.name.text, declaration.getText(source));
+        }
+      }
+    }
+  }
+  return bodies;
+}
+
+/**
+ * The export's own body, plus the bodies of every module-local helper it
+ * reaches. Followed to a fixed point rather than one level, because the real
+ * chain here is two deep: `updateProject` calls `requireProjectMember`, which
+ * calls `requireCallerId`, and only that last one calls `getSession`.
+ */
+function effectiveBody(actionExport: ActionExport, helpers: Map<string, string>): string {
+  const seen = new Set<string>([actionExport.name]);
+  let text = actionExport.body;
+
+  for (;;) {
+    let grew = false;
+    for (const [name, body] of helpers) {
+      if (seen.has(name)) continue;
+      if (!new RegExp(`\\b${name}\\s*\\(`).test(text)) continue;
+      seen.add(name);
+      text += `\n${body}`;
+      grew = true;
+    }
+    if (!grew) return text;
+  }
+}
+
+/** Strip comments so an assertion reads the code, never its own documentation. */
+function stripComments(text: string): string {
+  return text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
+}
 
 /** `getSession(false)` returns null instead of throwing, so it gates nothing. */
 const UNPROTECTED_SESSION = /\bgetSession\s*\(\s*false\s*\)/;
@@ -99,6 +163,27 @@ const PUBLIC_BY_DESIGN: Record<string, string> = {
     "public feedback widget; write-only into the feedback table",
   "src/server/actions/subscribe.ts::addContactToAudience":
     "public newsletter opt-in; write-only into the Resend audience",
+
+  // Town of Harmony's public services. Residents use these without an
+  // account, which is the point of a town website, so a session check would
+  // break them rather than secure them. Each is write-only and returns
+  // nothing readable. Their real exposure is submission spam, which is what
+  // the Turnstile token and the honeypot/timing fields on them are for.
+  "src/server/actions/town-contact.ts::submitTownContactForm":
+    "public town contact form; emails Town Hall and returns no data. Recipients are resolved server-side, see resolveRecipients",
+  "src/server/actions/community-center-reservation.ts::submitCommunityCenterReservation":
+    "public reservation request; emails Town Hall and returns no data. Recipients are resolved server-side, see resolveRecipients",
+
+  // Paying a sewer bill cannot require an account: residents are billed by
+  // sewer account number, not by login. The amount is not caller-controlled
+  // and cannot be, which is what makes this safe to publish: `tierId` selects
+  // from the server-side sewerRateTiers table and the price comes from a
+  // Stripe price id held in an env var. The caller picks a tier, never a
+  // number. Mis-selecting a tier is a billing reconciliation matter for Town
+  // Hall, which has the account number and service address in the Stripe
+  // session metadata; it is not an authorization bypass.
+  "src/server/actions/sewer-payments.ts::createSewerCheckoutSession":
+    "public sewer bill payment; the amount comes from a server-side rate tier and a Stripe price env var, never from the caller",
 };
 
 /**
@@ -226,8 +311,12 @@ describe("server action auth coverage", () => {
       const entry = serverActionModules.find((candidate) => candidate.path === path);
       if (!entry) throw new Error(`lost module ${path}`);
 
+      const helpers = localHelperBodies(entry.source);
       const offenders = collectExports(entry.source)
-        .filter((actionExport) => !AUTH_MARKERS.some((marker) => marker.test(actionExport.body)))
+        .filter((actionExport) => {
+          const body = effectiveBody(actionExport, helpers);
+          return !AUTH_MARKERS.some((marker) => marker.test(body));
+        })
         .filter((actionExport) => !PUBLIC_BY_DESIGN[`${path}::${actionExport.name}`])
         .map((actionExport) => actionExport.name);
 
@@ -322,9 +411,10 @@ describe("admin configuration", () => {
   });
 
   it("compares the admin domain exactly, not by suffix", () => {
-    // endsWith("@" + domain) accepted attacker@evil-lacymorrow.com.
+    // endsWith("@" + domain) accepted attacker@evil-lacymorrow.com. The file
+    // names the old call in a comment to explain the fix, so read the code.
     const text = readFileSync(join(SRC, "config", "admin-config.ts"), "utf8");
-    expect(text).not.toMatch(/endsWith\s*\(/);
+    expect(stripComments(text)).not.toMatch(/endsWith\s*\(/);
   });
 });
 
