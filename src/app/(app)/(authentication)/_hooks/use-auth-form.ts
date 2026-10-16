@@ -1,7 +1,11 @@
 import { useMemo } from "react";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
-import { env } from "@/env";
+import {
+  getAuthUiFlags,
+  hasUsableAuthControls,
+  isGuestOnlyAuthMode,
+} from "@/lib/auth/auth-ui-availability";
 
 export function useAuthForm(mode: "sign-in" | "sign-up", title?: string, description?: string) {
   const isSignIn = mode === "sign-in";
@@ -28,11 +32,15 @@ export function useAuthForm(mode: "sign-in" | "sign-up", title?: string, descrip
       : { text: "Already have an account?", href: routes.auth.signIn, label: "Sign in" };
   }, [isSignIn]);
 
-  const isGuestOnlyMode =
-    !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
-  const shouldShowAlternateLink = !isGuestOnlyMode && !!env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
-  const hasAnyAuthEnabled = env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
-  const showAuthUnavailable = !isGuestOnlyMode && !hasAnyAuthEnabled;
+  /**
+   * Keyed to the controls that would render, not to
+   * `NEXT_PUBLIC_FEATURE_AUTH_ENABLED`. The pages gate on the same predicate,
+   * but the `@modal` intercepting routes render the cards directly with no page
+   * gate, so the card has to be able to refuse on its own.
+   */
+  const flags = getAuthUiFlags();
+  const showAuthUnavailable = !hasUsableAuthControls(flags);
+  const shouldShowAlternateLink = !isGuestOnlyAuthMode(flags) && !showAuthUnavailable;
 
   return {
     cardTitle,
