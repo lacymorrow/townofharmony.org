@@ -14,22 +14,76 @@ describe("resolveRecipients", () => {
     vi.clearAllMocks();
   });
 
-  it("prefers a valid Builder override over env and default", () => {
+  it("prefers a Builder override that selects a server-configured address", () => {
     expect(
       resolveRecipients(
         "janet@example.com",
-        "env@example.com",
+        "env@example.com, janet@example.com",
         DEFAULT_TOWN_CONTACT_TO,
         "recipientEmail"
       )
     ).toEqual(["janet@example.com"]);
   });
 
+  /*
+   * SECURITY (LAC-3944). These three cases are the reason the override is an
+   * allowlist and not free text. `recipientEmail` arrives in the payload of a
+   * public, unauthenticated server action, so "authored in Builder" is not a
+   * property the server can verify. Before this, a POST could aim the town's
+   * verified Resend domain at any mailbox and attach a file to it.
+   *
+   * Refusing an override falls through to env, then to the default, so a
+   * refused address still reaches a town inbox. Mail is never dropped.
+   */
+  it("refuses a Builder override the server was never configured to mail", () => {
+    expect(
+      resolveRecipients(
+        "attacker@evil.example",
+        "env@example.com",
+        DEFAULT_TOWN_CONTACT_TO,
+        "recipientEmail"
+      )
+    ).toEqual(["env@example.com"]);
+  });
+
+  it("refuses an unconfigured override even with no env tier to fall back to", () => {
+    expect(
+      resolveRecipients(
+        "attacker@evil.example",
+        undefined,
+        DEFAULT_TOWN_CONTACT_TO,
+        "recipientEmail"
+      )
+    ).toEqual([DEFAULT_TOWN_CONTACT_TO]);
+  });
+
+  it("keeps only the configured addresses when an override mixes in an unconfigured one", () => {
+    expect(
+      resolveRecipients(
+        "janet@example.com, attacker@evil.example",
+        "janet@example.com",
+        DEFAULT_TOWN_CONTACT_TO,
+        "recipientEmail"
+      )
+    ).toEqual(["janet@example.com"]);
+  });
+
+  it("lets an override select the default address", () => {
+    expect(
+      resolveRecipients(
+        DEFAULT_TOWN_CONTACT_TO,
+        undefined,
+        DEFAULT_TOWN_CONTACT_TO,
+        "recipientEmail"
+      )
+    ).toEqual([DEFAULT_TOWN_CONTACT_TO]);
+  });
+
   it("splits comma-separated Builder values and trims whitespace", () => {
     expect(
       resolveRecipients(
         " janet@example.com , clerk@example.com ",
-        undefined,
+        "janet@example.com,clerk@example.com",
         DEFAULT_TOWN_CONTACT_TO,
         "recipientEmail"
       )
@@ -63,7 +117,7 @@ describe("resolveRecipients", () => {
     expect(
       resolveRecipients(
         "janet@example.com, bogus",
-        "env@example.com",
+        "janet@example.com",
         DEFAULT_TOWN_CONTACT_TO,
         "recipientEmail"
       )
