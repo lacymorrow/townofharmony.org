@@ -179,7 +179,7 @@ export function ProjectDialog({
     if (!newTeamName) return;
     setIsLoading(true);
     try {
-      const team = await createTeam(userId, newTeamName);
+      const team = await createTeam(newTeamName);
       if (!team) {
         throw new Error("Failed to create team");
       }
@@ -212,7 +212,7 @@ export function ProjectDialog({
     setIsLoading(true);
     try {
       if (!isEditMode) {
-        await createProject(values.name, values.teamId, userId);
+        await createProject(values.name, values.teamId);
         toast({
           title: "Success",
           description: `Project "${values.name}" has been created.`,

@@ -130,26 +130,29 @@ export async function createDeployment(
 /**
  * Update an existing deployment
  */
+/*
+ * SECURITY (LAC-3944): this used to take an optional third `userId`, with the
+ * comment "for background tasks". Passing it skipped the session check
+ * entirely, so the argument was not a convenience, it was the bypass: an
+ * anonymous POST naming any user id could update that user's deployment. A
+ * confused deputy.
+ *
+ * No background task ever needed it. The in-process callers hold the owner id
+ * already and call `deploymentService.updateDeployment` directly, below the
+ * action layer, which is where a trusted caller belongs.
+ */
 export async function updateDeployment(
   id: string,
-  data: Parameters<typeof deploymentService.updateDeployment>[2],
-  userId?: string
+  data: Parameters<typeof deploymentService.updateDeployment>[2]
 ): Promise<Deployment | null> {
-  // Use provided userId (for background tasks) or get from auth
-  let effectiveUserId = userId;
-
-  if (!effectiveUserId) {
-    const session = await auth();
-    if (!session?.user?.id) {
-      throw new Error("Unauthorized");
-    }
-    effectiveUserId = session.user.id;
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
   }
 
-  const result = await deploymentService.updateDeployment(id, effectiveUserId, data);
+  const result = await deploymentService.updateDeployment(id, session.user.id, data);
 
-  // Only revalidate when called from a request context (not from background tasks)
-  if (result && !userId) {
+  if (result) {
     revalidatePath("/deployments");
   }
 

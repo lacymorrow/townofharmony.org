@@ -1,5 +1,14 @@
-"use server";
-
+/*
+ * SECURITY (LAC-3944): this module used to open with a `"use server"`
+ * directive, which published every export below as an unauthenticated POST
+ * endpoint. That exposed the whole waitlist: `getWaitlistEntries` dumped the
+ * table, `getWaitlistStats` counted it, and `getWaitlistEntryByEmail(email)`
+ * answered whether any given address was on it.
+ *
+ * Nothing calls these from the client. The only consumer is the admin
+ * waitlist page, which is an async server component and imports them
+ * directly, so the directive bought nothing and cost the data.
+ */
 import { count, desc, eq } from "drizzle-orm";
 import { safeDbExecute } from "@/server/db";
 import { type NewWaitlistEntry, type WaitlistEntry, waitlistEntries } from "@/server/db/schema";
