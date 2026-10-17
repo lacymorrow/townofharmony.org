@@ -38,15 +38,7 @@ const isPlausiblePhone = (value: string) => {
   return digits >= 7;
 };
 
-interface TownContactFormProps {
-  // Optional Builder-block overrides passed through to submitTownContactForm.
-  // Cleared Builder fields arrive as "" (not undefined). The server treats
-  // empty or whitespace values as unset and falls back to env/default.
-  recipientEmail?: string;
-  bccEmail?: string;
-}
-
-export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormProps = {}) => {
+export const TownContactForm = () => {
   const [isPending, startTransition] = useTransition();
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -174,8 +166,6 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
         attachment,
         turnstileToken: turnstileTokenRef.current ?? undefined,
         website: (form.get("website") as string) || undefined,
-        recipientEmail,
-        bccEmail,
         _loadedAt: loadedAtRef.current,
       });
 

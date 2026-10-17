@@ -65,10 +65,8 @@ const reservationSchema = z
     notes: z.string().optional(),
     turnstileToken: z.string().optional(),
     website: z.string().optional(),
-    // Builder-block overrides. Malformed values are dropped in
-    // resolveRecipients() rather than failing the submission.
-    recipientEmail: z.string().optional(),
-    bccEmail: z.string().optional(),
+    // No recipient fields: where this mail goes is a server decision, never a
+    // payload one (LAC-3944 / LAC-4610). See resolveRecipients.
   })
   .refine((data) => Boolean(data.email) || Boolean(data.phone), {
     message: "Please provide an email address or a phone number so we can reply.",
@@ -100,8 +98,6 @@ export async function submitCommunityCenterReservation(
     notes,
     turnstileToken,
     website,
-    recipientEmail,
-    bccEmail,
   } = parsed.data;
 
   const ip = await getClientIp();
@@ -164,22 +160,17 @@ export async function submitCommunityCenterReservation(
 
   // Test senders (test.com / example.com) are rerouted to an inbox we own, the
   // same contract town-contact.ts follows (LAC-4202). Staff must never receive
-  // a test reservation, so the Builder/env recipients are skipped entirely.
+  // a test reservation, so the configured recipients are skipped entirely.
   const isTest = isTestSender(email);
   const toRecipients = isTest
     ? [resolveTestRecipient()]
-    : // Same inbox config as town inquiries (LAC-3312 / PR #234): Builder
-      // override -> env -> default. Reservations go to exploreharmonync@gmail.com.
-      resolveRecipients(
-        recipientEmail,
-        env.TOWN_CONTACT_TO_EMAIL,
-        DEFAULT_TOWN_CONTACT_TO,
-        "recipientEmail"
-      );
+    : // Same inbox config as town inquiries (LAC-3312 / PR #234): env ->
+      // default. Reservations go to exploreharmonync@gmail.com.
+      resolveRecipients(env.TOWN_CONTACT_TO_EMAIL, DEFAULT_TOWN_CONTACT_TO, "recipientEmail");
   // BCC is suppressed on the test path so cc'd staff inboxes never see a test.
   const bccRecipients = isTest
     ? []
-    : resolveRecipients(bccEmail, env.TOWN_CONTACT_BCC_EMAIL, DEFAULT_TOWN_CONTACT_BCC, "bccEmail");
+    : resolveRecipients(env.TOWN_CONTACT_BCC_EMAIL, DEFAULT_TOWN_CONTACT_BCC, "bccEmail");
 
   if (isTest) {
     logger.info("Community Center reservation test sender detected, rerouting", {

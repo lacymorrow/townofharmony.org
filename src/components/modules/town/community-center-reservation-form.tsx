@@ -28,18 +28,7 @@ const isPlausiblePhone = (value: string) => {
 // Fire-code capacity (see the reservation rules above the form).
 const MAX_ATTENDANCE = 120;
 
-interface CommunityCenterReservationFormProps {
-  // Optional Builder-block overrides passed through to the server action.
-  // Cleared Builder fields arrive as "" (not undefined); the server treats
-  // empty/whitespace values as unset and falls back to env/default.
-  recipientEmail?: string;
-  bccEmail?: string;
-}
-
-export const CommunityCenterReservationForm = ({
-  recipientEmail,
-  bccEmail,
-}: CommunityCenterReservationFormProps = {}) => {
+export const CommunityCenterReservationForm = () => {
   const [isPending, startTransition] = useTransition();
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -125,8 +114,6 @@ export const CommunityCenterReservationForm = ({
         notes: (form.get("notes") as string) || undefined,
         turnstileToken: turnstileTokenRef.current ?? undefined,
         website: (form.get("website") as string) || undefined,
-        recipientEmail,
-        bccEmail,
         _loadedAt: loadedAtRef.current,
       });
 

@@ -317,29 +317,20 @@ registerComponent(TownEmergencyServices, {
 // TownEmergencyAlertsList removed — EmergencyBanner in the layout already
 // shows active alerts on every page, making the Builder.io block redundant.
 
-// Form labels, validation, and submit handler are owned by the component
-// for security/consistency. Only recipient routing is exposed to town staff
-// so they can re-point inquiries without a code deploy (LAC-3347). Server
-// validates the addresses and falls back to env/default on a bad value.
+// No inputs, on purpose. Labels, validation, and the submit handler belong to
+// the component; recipient routing belongs to the server. This block used to
+// offer "Send Inquiries To" / "BCC" fields so staff could re-point inquiries
+// without a deploy (LAC-3347), but the value travelled in the payload of a
+// public, unauthenticated server action, which made it an open relay for the
+// town's verified mail domain (LAC-3944). Routing now comes from
+// TOWN_CONTACT_TO_EMAIL / TOWN_CONTACT_BCC_EMAIL, else the default in
+// src/server/utils/town-contact-recipients.ts — so the fields had stopped
+// changing anything, and they are gone rather than left in the editor looking
+// like they work (LAC-4610). Re-pointing is an env edit plus a redeploy.
+// Handing the fields back means reading the address server-side off the Builder
+// entry, never off the payload.
 registerComponent(TownContactForm, {
   name: "TownContactForm",
-  inputs: [
-    {
-      name: "recipientEmail",
-      type: "string",
-      friendlyName: "Send Inquiries To",
-      helperText:
-        "Where inquiries go. One address, or several separated by commas. Leave blank to use the town default.",
-    },
-    {
-      name: "bccEmail",
-      type: "string",
-      friendlyName: "BCC (hidden copy)",
-      helperText:
-        "Extra address(es) that get a hidden copy of every inquiry. Comma-separated. Leave blank to use the town default.",
-      advanced: true,
-    },
-  ],
 });
 
 registerComponent(TownAgendaMinutes, {
