@@ -44,6 +44,31 @@ updates:
     # Major bumps of framework-critical packages get opened individually (not
     # grouped), but never auto-batched with the rest — they always need a human.
 
+    # Majors that were reviewed and declined during the LAC-4115 triage. Each one
+    # needs migration work that Dependabot cannot do, and left alone each one
+    # re-opens every Monday and eats a slot in the 10-PR limit, which is what
+    # starves the queue behind it. Delete the entry when its issue lands; that is
+    # the signal the migration is done.
+    ignore:
+      # Tailwind v3 -> v4 is a config and API rewrite. Port shipkit-www's
+      # finished migration rather than redoing it. LAC-4644.
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
+      # v2 renames CookieBanner/ConsentManagerDialog and drops hasConsentFor,
+      # and consent is live in prod. LAC-3906.
+      - dependency-name: "@c15t/nextjs"
+        update-types: ["version-update:semver-major"]
+      # engine and slim have to move together, and v4 drops options sparkles.tsx
+      # passes. Fix belongs upstream in shipkit. LAC-4645.
+      - dependency-name: "@tsparticles/engine"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@tsparticles/slim"
+        update-types: ["version-update:semver-major"]
+      # overrides pins nanoid to ^3.3.18, so a major here installs nothing and
+      # arrives with a green check. LAC-4646.
+      - dependency-name: "nanoid"
+        update-types: ["version-update:semver-major"]
+
   # GitHub Actions used by the workflows in .github/workflows
   - package-ecosystem: "github-actions"
     directory: "/"
