@@ -52,7 +52,7 @@ import { submitCommunityCenterReservation } from "@/server/actions/community-cen
 
 const validSubmission = {
   firstName: "Jane",
-  email: "jane@example.com",
+  email: "jane@harmonyresident.org",
   eventDate: "2026-10-01",
   startTime: "10:00",
   endTime: "14:00",
@@ -63,6 +63,8 @@ const validSubmission = {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  // Keep the test-recipient resolution deterministic regardless of local env.
+  process.env.CONTACT_TEST_RECIPIENT = "";
   sendMock.mockResolvedValue({ id: "email-id" });
   isTurnstileConfiguredMock.mockReturnValue(true);
   verifyTurnstileTokenMock.mockResolvedValue(true);
@@ -112,7 +114,7 @@ describe("submitCommunityCenterReservation bot protection", () => {
     const notification = sendMock.mock.calls[0][0];
     expect(notification.to).toContain("exploreharmonync@gmail.com");
     expect(notification.subject).toMatch(/^Community Center Reservation:/);
-    expect(notification.replyTo).toBe("jane@example.com");
+    expect(notification.replyTo).toBe("jane@harmonyresident.org");
   });
 
   it("rejects an attendance count above the fire-code maximum", async () => {
@@ -124,6 +126,39 @@ describe("submitCommunityCenterReservation bot protection", () => {
 
     expect(result.success).toBe(false);
     expect(sendMock).not.toHaveBeenCalled();
+  });
+
+  it("reroutes a test sender and sends no confirmation to the test domain", async () => {
+    const result = await submitCommunityCenterReservation({
+      ...validSubmission,
+      email: "test@test.com",
+      turnstileToken: "good-token",
+    });
+
+    expect(result.success).toBe(true);
+    // One message only: the confirmation to test.com is suppressed.
+    expect(sendMock).toHaveBeenCalledTimes(1);
+
+    const notification = sendMock.mock.calls[0][0];
+    expect(notification.to).toEqual(["admin@buildandserve.com"]);
+    expect(notification.bcc).toEqual([]);
+    expect(notification.subject).toMatch(/^\[TEST\] Community Center Reservation:/);
+    // The town inbox must never appear on a test send.
+    const allAddresses = JSON.stringify([notification.to, notification.bcc]);
+    expect(allAddresses).not.toContain("exploreharmonync@gmail.com");
+    expect(allAddresses).not.toContain("townofharmony.org");
+  });
+
+  it("treats example.com senders as tests too", async () => {
+    const result = await submitCommunityCenterReservation({
+      ...validSubmission,
+      email: "jane@example.com",
+      turnstileToken: "good-token",
+    });
+
+    expect(result.success).toBe(true);
+    expect(sendMock).toHaveBeenCalledTimes(1);
+    expect(sendMock.mock.calls[0][0].to).toEqual(["admin@buildandserve.com"]);
   });
 
   it("rejects a submission with neither email nor phone", async () => {

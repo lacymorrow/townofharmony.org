@@ -25,10 +25,14 @@ export const isTestSender = (email: string | undefined | null): boolean => {
   return domain !== null && TEST_SENDER_DOMAINS.has(domain);
 };
 
-// Admin env var first (same convention as susanmorrow's CONTACT_TEST_RECIPIENT
-// fallback chain), then the fleet-wide default inbox.
+// CONTACT_TEST_RECIPIENT overrides, then the fleet-wide default inbox.
+//
+// Deliberately NOT falling back to ADMIN_EMAIL here: in this repo that var is
+// the admin-area login allowlist (see config/admin-config.ts), so setting it to
+// a town address would silently route test mail into the client's inbox, which
+// is the one thing this sentinel exists to prevent (LAC-4202).
 export const resolveTestRecipient = (): string => {
-  const fromEnv = (process.env.CONTACT_TEST_RECIPIENT ?? process.env.ADMIN_EMAIL ?? "")
+  const fromEnv = (process.env.CONTACT_TEST_RECIPIENT ?? "")
     .split(",")
     .map((entry) => entry.trim())
     .filter(Boolean)[0];

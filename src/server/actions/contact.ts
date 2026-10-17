@@ -11,6 +11,11 @@ import {
   getClientIp,
   validateSubmissionTiming,
 } from "@/server/utils/contact-rate-limit";
+import {
+  isTestSender,
+  resolveTestRecipient,
+  TEST_SUBJECT_PREFIX,
+} from "@/server/utils/contact-test-sentinel";
 import { contactFormSchema } from "@/types/contact";
 
 export async function submitContactForm(formData: FormData) {
@@ -75,10 +80,18 @@ export async function submitContactForm(formData: FormData) {
     }
 
     const isEmail = validatedData.contactInfo?.includes("@");
+    // Test senders (test.com / example.com) are rerouted to an inbox we own
+    // and never reach the town's support inbox (LAC-4202).
+    const isTest = isTestSender(validatedData.contactInfo);
+    if (isTest) {
+      logger.info("Contact form test sender detected, rerouting", {
+        context: "contact-form",
+      });
+    }
     const result = await resend.emails.send({
       from: `Contact Form <${siteConfig.email.noreply}>`,
-      to: [siteConfig.email.support],
-      subject: "New Contact Form Submission",
+      to: [isTest ? resolveTestRecipient() : siteConfig.email.support],
+      subject: `${isTest ? TEST_SUBJECT_PREFIX : ""}New Contact Form Submission`,
       ...(isEmail && validatedData.contactInfo ? { replyTo: validatedData.contactInfo } : {}),
       html: contactNotificationEmail({
         name: validatedData.name,
@@ -88,7 +101,9 @@ export async function submitContactForm(formData: FormData) {
       }),
     });
 
-    if (isEmail && validatedData.contactInfo) {
+    // Skip the confirmation on the test path (LAC-4202): test.com and
+    // example.com are real domains and must not receive auto-reply mail.
+    if (isEmail && validatedData.contactInfo && !isTest) {
       try {
         await resend.emails.send({
           from: `${siteConfig.name} <${siteConfig.email.noreply}>`,
@@ -105,7 +120,8 @@ export async function submitContactForm(formData: FormData) {
       }
     }
 
-    if (validatedData.newsletter && isEmail && validatedData.contactInfo) {
+    // Likewise, a test sender is never added to the newsletter audience.
+    if (validatedData.newsletter && isEmail && validatedData.contactInfo && !isTest) {
       try {
         await addContactToAudience(validatedData.contactInfo);
       } catch (error) {
