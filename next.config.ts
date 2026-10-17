@@ -197,7 +197,9 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
     },
-    webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
+    // FID was retired in web-vitals v4 and INP replaced it as the responsiveness
+    // Core Web Vital, so the attribution list has to track that rename.
+    webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "INP"],
 
     // Optimized prefetching
     optimisticClientCache: true,
