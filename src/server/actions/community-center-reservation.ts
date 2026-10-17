@@ -16,6 +16,11 @@ import {
   validateSubmissionTiming,
 } from "@/server/utils/contact-rate-limit";
 import {
+  isTestSender,
+  resolveTestRecipient,
+  TEST_SUBJECT_PREFIX,
+} from "@/server/utils/contact-test-sentinel";
+import {
   DEFAULT_TOWN_CONTACT_BCC,
   DEFAULT_TOWN_CONTACT_TO,
   resolveRecipients,
@@ -157,20 +162,31 @@ export async function submitCommunityCenterReservation(
     };
   }
 
-  // Same inbox config as town inquiries (LAC-3312 / PR #234): Builder override
-  // -> env -> default. Reservation requests go to exploreharmonync@gmail.com.
-  const toRecipients = resolveRecipients(
-    recipientEmail,
-    env.TOWN_CONTACT_TO_EMAIL,
-    DEFAULT_TOWN_CONTACT_TO,
-    "recipientEmail"
-  );
-  const bccRecipients = resolveRecipients(
-    bccEmail,
-    env.TOWN_CONTACT_BCC_EMAIL,
-    DEFAULT_TOWN_CONTACT_BCC,
-    "bccEmail"
-  );
+  // Test senders (test.com / example.com) are rerouted to an inbox we own, the
+  // same contract town-contact.ts follows (LAC-4202). Staff must never receive
+  // a test reservation, so the Builder/env recipients are skipped entirely.
+  const isTest = isTestSender(email);
+  const toRecipients = isTest
+    ? [resolveTestRecipient()]
+    : // Same inbox config as town inquiries (LAC-3312 / PR #234): Builder
+      // override -> env -> default. Reservations go to exploreharmonync@gmail.com.
+      resolveRecipients(
+        recipientEmail,
+        env.TOWN_CONTACT_TO_EMAIL,
+        DEFAULT_TOWN_CONTACT_TO,
+        "recipientEmail"
+      );
+  // BCC is suppressed on the test path so cc'd staff inboxes never see a test.
+  const bccRecipients = isTest
+    ? []
+    : resolveRecipients(bccEmail, env.TOWN_CONTACT_BCC_EMAIL, DEFAULT_TOWN_CONTACT_BCC, "bccEmail");
+
+  if (isTest) {
+    logger.info("Community Center reservation test sender detected, rerouting", {
+      context: "community-center-reservation",
+      to: toRecipients,
+    });
+  }
 
   const reservationFields = {
     firstName,
@@ -192,7 +208,10 @@ export async function submitCommunityCenterReservation(
       bcc: bccRecipients,
       // Distinct subject prefix so staff can triage reservation requests apart
       // from general inquiries (LAC-3315).
-      subject: `Community Center Reservation: ${[firstName, lastName]
+      subject: `${isTest ? TEST_SUBJECT_PREFIX : ""}Community Center Reservation: ${[
+        firstName,
+        lastName,
+      ]
         .filter(Boolean)
         .join(" ")
         .replace(/[\r\n]/g, " ")} — ${eventDate.replace(/[\r\n]/g, " ")}`,
@@ -207,7 +226,9 @@ export async function submitCommunityCenterReservation(
     };
   }
 
-  if (email) {
+  // Skip the confirmation on the test path (LAC-4202): test.com and
+  // example.com are real domains and must not receive auto-reply mail.
+  if (email && !isTest) {
     try {
       await resend.emails.send({
         from: `${siteConfig.name} <${siteConfig.email.noreply}>`,
