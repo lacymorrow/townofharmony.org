@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { env } from "@/env";
+import { getEnabledOAuthProviders, isGuestOnlyAuthMode } from "@/lib/auth/auth-ui-availability";
 import { cn } from "@/lib/utils";
 import { signInWithOAuthAction } from "@/server/actions/auth";
-// Compute enabled providers client-side from build-time flags
 import { MagicLinkForm } from "./magic-link-form";
 
 const oauthButtonVariants = cva("flex items-center justify-center gap-sm", {
@@ -33,12 +33,6 @@ interface OAuthButtonsProps {
   variant?: "default" | "icons";
   className?: string;
   collapsible?: boolean;
-}
-
-interface Provider {
-  id: string;
-  name: string;
-  isExcluded?: boolean;
 }
 
 function MagicLinkContent() {
@@ -69,27 +63,15 @@ export function OAuthButtons({
     setCurrentVariant(currentVariant === "default" ? "icons" : "default");
   };
 
-  // Guest-only mode when guest is allowed but no other methods are enabled
-  const isGuestOnlyMode =
-    !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+  /**
+   * Guest-only mode owns the whole card, so there is nothing to put buttons
+   * beside. Both the mode check and the provider list come from
+   * `auth-ui-availability` so the sign-in pages gate on exactly what renders
+   * here.
+   */
+  const oauthProviders = getEnabledOAuthProviders();
 
-  // Build list of enabled OAuth providers (exclude guest, vercel, credentials, resend)
-  const oauthProviders: Provider[] = [];
-  if (env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED)
-    oauthProviders.push({ id: "google", name: "Google" });
-  if (env.NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED)
-    oauthProviders.push({ id: "twitter", name: "Twitter" });
-  if (env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED)
-    oauthProviders.push({ id: "discord", name: "Discord" });
-  if (env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED)
-    oauthProviders.push({ id: "github", name: "GitHub" });
-  if (env.NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED)
-    oauthProviders.push({ id: "gitlab", name: "GitLab" });
-  if (env.NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED)
-    oauthProviders.push({ id: "bitbucket", name: "Bitbucket" });
-
-  // Don't render OAuth buttons if in guest-only mode
-  if (isGuestOnlyMode) {
+  if (isGuestOnlyAuthMode()) {
     return null;
   }
 

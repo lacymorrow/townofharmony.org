@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AuthBranding } from "@/app/(app)/(authentication)/_components/auth-branding";
-import { AuthForm } from "@/app/(app)/(authentication)/_components/auth-form";
+import { AuthUnavailable } from "@/app/(app)/(authentication)/_components/auth-unavailable";
 import { AuthenticationCard } from "@/app/(app)/(authentication)/_components/authentication-card";
-import { Icon } from "@/components/assets/icon";
-import { Divider } from "@/components/primitives/divider";
+import { SignUp } from "@/app/(app)/(authentication)/sign-up/_components/sign-up";
 import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
-import { env } from "@/env";
-import { SignUpForm } from "./_components/sign-up-form";
+import { hasUsableAuthControls, isGuestOnlyAuthMode } from "@/lib/auth/auth-ui-availability";
 
 export const metadata: Metadata = constructMetadata({
   title: "Create Account",
@@ -18,47 +16,23 @@ export const metadata: Metadata = constructMetadata({
 });
 
 export default function SignUpPage() {
-  const hasAuth = env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
-  const isGuestOnlyMode =
-    !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
-
   /*
-   * Redirect to sign-in page when no authentication methods are available
-   * since users can create their own names through the guest form
+   * Guest sign-in creates the account from a name typed on the sign-in page,
+   * so there is nothing for this page to collect.
    */
-  if (isGuestOnlyMode) {
+  if (isGuestOnlyAuthMode()) {
     redirect(routes.auth.signIn);
   }
 
-  if (!hasAuth) {
-    return (
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <div className="flex items-center gap-2 self-center font-medium">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Icon />
-          </div>
-          {siteConfig.title}
-        </div>
-        <div className="flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
-          <span aria-hidden="true">&gt;</span>
-          <span>Login and sign-up are not available at this time.</span>
-        </div>
-      </div>
-    );
+  if (!hasUsableAuthControls()) {
+    return <AuthUnavailable />;
   }
 
   return (
     <div className="flex w-full max-w-sm flex-col gap-6">
       <AuthBranding />
       <AuthenticationCard>
-        <AuthForm mode="sign-up">
-          {env.NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED && (
-            <>
-              <Divider text="Or continue with email" />
-              <SignUpForm />
-            </>
-          )}
-        </AuthForm>
+        <SignUp />
       </AuthenticationCard>
     </div>
   );

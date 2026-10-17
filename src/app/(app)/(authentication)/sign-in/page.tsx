@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { AuthBranding } from "@/app/(app)/(authentication)/_components/auth-branding";
+import { AuthUnavailable } from "@/app/(app)/(authentication)/_components/auth-unavailable";
 import { AuthenticationCard } from "@/app/(app)/(authentication)/_components/authentication-card";
 import { SignIn } from "@/app/(app)/(authentication)/sign-in/_components/sign-in";
-import { Icon } from "@/components/assets/icon";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
-import { env } from "@/env";
+import { hasUsableAuthControls } from "@/lib/auth/auth-ui-availability";
 
 export const metadata: Metadata = constructMetadata({
   title: "Sign In",
@@ -14,23 +14,14 @@ export const metadata: Metadata = constructMetadata({
 });
 
 export default function SignInPage() {
-  const hasAuth = env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
-
-  if (!hasAuth) {
-    return (
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <div className="flex items-center gap-2 self-center font-medium">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Icon />
-          </div>
-          {siteConfig.title}
-        </div>
-        <div className="flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
-          <span aria-hidden="true">&gt;</span>
-          <span>Login and sign-up are not available at this time.</span>
-        </div>
-      </div>
-    );
+  /**
+   * Gated on the controls that would render, not on
+   * `NEXT_PUBLIC_FEATURE_AUTH_ENABLED`. That flag is true for Better Auth,
+   * which contributes no control to the card, so it let the page render a card
+   * with nothing in it.
+   */
+  if (!hasUsableAuthControls()) {
+    return <AuthUnavailable />;
   }
 
   return (
