@@ -93,11 +93,8 @@ const townContactSchema = z.object({
   attachment: attachmentSchema.optional(),
   turnstileToken: z.string().optional(),
   website: z.string().optional(),
-  // Builder-block overrides. Accept any string; malformed values are
-  // dropped in resolveRecipients() rather than failing the submission
-  // (defense-in-depth against a CMS typo).
-  recipientEmail: z.string().optional(),
-  bccEmail: z.string().optional(),
+  // No recipient fields: where this mail goes is a server decision, never a
+  // payload one (LAC-3944 / LAC-4610). See resolveRecipients.
 });
 
 export type TownContactFormData = z.infer<typeof townContactSchema>;
@@ -122,8 +119,6 @@ export async function submitTownContactForm(
     attachment,
     turnstileToken,
     website,
-    recipientEmail,
-    bccEmail,
   } = parsed.data;
 
   const ip = await getClientIp();
@@ -196,16 +191,11 @@ export async function submitTownContactForm(
   const isTest = isTestSender(email);
   const toRecipients = isTest
     ? [resolveTestRecipient()]
-    : resolveRecipients(
-        recipientEmail,
-        env.TOWN_CONTACT_TO_EMAIL,
-        DEFAULT_TOWN_CONTACT_TO,
-        "recipientEmail"
-      );
+    : resolveRecipients(env.TOWN_CONTACT_TO_EMAIL, DEFAULT_TOWN_CONTACT_TO, "recipientEmail");
   // BCC is suppressed on the test path so staff cc'd inboxes never see a test.
   const bccRecipients = isTest
     ? []
-    : resolveRecipients(bccEmail, env.TOWN_CONTACT_BCC_EMAIL, DEFAULT_TOWN_CONTACT_BCC, "bccEmail");
+    : resolveRecipients(env.TOWN_CONTACT_BCC_EMAIL, DEFAULT_TOWN_CONTACT_BCC, "bccEmail");
 
   if (isTest) {
     logger.info("Town contact test sender detected, rerouting", {

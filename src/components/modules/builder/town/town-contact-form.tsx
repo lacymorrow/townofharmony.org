@@ -12,12 +12,7 @@ import {
 import { useBuilderEntry } from "@/lib/builder-data";
 import { getMapUrl } from "@/lib/map-utils";
 
-interface TownContactFormProps {
-  recipientEmail?: string;
-  bccEmail?: string;
-}
-
-export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormProps = {}) => {
+export const TownContactForm = () => {
   const { data: builderFlat } = useBuilderEntry<BuilderSettingsFlat>(
     "town-settings",
     {},
@@ -113,7 +108,7 @@ export const TownContactForm = ({ recipientEmail, bccEmail }: TownContactFormPro
 					    server action, validation, honeypot, and Turnstile.
 					    recipient/bcc overrides let town staff re-route inquiries
 					    from Builder without a code deploy (LAC-3347). */}
-          <ContactFormImpl recipientEmail={recipientEmail} bccEmail={bccEmail} />
+          <ContactFormImpl />
         </div>
       </div>
     </section>

@@ -15,63 +15,45 @@ const parseEmailList = (value: string | undefined | null): string[] =>
     .filter(Boolean);
 
 /**
- * Builder field -> env -> default. Emails that fail validation are dropped and
- * logged; if the whole override is invalid, we fall through to the next tier so
- * a typo in the CMS never silently swallows inquiries (LAC-3347).
+ * Where a town form's mail goes: `TOWN_CONTACT_TO_EMAIL` /
+ * `TOWN_CONTACT_BCC_EMAIL`, else the default above. Addresses that fail
+ * validation are dropped and logged, and an env value that is entirely
+ * unusable falls through to the default, so a typo in the Vercel dashboard
+ * never silently swallows inquiries (LAC-3347).
  *
- * SECURITY (LAC-3944): the Builder override reaches this function through the
- * payload of a public, unauthenticated server action, so it is attacker
- * controlled no matter how it was authored in the CMS. Validating its *shape*
- * was not enough: anyone could POST `recipientEmail` and have the town's
- * verified Resend domain deliver an attacker-written message, with an
- * attachment, to any address. That is an open relay, and it spends the town's
- * domain reputation.
+ * There is deliberately no caller-supplied tier. Until LAC-3944 the Builder
+ * blocks took a `recipientEmail`, which reached this function inside the
+ * payload of a public, unauthenticated server action — attacker controlled no
+ * matter how it had been authored in the CMS. Anyone could POST a recipient and
+ * have the town's verified Resend domain deliver an attacker-written message,
+ * attachment included, to any mailbox. LAC-3944 cut the override down to a
+ * selection from the addresses the server already knew; LAC-4610 removed the
+ * inputs, because no Builder entry had ever set one and a field that only
+ * accepts addresses the server is already configured for is not a control, it
+ * is a control-shaped thing that quietly does nothing.
  *
- * So the override is now a *selection* from the addresses the server already
- * knows (`envValue` plus `fallback`), never a way to introduce a new one.
- * Routing to a brand-new address is a one-line env change, which is the
- * trust boundary it should always have been behind.
+ * Re-pointing is an env edit plus a redeploy. Handing no-deploy routing back to
+ * town staff means reading the address server-side — fetch the Builder entry by
+ * id with the server's key and read the field off the fetched entry — never
+ * taking it from the payload (LAC-4610).
  */
 export const resolveRecipients = (
-  builderValue: string | undefined | null,
   envValue: string | undefined,
   fallback: string,
   field: string
 ): string[] => {
-  // The set a CMS-authored override is permitted to route to.
-  const allowed = new Set(
-    [...parseEmailList(envValue), fallback].map((addr) => addr.toLowerCase())
-  );
+  const configured = parseEmailList(envValue);
+  if (configured.length === 0) return [fallback];
 
-  const tryTier = (raw: string | undefined | null, source: string): string[] | null => {
-    const list = parseEmailList(raw);
-    if (list.length === 0) return null;
-    const valid = list.filter((addr) => EMAIL_RE.test(addr));
-    const invalid = list.filter((addr) => !EMAIL_RE.test(addr));
-    if (invalid.length > 0) {
-      logger.warn("Ignoring malformed town-contact recipient(s)", {
-        field,
-        source,
-        invalid,
-      });
-    }
+  const valid = configured.filter((addr) => EMAIL_RE.test(addr));
+  const invalid = configured.filter((addr) => !EMAIL_RE.test(addr));
+  if (invalid.length > 0) {
+    logger.warn("Ignoring malformed town-contact recipient(s)", {
+      field,
+      source: "env",
+      invalid,
+    });
+  }
 
-    if (source !== "builder") {
-      return valid.length > 0 ? valid : null;
-    }
-
-    // Anything the server has not been configured to mail is refused here.
-    const permitted = valid.filter((addr) => allowed.has(addr.toLowerCase()));
-    const refused = valid.filter((addr) => !allowed.has(addr.toLowerCase()));
-    if (refused.length > 0) {
-      logger.warn("Refusing town-contact recipient override not configured on the server", {
-        field,
-        source,
-        refused,
-      });
-    }
-    return permitted.length > 0 ? permitted : null;
-  };
-
-  return tryTier(builderValue, "builder") ?? tryTier(envValue, "env") ?? [fallback];
+  return valid.length > 0 ? valid : [fallback];
 };
