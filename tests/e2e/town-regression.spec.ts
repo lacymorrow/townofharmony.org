@@ -34,6 +34,64 @@ test("LAC-1704: /events returns 200 with rendered content", async ({ page }) => 
   expect(bodyText.trim().length).toBeGreaterThan(100);
 });
 
+// ── LAC-2291 ─────────────────────────────────────────────────────────────────
+// Collapsing the map sidebar left blank space: Leaflet caches the container
+// dimensions, so without invalidateSize() the tiles stayed rendered at the old
+// narrow width and the newly exposed strip on the right had nothing over it.
+// Fixed by the ResizeObserver in harmony-map.tsx (#188) — this guards it.
+test("LAC-2291: collapsing the map sidebar leaves no blank space", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const response = await page.goto("/map");
+
+  if (response?.status() === 404) {
+    test.skip(true, "/map returns 404 — map feature is disabled (DISABLE_MAP=true)");
+  }
+  expect(response?.status()).toBe(200);
+
+  // Leaflet loads client-side; wait for real tiles before measuring anything.
+  await page.waitForSelector(".leaflet-tile-loaded", { timeout: 30_000 });
+
+  // Union of the loaded tiles vs. the map pane. A gap > 0 on any edge means a
+  // strip of the pane has no tile over it — the blank space users reported.
+  const measure = () => {
+    const pane = document.querySelector('[aria-label="Interactive map of Harmony, NC"]');
+    if (!pane) throw new Error("map pane not found");
+    const p = pane.getBoundingClientRect();
+    const tiles = Array.from(document.querySelectorAll(".leaflet-tile-loaded"));
+    const cover = tiles.reduce(
+      (acc, t) => {
+        const r = t.getBoundingClientRect();
+        return {
+          left: Math.min(acc.left, r.left),
+          right: Math.max(acc.right, r.right),
+        };
+      },
+      { left: Infinity, right: -Infinity }
+    );
+    return {
+      paneWidth: Math.round(p.width),
+      gapRight: Math.round(p.right - cover.right),
+      gapLeft: Math.round(cover.left - p.left),
+    };
+  };
+
+  const before = await page.evaluate(measure);
+
+  await page.getByRole("button", { name: "Close sidebar" }).click();
+  // 300ms CSS transition on the sidebar, then any newly exposed tiles load.
+  await expect(page.getByRole("button", { name: "Open sidebar" })).toBeVisible();
+  await page.waitForTimeout(2_000);
+
+  const after = await page.evaluate(measure);
+
+  // Sanity check: the pane actually grew, so the assertions below mean something.
+  expect(after.paneWidth).toBeGreaterThan(before.paneWidth);
+
+  // 1px of slack absorbs subpixel layout rounding.
+  expect(after.gapRight).toBeLessThanOrEqual(1);
+  expect(after.gapLeft).toBeLessThanOrEqual(1);
+});
+
 // ── LAC-1704 ─────────────────────────────────────────────────────────────────
 // /events link disappeared from site navigation when the page was accidentally disabled.
 test("LAC-1704: /events link exists in site navigation", async ({ page }) => {
