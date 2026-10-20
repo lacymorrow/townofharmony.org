@@ -25,6 +25,11 @@ import { describe, expect, it } from "vitest";
  *
  * Do not reintroduce it. An upstream Shipkit sync will try. If Builder ever
  * ships a release whose webpack entry passes `ts`, re-adding is one import.
+ *
+ * A third case used to assert the package was absent from `registry.json`'s
+ * item dependencies. That file went away with the rest of the shadcn registry
+ * in LAC-4606, so the case went with it: there is no registry consumer left to
+ * protect. Restoring the assertion requires restoring the registry first.
  */
 const ROOT = process.cwd();
 const PACKAGE = "@builder.io/dev-tools";
@@ -50,16 +55,6 @@ describe("@builder.io/dev-tools stays out of the build (LAC-4994)", () => {
     // toHaveProperty would read as a nested path and always pass.
     expect(Object.keys(pkg.dependencies ?? {})).not.toContain(PACKAGE);
     expect(Object.keys(pkg.devDependencies ?? {})).not.toContain(PACKAGE);
-  });
-
-  it("is not handed to registry consumers", () => {
-    const registry = readJson("registry.json") as {
-      items: { name: string; dependencies?: string[] }[];
-    };
-
-    for (const item of registry.items) {
-      expect(item.dependencies ?? []).not.toContain(PACKAGE);
-    }
   });
 
   it("is not imported anywhere in src/", () => {

@@ -128,7 +128,6 @@ const filesToRemove = [
 
   // Public assets
   "public/examples",
-  "public/registry",
   "public/workers",
 ];
 
@@ -164,7 +163,6 @@ const dirsToRemove = [
   "src/server/services",
   "tests",
   "public/examples",
-  "public/registry",
   "public/workers",
 ];
 
