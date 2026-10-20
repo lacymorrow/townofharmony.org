@@ -72,13 +72,13 @@ bun start              # Start production server
 bun run analyze        # Analyze bundle size
 ```
 
-### Registry
+### No component registry
 
-```bash
-bun run build:registry # Build shadcn registry (npx shadcn build)
-```
-
-Source: `registry.json` (project root). Output: `public/r/*.json`. See `docs/features/registry.mdx` for full documentation.
+This site does not publish a shadcn registry. `registry.json`, `public/r/`, `public/registry/` and the
+`build:registry` / `build:blocks` scripts were removed in LAC-4606: both generators they pointed at
+(`src/registry/generate-registry.ts`, deleted 2025-02, and `scripts/generate-registry.ts`, deleted 2025-07)
+were gone, so the committed snapshots drifted from source with nothing able to regenerate or check them. Upstream shipkit
+still ships a registry, so an upstream merge may try to bring these files back. Drop them again.
 
 ## Architecture Overview
 

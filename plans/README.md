@@ -35,8 +35,13 @@ fixes can land with confidence.
 | 013 | Replace `npm run` / `npx` in `package.json` scripts with `bun run` / `bunx`  | P3       | S      | dx                        | [#234](https://github.com/lacymorrow/shipkit/issues/234) | ⬜ todo |
 | 014 | Lazy-load Builder.io SDK and dedupe `getPageData` in CMS catch-all           | P3       | M      | performance               | [#235](https://github.com/lacymorrow/shipkit/issues/235) | ⬜ todo |
 | 015 | Remove stale `.env.old` / `.env.local.disabled` from the working tree        | P3       | S      | dx / hygiene              | [#236](https://github.com/lacymorrow/shipkit/issues/236) | ⬜ todo |
-| 017 | Direction — document the shadcn component registry as a distribution channel | P3       | S      | direction                 | [#238](https://github.com/lacymorrow/shipkit/issues/238) | ⬜ todo |
+| 017 | Direction — document the shadcn component registry as a distribution channel | P3       | S      | direction                 | [#238](https://github.com/lacymorrow/shipkit/issues/238) | 🚫 n/a  |
 | 018 | Direction — publish the `cli/` scaffolder and link it from README            | P3       | M      | direction                 | [#239](https://github.com/lacymorrow/shipkit/issues/239) | ⬜ todo |
+
+**017 is not applicable to this site (LAC-4606).** The registry was deleted here: a town
+website is not a component distribution, and the generators that built `public/r/` were
+already gone, so the snapshots had silently drifted from source. The plan still applies
+upstream in shipkit.
 
 ## How to execute a plan
 

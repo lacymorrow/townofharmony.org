@@ -1,5 +1,11 @@
 # Plan 017: Direction — document the shadcn component registry as a distribution channel
 
+> **Not applicable to townofharmony.org (LAC-4606, 2026-10-20).** The registry was
+> deleted from this repo instead of documented: `registry.json`, `public/r/`,
+> `public/registry/` and the `build:registry` / `build:blocks` scripts are gone. This
+> plan was inherited from upstream shipkit, where the registry is a real distribution
+> channel. It still applies there. Do not execute it here.
+
 > **Executor instructions**: Follow this plan step by step. When done,
 > update the status row for this plan in `plans/README.md`.
 
