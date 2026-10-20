@@ -518,7 +518,7 @@
       "title": "Builder.io",
       "description": "Visual page builder integration with Builder.io for no-code content editing.",
       "categories": ["shipkit", "cms", "builder"],
-      "dependencies": ["@builder.io/react", "@builder.io/sdk", "@builder.io/dev-tools"],
+      "dependencies": ["@builder.io/react", "@builder.io/sdk"],
       "registryDependencies": ["@shipkit/cn"],
       "files": [
         {
@@ -567,17 +567,12 @@
           "target": "~/src/components/modules/builder/testimonials.tsx"
         },
         {
-          "path": "src/config/nextjs/with-builder.ts",
-          "type": "registry:lib",
-          "target": "~/src/config/nextjs/with-builder.ts"
-        },
-        {
           "path": "src/styles/builder-io.css",
           "type": "registry:style",
           "target": "~/src/styles/builder-io.css"
         }
       ],
-      "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add your `BUILDER_API_KEY` to `.env`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard."
+      "docs": "Visual page builder powered by Builder.io. Sign up at builder.io and add your `BUILDER_API_KEY` to `.env`. Create pages visually in the Builder.io dashboard."
     },
     {
       "name": "cms-pages",
