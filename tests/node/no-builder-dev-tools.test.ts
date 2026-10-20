@@ -6,10 +6,10 @@ import { describe, expect, it } from "vitest";
  * Regression guard for LAC-4994.
  *
  * `@builder.io/dev-tools` wires a webpack plugin that builds its own dev-tools
- * server. From 1.83.3 onwards (checked through 1.94.0, the current latest) that
- * server stopped reading TypeScript itself and started expecting a `ts` option
- * from its caller, but upstream never updated their own next/webpack/vite
- * entries to pass one. So `createDevTools()` rejects with
+ * server. Somewhere between 1.60.0 and 1.75.0 that server stopped reading
+ * TypeScript itself and started expecting a `ts` option from its caller, but
+ * upstream never updated their own next/webpack/vite entries to pass one, and
+ * still had not by 1.94.0. So `createDevTools()` rejects with
  *
  *   createDevTools() requires a TypeScript instance passed to the 'ts' option
  *
