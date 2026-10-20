@@ -3,7 +3,7 @@
   "name": "builder-io",
   "title": "Builder.io",
   "description": "Visual page builder integration with Builder.io for no-code content editing.",
-  "dependencies": ["@builder.io/react", "@builder.io/sdk", "@builder.io/dev-tools"],
+  "dependencies": ["@builder.io/react", "@builder.io/sdk"],
   "registryDependencies": ["@shipkit/cn"],
   "files": [
     {
@@ -61,19 +61,13 @@
       "target": "~/src/components/modules/builder/testimonials.tsx"
     },
     {
-      "path": "src/config/nextjs/with-builder.ts",
-      "content": "import BuilderDevTools from \"@builder.io/dev-tools/next\";\nimport type { NextConfig } from \"next\";\nimport { buildTimeFeatures } from \"../features-config\";\n\n/**\n * Applies Builder.io configuration to the Next.js config.\n * @param nextConfig The existing Next.js configuration object.\n * @returns The modified Next.js configuration object with Builder support.\n */\n\nconst builderConfig = {};\nexport function withBuilderConfig(nextConfig: NextConfig): NextConfig {\n  if (buildTimeFeatures.BUILDER_ENABLED) {\n    return BuilderDevTools(builderConfig)(nextConfig);\n  }\n  return nextConfig;\n}\n",
-      "type": "registry:lib",
-      "target": "~/src/config/nextjs/with-builder.ts"
-    },
-    {
       "path": "src/styles/builder-io.css",
       "content": "/* Builder.io Overrides */\n.next-error-h1 {\n  line-height: 49px;\n}\n",
       "type": "registry:style",
       "target": "~/src/styles/builder-io.css"
     }
   ],
-  "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add your `BUILDER_API_KEY` to `.env`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard.",
+  "docs": "Visual page builder powered by Builder.io. Sign up at builder.io and add your `BUILDER_API_KEY` to `.env`. Create pages visually in the Builder.io dashboard.",
   "categories": ["shipkit", "cms", "builder"],
   "type": "registry:block"
 }
