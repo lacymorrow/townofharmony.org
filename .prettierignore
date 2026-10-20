@@ -14,8 +14,7 @@ docs-site
 
 # Build output. Formatting these would make `format:check` fail the moment
 # anything regenerates them: public/data/document-index.json comes from
-# `build:docs-index`, public/registry/ from `build:blocks`, and
-# public/workers/ from `workers:build`.
+# `build:docs-index` and public/workers/ from `workers:build`.
 .vercel
 .source
 public

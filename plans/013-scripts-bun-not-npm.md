@@ -45,7 +45,6 @@ Approximate locations (verify in live file at commit `6358b2b2`):
 - `"postinstall"` — runs `npx next telemetry disable`
 - `"check:metadata"` — runs `npx check-site-meta 3000`
 - `"check:performance"` — `next dev & npx react-scan@latest localhost:3000`
-- `"build:registry"` — runs `npx shadcn build`
 - `"analyze*"` — uses `cross-env` directly (good — no change needed)
 
 Plus a `clean` script that deletes `bun.lockb` (legacy). Worth flagging in
@@ -122,7 +121,6 @@ Test that the changes work. Skip db-mutating ones unless you have a throwaway DB
 bun run lint               # full lint chain
 bun run doctor             # type generation + import map (may take a minute)
 bun run check:metadata     # external call; fine to run
-bun run build:registry     # shadcn build; produces files in public/r/
 ```
 
 Verify each exits 0. Spot any that fail because the underlying tool isn't
@@ -142,7 +140,6 @@ No new tests. Verification by running the affected scripts (Step 4).
 - [ ] `bun run lint` exits 0.
 - [ ] `bun run doctor` exits 0.
 - [ ] `bun run check:metadata` exits 0 (or, if the script requires a running dev server, skip and note).
-- [ ] `bun run build:registry` exits 0.
 - [ ] `bun run typecheck && bun run test` exit 0.
 - [ ] `plans/README.md` status row for 013 updated.
 
