@@ -38,6 +38,17 @@ export const resources: TownResource[] = [
   },
   // Applications
   {
+    id: 12,
+    title: "2026 Christmas Parade Application",
+    slug: "christmas-parade-application",
+    type: "document",
+    category: "Community",
+    icon: "FileText",
+    description:
+      "Entry application for the Sunday, December 6, 2026 Christmas Parade. Due Wednesday, December 2.",
+    externalUrl: "/docs/2026-christmas-parade-application.pdf",
+  },
+  {
     id: 10,
     title: "Community Center Reservation",
     slug: "community-center-reservation",
