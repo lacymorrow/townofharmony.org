@@ -1,6 +1,6 @@
 import { getActiveAnnouncements } from "@/lib/town-data";
+import { DataLink } from "@/components/primitives/data-link";
 import { extractTextFromRichText } from "@/components/town/payload-rich-text";
-import Link from "next/link";
 
 export async function EmergencyBanner() {
   const announcements = await getActiveAnnouncements();
@@ -31,12 +31,12 @@ export async function EmergencyBanner() {
               </a>
             )}
             {alert.link && (
-              <Link
+              <DataLink
                 href={alert.link}
                 className="ml-2 font-semibold text-sage underline hover:text-sage-dark"
               >
                 View details
-              </Link>
+              </DataLink>
             )}
           </span>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 
 interface TownCommunitySpotlightProps {
@@ -47,12 +47,12 @@ export const TownCommunitySpotlight = ({
             </div>
             <h2 className="mb-3 font-serif text-2xl font-bold text-sage-dark">{title}</h2>
             <p className="mb-5 text-base leading-relaxed text-[#4A4640]">{description}</p>
-            <Link
+            <DataLink
               href={linkHref}
               className="cursor-pointer text-[15px] font-semibold text-sage transition-colors hover:text-sage-dark hover:underline"
             >
               Learn More &rarr;
-            </Link>
+            </DataLink>
           </div>
         </div>
       </div>

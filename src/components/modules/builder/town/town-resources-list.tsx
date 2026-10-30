@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { DataLink } from "@/components/primitives/data-link";
 import { DocumentViewerDialog } from "@/components/town/document-viewer-dialog";
 import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { useBuilderData } from "@/lib/builder-data";
@@ -276,25 +276,17 @@ export const TownResourcesList = ({ type }: TownResourcesListProps) => {
                     }
 
                     if (resource.externalUrl) {
-                      const isInternal =
-                        resource.externalUrl.startsWith("/") &&
-                        !resource.externalUrl.startsWith("//");
-                      if (isInternal) {
-                        return (
-                          <Link key={resource.slug} href={resource.externalUrl}>
-                            {content}
-                          </Link>
-                        );
-                      }
+                      // A non-document resource may still point at a file under
+                      // public/, which has no route to match (LAC-6284), so let
+                      // DataLink pick the element.
                       return (
-                        <a
+                        <DataLink
                           key={resource.slug}
                           href={resource.externalUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          fallback={content}
                         >
                           {content}
-                        </a>
+                        </DataLink>
                       );
                     }
 

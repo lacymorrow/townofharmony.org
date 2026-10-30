@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface TownAnnouncementBarProps {
@@ -68,12 +68,12 @@ export const TownAnnouncementBar = ({
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(message, { stripLinks: true }) }}
           />
           {ctaText && ctaHref && (
-            <Link
+            <DataLink
               href={ctaHref}
               className="flex-shrink-0 text-sm font-semibold text-sage underline hover:text-sage-dark"
             >
               {ctaText}
-            </Link>
+            </DataLink>
           )}
         </div>
       </div>

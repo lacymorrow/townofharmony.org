@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 import { AlertCircle, Briefcase, Calendar, FileText, Home, Phone, Star, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { isHrefHidden } from "@/lib/hidden-hrefs";
@@ -52,7 +52,7 @@ export const TownQuickLinks = ({ links }: TownQuickLinksProps) => {
           {resolvedLinks.map((link) => {
             const Icon = link.icon ? (iconMap[link.icon] ?? FileText) : FileText;
             return (
-              <Link
+              <DataLink
                 key={link.title}
                 href={link.href}
                 className="group flex cursor-pointer items-start gap-4 rounded-xl border border-[#DDD7CC] bg-warm-white p-6 transition-all hover:-translate-y-0.5 hover:border-sage-light hover:shadow-md"
@@ -64,7 +64,7 @@ export const TownQuickLinks = ({ links }: TownQuickLinksProps) => {
                   <h3 className="mb-1 text-base font-semibold text-[#2D2A24]">{link.title}</h3>
                   <p className="text-[13px] text-[#4A4640]">{link.description}</p>
                 </div>
-              </Link>
+              </DataLink>
             );
           })}
         </div>

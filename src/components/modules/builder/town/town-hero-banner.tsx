@@ -2,7 +2,7 @@
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
-import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 import {
   Dialog,
   DialogContent,
@@ -39,12 +39,12 @@ export const TownHeroBanner = ({
             </h2>
             <p className="mb-8 max-w-[480px] text-lg leading-relaxed text-white/90">{subtitle}</p>
             <div className="flex flex-wrap gap-3">
-              <Link
+              <DataLink
                 href={ctaHref}
                 className="inline-flex items-center gap-2 rounded-lg bg-wheat px-7 py-3.5 text-[15px] font-bold text-sage-deep transition-colors hover:bg-wheat-light"
               >
                 {ctaText}
-              </Link>
+              </DataLink>
             </div>
           </div>
 

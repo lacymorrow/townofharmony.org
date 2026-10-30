@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 import { getSettings } from "@/lib/town-data";
 
 export async function CommunitySpotlight() {
@@ -26,12 +26,12 @@ export async function CommunitySpotlight() {
             <p className="mb-5 text-base leading-relaxed text-[#4A4640]">
               {homepage.spotlightDescription}
             </p>
-            <Link
+            <DataLink
               href={homepage.spotlightCtaHref}
               className="cursor-pointer text-base font-semibold text-sage transition-colors hover:text-sage-dark hover:underline"
             >
               {homepage.spotlightCtaText} &rarr;
-            </Link>
+            </DataLink>
           </div>
         </div>
       </div>
