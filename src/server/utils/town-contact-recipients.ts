@@ -3,8 +3,18 @@ import { logger } from "@/lib/logger";
 // Defaults reflect Janet's 2026-08 routing request (LAC-3312). Kept here — not
 // in the server action — so unit tests can import them without pulling in the
 // "use server" module.
+//
+// These two are the GENERAL CONTACT form only. Community Center reservations
+// used to share them; LAC-6293 split reservations onto their own pair below, so
+// changing these no longer moves reservation mail and vice versa.
 export const DEFAULT_TOWN_CONTACT_TO = "exploreharmonync@gmail.com";
 export const DEFAULT_TOWN_CONTACT_BCC = "harmonync@yadtel.net";
+
+// Community Center reservations go to the yadtel address and nowhere else
+// (LAC-6293). There is deliberately no BCC default: the town asked for the one
+// recipient, so an unset TOWN_RESERVATION_BCC_EMAIL means no BCC at all rather
+// than quietly copying the old inbox.
+export const DEFAULT_TOWN_RESERVATION_TO = "harmonync@yadtel.net";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -15,11 +25,13 @@ const parseEmailList = (value: string | undefined | null): string[] =>
     .filter(Boolean);
 
 /**
- * Where a town form's mail goes: `TOWN_CONTACT_TO_EMAIL` /
- * `TOWN_CONTACT_BCC_EMAIL`, else the default above. Addresses that fail
- * validation are dropped and logged, and an env value that is entirely
- * unusable falls through to the default, so a typo in the Vercel dashboard
- * never silently swallows inquiries (LAC-3347).
+ * Where a town form's mail goes: the caller's env var
+ * (`TOWN_CONTACT_*_EMAIL` for the general contact form,
+ * `TOWN_RESERVATION_*_EMAIL` for Community Center reservations), else the
+ * matching default above. Addresses that fail validation are dropped and
+ * logged, and an env value that is entirely unusable falls through to the
+ * fallback, so a typo in the Vercel dashboard never silently swallows
+ * inquiries (LAC-3347).
  *
  * There is deliberately no caller-supplied tier. Until LAC-3944 the Builder
  * blocks took a `recipientEmail`, which reached this function inside the
@@ -39,11 +51,14 @@ const parseEmailList = (value: string | undefined | null): string[] =>
  */
 export const resolveRecipients = (
   envValue: string | undefined,
-  fallback: string,
+  fallback: string | null,
   field: string
 ): string[] => {
+  // A null fallback means "no recipient is a valid outcome" — used for the
+  // reservation BCC, which has no default address to fall back to (LAC-6293).
+  const fallbackList = fallback === null ? [] : [fallback];
   const configured = parseEmailList(envValue);
-  if (configured.length === 0) return [fallback];
+  if (configured.length === 0) return fallbackList;
 
   const valid = configured.filter((addr) => EMAIL_RE.test(addr));
   const invalid = configured.filter((addr) => !EMAIL_RE.test(addr));
@@ -55,5 +70,5 @@ export const resolveRecipients = (
     });
   }
 
-  return valid.length > 0 ? valid : [fallback];
+  return valid.length > 0 ? valid : fallbackList;
 };

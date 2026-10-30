@@ -64,4 +64,18 @@ describe("resolveRecipients", () => {
       DEFAULT_TOWN_CONTACT_BCC,
     ]);
   });
+
+  // The reservation BCC has no default address: nobody is copied unless the
+  // env var names someone (LAC-6293).
+  it("returns no recipients when the fallback is null and env is unset", () => {
+    expect(resolveRecipients(undefined, null, "bccEmail")).toEqual([]);
+  });
+
+  it("returns no recipients when the fallback is null and env is unusable", () => {
+    expect(resolveRecipients("not-an-email", null, "bccEmail")).toEqual([]);
+  });
+
+  it("still honours a valid address when the fallback is null", () => {
+    expect(resolveRecipients("clerk@example.com", null, "bccEmail")).toEqual(["clerk@example.com"]);
+  });
 });

@@ -2,8 +2,12 @@
  * Regression tests for LAC-3315: the Community Center reservation form must
  * inherit the same fail-closed bot protection as the town contact form
  * (honeypot silently dropped, Turnstile enforced when configured) and route
- * requests to the shared town inbox with a distinct subject prefix so staff
- * can triage reservation requests apart from general inquiries.
+ * requests to the town inbox with a distinct subject prefix so staff can
+ * triage reservation requests apart from general inquiries.
+ *
+ * LAC-6293 moved reservations off the shared contact inbox: they now go to
+ * harmonync@yadtel.net and nowhere else, via their own TOWN_RESERVATION_*
+ * env pair, so re-pointing the contact form cannot move reservation mail.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -112,9 +116,28 @@ describe("submitCommunityCenterReservation bot protection", () => {
     expect(sendMock).toHaveBeenCalledTimes(2);
 
     const notification = sendMock.mock.calls[0][0];
-    expect(notification.to).toContain("exploreharmonync@gmail.com");
+    expect(notification.to).toEqual(["harmonync@yadtel.net"]);
     expect(notification.subject).toMatch(/^Community Center Reservation:/);
     expect(notification.replyTo).toBe("jane@harmonyresident.org");
+  });
+
+  it("routes reservations to the yadtel address only, with no BCC (LAC-6293)", async () => {
+    const result = await submitCommunityCenterReservation({
+      ...validSubmission,
+      turnstileToken: "good-token",
+    });
+
+    expect(result.success).toBe(true);
+
+    const notification = sendMock.mock.calls[0][0];
+    // The single recipient the town asked for.
+    expect(notification.to).toEqual(["harmonync@yadtel.net"]);
+    // No BCC default: unset TOWN_RESERVATION_BCC_EMAIL means nobody is copied.
+    expect(notification.bcc).toEqual([]);
+    // The general contact form's inbox must not appear anywhere on a
+    // reservation — that shared routing is exactly what LAC-6293 removed.
+    const allAddresses = JSON.stringify([notification.to, notification.bcc]);
+    expect(allAddresses).not.toContain("exploreharmonync@gmail.com");
   });
 
   it("rejects an attendance count above the fire-code maximum", async () => {
@@ -145,6 +168,7 @@ describe("submitCommunityCenterReservation bot protection", () => {
     expect(notification.subject).toMatch(/^\[TEST\] Community Center Reservation:/);
     // The town inbox must never appear on a test send.
     const allAddresses = JSON.stringify([notification.to, notification.bcc]);
+    expect(allAddresses).not.toContain("harmonync@yadtel.net");
     expect(allAddresses).not.toContain("exploreharmonync@gmail.com");
     expect(allAddresses).not.toContain("townofharmony.org");
   });

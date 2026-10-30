@@ -42,10 +42,14 @@ const serverSchema = {
   RESEND_API_KEY: z.string().optional(),
   RESEND_AUDIENCE_ID: z.string().optional(),
   RESEND_FROM_EMAIL: z.string().optional(),
-  // Town contact/community-center inquiry routing. Comma-separated addresses
-  // so town staff can re-point routing without a code deploy (LAC-3312).
+  // General contact form routing. Comma-separated addresses so town staff can
+  // re-point routing without a code deploy (LAC-3312).
   TOWN_CONTACT_TO_EMAIL: z.string().optional(),
   TOWN_CONTACT_BCC_EMAIL: z.string().optional(),
+  // Community Center reservation routing, split off from the contact form so
+  // the two can be re-pointed independently (LAC-6293). Unset BCC means no BCC.
+  TOWN_RESERVATION_TO_EMAIL: z.string().optional(),
+  TOWN_RESERVATION_BCC_EMAIL: z.string().optional(),
 
   // OAuth Providers
   AUTH_DISCORD_ID: z.string().optional(),
