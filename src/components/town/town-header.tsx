@@ -3,6 +3,7 @@
 import { AlertTriangle, Calendar, Menu, Phone, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 import { useState } from "react";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { PhoneCopyButton } from "@/components/town/phone-copy-button";
@@ -159,7 +160,7 @@ export function TownHeader({
                               {item.children.map((child) => (
                                 <li key={child.name}>
                                   <NavigationMenuLink asChild>
-                                    <Link
+                                    <DataLink
                                       href={child.href}
                                       className={cn(
                                         "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-stone hover:text-sage-dark focus:bg-stone focus:text-sage-dark"
@@ -168,7 +169,7 @@ export function TownHeader({
                                       <div className="text-sm font-medium leading-none">
                                         {child.name}
                                       </div>
-                                    </Link>
+                                    </DataLink>
                                   </NavigationMenuLink>
                                 </li>
                               ))}
@@ -180,12 +181,12 @@ export function TownHeader({
                     return (
                       <NavigationMenuItem key={item.name}>
                         <NavigationMenuLink asChild>
-                          <Link
+                          <DataLink
                             href={item.href}
                             className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-[15px] font-medium text-[#4A4640] transition-colors hover:bg-stone hover:text-sage-dark focus:bg-stone focus:text-sage-dark focus:outline-none"
                           >
                             {item.name}
-                          </Link>
+                          </DataLink>
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                     );
@@ -261,24 +262,24 @@ export function TownHeader({
             </button>
             {navigation.map((item) => (
               <div key={item.name}>
-                <Link
+                <DataLink
                   href={item.href}
                   className="block py-2 text-[#2D2A24] transition-colors hover:text-sage-dark"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
-                </Link>
+                </DataLink>
                 {item.children && (
                   <div className="ml-4">
                     {item.children.map((child) => (
-                      <Link
+                      <DataLink
                         key={child.name}
                         href={child.href}
                         className="block py-1 text-sm text-[#4A4640] transition-colors hover:text-sage-dark"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {child.name}
-                      </Link>
+                      </DataLink>
                     ))}
                   </div>
                 )}

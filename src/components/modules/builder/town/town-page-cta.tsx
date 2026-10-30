@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 
 interface TownPageCtaProps {
   heading?: string;
@@ -39,7 +39,7 @@ export const TownPageCta = ({
           </p>
         )}
         {ctaText && ctaHref && (
-          <Link
+          <DataLink
             href={ctaHref}
             className={
               isPrimary
@@ -48,7 +48,7 @@ export const TownPageCta = ({
             }
           >
             {ctaText}
-          </Link>
+          </DataLink>
         )}
       </div>
     </section>

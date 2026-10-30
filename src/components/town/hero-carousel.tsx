@@ -1,7 +1,7 @@
 "use client";
 
 import useEmblaCarousel from "embla-carousel-react";
-import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { getMediaUrl } from "@/lib/utils/get-media-url";
@@ -246,18 +246,18 @@ function HeroTextColumn({
       </h1>
       <p className="mb-8 max-w-[480px] text-lg leading-relaxed text-white/90">{description}</p>
       <div className="flex flex-wrap gap-3">
-        <Link
+        <DataLink
           href={ctaHref}
           className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-wheat px-7 py-3.5 text-[15px] font-bold text-sage-deep transition-colors hover:bg-wheat-light"
         >
           {ctaText}
-        </Link>
-        <Link
+        </DataLink>
+        <DataLink
           href={resolvedSecondaryHref}
           className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-7 py-3.5 text-[15px] font-medium text-white transition-colors hover:border-white/30 hover:bg-white/15"
         >
           {resolvedSecondaryText}
-        </Link>
+        </DataLink>
       </div>
     </div>
   );

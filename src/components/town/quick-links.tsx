@@ -11,7 +11,7 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 
 import { getHiddenHrefs } from "@/lib/preview-flags";
 import { getSettings } from "@/lib/town-data";
@@ -51,7 +51,7 @@ export async function QuickLinks() {
           {quickLinks.map((link) => {
             const Icon = iconMap[link.icon] ?? FileText;
             return (
-              <Link
+              <DataLink
                 key={link.title}
                 href={link.href}
                 className="group flex cursor-pointer items-start gap-4 rounded-xl border border-[#DDD7CC] bg-warm-white p-6 transition-all hover:-translate-y-0.5 hover:border-sage-light hover:shadow-md"
@@ -63,7 +63,7 @@ export async function QuickLinks() {
                   <p className="mb-1 text-base font-semibold text-[#2D2A24]">{link.title}</p>
                   <p className="text-sm text-[#4A4640]">{link.description}</p>
                 </div>
-              </Link>
+              </DataLink>
             );
           })}
         </div>

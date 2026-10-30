@@ -1,5 +1,5 @@
 import { Facebook, Twitter, Youtube } from "lucide-react";
-import Link from "next/link";
+import { DataLink } from "@/components/primitives/data-link";
 
 import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { PhoneCopyButton } from "@/components/town/phone-copy-button";
@@ -127,12 +127,12 @@ export function TownFooter({
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.name}>
-                    <Link
+                    <DataLink
                       href={link.href}
                       className="text-sm text-white/70 transition-colors hover:text-wheat"
                     >
                       {link.name}
-                    </Link>
+                    </DataLink>
                   </li>
                 ))}
               </ul>
@@ -146,13 +146,13 @@ export function TownFooter({
             <span>{renderCopyright(settings.footer.copyright, settings.siteTitle)}</span>
             <div className="flex gap-5">
               {settings.footer.legalLinks.map((link) => (
-                <Link
+                <DataLink
                   key={link.href}
                   href={link.href}
                   className="text-white/80 transition-colors hover:text-wheat"
                 >
                   {link.name}
-                </Link>
+                </DataLink>
               ))}
             </div>
           </div>

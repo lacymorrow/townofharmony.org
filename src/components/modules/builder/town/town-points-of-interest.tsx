@@ -1,14 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { DataLink } from "@/components/primitives/data-link";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { useBuilderData } from "@/lib/builder-data";
 import { getMapUrl } from "@/lib/map-utils";
 import { htmlToPlainText } from "@/lib/html-to-text";
-import { isExternalUrl, isSafeUrl } from "@/lib/utils";
+import { isSafeUrl } from "@/lib/utils";
 import { pointsOfInterest as staticPOIs } from "@/data/town/points-of-interest";
 import type { TownPointOfInterest } from "@/data/town/types";
 
@@ -110,7 +110,6 @@ export const TownPointsOfInterest = ({ showCategoryFilter = true }: TownPointsOf
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {pois.map((poi) => {
               const safeLink = poi.link && isSafeUrl(poi.link) ? poi.link : undefined;
-              const isExternal = safeLink ? isExternalUrl(safeLink) : false;
               return (
                 <div
                   key={poi.slug}
@@ -158,24 +157,13 @@ export const TownPointsOfInterest = ({ showCategoryFilter = true }: TownPointsOf
                       </span>
                     )}
                     <h2 className="mb-2 text-lg font-semibold text-[#2D2A24]">
-                      {safeLink ? (
-                        isExternal ? (
-                          <a
-                            href={safeLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="transition-colors hover:text-sage-dark"
-                          >
-                            {poi.name}
-                          </a>
-                        ) : (
-                          <Link href={safeLink} className="transition-colors hover:text-sage-dark">
-                            {poi.name}
-                          </Link>
-                        )
-                      ) : (
-                        poi.name
-                      )}
+                      <DataLink
+                        href={safeLink}
+                        className="transition-colors hover:text-sage-dark"
+                        fallback={poi.name}
+                      >
+                        {poi.name}
+                      </DataLink>
                     </h2>
                     <p className="mb-3 line-clamp-2 text-base text-[#4A4640]">
                       {htmlToPlainText(poi.description)}
@@ -279,19 +267,10 @@ export const TownPointsOfInterest = ({ showCategoryFilter = true }: TownPointsOf
                             </svg>
                           </>
                         );
-                        return isExternal ? (
-                          <a
-                            href={safeLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={visitClassName}
-                          >
+                        return (
+                          <DataLink href={safeLink} className={visitClassName}>
                             {visitContent}
-                          </a>
-                        ) : (
-                          <Link href={safeLink} className={visitClassName}>
-                            {visitContent}
-                          </Link>
+                          </DataLink>
                         );
                       })()}
                   </div>
