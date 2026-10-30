@@ -66,7 +66,6 @@ vi.mock("@/server/utils/contact-rate-limit", () => ({
 import { submitCommunityCenterReservation } from "@/server/actions/community-center-reservation";
 import { submitTownContactForm } from "@/server/actions/town-contact";
 import {
-  DEFAULT_TOWN_CONTACT_BCC,
   DEFAULT_TOWN_CONTACT_TO,
   DEFAULT_TOWN_RESERVATION_TO,
 } from "@/server/utils/town-contact-recipients";
@@ -124,8 +123,9 @@ describe("town form recipients ignore the request payload", () => {
 
     expect(result.success).toBe(true);
     const notification = sendMock.mock.calls[0][0];
-    expect(notification.to).toEqual([DEFAULT_TOWN_CONTACT_TO]);
-    expect(notification.bcc).toEqual([DEFAULT_TOWN_CONTACT_BCC]);
+    expect(notification.to).toEqual(DEFAULT_TOWN_CONTACT_TO);
+    // Every contact recipient is a visible TO since LAC-6294, so no BCC.
+    expect(notification.bcc).toEqual([]);
     expect(JSON.stringify(sendMock.mock.calls)).not.toContain("evil.example");
   });
 

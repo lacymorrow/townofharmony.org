@@ -1,14 +1,25 @@
 import { logger } from "@/lib/logger";
 
-// Defaults reflect Janet's 2026-08 routing request (LAC-3312). Kept here — not
-// in the server action — so unit tests can import them without pulling in the
-// "use server" module.
+// Where a website inquiry goes today (LAC-6294, 2026-10-30): Janet Harriman of
+// Copper Gate Media, who builds and runs the site for the town, the town's
+// yadtel inbox, and the town's general gmail. All three are visible TO
+// recipients so everyone handling an inquiry can see who else received it. The
+// yadtel address was a BCC here from LAC-3312 until LAC-6294 moved it up.
+// Kept in this module — not in the server action — so unit tests can import it
+// without pulling in the "use server" module.
 //
-// These two are the GENERAL CONTACT form only. Community Center reservations
-// used to share them; LAC-6293 split reservations onto their own pair below, so
-// changing these no longer moves reservation mail and vice versa.
-export const DEFAULT_TOWN_CONTACT_TO = "exploreharmonync@gmail.com";
-export const DEFAULT_TOWN_CONTACT_BCC = "harmonync@yadtel.net";
+// This list is the GENERAL CONTACT form only. Community Center reservations
+// used to share it; LAC-6293 split reservations onto their own pair below, so
+// changing this no longer moves reservation mail and vice versa.
+export const DEFAULT_TOWN_CONTACT_TO = [
+  "coppergatemedia@gmail.com",
+  "harmonync@yadtel.net",
+  "exploreharmonync@gmail.com",
+];
+
+// No BCC default for the general contact form: every recipient above is on TO.
+// An unset TOWN_CONTACT_BCC_EMAIL therefore means no BCC at all, rather than
+// quietly sending the yadtel inbox a second copy of every inquiry (LAC-6294).
 
 // Community Center reservations go to the yadtel address and nowhere else
 // (LAC-6293). There is deliberately no BCC default: the town asked for the one
@@ -51,12 +62,13 @@ const parseEmailList = (value: string | undefined | null): string[] =>
  */
 export const resolveRecipients = (
   envValue: string | undefined,
-  fallback: string | null,
+  fallback: string | string[] | null,
   field: string
 ): string[] => {
   // A null fallback means "no recipient is a valid outcome" — used for the
-  // reservation BCC, which has no default address to fall back to (LAC-6293).
-  const fallbackList = fallback === null ? [] : [fallback];
+  // reservation BCC and the contact BCC, neither of which has a default address
+  // to fall back to (LAC-6293, LAC-6294).
+  const fallbackList = fallback === null ? [] : [fallback].flat();
   const configured = parseEmailList(envValue);
   if (configured.length === 0) return fallbackList;
 
