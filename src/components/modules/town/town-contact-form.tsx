@@ -68,7 +68,7 @@ export const TownContactForm = () => {
         // Community center reservations have their own page and a link block
         // beside this form (LAC-6295), so the option is dropped even if the
         // staff-edited Builder entry still exists.
-        .filter((t) => !/community.?center|reservation/i.test(`${t.value} ${t.label}`))
+        .filter((t) => !/community.?center/i.test(`${t.value} ${t.label}`))
         .map((t) => ({ value: t.value, label: t.label })),
     [builderInquiryTypes]
   );
