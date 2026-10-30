@@ -21,8 +21,7 @@ import {
   TEST_SUBJECT_PREFIX,
 } from "@/server/utils/contact-test-sentinel";
 import {
-  DEFAULT_TOWN_CONTACT_BCC,
-  DEFAULT_TOWN_CONTACT_TO,
+  DEFAULT_TOWN_RESERVATION_TO,
   resolveRecipients,
 } from "@/server/utils/town-contact-recipients";
 
@@ -164,13 +163,21 @@ export async function submitCommunityCenterReservation(
   const isTest = isTestSender(email);
   const toRecipients = isTest
     ? [resolveTestRecipient()]
-    : // Same inbox config as town inquiries (LAC-3312 / PR #234): env ->
-      // default. Reservations go to exploreharmonync@gmail.com.
-      resolveRecipients(env.TOWN_CONTACT_TO_EMAIL, DEFAULT_TOWN_CONTACT_TO, "recipientEmail");
+    : // Reservation-only routing (LAC-6293): env -> default. Deliberately NOT
+      // the TOWN_CONTACT_* pair the general contact form uses, so re-pointing
+      // one form never moves the other. Reservations go to
+      // harmonync@yadtel.net.
+      resolveRecipients(
+        env.TOWN_RESERVATION_TO_EMAIL,
+        DEFAULT_TOWN_RESERVATION_TO,
+        "recipientEmail"
+      );
   // BCC is suppressed on the test path so cc'd staff inboxes never see a test.
+  // Off the test path there is no BCC default: the town asked for the single
+  // yadtel recipient, so this is [] unless TOWN_RESERVATION_BCC_EMAIL is set.
   const bccRecipients = isTest
     ? []
-    : resolveRecipients(env.TOWN_CONTACT_BCC_EMAIL, DEFAULT_TOWN_CONTACT_BCC, "bccEmail");
+    : resolveRecipients(env.TOWN_RESERVATION_BCC_EMAIL, null, "bccEmail");
 
   if (isTest) {
     logger.info("Community Center reservation test sender detected, rerouting", {
