@@ -327,12 +327,30 @@ function HeroMedia({
   const showVideo = Boolean(heroVideoUrl) && !prefersReducedMotion;
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const [videoFailed, setVideoFailed] = React.useState(false);
+  // Tracked as the URL that failed rather than a boolean so a new Builder
+  // upload is retried automatically. A reset effect cannot do that job here:
+  // effects run *after* ref callbacks, so it would clear a pre-hydration
+  // failure detected on mount.
+  const [failedImageUrl, setFailedImageUrl] = React.useState<string | null>(null);
+  const imageFailed = heroImageUrl !== null && failedImageUrl === heroImageUrl;
 
   // Reset the failure flag whenever the video source changes so a new Builder
   // upload gets a fresh play attempt instead of being permanently disqualified.
   React.useEffect(() => {
     setVideoFailed(false);
   }, [heroVideoUrl]);
+
+  // The hero is server-rendered, so an image that 404s, is blocked by an
+  // extension, or loses the CDN usually fails *before* React hydrates — the
+  // `onError` prop is attached too late to ever fire and the browser paints a
+  // broken-image icon over the gradient (LAC-6283). Re-check the decoded size
+  // when the element attaches so a pre-hydration failure still falls back.
+  const imageRef = React.useCallback(
+    (node: HTMLImageElement | null) => {
+      if (node?.complete && node.naturalWidth === 0) setFailedImageUrl(heroImageUrl);
+    },
+    [heroImageUrl]
+  );
 
   React.useEffect(() => {
     const v = videoRef.current;
@@ -373,11 +391,13 @@ function HeroMedia({
     );
   }
 
-  if (heroImageUrl) {
+  if (heroImageUrl && !imageFailed) {
     return (
       <img
+        ref={imageRef}
         src={heroImageUrl}
         alt={slide.title}
+        onError={() => setFailedImageUrl(heroImageUrl)}
         className="absolute inset-0 h-full w-full object-cover"
       />
     );
