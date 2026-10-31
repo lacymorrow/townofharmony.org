@@ -1,9 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  DEFAULT_TOWN_CONTACT_BCC,
-  DEFAULT_TOWN_CONTACT_TO,
-  resolveRecipients,
-} from "@/server/utils/town-contact-recipients";
+import { DEFAULT_TOWN_CONTACT_TO, resolveRecipients } from "@/server/utils/town-contact-recipients";
 
 vi.mock("@/lib/logger", () => ({
   logger: { warn: vi.fn(), info: vi.fn(), error: vi.fn(), debug: vi.fn() },
@@ -48,20 +44,28 @@ describe("resolveRecipients", () => {
   });
 
   it("falls through to the default when the env value is entirely malformed", () => {
-    expect(resolveRecipients("not-an-email", DEFAULT_TOWN_CONTACT_TO, "recipientEmail")).toEqual([
-      DEFAULT_TOWN_CONTACT_TO,
-    ]);
+    expect(resolveRecipients("not-an-email", DEFAULT_TOWN_CONTACT_TO, "recipientEmail")).toEqual(
+      DEFAULT_TOWN_CONTACT_TO
+    );
   });
 
   it("falls through to the default when env is unset", () => {
-    expect(resolveRecipients(undefined, DEFAULT_TOWN_CONTACT_TO, "recipientEmail")).toEqual([
-      DEFAULT_TOWN_CONTACT_TO,
-    ]);
+    expect(resolveRecipients(undefined, DEFAULT_TOWN_CONTACT_TO, "recipientEmail")).toEqual(
+      DEFAULT_TOWN_CONTACT_TO
+    );
   });
 
   it("falls through to the default when env is set to whitespace", () => {
-    expect(resolveRecipients("   ", DEFAULT_TOWN_CONTACT_BCC, "bccEmail")).toEqual([
-      DEFAULT_TOWN_CONTACT_BCC,
+    expect(resolveRecipients("   ", DEFAULT_TOWN_CONTACT_TO, "recipientEmail")).toEqual(
+      DEFAULT_TOWN_CONTACT_TO
+    );
+  });
+
+  // A single-address fallback still yields one recipient: reservations pass a
+  // bare string (LAC-6293) while the contact form passes a list (LAC-6294).
+  it("accepts a single-address fallback as well as a list", () => {
+    expect(resolveRecipients(undefined, "clerk@example.com", "recipientEmail")).toEqual([
+      "clerk@example.com",
     ]);
   });
 

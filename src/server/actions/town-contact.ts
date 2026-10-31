@@ -20,11 +20,7 @@ import {
   resolveTestRecipient,
   TEST_SUBJECT_PREFIX,
 } from "@/server/utils/contact-test-sentinel";
-import {
-  DEFAULT_TOWN_CONTACT_BCC,
-  DEFAULT_TOWN_CONTACT_TO,
-  resolveRecipients,
-} from "@/server/utils/town-contact-recipients";
+import { DEFAULT_TOWN_CONTACT_TO, resolveRecipients } from "@/server/utils/town-contact-recipients";
 
 /**
  * Inquiry types live in the Builder.io `town-contact-inquiry-type` data model
@@ -193,9 +189,12 @@ export async function submitTownContactForm(
     ? [resolveTestRecipient()]
     : resolveRecipients(env.TOWN_CONTACT_TO_EMAIL, DEFAULT_TOWN_CONTACT_TO, "recipientEmail");
   // BCC is suppressed on the test path so staff cc'd inboxes never see a test.
+  // Off the test path there is no BCC default either: since LAC-6294 every
+  // configured recipient is a visible TO, so this is [] unless
+  // TOWN_CONTACT_BCC_EMAIL names someone.
   const bccRecipients = isTest
     ? []
-    : resolveRecipients(env.TOWN_CONTACT_BCC_EMAIL, DEFAULT_TOWN_CONTACT_BCC, "bccEmail");
+    : resolveRecipients(env.TOWN_CONTACT_BCC_EMAIL, null, "bccEmail");
 
   if (isTest) {
     logger.info("Town contact test sender detected, rerouting", {
