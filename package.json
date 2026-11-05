@@ -350,7 +350,6 @@
     "edgedriver",
     "esbuild",
     "geckodriver",
-    "isolated-vm",
     "onnxruntime-node",
     "prisma",
     "protobufjs",
