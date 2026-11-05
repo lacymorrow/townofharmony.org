@@ -3,14 +3,25 @@
 #
 # Wired from vercel.json as `"ignoreCommand": "bash scripts/vercel-ignore-step.sh"`.
 # vercel.json's ignoreCommand OVERRIDES the dashboard "Ignored Build Step" field,
-# so this file is the live surface for any commit that contains it. The dashboard
-# field still governs branches cut before this landed, and carries the same
-# semantics on both projects so the two surfaces cannot disagree (LAC-6380).
+# so this file is the live surface for any commit that contains it, and the
+# dashboard field only governs branches cut before this landed (LAC-6380). Both
+# dashboard fields were set to agree with this file rather than left to drift:
+# townofharmony-org carries the same production + subject/branch marker logic
+# inline, townofharmony-org-preview carries production-only, which is the same
+# answer there because that project has no reason to build a branch at all.
 #
 # Two Vercel projects build this one repo, and both read this file (LAC-7152):
 #
 #   townofharmony-org          production = main -> townofharmony.org, www
 #   townofharmony-org-preview  production = main -> preview.townofharmony.org
+#
+# The second project exists so the client-facing staging domain keeps serving a
+# current build after previews became opt-in. It is a *production* target on its
+# own project, so it is publicly reachable where the old SSO-gated preview
+# deployment was not. What makes that safe is measured, not assumed: the
+# host-scoped noindex headers in next.config.ts, and Stripe keys that are
+# sk_test_/pk_test_ on that project, so the sewer flow it exposes and production
+# hides cannot take real money.
 #
 # Production always builds on both. A skipped production build would leave a live
 # client domain on an older deployment after a merge.
