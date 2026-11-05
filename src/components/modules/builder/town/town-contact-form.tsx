@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { CalendarCheck, Clock, Mail, MapPin, Phone } from "lucide-react";
 import { TownContactForm as ContactFormImpl } from "@/components/modules/town/town-contact-form";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { PhoneCopyButton } from "@/components/town/phone-copy-button";
@@ -102,6 +102,23 @@ export const TownContactForm = () => {
                 </div>
               );
             })}
+
+            <a
+              href="/resources/community-center-reservation"
+              className="flex items-start gap-4 rounded-xl border border-[#DDD7CC] bg-warm-white p-5 transition-shadow hover:shadow-md"
+            >
+              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-sage-dark">
+                <CalendarCheck className="h-5 w-5 text-wheat" />
+              </div>
+              <div>
+                <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-[#4A4640]">
+                  Community Center Reservations
+                </p>
+                <p className="text-[15px] font-medium text-[#2D2A24]">
+                  Want to rent the community center? Reserve it here.
+                </p>
+              </div>
+            </a>
           </div>
 
           {/* Contact Form — uses the full-featured static form with

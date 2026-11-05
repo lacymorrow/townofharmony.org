@@ -359,6 +359,6 @@
     "utf-8-validate"
   ],
   "engines": {
-    "node": ">=18"
+    "node": "24.x"
   }
 }
