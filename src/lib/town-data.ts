@@ -290,7 +290,7 @@ export const getEvents = async (options?: {
  */
 export const getEventBySlug = async (slug: string): Promise<TownEvent | null> => {
   const direct = await fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
-  if (direct) return ensureEventSlug(direct);
+  if (direct) return normalizeEventCategories(ensureEventSlug(direct));
   const bySlug = await resolveEventBySlugMap();
   const match = bySlug.get(slug);
   if (match) {
