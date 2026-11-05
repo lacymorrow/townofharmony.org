@@ -150,6 +150,32 @@ const nextConfig: NextConfig = {
           // },
         ],
       },
+      /*
+       * Keep the staging surface out of search results.
+       *
+       * preview.townofharmony.org is served by the `townofharmony-org-preview`
+       * Vercel project, where it is a *production* deployment on a custom domain
+       * (LAC-7152). Vercel only adds its own `X-Robots-Tag: noindex` to preview
+       * deployments, so a production-target staging domain would otherwise be
+       * crawlable and compete with townofharmony.org for the same content.
+       * robots.ts is host-agnostic and advertises the production sitemap, so the
+       * header is the thing doing the work here.
+       */
+      {
+        source: "/(.*)",
+        has: [
+          {
+            type: "host",
+            value: "preview.townofharmony.org",
+          },
+        ],
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+        ],
+      },
     ]);
   },
 
