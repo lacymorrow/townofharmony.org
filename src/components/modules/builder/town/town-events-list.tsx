@@ -8,6 +8,7 @@ import { AddressCopyButton } from "@/components/town/address-copy-button";
 import type { TownEvent } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { getTodayString, safeDate, toDateOnly } from "@/lib/date-only";
+import { normalizeEventCategories } from "@/lib/event-categories";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { formatTime } from "@/lib/utils";
 
@@ -16,8 +17,13 @@ interface TownEventsListProps {
   showFilters?: boolean;
 }
 
+// Builder is read client-side here, so the server-side normalizer never sees
+// this data. Run the same one so the filter and badges match the other paths.
 const safeCategories = (event: TownEvent): string[] =>
-  Array.isArray(event.categories) ? event.categories : [];
+  normalizeEventCategories({
+    ...event,
+    categories: Array.isArray(event.categories) ? event.categories : [],
+  }).categories;
 
 const isPastEvent = (event: TownEvent, todayStr: string): boolean => {
   const dateStr = toDateOnly(event.eventDate);
@@ -37,13 +43,7 @@ const SectionDivider = ({ label }: { label: string }) => (
  * alphabetically after these — editors can add new categories without a code
  * change.
  */
-const PREFERRED_CATEGORY_ORDER = [
-  "community",
-  "recreation",
-  "government",
-  "education",
-  "holiday",
-] as const;
+const PREFERRED_CATEGORY_ORDER = ["recreation", "government", "education", "holiday"] as const;
 
 const MONTHS = [
   { value: "1", label: "January" },

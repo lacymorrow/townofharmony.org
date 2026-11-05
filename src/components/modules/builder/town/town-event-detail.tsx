@@ -9,6 +9,7 @@ import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownEvent } from "@/data/town/types";
 import { resolveBuilderRef } from "@/data/town/types";
 import { useBuilderEntry } from "@/lib/builder-data";
+import { normalizeEventCategories } from "@/lib/event-categories";
 import { deriveEventStatus, type EventDisplayStatus } from "@/lib/event-status";
 import { getMapUrl } from "@/lib/map-utils";
 import { sanitizeHtml } from "@/lib/sanitize-html";
@@ -19,7 +20,10 @@ interface TownEventDetailProps {
 }
 
 const safeCategories = (event: TownEvent): string[] =>
-  Array.isArray(event.categories) ? event.categories : [];
+  normalizeEventCategories({
+    ...event,
+    categories: Array.isArray(event.categories) ? event.categories : [],
+  }).categories;
 
 const safeDate = (dateStr: unknown): Date | null => {
   if (!dateStr || typeof dateStr !== "string") return null;

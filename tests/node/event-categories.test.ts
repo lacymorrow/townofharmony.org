@@ -24,4 +24,23 @@ describe("normalizeEventCategories", () => {
       "festival",
     ]);
   });
+
+  it("replaces a lone 'event' category", () => {
+    expect(normalizeEventCategories(make("Town Picnic", ["event"])).categories).toEqual(["other"]);
+  });
+
+  it("does not duplicate an existing farmers market category", () => {
+    const r = normalizeEventCategories(make("May Farmers Market", ["Farmers Market", "event"]));
+    expect(r.categories).toEqual(["farmers market"]);
+  });
+
+  it("lowercases and trims, and ignores blank entries", () => {
+    const r = normalizeEventCategories(make("Concert", ["  Recreation ", " "]));
+    expect(r.categories).toEqual(["recreation"]);
+  });
+
+  it("infers market, festival and other from title", () => {
+    expect(normalizeEventCategories(make("HWY 21 Road Market", [])).categories).toEqual(["market"]);
+    expect(normalizeEventCategories(make("Christmas Parade", [])).categories).toEqual(["festival"]);
+  });
 });
