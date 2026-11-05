@@ -43,4 +43,28 @@ describe("normalizeEventCategories", () => {
     expect(normalizeEventCategories(make("HWY 21 Road Market", [])).categories).toEqual(["market"]);
     expect(normalizeEventCategories(make("Christmas Parade", [])).categories).toEqual(["festival"]);
   });
+  it("survives non-array tags from Builder", () => {
+    const withObjectTags = {
+      title: "Spring Concert",
+      tags: { 0: "music" },
+      categories: ["recreation"],
+    } as unknown as Parameters<typeof normalizeEventCategories>[0];
+    expect(normalizeEventCategories(withObjectTags).categories).toEqual(["recreation"]);
+
+    const withStringTags = {
+      title: "Spring Concert",
+      tags: "music",
+      categories: [],
+    } as unknown as Parameters<typeof normalizeEventCategories>[0];
+    expect(normalizeEventCategories(withStringTags).categories).toEqual(["other"]);
+  });
+
+  it("survives non-array categories from Builder", () => {
+    const withObjectCategories = {
+      title: "Christmas Parade",
+      tags: [],
+      categories: { 0: "holiday" },
+    } as unknown as Parameters<typeof normalizeEventCategories>[0];
+    expect(normalizeEventCategories(withObjectCategories).categories).toEqual(["festival"]);
+  });
 });
