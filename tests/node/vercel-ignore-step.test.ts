@@ -123,15 +123,33 @@ describe("vercel-ignore-step.sh: previews are opt-in", () => {
     expect(status).toBe(BUILD);
   });
 
-  it("builds a preview when [preview] is in the branch name", () => {
+  it("does not treat a [preview] branch name as an escape", () => {
+    // Regression: an earlier cut carried a second `case` on VERCEL_GIT_COMMIT_REF,
+    // which made this the only project in the fleet with a rule looser than the
+    // fleet default. The marker is per-commit on purpose, so that opting a branch
+    // in is a visible act in history rather than a property of its name.
     const { status, stdout } = runIgnoreStep({
       VERCEL_ENV: "preview",
       VERCEL_GIT_COMMIT_REF: "LAC-1234/some-fix-[preview]",
       VERCEL_GIT_COMMIT_MESSAGE: "feat: new events page",
     });
 
-    expect(status).toBe(BUILD);
-    expect(stdout).toContain("branch name");
+    expect(status).toBe(SKIP);
+    expect(stdout).toContain("skipping");
+  });
+
+  it("matches the fleet default on every arm it shares with it", () => {
+    // The dashboard field on townofharmony-org is FLEET_DEFAULT verbatim while
+    // this script is the live surface, so a divergence beyond the documented
+    // subject-vs-body narrowing would be invisible until a build ran. Asserting
+    // the script carries no ref-based escape at all is what keeps the two in step.
+    const script = readFileSync(scriptPath, "utf8");
+    const executable = script
+      .split("\n")
+      .filter((line) => !line.trimStart().startsWith("#"))
+      .join("\n");
+
+    expect(executable).not.toContain("VERCEL_GIT_COMMIT_REF");
   });
 
   it("skips when VERCEL_ENV is absent, rather than defaulting to a build", () => {
