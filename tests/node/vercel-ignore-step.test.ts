@@ -87,7 +87,7 @@ describe("vercel-ignore-step.sh: previews are opt-in", () => {
     expect(status).toBe(SKIP);
   });
 
-  it("builds a preview when [preview] is in the commit message", () => {
+  it("builds a preview when [preview] is in the commit subject", () => {
     const { status, stdout } = runIgnoreStep({
       VERCEL_ENV: "preview",
       VERCEL_GIT_COMMIT_REF: "LAC-1234/some-fix",
@@ -95,7 +95,32 @@ describe("vercel-ignore-step.sh: previews are opt-in", () => {
     });
 
     expect(status).toBe(BUILD);
-    expect(stdout).toContain("commit message");
+    expect(stdout).toContain("commit subject");
+  });
+
+  it("ignores a marker that appears only in the commit body", () => {
+    // Regression: the first cut matched the whole message, so a commit whose body
+    // merely discussed the marker opted itself in. That cost a real build, and a
+    // failed one, on townofharmony-org-preview.
+    const { status, stdout } = runIgnoreStep({
+      VERCEL_ENV: "preview",
+      VERCEL_GIT_COMMIT_REF: "LAC-1234/some-fix",
+      VERCEL_GIT_COMMIT_MESSAGE:
+        "ci: document the opt-in marker\n\nNo [preview] marker on purpose: this commit should not build.",
+    });
+
+    expect(status).toBe(SKIP);
+    expect(stdout).toContain("skipping");
+  });
+
+  it("builds on a subject marker even when the body also mentions it", () => {
+    const { status } = runIgnoreStep({
+      VERCEL_ENV: "preview",
+      VERCEL_GIT_COMMIT_REF: "LAC-1234/some-fix",
+      VERCEL_GIT_COMMIT_MESSAGE: "feat: events page [preview]\n\nUsing [preview] deliberately.",
+    });
+
+    expect(status).toBe(BUILD);
   });
 
   it("builds a preview when [preview] is in the branch name", () => {
