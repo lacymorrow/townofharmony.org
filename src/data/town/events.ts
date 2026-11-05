@@ -24,7 +24,7 @@ export const events: TownEvent[] = [
     contactPhone: "(704) 881-8094",
     status: "past",
     isRecurring: false,
-    categories: ["community", "festival"],
+    categories: ["festival"],
     tags: ["spring", "festival", "family"],
   },
   {
@@ -45,7 +45,7 @@ export const events: TownEvent[] = [
     contactPhone: "",
     status: "upcoming",
     isRecurring: false,
-    categories: ["community", "recreation", "farmers market", "event"],
+    categories: ["farmers market", "recreation"],
     tags: ["farmers-market", "local"],
   },
   {
@@ -66,7 +66,7 @@ export const events: TownEvent[] = [
     contactPhone: "",
     status: "upcoming",
     isRecurring: true,
-    categories: ["community", "recreation"],
+    categories: ["farmers market", "recreation"],
     tags: ["farmers-market", "local"],
   },
   {
@@ -87,7 +87,7 @@ export const events: TownEvent[] = [
     contactPhone: "(704) 546-2339",
     status: "upcoming",
     isRecurring: false,
-    categories: ["community"],
+    categories: ["market"],
     tags: ["road-market", "summer"],
   },
   {
@@ -108,7 +108,7 @@ export const events: TownEvent[] = [
     contactPhone: "",
     status: "upcoming",
     isRecurring: true,
-    categories: ["community", "recreation"],
+    categories: ["farmers market", "recreation"],
     tags: ["farmers-market", "local"],
   },
   {
@@ -129,7 +129,7 @@ export const events: TownEvent[] = [
     contactPhone: "",
     status: "upcoming",
     isRecurring: false,
-    categories: ["community", "recreation"],
+    categories: ["farmers market", "recreation"],
     tags: ["farmers-market", "local"],
   },
   {
@@ -150,7 +150,7 @@ export const events: TownEvent[] = [
     contactPhone: "",
     status: "upcoming",
     isRecurring: false,
-    categories: [],
+    categories: ["festival"],
     tags: [],
   },
   {
@@ -169,7 +169,7 @@ export const events: TownEvent[] = [
     contactPhone: "",
     status: "upcoming",
     isRecurring: false,
-    categories: [],
+    categories: ["festival"],
     tags: [],
   },
 ];

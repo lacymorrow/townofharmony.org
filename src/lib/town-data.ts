@@ -28,6 +28,7 @@ import type {
 } from "@/data/town/types";
 import type { MapBusiness } from "@/lib/map-utils";
 import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-server";
+import { normalizeEventCategories } from "@/lib/event-categories";
 import { fetchBuilderEntries } from "@/lib/builder-content-fetch";
 import { getTodayString, toDateOnly } from "@/lib/date-only";
 import { logger } from "@/lib/logger";
@@ -217,7 +218,7 @@ const ensureEventSlug = (event: TownEvent): TownEvent => {
  */
 export const resolveEvents = cache(async (): Promise<TownEvent[]> => {
   const { results } = await fetchBuilderContent<TownEvent>("town-event", { limit: 1000 });
-  return results.map(ensureEventSlug);
+  return results.map((e) => normalizeEventCategories(ensureEventSlug(e)));
 });
 
 /**
@@ -289,7 +290,7 @@ export const getEvents = async (options?: {
  */
 export const getEventBySlug = async (slug: string): Promise<TownEvent | null> => {
   const direct = await fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
-  if (direct) return ensureEventSlug(direct);
+  if (direct) return normalizeEventCategories(ensureEventSlug(direct));
   const bySlug = await resolveEventBySlugMap();
   const match = bySlug.get(slug);
   if (match) {
