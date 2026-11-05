@@ -11,6 +11,8 @@
     }
   ],
 
+  "ignoreCommand": "bash scripts/vercel-ignore-step.sh",
+
   "buildCommand": "bun run build:vercel",
   "devCommand": "bun run dev",
   "installCommand": "bun install --frozen-lockfile",

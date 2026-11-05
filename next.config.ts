@@ -150,6 +150,55 @@ const nextConfig: NextConfig = {
           // },
         ],
       },
+      /*
+       * Keep the staging surface out of search results.
+       *
+       * preview.townofharmony.org is served by the `townofharmony-org-preview`
+       * Vercel project, where it is a *production* deployment on a custom domain
+       * (LAC-7152). Vercel only adds its own `X-Robots-Tag: noindex` to preview
+       * deployments, so a production-target staging domain would otherwise be
+       * crawlable and compete with townofharmony.org for the same content.
+       * robots.ts is host-agnostic and advertises the production sitemap, so the
+       * header is the thing doing the work here.
+       *
+       * Measured, not assumed: before this rule existed, both hosts below
+       * answered 200 with no X-Robots-Tag of any kind.
+       *
+       * One rule per host on purpose. Entries inside a single `has` array are
+       * ANDed, so they cannot express "either host", and a regex alternation that
+       * matched more than intended would noindex the live town site. An explicit
+       * list can only ever over-apply to staging, which is the harmless direction.
+       */
+      {
+        source: "/(.*)",
+        has: [
+          {
+            type: "host",
+            value: "preview.townofharmony.org",
+          },
+        ],
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+        ],
+      },
+      {
+        source: "/(.*)",
+        has: [
+          {
+            type: "host",
+            value: "townofharmony-org-preview.vercel.app",
+          },
+        ],
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+        ],
+      },
     ]);
   },
 
