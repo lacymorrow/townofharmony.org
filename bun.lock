@@ -261,7 +261,6 @@
   },
   "trustedDependencies": [
     "@tsparticles/engine",
-    "isolated-vm",
     "utf-8-validate",
     "unrs-resolver",
     "protobufjs",
