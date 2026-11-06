@@ -34,6 +34,7 @@ import { pointsOfInterest } from "@/data/town/points-of-interest";
 import { resources } from "@/data/town/resources";
 import { isSewerVisible } from "@/data/town/sewer-rates";
 import { teamMembers } from "@/data/town/team-members";
+import { getCanonicalEventSlug } from "@/lib/event-slug";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { isExternalUrl, isSafeUrl } from "@/lib/utils";
 
@@ -412,7 +413,7 @@ export const TownSearch = ({ open, onOpenChange }: TownSearchProps) => {
         }
       }
       for (const event of events) {
-        const href = `/events/${event.slug}`;
+        const href = `/events/${getCanonicalEventSlug(event)}`;
         if (!staticHrefs.has(href)) {
           results.push({
             id: `event-${event.slug}`,

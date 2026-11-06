@@ -9,6 +9,7 @@ import type { TownEvent } from "@/data/town/types";
 import { useBuilderPaginatedData } from "@/lib/builder-data";
 import { getTodayString, safeDate, toDateOnly } from "@/lib/date-only";
 import { normalizeEventCategories } from "@/lib/event-categories";
+import { getCanonicalEventSlug } from "@/lib/event-slug";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { formatTime } from "@/lib/utils";
 
@@ -262,7 +263,7 @@ const TownEventsListInner = ({ itemsPerPage = 10, showFilters = true }: TownEven
                   {showUpcomingHeader && <SectionDivider label="Upcoming Events" />}
                   {showPastHeader && <SectionDivider label="Past Events" />}
                   <Link
-                    href={`/events/${encodeURIComponent(event.slug)}`}
+                    href={`/events/${getCanonicalEventSlug(event)}`}
                     className={`group flex flex-col gap-4 overflow-hidden rounded-lg border border-stone bg-white transition-shadow hover:shadow-lg md:flex-row ${
                       isPast ? "opacity-80 hover:opacity-100" : ""
                     }`}

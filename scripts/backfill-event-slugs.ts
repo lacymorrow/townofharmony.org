@@ -1,11 +1,19 @@
 /**
- * Backfill missing `data.slug` on Builder.io town-event entries.
+ * Repair `data.slug` on Builder.io town-event entries.
  *
- * The slug field is intentionally optional in the model (editors can leave
- * it blank), but a missing slug forces `getEventBySlug` down a fallback
- * path that scans the full events collection. Derives the slug from the
- * entry title and writes it back, so the fast Builder query path is used
- * for every event from then on.
+ * Two defects, one pass:
+ *
+ * 1. **Missing slug.** The field is intentionally optional in the model
+ *    (editors can leave it blank), but a missing slug forces
+ *    `getEventBySlug` down a fallback path that scans the full events
+ *    collection. Derived from the entry title and written back.
+ *
+ * 2. **Malformed slug.** Editors type the slug by hand, so an entry can
+ *    carry a value that is not URL-shaped. The Christmas Festival entry
+ *    held a literal space — `"christmas-festival-tree-lighting 2026"` —
+ *    which rendered every list link as `%20` and served a dead page
+ *    (LAC-7168). Any slug that differs from its own slugified form is
+ *    rewritten to that form.
  *
  * Usage:
  *   npx tsx scripts/backfill-event-slugs.ts --dry-run   # preview only
@@ -95,6 +103,7 @@ async function main() {
   }
 
   let backfilled = 0;
+  let repaired = 0;
   let alreadyPresent = 0;
   let skippedNoTitle = 0;
   let skippedDuplicate = 0;
@@ -102,7 +111,35 @@ async function main() {
   for (const event of events) {
     const slug = event.data?.slug;
     if (typeof slug === "string" && slug.trim() !== "") {
-      alreadyPresent++;
+      const canonical = slugify(slug);
+      if (canonical === slug.trim()) {
+        alreadyPresent++;
+        continue;
+      }
+      // Present but not URL-shaped — a space, uppercase, punctuation. The
+      // link and the lookup both canonicalize, so the stored value is the
+      // odd one out; rewrite it (LAC-7168).
+      if (!canonical) {
+        console.log(`  [SKIP] ${event.id}: slug "${slug}" slugified to empty`);
+        skippedNoTitle++;
+        continue;
+      }
+      if (seenSlugs.has(canonical)) {
+        console.log(
+          `  [SKIP] ${event.id}: canonical slug "${canonical}" already in use by another event — fix "${slug}" by hand`
+        );
+        skippedDuplicate++;
+        continue;
+      }
+      seenSlugs.delete(slug.trim());
+      seenSlugs.add(canonical);
+      if (dryRun) {
+        console.log(`  [WOULD REPAIR]   "${slug}" → slug "${canonical}"`);
+      } else {
+        await writeSlug(event, canonical);
+        console.log(`  [REPAIRED]       "${slug}" → slug "${canonical}"`);
+      }
+      repaired++;
       continue;
     }
     const title = event.data?.title;
@@ -136,7 +173,8 @@ async function main() {
 
   const parts = [
     `${backfilled} backfilled`,
-    `${alreadyPresent} already had slug`,
+    `${repaired} repaired`,
+    `${alreadyPresent} already canonical`,
     `${skippedNoTitle} skipped (no title)`,
   ];
   if (skippedDuplicate > 0) parts.push(`${skippedDuplicate} skipped (duplicate slug)`);

@@ -1,6 +1,7 @@
 import { Calendar, Clock } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCanonicalEventSlug } from "@/lib/event-slug";
 import { formatDate, formatTime } from "@/lib/utils";
 import { getEvents } from "@/lib/town-data";
 
@@ -36,7 +37,7 @@ export async function RelatedEvents({ currentEventId, categories }: RelatedEvent
           {related.map((event: any) => (
             <div key={event.id} className="border-b pb-4 last:border-0">
               <Link
-                href={`/events/${event.slug}`}
+                href={`/events/${getCanonicalEventSlug(event)}`}
                 className="block transition-colors hover:text-sage-dark"
               >
                 <h4 className="mb-2 line-clamp-2 font-medium">{event.title}</h4>
