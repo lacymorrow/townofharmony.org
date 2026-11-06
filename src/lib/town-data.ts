@@ -237,7 +237,17 @@ const resolveEventBySlugMap = cache(async (): Promise<Map<string, TownEvent>> =>
   const all = await resolveEvents();
   const map = new Map<string, TownEvent>();
   const add = (key: string, event: TownEvent) => {
-    if (key && !map.has(key)) map.set(key, event);
+    if (!key) return;
+    const owner = map.get(key);
+    if (!owner) {
+      map.set(key, event);
+    } else if (owner !== event) {
+      logger.warn(`Event slug collision on "${key}": keeping the first entry`, {
+        slug: key,
+        kept: owner.title,
+        skipped: event.title,
+      });
+    }
   };
   for (const event of all) {
     add(getCanonicalEventSlug(event), event);
