@@ -28,10 +28,16 @@ interface EventSlugFields {
 /**
  * The URL slug for an event: the editor's slug run through `slugify`, or the
  * title when the slug is cleared (Builder clears fields to `""`, not
- * `undefined`). Never contains a character that needs percent-encoding.
+ * `undefined`). Never contains a character that needs percent-encoding, and
+ * never empty.
+ *
+ * Each candidate is slugified before it is accepted, rather than picking the
+ * first truthy field and slugifying once. A slug of `"!!!"` is truthy but
+ * slugifies to `""`, so the single-slugify form emitted `/events/` — the same
+ * dead link this module exists to prevent, one layer down.
  */
 export function getCanonicalEventSlug(event: EventSlugFields): string {
-  return slugify(event.slug || event.title || "event");
+  return slugify(event.slug || "") || slugify(event.title || "") || "event";
 }
 
 /**

@@ -26,6 +26,24 @@ describe("getCanonicalEventSlug", () => {
     );
   });
 
+  it("falls through to the title when the slug is truthy but slugifies to nothing", () => {
+    // `"!!!"` is truthy, so picking the first truthy field and slugifying once
+    // emitted `/events/` — an empty slug, the same dead link one layer down.
+    expect(getCanonicalEventSlug({ slug: "!!!", title: "Fall Festival 2026" })).toBe(
+      "fall-festival-2026"
+    );
+    expect(getCanonicalEventSlug({ slug: "---", title: "Fall Festival 2026" })).toBe(
+      "fall-festival-2026"
+    );
+  });
+
+  it("never returns an empty slug, even when nothing slugifies", () => {
+    // An all-non-ASCII title strips to nothing: `slugify` is ASCII-only.
+    expect(getCanonicalEventSlug({ title: "日本語" })).toBe("event");
+    expect(getCanonicalEventSlug({ slug: "★", title: "★" })).toBe("event");
+    expect(getCanonicalEventSlug({})).toBe("event");
+  });
+
   it("never emits a character that would need percent-encoding", () => {
     expect(getCanonicalEventSlug({ title: "HWY 21 — 3-Day Road Market 2026" })).toBe(
       encodeURIComponent(getCanonicalEventSlug({ title: "HWY 21 — 3-Day Road Market 2026" }))
