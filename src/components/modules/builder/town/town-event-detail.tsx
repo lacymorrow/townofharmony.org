@@ -8,8 +8,9 @@ import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownEvent } from "@/data/town/types";
 import { resolveBuilderRef } from "@/data/town/types";
-import { useBuilderEntry } from "@/lib/builder-data";
+import { useBuilderData } from "@/lib/builder-data";
 import { normalizeEventCategories } from "@/lib/event-categories";
+import { findEventBySlug } from "@/lib/event-slug";
 import { deriveEventStatus, type EventDisplayStatus } from "@/lib/event-status";
 import { getMapUrl } from "@/lib/map-utils";
 import { sanitizeHtml } from "@/lib/sanitize-html";
@@ -40,17 +41,15 @@ const statusColors: Record<EventDisplayStatus, string> = {
 const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
   const pathname = usePathname();
   const rawSlug = slugProp || pathname?.split("/").filter(Boolean).pop() || "";
-  const slug = (() => {
-    try {
-      return decodeURIComponent(rawSlug)
-        .toLowerCase()
-        .replace(/[^a-z0-9-]/g, "");
-    } catch {
-      return rawSlug.toLowerCase().replace(/[^a-z0-9-]/g, "");
-    }
-  })();
 
-  const { data: event, loading } = useBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
+  // Resolved against the whole collection rather than by a `data.slug` query:
+  // an editor can save a slug that is not URL-shaped (LAC-7168 — a literal
+  // space), and no query can match that once the link carries the canonical
+  // form. `findEventBySlug` compares canonical forms, so both the repaired
+  // link and the legacy `%20` one land on the event. `town-event` is a small
+  // bounded model and the /events list already fetches all of it.
+  const { data: events, loading } = useBuilderData<TownEvent>("town-event", { limit: 1000 });
+  const event = findEventBySlug(events, rawSlug);
 
   if (loading) {
     return (

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import type { TownEvent } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
+import { getCanonicalEventSlug } from "@/lib/event-slug";
 import { formatTime } from "@/lib/utils";
 
 interface TownUpcomingEventsProps {
@@ -69,7 +70,7 @@ const TownUpcomingEventsInner = ({ limit = 5 }: TownUpcomingEventsProps) => {
             return (
               <Link
                 key={event.slug}
-                href={`/events/${event.slug}`}
+                href={`/events/${getCanonicalEventSlug(event)}`}
                 className="group flex cursor-pointer items-center gap-4 rounded-[10px] border border-transparent bg-cream p-4 transition-colors hover:border-[#DDD7CC]"
               >
                 <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-wheat" />

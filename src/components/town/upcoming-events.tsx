@@ -1,6 +1,7 @@
 import { Calendar } from "lucide-react";
 import Link from "next/link";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { getCanonicalEventSlug } from "@/lib/event-slug";
 import { getEvents } from "@/lib/town-data";
 import { formatTime } from "@/lib/utils";
 
@@ -28,7 +29,7 @@ export async function UpcomingEvents() {
         return (
           <Link
             key={event.id}
-            href={`/events/${event.slug}`}
+            href={`/events/${getCanonicalEventSlug(event)}`}
             className="group flex cursor-pointer items-center gap-4 rounded-[10px] border border-transparent bg-cream p-4 transition-colors hover:border-[#DDD7CC]"
           >
             <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-wheat" />

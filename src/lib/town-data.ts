@@ -26,6 +26,7 @@ import type {
   TownResource,
   TownTeamMember,
 } from "@/data/town/types";
+import { getCanonicalEventSlug, normalizeEventSlugParam } from "@/lib/event-slug";
 import type { MapBusiness } from "@/lib/map-utils";
 import { fetchBuilderContent, fetchBuilderEntry } from "@/lib/builder-data-server";
 import { normalizeEventCategories } from "@/lib/event-categories";
@@ -223,14 +224,24 @@ export const resolveEvents = cache(async (): Promise<TownEvent[]> => {
 
 /**
  * Slug → event map, built once per render and reused by `getEventBySlug`
- * when an entry's stored slug doesn't match (e.g. editor left the field
- * blank and we fall back to a title-derived slug).
+ * when an entry's stored slug doesn't match: the editor left the field blank
+ * and we fall back to a title-derived slug, or the stored slug is not
+ * URL-shaped so no `data.slug` query can match the link (LAC-7168).
+ *
+ * Keyed by canonical slug first and by the raw stored slug second. First
+ * write wins, so two entries whose canonical slugs collide resolve
+ * deterministically to the earlier one, matching the client-side
+ * `findEventBySlug`.
  */
 const resolveEventBySlugMap = cache(async (): Promise<Map<string, TownEvent>> => {
   const all = await resolveEvents();
   const map = new Map<string, TownEvent>();
+  const add = (key: string, event: TownEvent) => {
+    if (key && !map.has(key)) map.set(key, event);
+  };
   for (const event of all) {
-    if (event.slug) map.set(event.slug, event);
+    add(getCanonicalEventSlug(event), event);
+    if (event.slug) add(event.slug, event);
   }
   return map;
 });
@@ -283,19 +294,20 @@ export const getEvents = async (options?: {
  * Get a single event by slug from Builder.io.
  *
  * Direct path: query Builder by `data.slug` — O(1) on the CMS side.
- * Fallback path: only runs when the entry was saved without a slug field
- * (editors can leave it blank — the model marks slug optional). Uses the
- * request-cached slug map so the cost is one Builder fetch per render,
- * not one per missing-slug lookup, with O(1) lookup against the map.
+ * Fallback path: runs when the entry was saved without a slug field
+ * (editors can leave it blank — the model marks slug optional) or with a
+ * slug that is not URL-shaped (LAC-7168). Uses the request-cached slug map
+ * so the cost is one Builder fetch per render, not one per fallback lookup,
+ * with O(1) lookup against the map.
  */
 export const getEventBySlug = async (slug: string): Promise<TownEvent | null> => {
   const direct = await fetchBuilderEntry<TownEvent>("town-event", { "data.slug": slug });
   if (direct) return normalizeEventCategories(ensureEventSlug(direct));
   const bySlug = await resolveEventBySlugMap();
-  const match = bySlug.get(slug);
+  const match = bySlug.get(normalizeEventSlugParam(slug)) ?? bySlug.get(slug);
   if (match) {
     logger.warn(
-      "Event resolved via slug-derivation fallback — Builder entry is missing data.slug",
+      "Event resolved via slug fallback — Builder entry's data.slug is missing or not URL-shaped",
       {
         slug,
         eventTitle: match.title,

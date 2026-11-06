@@ -4,6 +4,7 @@ import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { LightboxImage } from "@/components/ui/lightbox-image";
+import { getCanonicalEventSlug } from "@/lib/event-slug";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { formatDate, formatTime } from "@/lib/utils";
 
@@ -47,7 +48,7 @@ export function EventCard({ event }: EventCardProps) {
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <Link
-                href={`/events/${event.slug}`}
+                href={`/events/${getCanonicalEventSlug(event)}`}
                 className="transition-colors hover:text-sage-dark"
               >
                 <h3 className="text-base font-semibold leading-tight">{event.title}</h3>

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
+import { getCanonicalEventSlug } from "@/lib/event-slug";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { getMapUrl } from "@/lib/map-utils";
 import { pageTitle } from "@/lib/page-title";
@@ -18,7 +19,9 @@ interface PageProps {
 
 export async function generateStaticParams() {
   const allEvents = await resolveEvents();
-  return allEvents.map((e) => ({ slug: e.slug }));
+  // Canonical form, not the stored slug: an editor can save a slug that is
+  // not URL-shaped (LAC-7168) and that must never become a route param.
+  return allEvents.map((e) => ({ slug: getCanonicalEventSlug(e) }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -27,14 +30,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!event) return { title: "Event Not Found" };
   const description =
     htmlToPlainText(event.description) || `${event.title} — Community event in Harmony, NC.`;
+  // Always the canonical slug, so a legacy percent-encoded link does not
+  // advertise itself as the canonical URL (LAC-7168).
+  const canonicalSlug = getCanonicalEventSlug(event);
   return {
     title: { absolute: pageTitle(event.title) },
     description,
-    alternates: { canonical: `${siteConfig.url}/events/${slug}` },
+    alternates: { canonical: `${siteConfig.url}/events/${canonicalSlug}` },
     openGraph: {
       title: `${event.title} — Town of Harmony, NC`,
       description,
-      url: `${siteConfig.url}/events/${slug}`,
+      url: `${siteConfig.url}/events/${canonicalSlug}`,
       ...(event.featuredImage && { images: [{ url: event.featuredImage }] }),
     },
   };
