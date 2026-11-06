@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getBuilderPageContent } from "@/lib/builder-data-server";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
+import { isBuilderTemplatePage } from "@/lib/builder-page-kind";
 import { getCanonicalEventSlug } from "@/lib/event-slug";
 import { htmlToPlainText } from "@/lib/html-to-text";
 import { getMapUrl } from "@/lib/map-utils";
@@ -50,12 +51,20 @@ export default async function EventDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
   const builderContent = await getBuilderPageContent(`/events/${slug}`);
-  if (builderContent) {
+  // The live Builder entry is the `/events/:slug` template, which matches any
+  // slug, so it must not decide existence: a dead slug would serve 200 and a
+  // client-rendered "Event not found" (LAC-7336). An exact-URL Builder page is
+  // editor-authored content with no town-event behind it and still renders.
+  if (builderContent && !isBuilderTemplatePage(builderContent)) {
     return <RenderBuilderContent content={builderContent} model="page" />;
   }
 
   const event = await getEventBySlug(slug);
   if (!event) notFound();
+
+  if (builderContent) {
+    return <RenderBuilderContent content={builderContent} model="page" />;
+  }
 
   const date = new Date(event.eventDate);
   const dateStr = date.toLocaleDateString("en-US", {
