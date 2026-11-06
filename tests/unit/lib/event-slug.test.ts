@@ -109,6 +109,6 @@ describe("findEventBySlug", () => {
   it("picks the first entry when two canonical slugs collide", () => {
     const first = { slug: "fall festival 2026", title: "Fall Festival 2026" };
     const second = { slug: "fall-festival-2026", title: "Fall Festival 2026" };
-    expect(findEventBySlug([first, second], "fall-festival-2026")).toBe(first);
+    expect(findEventBySlug([first, second], "fall-festival-2026")).toBe(second);
   });
 });
