@@ -37,8 +37,8 @@
 # client domain on an older deployment after a merge.
 #
 # Everything else is opt-in. Branch builds were 64.8 min/wk of build time on a repo
-# where agents already run `verify` locally (typecheck, lint, tests, production
-# build, route smoke) before pushing, and where both long-lived surfaces above stay
+# where CI already gates every PR (typecheck, branding, format, vitest; see
+# .github/workflows/ci.yml) and where both long-lived surfaces above stay
 # current without them. Put [preview] in the commit subject when a branch actually
 # needs a deployed URL, or redeploy it from the Vercel dashboard, which bypasses
 # this step entirely.
