@@ -5,6 +5,10 @@ import { siteConfig } from "@/config/site-config";
 import { contactInquiryTypes } from "@/data/town/contact-inquiry-types";
 import type { TownContactInquiryType } from "@/data/town/types";
 import { env } from "@/env";
+import {
+  CONTACT_ATTACHMENT_MAX_BYTES,
+  CONTACT_ATTACHMENT_MIME_TYPES,
+} from "@/lib/contact-attachment";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
 import { townContactConfirmationEmail, townContactNotificationEmail } from "@/lib/email-templates";
 import { logger } from "@/lib/logger";
@@ -48,16 +52,13 @@ async function loadInquiryTypes(): Promise<TownContactInquiryType[]> {
   return contactInquiryTypes.filter((t) => t.isActive !== false);
 }
 
-const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/jpeg", "image/png"] as const;
-const MAX_ATTACHMENT_BYTES = 3 * 1024 * 1024;
-
 const attachmentSchema = z
   .object({
     filename: z.string(),
     content: z.string(),
-    contentType: z.enum(ALLOWED_ATTACHMENT_TYPES),
+    contentType: z.enum(CONTACT_ATTACHMENT_MIME_TYPES),
   })
-  .refine((data) => data.content.length * 0.75 <= MAX_ATTACHMENT_BYTES, {
+  .refine((data) => data.content.length * 0.75 <= CONTACT_ATTACHMENT_MAX_BYTES, {
     message: "File must be 3 MB or smaller.",
   });
 
