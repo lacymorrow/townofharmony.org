@@ -1,16 +1,6 @@
 import type { TownContactInquiryType } from "./types";
 
 /**
- * Matches the "General Inquiry" option loosely because its Builder entry is
- * staff-editable and the value has drifted before (e.g. "general" became
- * "general inquiry | other"), which silently broke value-equality checks
- * (LAC-3550).
- */
-export function isGeneralInquiry(option: { value: string; label: string }): boolean {
-  return /general/i.test(option.value) || /general/i.test(option.label);
-}
-
-/**
  * Inquiry type options shown in the public contact form.
  * Mirrored in Builder.io model `town-contact-inquiry-type` (editable by staff).
  * The form falls back to this list when Builder returns no entries.

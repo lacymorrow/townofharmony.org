@@ -2,13 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Turnstile } from "@/components/turnstile";
-import { contactInquiryTypes, isGeneralInquiry } from "@/data/town/contact-inquiry-types";
+import { contactInquiryTypes } from "@/data/town/contact-inquiry-types";
 import type { TownContactInquiryType } from "@/data/town/types";
 import { useBuilderData } from "@/lib/builder-data";
+import {
+  CONTACT_ATTACHMENT_ACCEPT,
+  CONTACT_ATTACHMENT_LABEL,
+  CONTACT_ATTACHMENT_MAX_BYTES,
+  resolveContactAttachmentType,
+} from "@/lib/contact-attachment";
 import { submitTownContactForm, type TownContactFormData } from "@/server/actions/town-contact";
-
-const ALLOWED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png"];
-const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3 MB
 
 async function readFileAsBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -73,14 +76,13 @@ export const TownContactForm = () => {
     [builderInquiryTypes]
   );
 
-  // Default the select to General Inquiry. The Builder fetch resolves after
-  // mount and can replace the fallback options with different values (the
-  // staff-edited entry is "general inquiry | other", not "general"), so
-  // re-sync whenever the current selection is no longer a valid option.
+  // No default topic: the select opens on "Select a topic…" so every sender
+  // picks one on purpose (client request). If a staff edit in Builder removes
+  // the chosen option, clear it rather than submit a stale value.
   useEffect(() => {
-    if (inquiryOptions.length === 0) return;
-    if (inquiryOptions.some((opt) => opt.value === inquiryType)) return;
-    setInquiryType(inquiryOptions.find(isGeneralInquiry)?.value ?? "");
+    if (inquiryType && !inquiryOptions.some((opt) => opt.value === inquiryType)) {
+      setInquiryType("");
+    }
   }, [inquiryOptions, inquiryType]);
 
   useEffect(() => {
@@ -128,10 +130,11 @@ export const TownContactForm = () => {
 
     const file = form.get("attachment") as File | null;
     const hasFile = file instanceof File && file.size > 0;
+    const fileType = hasFile ? resolveContactAttachmentType(file) : null;
     if (hasFile) {
-      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-        validationErrors.attachment = "Only PDF, JPG, and PNG files are accepted.";
-      } else if (file.size > MAX_FILE_SIZE) {
+      if (!fileType) {
+        validationErrors.attachment = `Only ${CONTACT_ATTACHMENT_LABEL} files are accepted.`;
+      } else if (file.size > CONTACT_ATTACHMENT_MAX_BYTES) {
         validationErrors.attachment = "File must be 3 MB or smaller.";
       }
     }
@@ -145,13 +148,13 @@ export const TownContactForm = () => {
     setServerError(null);
 
     let attachment: TownContactFormData["attachment"] | undefined;
-    if (hasFile) {
+    if (hasFile && fileType) {
       try {
         const base64 = await readFileAsBase64(file);
         attachment = {
           filename: file.name,
           content: base64,
-          contentType: file.type as "application/pdf" | "image/jpeg" | "image/png",
+          contentType: fileType,
         };
       } catch {
         setServerError("Failed to read the attachment. Please try again.");
@@ -336,14 +339,14 @@ export const TownContactForm = () => {
         label="Attachment"
         id="attachment"
         error={errors.attachment}
-        hint="Optional — PDF, JPG, or PNG, max 3 MB"
+        hint={`Optional — ${CONTACT_ATTACHMENT_LABEL}, max 3 MB`}
       >
         <div>
           <input
             id="attachment"
             name="attachment"
             type="file"
-            accept=".pdf,.jpg,.jpeg,.png"
+            accept={CONTACT_ATTACHMENT_ACCEPT}
             aria-describedby={errors.attachment ? "attachment-error" : undefined}
             className="sr-only"
             onChange={(e) => setSelectedFileName(e.target.files?.[0]?.name ?? null)}
