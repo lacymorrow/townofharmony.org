@@ -383,6 +383,9 @@ export const getMeetings = async (options?: {
       case "has-minutes":
         filtered = filtered.filter((m) => m.minutes || m.minutesUrl);
         break;
+      case "proposed-agenda":
+        filtered = filtered.filter((m) => m.agendaDocument);
+        break;
     }
   }
 

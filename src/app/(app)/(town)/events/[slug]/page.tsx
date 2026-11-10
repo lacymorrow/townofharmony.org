@@ -12,6 +12,7 @@ import { sanitizeHtml } from "@/lib/sanitize-html";
 import { resolveEvents, getEventBySlug } from "@/lib/town-data";
 import { formatTime } from "@/lib/utils";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
+import { EventAlbum } from "@/components/town/events/event-album";
 import { PhoneCopyButton } from "@/components/town/phone-copy-button";
 
 interface PageProps {
@@ -118,6 +119,7 @@ export default async function EventDetailPage({ params }: PageProps) {
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.content) }}
           />
         )}
+        <EventAlbum title={event.title} items={event.gallery} />
         {(event.contactPhone || event.contactEmail) && (
           <div className="mt-8 rounded border border-stone bg-white p-4">
             <h2 className="mb-2 font-semibold">Contact</h2>

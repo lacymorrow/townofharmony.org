@@ -26,6 +26,7 @@ const PREFERRED_TYPE_ORDER = ["Council", "Planning", "Public Hearing"] as const;
 const STATUS_OPTIONS = [
   { value: "upcoming", label: "Upcoming" },
   { value: "past", label: "Past" },
+  { value: "proposed-agenda", label: "Proposed Agenda" },
   { value: "has-recordings", label: "Has Recordings" },
   { value: "has-minutes", label: "Has Minutes" },
 ] as const;
@@ -140,6 +141,7 @@ export const TownMeetingsList = ({
         if (status === "past" && !isPast) return false;
         if (status === "has-recordings" && !meeting.videoUrl && !meeting.audioUrl) return false;
         if (status === "has-minutes" && !meeting.minutes && !meeting.minutesUrl) return false;
+        if (status === "proposed-agenda" && !meeting.agendaDocument) return false;
       }
       return true;
     },
@@ -290,6 +292,11 @@ export const TownMeetingsList = ({
                             className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${badgeClass}`}
                           >
                             {typeLabel}
+                          </span>
+                        )}
+                        {meeting.agendaDocument && (
+                          <span className="rounded-full bg-sage/10 px-2 py-0.5 text-xs text-sage-dark">
+                            Proposed Agenda
                           </span>
                         )}
                         {(meeting.videoUrl || meeting.audioUrl) && (
