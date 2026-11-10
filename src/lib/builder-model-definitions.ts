@@ -32,6 +32,8 @@ interface BuilderModelDefinition {
 interface FieldExtras {
   friendlyName?: string;
   helperText?: string;
+  /** Tucks the field under Builder's "Advanced" toggle so editors see only what matters. */
+  advanced?: boolean;
 }
 
 const text = (name: string, required = false, extras: FieldExtras = {}): BuilderField => ({
@@ -58,10 +60,11 @@ const num = (name: string): BuilderField => ({
   type: "number",
 });
 
-const bool = (name: string, defaultValue = false): BuilderField => ({
+const bool = (name: string, defaultValue = false, extras: FieldExtras = {}): BuilderField => ({
   name,
   type: "boolean",
   defaultValue,
+  ...extras,
 });
 
 const date = (name: string, extras: FieldExtras = {}): BuilderField => ({
@@ -70,23 +73,27 @@ const date = (name: string, extras: FieldExtras = {}): BuilderField => ({
   ...extras,
 });
 
-const url = (name: string): BuilderField => ({
+const url = (name: string, extras: FieldExtras = {}): BuilderField => ({
   name,
   type: "url",
+  ...extras,
 });
 
 const file = (
   name: string,
-  allowedFileTypes = ["jpeg", "png", "webp", "svg", "gif"]
+  allowedFileTypes = ["jpeg", "png", "webp", "svg", "gif"],
+  extras: FieldExtras = {}
 ): BuilderField => ({
   name,
   type: "file",
   allowedFileTypes,
+  ...extras,
 });
 
-const tags = (name: string): BuilderField => ({
+const tags = (name: string, extras: FieldExtras = {}): BuilderField => ({
   name,
   type: "Tags",
+  ...extras,
 });
 
 const emailField = (name: string): BuilderField => ({
@@ -103,10 +110,11 @@ const phone = (name: string): BuilderField => ({
   },
 });
 
-const enumText = (name: string, values: string[]): BuilderField => ({
+const enumText = (name: string, values: string[], extras: FieldExtras = {}): BuilderField => ({
   name,
   type: "text",
   enum: values,
+  ...extras,
 });
 
 const reference = (name: string, model: string): BuilderField => ({
@@ -215,20 +223,56 @@ export const modelDefinitions: BuilderModelDefinition[] = [
   {
     name: "town-announcement",
     kind: "data",
+    nameField: "title",
+    helperText:
+      "The notice bar across the top of every page. The newest notice that is switched on and not past its end date is the one shown.",
+    // Ordered as the editor reads them. Only these fields reach the banner;
+    // the rest stay under Advanced so existing entries keep their data.
     fields: [
-      text("title", true),
-      richText("content"),
-      richText("message"),
-      enumText("level", ["info", "warning", "critical"]),
-      bool("isActive", true),
-      date("startsAt"),
-      date("endsAt"),
-      date("createdAt"),
-      date("updatedAt"),
-      url("externalUrl"),
-      tags("affectedAreas"),
-      text("contactInfo"),
-      tags("instructions"),
+      text("title", true, {
+        friendlyName: "Headline",
+        helperText: 'Short and bold, e.g. "Christmas Parade Application Now Available".',
+      }),
+      longText("content", {
+        friendlyName: "Message",
+        helperText: "One or two sentences shown after the headline.",
+      }),
+      file("file", ["pdf", "doc", "docx", "jpeg", "jpg", "png"], {
+        friendlyName: "Attachment",
+        helperText:
+          'Upload a PDF or image. "View details" opens it in a new tab. Replace it here to update the file.',
+      }),
+      text("link", false, {
+        friendlyName: "Link",
+        helperText:
+          'Used only when there is no attachment. A page on this site (e.g. "/contact") or a full web address.',
+      }),
+      bool("isActive", true, {
+        friendlyName: "Show on site",
+        helperText: "Switch off to take the notice down.",
+      }),
+      date("endsAt", {
+        friendlyName: "Hide after",
+        helperText: "Optional. The notice disappears on its own after this date.",
+      }),
+      date("startsAt", {
+        friendlyName: "Show from",
+        helperText: "Optional. Leave blank to show it as soon as it is published.",
+      }),
+      enumText("level", ["info", "warning", "critical"], {
+        friendlyName: "Label",
+        helperText: 'info and warning show "Notice". critical shows "Alert".',
+      }),
+      longText("message", { advanced: true, helperText: "Not shown in the notice bar." }),
+      date("createdAt", { advanced: true, helperText: "Not shown in the notice bar." }),
+      date("updatedAt", { advanced: true, helperText: "Not shown in the notice bar." }),
+      url("externalUrl", {
+        advanced: true,
+        helperText: "Older link field. Use Attachment or Link instead.",
+      }),
+      tags("affectedAreas", { advanced: true, helperText: "Not shown in the notice bar." }),
+      text("contactInfo", false, { advanced: true, helperText: "Not shown in the notice bar." }),
+      tags("instructions", { advanced: true, helperText: "Not shown in the notice bar." }),
     ],
   },
   {

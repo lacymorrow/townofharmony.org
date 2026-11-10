@@ -205,13 +205,19 @@ Use this any time the Town Clerk sends a set of minutes for a Board of Aldermen,
 4. Set `priority` (built-in Builder.io field) to control display position.
 5. Click **Publish**.
 
-### Post an Emergency Alert
+### Post or Change the Notice Bar
 
-1. Go to **Models > town-announcement > + New**.
-2. Fill in: title, message/content, level (`info`, `warning`, or `critical`).
-3. Set `isActive` to true, `startsAt` to now.
-4. Click **Publish**.
-5. The alert appears on the emergency alerts page within 60 seconds.
+The notice bar runs across the top of every page. It shows one notice: the
+newest one that is switched on and not past its end date.
+
+1. Go to **Content**, filter to **town-announcement**, and open a notice or click **+ New**.
+2. Fill in **Headline** and **Message**.
+3. To link a document, upload it under **Attachment**. To link a page or another
+   website instead, type it under **Link** (e.g. `/contact`).
+4. Optional: set **Hide after** so it comes down on its own.
+5. Click **Publish**. The bar updates within a minute.
+
+To take a notice down, switch off **Show on site** (or unpublish it) and publish.
 
 ### Edit the Homepage Layout
 

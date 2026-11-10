@@ -208,6 +208,8 @@ export interface TownAnnouncement {
   endsAt?: string;
   createdAt: string;
   updatedAt?: string;
+  /** Builder file upload (CDN URL). Takes precedence over `link`. */
+  file?: string;
   link?: string;
   externalUrl?: string;
   affectedAreas?: string[];

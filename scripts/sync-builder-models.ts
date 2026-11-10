@@ -119,6 +119,9 @@ function diffFields(
     if (liveEnum.join("|") !== localEnum.join("|")) {
       reasons.push(`enum`);
     }
+    if (((live.advanced as boolean | undefined) ?? false) !== (lf.advanced ?? false)) {
+      reasons.push(`advanced`);
+    }
     if (reasons.length > 0) changed.push({ name, reasons });
   }
 
