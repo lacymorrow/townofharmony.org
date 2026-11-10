@@ -100,6 +100,29 @@ export const MeetingDetailBody = ({ meeting }: MeetingDetailBodyProps) => {
           </div>
         )}
 
+        {meeting.agendaDocument && (
+          <div className="mb-8">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <h2 className="font-serif text-lg font-bold text-sage-dark">Proposed Agenda</h2>
+              <a
+                href={meeting.agendaDocument}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium text-sage hover:text-sage-dark"
+              >
+                Download
+              </a>
+            </div>
+            <div className="h-[75svh] min-h-[480px] overflow-hidden rounded-xl border border-stone bg-white">
+              <DocumentViewer
+                url={meeting.agendaDocument}
+                title={`Proposed agenda - ${meeting.title}`}
+              />
+            </div>
+          </div>
+        )}
+
         {meeting.agenda && (
           <div className="mb-8">
             <h2 className="mb-3 font-serif text-lg font-bold text-sage-dark">Agenda</h2>
