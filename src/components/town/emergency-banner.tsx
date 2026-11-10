@@ -9,6 +9,9 @@ export async function EmergencyBanner() {
   if (!alert) return null;
 
   const messageText = extractTextFromRichText(alert.content);
+  // One link, editor's choice: an uploaded file wins, then a typed link, then
+  // the legacy externalUrl field older entries may still carry.
+  const href = [alert.file, alert.link, alert.externalUrl].find((h) => h?.trim());
 
   return (
     <div className="border-b border-[#DDD7CC] bg-cream py-3">
@@ -20,19 +23,9 @@ export async function EmergencyBanner() {
           <span className="text-[#2D2A24]">
             <strong className="mr-1 font-semibold">{alert.title}:</strong>
             {messageText}
-            {alert.externalUrl && (
-              <a
-                href={alert.externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-2 font-semibold text-sage underline hover:text-sage-dark"
-              >
-                Learn more
-              </a>
-            )}
-            {alert.link && (
+            {href && (
               <DataLink
-                href={alert.link}
+                href={href}
                 className="ml-2 font-semibold text-sage underline hover:text-sage-dark"
               >
                 View details

@@ -136,9 +136,12 @@ const resolveEmergencyServices = buildBuilderListResolver<TownEmergencyService>(
   "town-emergency-service",
   emergencyServices
 );
+// Newest first: the banner shows one notice, so a freshly published one must
+// win over an older notice that is still switched on.
 const resolveAnnouncements = buildBuilderListResolver<TownAnnouncement>(
   "town-announcement",
-  announcements
+  announcements,
+  { sort: { createdDate: -1 } }
 );
 const resolveBusinesses = buildBuilderListResolver<TownBusiness>("town-business", businesses);
 const resolveElections = buildBuilderListResolver<TownElection>("town-election", elections);

@@ -51,6 +51,35 @@ describe("EmergencyBanner", () => {
     expect(link).not.toHaveAttribute("target");
   });
 
+  // Staff upload the file in Builder, so it must win over a typed link and
+  // the banner must still show exactly one "View details".
+  it("links an uploaded attachment ahead of a typed link", async () => {
+    const file = "https://cdn.builder.io/o/assets%2Fabc%2Fparade.pdf?alt=media";
+    mockGetActiveAnnouncements.mockResolvedValue([
+      { ...announcement, file, externalUrl: "https://example.com" },
+    ]);
+
+    await renderBanner();
+
+    const links = screen.getAllByRole("link");
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveAttribute("href", file);
+    expect(links[0]).toHaveAttribute("target", "_blank");
+  });
+
+  it("falls back to the legacy externalUrl when nothing else is set", async () => {
+    mockGetActiveAnnouncements.mockResolvedValue([
+      { ...announcement, link: "  ", externalUrl: "https://example.com/info" },
+    ]);
+
+    await renderBanner();
+
+    expect(screen.getByRole("link", { name: "View details" })).toHaveAttribute(
+      "href",
+      "https://example.com/info"
+    );
+  });
+
   it("renders nothing when there is no active announcement", async () => {
     mockGetActiveAnnouncements.mockResolvedValue([]);
 
