@@ -1,12 +1,19 @@
 /**
  * Tests for scripts/vercel-ignore-step.sh (LAC-7152).
  *
- * Two Vercel projects build this repo and both read this one script, so the
- * production arm is load-bearing for two live client domains: townofharmony.org
- * via `townofharmony-org`, and preview.townofharmony.org via the production
- * target of `townofharmony-org-preview`. A regression that makes the production
- * arm exit 0 would silently freeze a client site on an older deployment after a
- * merge, which is exactly the failure this file exists to catch.
+ * Two Vercel projects build this repo and both read this one script, and since
+ * LAC-7939 they get different answers on the same `VERCEL_ENV=production`:
+ *
+ *   townofharmony-org          the live town site, always builds
+ *   townofharmony-org-preview  preview.townofharmony.org, opt-in like a branch
+ *
+ * The only thing separating them inside the ignore step is
+ * VERCEL_PROJECT_PRODUCTION_URL, so the discriminator is the load-bearing part
+ * of this file. A regression that makes the live site's production arm exit 0
+ * would silently freeze townofharmony.org on an older deployment after a merge,
+ * which is exactly the failure this file exists to catch. Every live-site case
+ * below therefore also exists in a fail-safe form, where an absent or unexpected
+ * production URL must still build.
  *
  * Exit 1 = build. Exit 0 = skip.
  */
@@ -42,8 +49,52 @@ function runIgnoreStep(vercelEnv: Record<string, string>) {
   return { status: result.status, stdout: result.stdout };
 }
 
-describe("vercel-ignore-step.sh: production", () => {
+const LIVE_SITE_URL = "www.townofharmony.org";
+const STAGING_URL = "preview.townofharmony.org";
+
+describe("vercel-ignore-step.sh: the live site always builds", () => {
   it("builds production", () => {
+    const { status, stdout } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: LIVE_SITE_URL,
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE: "fix: a routine production merge",
+    });
+
+    expect(status).toBe(BUILD);
+    expect(stdout).toContain(`production (${LIVE_SITE_URL}): building`);
+  });
+
+  it("builds production even when the commit asks to skip CI", () => {
+    const { status } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: LIVE_SITE_URL,
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE: "chore(deps): bump things [skip ci]",
+    });
+
+    expect(status).toBe(BUILD);
+  });
+
+  it("builds production on the apex host as well as www", () => {
+    // VERCEL_PROJECT_PRODUCTION_URL is whichever production domain Vercel
+    // prefers, and this project carries three. Only the staging hosts are
+    // matched by name, so every other value lands here.
+    const { status } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: "townofharmony.org",
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE: "fix: a routine production merge",
+    });
+
+    expect(status).toBe(BUILD);
+  });
+
+  it("builds production when the production URL is absent", () => {
+    // Fail-safe. The discriminator is a system env var this script cannot
+    // verify, so its absence has to mean "build", never "skip". Getting this
+    // backwards is the one failure here that is a client incident rather than a
+    // build-minutes regression.
     const { status, stdout } = runIgnoreStep({
       VERCEL_ENV: "production",
       VERCEL_GIT_COMMIT_REF: "main",
@@ -51,17 +102,139 @@ describe("vercel-ignore-step.sh: production", () => {
     });
 
     expect(status).toBe(BUILD);
-    expect(stdout).toContain("production: building");
+    expect(stdout).toContain("no production url");
   });
 
-  it("builds production even when the commit asks to skip CI", () => {
+  it("builds production when the production URL is empty", () => {
     const { status } = runIgnoreStep({
       VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: "",
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE: "fix: a routine production merge",
+    });
+
+    expect(status).toBe(BUILD);
+  });
+
+  it("builds production when the production URL is one it has never seen", () => {
+    const { status } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: "townofharmony-org.vercel.app",
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE: "fix: a routine production merge",
+    });
+
+    expect(status).toBe(BUILD);
+  });
+
+  it("does not let a staging host as a substring gate the live site", () => {
+    // `case` patterns are matched whole here, not as prefixes. A host that
+    // merely contains the staging name must not take the staging arm.
+    const { status } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: "not-preview.townofharmony.org.example.com",
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE: "fix: a routine production merge",
+    });
+
+    expect(status).toBe(BUILD);
+  });
+});
+
+describe("vercel-ignore-step.sh: the staging project is opt-in too (LAC-7939)", () => {
+  // townofharmony-org-preview tracks main, so before LAC-7939 every merge built
+  // twice: once here, skippably, and once there, unskippably. That second build
+  // was 38.4 wall-min/wk. The domain keeps serving its last deployment, so what
+  // this trades is freshness, not availability.
+
+  it("skips the staging production build with no marker", () => {
+    const { status, stdout } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: STAGING_URL,
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE: "fix: a routine production merge",
+    });
+
+    expect(status).toBe(SKIP);
+    expect(stdout).toContain(`staging (${STAGING_URL}, env=production): skipping`);
+  });
+
+  it("names the discriminator it saw on a skip, so a build log can verify it", () => {
+    // The script cannot prove from the inside that VERCEL_PROJECT_PRODUCTION_URL
+    // reaches the ignore step, and a wrong answer there is a silent revert of
+    // LAC-7939 rather than a failure. Printing the value on the free ~2s skips a
+    // PR branch already generates is what makes that checkable without
+    // spending a real build.
+    // Both skip paths, because a PR branch produces one build per project and
+    // either log alone would settle it.
+    for (const productionUrl of [LIVE_SITE_URL, STAGING_URL]) {
+      const { stdout } = runIgnoreStep({
+        VERCEL_ENV: "preview",
+        VERCEL_PROJECT_PRODUCTION_URL: productionUrl,
+        VERCEL_GIT_COMMIT_REF: "LAC-1234/some-fix",
+        VERCEL_GIT_COMMIT_MESSAGE: "fix: some fix",
+      });
+
+      expect(stdout).toContain(productionUrl);
+      expect(stdout).toContain("env=preview");
+    }
+  });
+
+  it("skips the staging production build on its generated vercel.app host too", () => {
+    const { status } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: "townofharmony-org-preview.vercel.app",
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE: "fix: a routine production merge",
+    });
+
+    expect(status).toBe(SKIP);
+  });
+
+  it("builds the staging production build when [preview] is in the subject", () => {
+    const { status, stdout } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: STAGING_URL,
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE: "feat: new business listings for staff review [preview] (#412)",
+    });
+
+    expect(status).toBe(BUILD);
+    expect(stdout).toContain("commit subject");
+  });
+
+  it("ignores a staging marker that appears only in the commit body", () => {
+    const { status } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: STAGING_URL,
+      VERCEL_GIT_COMMIT_REF: "main",
+      VERCEL_GIT_COMMIT_MESSAGE:
+        "fix: a routine production merge\n\nNot refreshing staging: no [preview] marker on purpose.",
+    });
+
+    expect(status).toBe(SKIP);
+  });
+
+  it("skips the staging production build on [skip ci] like any other commit", () => {
+    const { status } = runIgnoreStep({
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: STAGING_URL,
       VERCEL_GIT_COMMIT_REF: "main",
       VERCEL_GIT_COMMIT_MESSAGE: "chore(deps): bump things [skip ci]",
     });
 
-    expect(status).toBe(BUILD);
+    expect(status).toBe(SKIP);
+  });
+
+  it("still skips the staging project's own branch previews", () => {
+    const { status } = runIgnoreStep({
+      VERCEL_ENV: "preview",
+      VERCEL_PROJECT_PRODUCTION_URL: STAGING_URL,
+      VERCEL_GIT_COMMIT_REF: "LAC-1234/some-fix",
+      VERCEL_GIT_COMMIT_MESSAGE: "fix: some fix",
+    });
+
+    expect(status).toBe(SKIP);
   });
 });
 
