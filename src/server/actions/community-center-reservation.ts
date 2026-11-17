@@ -200,7 +200,7 @@ export async function submitCommunityCenterReservation(
   };
 
   try {
-    await resend.emails.send({
+    const { error: sendError } = await resend.emails.send({
       from: `${siteConfig.name} Reservations <${siteConfig.email.noreply}>`,
       to: toRecipients,
       bcc: bccRecipients,
@@ -216,6 +216,8 @@ export async function submitCommunityCenterReservation(
       ...(email ? { replyTo: email } : {}),
       html: communityCenterReservationNotificationEmail(reservationFields),
     });
+    // Resend resolves with { error } instead of throwing (LAC-8326).
+    if (sendError) throw sendError;
   } catch (error) {
     console.error("Error sending Community Center reservation email:", error);
     return {
