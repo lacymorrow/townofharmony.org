@@ -205,7 +205,7 @@ export async function submitTownContactForm(
   }
 
   try {
-    await resend.emails.send({
+    const { error: sendError } = await resend.emails.send({
       from: `${siteConfig.name} Contact Form <${siteConfig.email.noreply}>`,
       to: toRecipients,
       bcc: bccRecipients,
@@ -237,6 +237,10 @@ export async function submitTownContactForm(
           }
         : {}),
     });
+    // The Resend SDK resolves with { data, error } and does NOT throw on an API
+    // rejection (rate limit, bad sender, suppression). Without this check the
+    // visitor sees success while no mail is sent (LAC-8326).
+    if (sendError) throw sendError;
   } catch (error) {
     console.error("Error sending town contact form email:", error);
     return {
