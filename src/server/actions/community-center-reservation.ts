@@ -7,6 +7,7 @@ import {
   communityCenterReservationConfirmationEmail,
   communityCenterReservationNotificationEmail,
 } from "@/lib/email-templates";
+import { getEmailTownSettings } from "@/lib/email-town-settings";
 import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
@@ -214,7 +215,10 @@ export async function submitCommunityCenterReservation(
         .join(" ")
         .replace(/[\r\n]/g, " ")} — ${eventDate.replace(/[\r\n]/g, " ")}`,
       ...(email ? { replyTo: email } : {}),
-      html: communityCenterReservationNotificationEmail(reservationFields),
+      html: communityCenterReservationNotificationEmail(
+        reservationFields,
+        await getEmailTownSettings()
+      ),
     });
     // Resend resolves with { error } instead of throwing (LAC-8326).
     if (sendError) throw sendError;
@@ -234,7 +238,10 @@ export async function submitCommunityCenterReservation(
         from: `${siteConfig.name} <${siteConfig.email.noreply}>`,
         to: [email],
         subject: `Your Community Center reservation request has been received — ${siteConfig.name}`,
-        html: communityCenterReservationConfirmationEmail(reservationFields),
+        html: communityCenterReservationConfirmationEmail(
+          reservationFields,
+          await getEmailTownSettings()
+        ),
       });
     } catch (error) {
       console.error("Error sending Community Center reservation confirmation email:", error);
