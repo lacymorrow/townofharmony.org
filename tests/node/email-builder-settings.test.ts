@@ -12,7 +12,11 @@ import {
 
 const builder = {
   ...settings,
-  contactInfo: { ...settings.contactInfo, phone: "(704) 555-0142", address: "1 Test Lane, Harmony, NC" },
+  contactInfo: {
+    ...settings.contactInfo,
+    phone: "(704) 555-0142",
+    address: "1 Test Lane, Harmony, NC",
+  },
   officeHours: { ...settings.officeHours, weekday: "Tuesday - Thursday 10:00 AM - 2:00 PM" },
 };
 
