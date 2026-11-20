@@ -11,6 +11,7 @@ import {
 } from "@/lib/contact-attachment";
 import { fetchBuilderContent } from "@/lib/builder-data-server";
 import { townContactConfirmationEmail, townContactNotificationEmail } from "@/lib/email-templates";
+import { getEmailTownSettings } from "@/lib/email-town-settings";
 import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
@@ -217,14 +218,17 @@ export async function submitTownContactForm(
         .join(" ")
         .replace(/[\r\n]/g, " ")}`,
       ...(email ? { replyTo: email } : {}),
-      html: townContactNotificationEmail({
-        firstName,
-        lastName,
-        email,
-        phone,
-        inquiryType: inquiryLabel,
-        message,
-      }),
+      html: townContactNotificationEmail(
+        {
+          firstName,
+          lastName,
+          email,
+          phone,
+          inquiryType: inquiryLabel,
+          message,
+        },
+        await getEmailTownSettings()
+      ),
       ...(attachment
         ? {
             attachments: [
@@ -257,14 +261,17 @@ export async function submitTownContactForm(
         from: `${siteConfig.name} <${siteConfig.email.noreply}>`,
         to: [email],
         subject: `Your inquiry has been received — ${siteConfig.name}`,
-        html: townContactConfirmationEmail({
-          firstName,
-          lastName,
-          email,
-          phone,
-          inquiryType: inquiryLabel,
-          message,
-        }),
+        html: townContactConfirmationEmail(
+          {
+            firstName,
+            lastName,
+            email,
+            phone,
+            inquiryType: inquiryLabel,
+            message,
+          },
+          await getEmailTownSettings()
+        ),
       });
     } catch (error) {
       console.error("Error sending town contact confirmation email:", error);
