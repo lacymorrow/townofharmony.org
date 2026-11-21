@@ -47,7 +47,10 @@ export const TownContactForm = () => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
-  const [inquiryType, setInquiryType] = useState("");
+  // Stored with its label rather than as a bare value so the chosen option can
+  // still be rendered if it later disappears from the list (see selectOptions).
+  const [chosenInquiry, setChosenInquiry] = useState<{ value: string; label: string } | null>(null);
+  const inquiryType = chosenInquiry?.value ?? "";
   const turnstileTokenRef = useRef<string | null>(null);
   const turnstileResetRef = useRef<(() => void) | null>(null);
   const [turnstileFailed, setTurnstileFailed] = useState(false);
@@ -77,13 +80,27 @@ export const TownContactForm = () => {
   );
 
   // No default topic: the select opens on "Select a topic…" so every sender
-  // picks one on purpose (client request). If a staff edit in Builder removes
-  // the chosen option, clear it rather than submit a stale value.
-  useEffect(() => {
-    if (inquiryType && !inquiryOptions.some((opt) => opt.value === inquiryType)) {
-      setInquiryType("");
+  // picks one on purpose (client request).
+  //
+  // The option list is NOT stable while the page is open. useBuilderData hands
+  // back the static fallback synchronously and swaps in the Builder entries
+  // when its fetch lands ~300ms later, and the two lists are not the same
+  // value-set — the fallback has `general` and `other`, the live Builder model
+  // has neither. A staff edit in Builder can drop an option mid-session too.
+  //
+  // So a value the visitor already chose is kept in the list no matter what
+  // arrives afterwards (LAC-8826). This used to clear the select instead, which
+  // sent it back to its *disabled* placeholder — and the browser omits a
+  // selected-but-disabled option from FormData entirely, so the form failed its
+  // own validation and never submitted, with nothing on screen to explain why.
+  // Honoring the pick is also what the visitor expects: it is the option that
+  // was in front of them. The server accepts both lists for the same reason.
+  const selectOptions = useMemo(() => {
+    if (!chosenInquiry || inquiryOptions.some((opt) => opt.value === chosenInquiry.value)) {
+      return inquiryOptions;
     }
-  }, [inquiryOptions, inquiryType]);
+    return [...inquiryOptions, chosenInquiry];
+  }, [inquiryOptions, chosenInquiry]);
 
   useEffect(() => {
     if (submitted && successRef.current) {
@@ -308,13 +325,16 @@ export const TownContactForm = () => {
           aria-invalid={!!errors.inquiryType}
           aria-describedby={errors.inquiryType ? "inquiryType-error" : undefined}
           value={inquiryType}
-          onChange={(e) => setInquiryType(e.target.value)}
+          onChange={(e) => {
+            const { value, selectedOptions } = e.target;
+            setChosenInquiry(value ? { value, label: selectedOptions[0]?.label ?? value } : null);
+          }}
           className={`town-select ${inputClass(!!errors.inquiryType, "pr-10")}`}
         >
           <option value="" disabled>
             Select a topic…
           </option>
-          {inquiryOptions.map((opt) => (
+          {selectOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>

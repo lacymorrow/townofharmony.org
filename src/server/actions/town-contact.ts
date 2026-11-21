@@ -166,7 +166,15 @@ export async function submitTownContactForm(
 
   // Bot checks come first so spam never costs a Builder.io fetch.
   const inquiryTypes = await loadInquiryTypes();
-  const matched = inquiryTypes.find((t) => t.value === inquiryType);
+  // The form renders the static fallback list until its own Builder fetch
+  // resolves, so a visitor can legitimately send a fallback-only value such as
+  // `general` (LAC-8826). Both lists ship from this repo and neither is user
+  // input, so accept either — Builder wins the label when a value is in both.
+  // Rejecting our own shipped options turned a slow CMS fetch into a dead form.
+  // Anything in neither list is still refused.
+  const matched =
+    inquiryTypes.find((t) => t.value === inquiryType) ??
+    contactInquiryTypes.find((t) => t.isActive !== false && t.value === inquiryType);
   if (!matched) {
     return { success: false, error: "Please select an inquiry type" };
   }
