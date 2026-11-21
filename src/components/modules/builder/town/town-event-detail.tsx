@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ErrorBoundary } from "@/components/primitives/error-boundary";
 import { AddressCopyButton } from "@/components/town/address-copy-button";
 import { PhoneCopyButton } from "@/components/town/phone-copy-button";
+import { EventAlbum } from "@/components/town/events/event-album";
 import { LightboxImage } from "@/components/ui/lightbox-image";
 import type { TownEvent } from "@/data/town/types";
 import { resolveBuilderRef } from "@/data/town/types";
@@ -252,6 +253,8 @@ const TownEventDetailInner = ({ slug: slugProp }: TownEventDetailProps) => {
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.content) }}
           />
         )}
+
+        <EventAlbum title={event.title} items={event.gallery} />
       </div>
     </section>
   );

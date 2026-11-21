@@ -53,6 +53,13 @@ export interface TownEvent {
   isRecurring: boolean;
   categories: string[];
   tags: string[];
+  /** Photo/video album; Builder list of `{ media, caption }`. */
+  gallery?: TownEventMedia[];
+}
+
+export interface TownEventMedia {
+  media?: string;
+  caption?: string;
 }
 
 export interface TownMeeting {
@@ -63,6 +70,8 @@ export interface TownMeeting {
   meetingDate: string;
   meetingTime: string;
   location: string;
+  /** Uploaded proposed-agenda file (PDF/Word). */
+  agendaDocument?: string;
   agenda: string;
   attendees: string[];
   isPublic: boolean;

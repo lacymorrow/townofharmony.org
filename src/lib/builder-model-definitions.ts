@@ -483,22 +483,47 @@ export const modelDefinitions: BuilderModelDefinition[] = [
       bool("isRecurring"),
       tags("categories"),
       tags("tags"),
+      {
+        ...list("gallery", [
+          {
+            ...file("media", ["jpeg", "jpg", "png", "webp", "gif", "mp4", "webm", "mov", "m4v"]),
+            friendlyName: "Photo or video",
+          },
+          text("caption", undefined, { friendlyName: "Caption (optional)" }),
+        ]),
+        friendlyName: "Photo & video album",
+        helperText: "Photos and videos from the event. They show as an album on the event page.",
+      },
     ],
   },
   {
     name: "town-meeting",
     kind: "data",
+    nameField: "title",
     fields: [
       text("title", true),
       text("slug", true),
       enumText("type", ["Council", "Planning", "Public Hearing"]),
-      date("meetingDate"),
-      text("meetingTime"),
+      date("meetingDate", {
+        friendlyName: "Meeting date",
+        helperText:
+          "Pick the day only. The time on this picker is ignored; type the time in Start time below.",
+      }),
+      text("meetingTime", undefined, {
+        friendlyName: "Start time",
+        helperText: 'e.g. "7:00 PM". This is the time shown on the site.',
+      }),
       text("location"),
-      richText("agenda"),
+      {
+        ...file("agendaDocument", ["pdf", "doc", "docx"]),
+        friendlyName: "Proposed agenda document",
+        helperText:
+          "Upload the proposed agenda (PDF or Word). It shows on the meeting page and the meeting is listed under Proposed Agenda.",
+      },
+      longText("agenda"),
       tags("attendees"),
       bool("isPublic", true),
-      richText("minutes"),
+      longText("minutes"),
       url("minutesUrl"),
       url("videoUrl"),
       url("audioUrl"),
