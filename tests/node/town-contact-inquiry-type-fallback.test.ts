@@ -18,9 +18,21 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { contactInquiryTypes } from "@/data/town/contact-inquiry-types";
 
-const { sendMock, fetchBuilderContentMock } = vi.hoisted(() => ({
+const { sendMock, fetchBuilderContentMock, inactiveFallbackType } = vi.hoisted(() => ({
   sendMock: vi.fn(),
   fetchBuilderContentMock: vi.fn(),
+  /**
+   * No shipped fallback entry is inactive today, so all three `isActive`
+   * guards in `town-contact.ts` are unreachable with the real list — deleting
+   * any one of them left the whole suite green (LAC-8830). Appending a retired
+   * entry to the fallback makes them reachable. It must be explicitly `false`,
+   * not missing, because `isActive !== false` is the guard under test.
+   */
+  inactiveFallbackType: {
+    value: "retired-fallback-topic",
+    label: "Retired Fallback Topic",
+    isActive: false,
+  },
 }));
 
 vi.mock("@/env", () => ({
@@ -37,6 +49,14 @@ vi.mock("@/config/site-config", () => ({
 vi.mock("@/lib/builder-data-server", () => ({
   fetchBuilderContent: fetchBuilderContentMock,
 }));
+
+vi.mock("@/data/town/contact-inquiry-types", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/data/town/contact-inquiry-types")>();
+  return {
+    ...actual,
+    contactInquiryTypes: [...actual.contactInquiryTypes, inactiveFallbackType],
+  };
+});
 
 vi.mock("@/lib/email-templates", () => ({
   townContactConfirmationEmail: () => "<html></html>",
@@ -140,5 +160,56 @@ describe("submitTownContactForm inquiry type sources (LAC-8826)", () => {
     expect(result.success).toBe(false);
     expect("error" in result && result.error).toBe("Please select an inquiry type");
     expect(sendMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("submitTownContactForm refuses inactive inquiry types (LAC-8830)", () => {
+  it("refuses an inactive fallback value when Builder returns a list", async () => {
+    const result = await submitTownContactForm({
+      ...validSubmission,
+      inquiryType: inactiveFallbackType.value,
+    });
+
+    expect(result.success).toBe(false);
+    expect("error" in result && result.error).toBe("Please select an inquiry type");
+    expect(sendMock).not.toHaveBeenCalled();
+  });
+
+  it("refuses an inactive fallback value when Builder is unreachable", async () => {
+    fetchBuilderContentMock.mockRejectedValue(new Error("Builder down"));
+
+    const result = await submitTownContactForm({
+      ...validSubmission,
+      inquiryType: inactiveFallbackType.value,
+    });
+
+    expect(result.success).toBe(false);
+    expect("error" in result && result.error).toBe("Please select an inquiry type");
+    expect(sendMock).not.toHaveBeenCalled();
+  });
+
+  it("refuses an inactive Builder-only value", async () => {
+    fetchBuilderContentMock.mockResolvedValue({
+      results: [
+        ...builderResults,
+        { value: "retired-builder-topic", label: "Retired Builder Topic", isActive: false },
+      ],
+    });
+
+    const result = await submitTownContactForm({
+      ...validSubmission,
+      inquiryType: "retired-builder-topic",
+    });
+
+    expect(result.success).toBe(false);
+    expect("error" in result && result.error).toBe("Please select an inquiry type");
+    expect(sendMock).not.toHaveBeenCalled();
+  });
+
+  it("still accepts the active fallback value next to the inactive one", async () => {
+    const result = await submitTownContactForm({ ...validSubmission });
+
+    expect(result.success).toBe(true);
+    expect(sendMock).toHaveBeenCalled();
   });
 });
