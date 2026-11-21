@@ -51,6 +51,7 @@ export const TownContactForm = () => {
   // still be rendered if it later disappears from the list (see selectOptions).
   const [chosenInquiry, setChosenInquiry] = useState<{ value: string; label: string } | null>(null);
   const inquiryType = chosenInquiry?.value ?? "";
+  const inquirySelectRef = useRef<HTMLSelectElement | null>(null);
   const turnstileTokenRef = useRef<string | null>(null);
   const turnstileResetRef = useRef<(() => void) | null>(null);
   const [turnstileFailed, setTurnstileFailed] = useState(false);
@@ -101,6 +102,35 @@ export const TownContactForm = () => {
     }
     return [...inquiryOptions, chosenInquiry];
   }, [inquiryOptions, chosenInquiry]);
+
+  // Adopt a topic the visitor picked BEFORE this component hydrated (LAC-8831).
+  //
+  // The select is server-rendered, so it is a working HTML control long before
+  // the client bundle runs — on a slow phone a visitor can pick a topic while
+  // the page is still inert. That pick exists only in the DOM: `onChange` is
+  // not attached yet, so `chosenInquiry` stays null. Hydration leaves the DOM
+  // value alone, but the select is controlled, so the first re-render AFTER it
+  // (the Builder fetch landing, Turnstile verifying, any state change at all)
+  // writes `value=""` back over the element. That lands on the *disabled*
+  // placeholder, which the form-data algorithm omits from FormData entirely, so
+  // the form failed its own validation and never POSTed, with nothing on screen
+  // to explain why. The LAC-8825 prod probe lost the value in 4 of 6 runs.
+  //
+  // Reading the node here is safe against that race: React flushes a commit's
+  // passive effects before it begins the next render, so this runs before any
+  // re-render can overwrite the value, even when the Builder fetch resolves in
+  // the same tick as hydration (covered by the regression test). On a
+  // client-side mount the select renders empty, so there is nothing to adopt.
+  useEffect(() => {
+    const select = inquirySelectRef.current;
+    if (!select?.value) return;
+    const option = select.selectedOptions[0];
+    // The placeholder is disabled; only a real pick counts.
+    if (!option || option.disabled) return;
+    setChosenInquiry(
+      (current) => current ?? { value: select.value, label: option.label || select.value }
+    );
+  }, []);
 
   useEffect(() => {
     if (submitted && successRef.current) {
@@ -318,6 +348,7 @@ export const TownContactForm = () => {
 
       <FieldWrapper label="Inquiry Type" id="inquiryType" error={errors.inquiryType} required>
         <select
+          ref={inquirySelectRef}
           id="inquiryType"
           name="inquiryType"
           required
