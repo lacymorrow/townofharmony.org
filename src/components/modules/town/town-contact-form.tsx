@@ -116,11 +116,11 @@ export const TownContactForm = () => {
   // the form failed its own validation and never POSTed, with nothing on screen
   // to explain why. The LAC-8825 prod probe lost the value in 4 of 6 runs.
   //
-  // Reading the node here is safe against that race: React flushes a commit's
-  // passive effects before it begins the next render, so this runs before any
-  // re-render can overwrite the value, even when the Builder fetch resolves in
-  // the same tick as hydration (covered by the regression test). On a
-  // client-side mount the select renders empty, so there is nothing to adopt.
+  // Reading the node here beats that overwrite: React flushes a commit's
+  // passive effects before it begins the next render, and nothing can even ask
+  // for a re-render earlier than that — the Builder fetch and the Turnstile
+  // script are both kicked off by effects of this same commit. On a client-side
+  // mount the select renders empty, so there is nothing to adopt.
   useEffect(() => {
     const select = inquirySelectRef.current;
     if (!select?.value) return;

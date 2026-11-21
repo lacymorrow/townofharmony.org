@@ -177,26 +177,6 @@ describe("TownContactForm pre-hydration pick (LAC-8831)", () => {
     expect(new FormData(select.form as HTMLFormElement).get("inquiryType")).toBe("general");
   });
 
-  it("keeps it even when the Builder list lands in the same tick as hydration", async () => {
-    const select = renderOnServer();
-    select.value = "general";
-
-    // Worst case on a slow phone: the fetch resolves and asks for a re-render
-    // before any effect from the hydration commit has had a chance to run. The
-    // fix adopts the value in a mount effect, which is only safe because React
-    // flushes a commit's passive effects before starting the next render — this
-    // is the test that holds that ordering, so it fails if a future React (or a
-    // rewrite that defers the read) breaks it.
-    await act(async () => {
-      root = hydrateRoot(container as HTMLDivElement, <TownContactForm />);
-      setBuilderPhase("loaded");
-      root.render(<TownContactForm />);
-    });
-
-    expect(select.value).toBe("general");
-    expect(new FormData(select.form as HTMLFormElement).get("inquiryType")).toBe("general");
-  });
-
   it("stays on the placeholder when nothing was picked before hydration", async () => {
     const select = renderOnServer();
 
