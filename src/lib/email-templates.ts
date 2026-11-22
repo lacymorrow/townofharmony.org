@@ -1,5 +1,6 @@
 import { siteConfig } from "@/config/site-config";
-import { settings } from "@/data/town/settings";
+import { settings as staticSettings } from "@/data/town/settings";
+import type { TownSettings } from "@/data/town/types";
 import { formatTime } from "@/lib/utils";
 
 export const esc = (s: string) =>
@@ -18,7 +19,25 @@ const BRAND = {
 // tel: link styled white keeps the number readable on the dark footer (LAC-3978).
 const telHref = (phone: string) => `tel:+1${phone.replace(/\D/g, "")}`;
 
-const layout = (body: string) =>
+export interface EmailTownInfo {
+  phone: string;
+  address: string;
+  weekdayHours: string;
+}
+
+// Builder-backed settings win field by field; an empty or missing value falls
+// back to the static file so an email never ships a blank footer (LAC-8682).
+export function resolveEmailTownInfo(town?: Partial<TownSettings> | null): EmailTownInfo {
+  const pick = (v: unknown, fallback: string) =>
+    typeof v === "string" && v.trim() ? v.trim() : fallback;
+  return {
+    phone: pick(town?.contactInfo?.phone, staticSettings.contactInfo.phone),
+    address: pick(town?.contactInfo?.address, staticSettings.contactInfo.address),
+    weekdayHours: pick(town?.officeHours?.weekday, staticSettings.officeHours.weekday),
+  };
+}
+
+const layout = (body: string, info: EmailTownInfo) =>
   `
 <!DOCTYPE html>
 <html>
@@ -45,9 +64,9 @@ const layout = (body: string) =>
         <tr>
           <td style="background-color:${BRAND.footer};padding:24px 32px;">
             <p style="margin:0 0 8px;color:#aaa;font-size:12px;">${siteConfig.name} — Official Contact Information</p>
-            <p style="margin:0 0 4px;color:#ccc;font-size:12px;">${settings.contactInfo.address}</p>
-            <p style="margin:0 0 4px;font-size:14px;"><a href="${telHref(settings.contactInfo.phone)}" style="color:#fff;text-decoration:none;">Phone: ${settings.contactInfo.phone}</a></p>
-            <p style="margin:0;color:#ccc;font-size:11px;">Office Hours: ${settings.officeHours.weekday}</p>
+            <p style="margin:0 0 4px;color:#ccc;font-size:12px;">${esc(info.address)}</p>
+            <p style="margin:0 0 4px;font-size:14px;"><a href="${telHref(info.phone)}" style="color:#fff;text-decoration:none;">Phone: ${esc(info.phone)}</a></p>
+            <p style="margin:0;color:#ccc;font-size:11px;">Office Hours: ${esc(info.weekdayHours)}</p>
           </td>
         </tr>
 
@@ -64,11 +83,15 @@ const row = (label: string, value: string) =>
     <td style="padding:6px 0;font-size:14px;color:${BRAND.text};vertical-align:top;">${value}</td>
   </tr>`;
 
-export function contactConfirmationEmail(opts: {
-  name: string;
-  contactInfo?: string;
-  message: string;
-}): string {
+export function contactConfirmationEmail(
+  opts: {
+    name: string;
+    contactInfo?: string;
+    message: string;
+  },
+  town?: Partial<TownSettings> | null
+): string {
+  const info = resolveEmailTownInfo(town);
   const safeName = esc(opts.name);
   const safeContact = opts.contactInfo ? esc(opts.contactInfo) : null;
   const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
@@ -88,21 +111,25 @@ export function contactConfirmationEmail(opts: {
 
     <p style="margin:0 0 8px;font-size:14px;color:${BRAND.muted};">Need to reach us sooner?</p>
     <p style="margin:0;font-size:14px;color:${BRAND.text};">
-      Call us at <strong>${settings.contactInfo.phone}</strong> during office hours (${settings.officeHours.weekday}).
+      Call us at <strong>${esc(info.phone)}</strong> during office hours (${esc(info.weekdayHours)}).
     </p>
   `;
 
-  return layout(body);
+  return layout(body, info);
 }
 
-export function townContactConfirmationEmail(opts: {
-  firstName: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  inquiryType: string;
-  message: string;
-}): string {
+export function townContactConfirmationEmail(
+  opts: {
+    firstName: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    inquiryType: string;
+    message: string;
+  },
+  town?: Partial<TownSettings> | null
+): string {
+  const info = resolveEmailTownInfo(town);
   const safeName = [esc(opts.firstName), opts.lastName ? esc(opts.lastName) : ""]
     .filter(Boolean)
     .join(" ");
@@ -128,19 +155,23 @@ export function townContactConfirmationEmail(opts: {
 
     <p style="margin:0 0 8px;font-size:14px;color:${BRAND.muted};">Need immediate assistance?</p>
     <p style="margin:0;font-size:14px;color:${BRAND.text};">
-      Call us at <strong>${settings.contactInfo.phone}</strong> or visit us at ${settings.contactInfo.address} during office hours (${settings.officeHours.weekday}).
+      Call us at <strong>${esc(info.phone)}</strong> or visit us at ${esc(info.address)} during office hours (${esc(info.weekdayHours)}).
     </p>
   `;
 
-  return layout(body);
+  return layout(body, info);
 }
 
-export function contactNotificationEmail(opts: {
-  name: string;
-  contactInfo?: string;
-  message: string;
-  newsletter: boolean;
-}): string {
+export function contactNotificationEmail(
+  opts: {
+    name: string;
+    contactInfo?: string;
+    message: string;
+    newsletter: boolean;
+  },
+  town?: Partial<TownSettings> | null
+): string {
+  const info = resolveEmailTownInfo(town);
   const safeName = esc(opts.name);
   const safeContact = opts.contactInfo ? esc(opts.contactInfo) : null;
   const safeMessage = esc(opts.message).replace(/\n/g, "<br>");
@@ -160,17 +191,21 @@ export function contactNotificationEmail(opts: {
     </table>
   `;
 
-  return layout(body);
+  return layout(body, info);
 }
 
-export function townContactNotificationEmail(opts: {
-  firstName: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  inquiryType: string;
-  message: string;
-}): string {
+export function townContactNotificationEmail(
+  opts: {
+    firstName: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    inquiryType: string;
+    message: string;
+  },
+  town?: Partial<TownSettings> | null
+): string {
+  const info = resolveEmailTownInfo(town);
   const safeName = [esc(opts.firstName), opts.lastName ? esc(opts.lastName) : ""]
     .filter(Boolean)
     .join(" ");
@@ -201,7 +236,7 @@ export function townContactNotificationEmail(opts: {
     </table>
   `;
 
-  return layout(body);
+  return layout(body, info);
 }
 
 interface CommunityCenterReservationFields {
@@ -245,8 +280,10 @@ function reservationDetailRows(opts: CommunityCenterReservationFields): string {
 }
 
 export function communityCenterReservationNotificationEmail(
-  opts: CommunityCenterReservationFields
+  opts: CommunityCenterReservationFields,
+  town?: Partial<TownSettings> | null
 ): string {
+  const info = resolveEmailTownInfo(town);
   const replyHint = opts.email
     ? "Reply to this email to respond directly."
     : opts.phone
@@ -269,12 +306,14 @@ export function communityCenterReservationNotificationEmail(
     </p>
   `;
 
-  return layout(body);
+  return layout(body, info);
 }
 
 export function communityCenterReservationConfirmationEmail(
-  opts: CommunityCenterReservationFields
+  opts: CommunityCenterReservationFields,
+  town?: Partial<TownSettings> | null
 ): string {
+  const info = resolveEmailTownInfo(town);
   const safeName = [esc(opts.firstName), opts.lastName ? esc(opts.lastName) : ""]
     .filter(Boolean)
     .join(" ");
@@ -292,9 +331,9 @@ export function communityCenterReservationConfirmationEmail(
 
     <p style="margin:0 0 8px;font-size:14px;color:${BRAND.muted};">Questions?</p>
     <p style="margin:0;font-size:14px;color:${BRAND.text};">
-      Call us at <strong>${settings.contactInfo.phone}</strong> or visit us at ${settings.contactInfo.address} during office hours (${settings.officeHours.weekday}).
+      Call us at <strong>${esc(info.phone)}</strong> or visit us at ${esc(info.address)} during office hours (${esc(info.weekdayHours)}).
     </p>
   `;
 
-  return layout(body);
+  return layout(body, info);
 }

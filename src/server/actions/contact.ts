@@ -2,6 +2,7 @@
 
 import { siteConfig } from "@/config/site-config";
 import { contactConfirmationEmail, contactNotificationEmail } from "@/lib/email-templates";
+import { getEmailTownSettings } from "@/lib/email-town-settings";
 import { logger } from "@/lib/logger";
 import { resend } from "@/lib/resend";
 import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/turnstile";
@@ -93,12 +94,15 @@ export async function submitContactForm(formData: FormData) {
       to: [isTest ? resolveTestRecipient() : siteConfig.email.support],
       subject: `${isTest ? TEST_SUBJECT_PREFIX : ""}New Contact Form Submission`,
       ...(isEmail && validatedData.contactInfo ? { replyTo: validatedData.contactInfo } : {}),
-      html: contactNotificationEmail({
-        name: validatedData.name,
-        contactInfo: validatedData.contactInfo,
-        message: validatedData.message,
-        newsletter: validatedData.newsletter,
-      }),
+      html: contactNotificationEmail(
+        {
+          name: validatedData.name,
+          contactInfo: validatedData.contactInfo,
+          message: validatedData.message,
+          newsletter: validatedData.newsletter,
+        },
+        await getEmailTownSettings()
+      ),
     });
 
     // Skip the confirmation on the test path (LAC-4202): test.com and
@@ -109,11 +113,14 @@ export async function submitContactForm(formData: FormData) {
           from: `${siteConfig.name} <${siteConfig.email.noreply}>`,
           to: [validatedData.contactInfo],
           subject: `We received your message — ${siteConfig.name}`,
-          html: contactConfirmationEmail({
-            name: validatedData.name,
-            contactInfo: validatedData.contactInfo,
-            message: validatedData.message,
-          }),
+          html: contactConfirmationEmail(
+            {
+              name: validatedData.name,
+              contactInfo: validatedData.contactInfo,
+              message: validatedData.message,
+            },
+            await getEmailTownSettings()
+          ),
         });
       } catch (error) {
         console.error("Error sending contact confirmation email:", error);
